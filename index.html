@@ -4,11 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>B FIT ASSESSMENT CLUB | Professional Evaluation</title>
-    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23ff6b00'/%3E%3Cstop offset='1' stop-color='%23ff9900'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='14' fill='url(%23g)'/%3E%3Ctext x='32' y='40' font-family='Arial Black,Arial' font-weight='900' font-size='34' text-anchor='middle' fill='white'%3EB%3C/text%3E%3Ctext x='32' y='56' font-family='Arial' font-weight='700' font-size='14' text-anchor='middle' fill='white'%3EFIT%3C/text%3E%3C/svg%3E">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;600;700;900&family=Montserrat:wght@400;600;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Tesseract Engine Core -->
     <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 
     <style>
@@ -16,8 +17,8 @@
             --bg-main: #0b0f19;
             --card-bg: #131b2e;
             --card-inner: #1e293b;
-            --primary-orange: #ff6b00;
-            --primary-orange-hover: #e05e00;
+            --bfit-gold: #ff6b00;
+            --bfit-gold-soft: #e05e00;
             --text-white: #ffffff;
             --text-muted: #94a3b8;
             --border-color: #334155;
@@ -31,10 +32,7 @@
             margin: 0;
             padding: 0;
             font-family: 'Tajawal', 'Montserrat', sans-serif;
-        }
-
-        input, select, button, label, .exercise-avatar-box {
-            transition: background-color 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease, color 0.25s ease, transform 0.25s ease;
+            transition: all 0.2s ease;
         }
 
         body {
@@ -45,12 +43,12 @@
             align-items: flex-start;
             padding: 30px 15px;
             min-height: 100vh;
-            background-image: radial-gradient(circle at top right, rgba(255, 107, 0, 0.15), transparent 60%);
+            background-image: radial-gradient(circle at top right, rgba(255, 107, 0, 0.1), transparent 60%);
         }
 
         .assessment-container {
             width: 100%;
-            max-width: 1050px;
+            max-width: 1100px;
             background: var(--card-bg);
             border-radius: 24px;
             box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6);
@@ -62,7 +60,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 4px solid var(--primary-orange);
+            border-bottom: 4px solid var(--bfit-gold);
             padding-bottom: 20px;
             margin-bottom: 30px;
         }
@@ -74,15 +72,15 @@
         }
 
         .brand-logo-icon {
-            width: 85px;
-            height: 70px;
-            background: linear-gradient(135deg, var(--primary-orange), #ff9900);
-            border-radius: 18px;
+            width: 90px;
+            height: 65px;
+            background: linear-gradient(135deg, var(--bfit-gold), #ff8800);
+            border-radius: 16px;
             display: flex;
             justify-content: center;
             align-items: center;
             color: #fff;
-            box-shadow: 0 8px 25px rgba(255, 107, 0, 0.4);
+            box-shadow: 0 8px 25px rgba(255, 107, 0, 0.35);
             font-family: 'Montserrat', sans-serif;
             font-weight: 900;
             font-size: 22px;
@@ -101,7 +99,7 @@
 
         .brand-titles p {
             font-size: 13px;
-            color: var(--primary-orange);
+            color: var(--bfit-gold);
             font-weight: 700;
             font-family: 'Montserrat', sans-serif;
             letter-spacing: 0.5px;
@@ -114,7 +112,7 @@
             margin: 35px 0 20px 0;
             display: flex;
             align-items: center;
-            border-right: 6px solid var(--primary-orange);
+            border-right: 6px solid var(--bfit-gold);
         }
 
         .section-header h2 {
@@ -166,14 +164,14 @@
         }
 
         .input-box input:focus, .input-box select:focus {
-            border-color: var(--primary-orange);
+            border-color: var(--bfit-gold);
             box-shadow: 0 0 0 4px rgba(255, 107, 0, 0.15);
         }
 
         .ocr-status {
             font-size: 13px;
-            color: var(--primary-orange);
-            margin-top: 5px;
+            color: var(--bfit-gold);
+            margin-top: 6px;
             font-weight: 700;
             display: none;
             line-height: 1.7;
@@ -212,45 +210,30 @@
         .exercise-card {
             background: var(--card-inner);
             border: 1px solid var(--border-color);
-            border-radius: 16px;
+            border-radius: 18px;
             padding: 22px;
-            margin-bottom: 20px;
+            margin-bottom: 22px;
             display: grid;
-            grid-template-columns: 130px 1fr;
+            grid-template-columns: 200px 1fr;
             gap: 22px;
             align-items: center;
         }
 
-        .exercise-avatar-box {
-            width: 130px;
-            height: 105px;
-            background: linear-gradient(135deg, rgba(15, 23, 42, 0.98), rgba(30, 41, 59, 0.98));
-            border-radius: 12px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
+        .exercise-preview-box {
+            width: 100%;
+            height: 135px;
+            background: #000;
+            border-radius: 14px;
+            overflow: hidden;
             border: 2px solid var(--accent-gender);
-            color: var(--accent-gender);
             position: relative;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
         }
 
-        .exercise-avatar-box i {
-            font-size: 38px;
-            margin-bottom: 6px;
-            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
-        }
-
-        .exercise-avatar-box .gender-badge {
-            font-size: 10px;
-            background: var(--accent-gender);
-            color: #0f172a;
-            padding: 2px 8px;
-            border-radius: 4px;
-            font-weight: 900;
-            font-family: 'Montserrat', sans-serif;
-            text-transform: uppercase;
+        .exercise-preview-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
         .exercise-details h4 {
@@ -275,12 +258,12 @@
 
         .exercise-details h4 span.target-tag {
             font-size: 12px;
-            background: rgba(255, 107, 0, 0.2);
-            color: var(--primary-orange);
+            background: rgba(255, 107, 0, 0.15);
+            color: var(--bfit-gold);
             padding: 4px 10px;
             border-radius: 6px;
             font-weight: 700;
-            border: 1px solid rgba(255, 107, 0, 0.4);
+            border: 1px solid rgba(255, 107, 0, 0.3);
             font-family: 'Montserrat', sans-serif;
             direction: ltr;
         }
@@ -293,16 +276,16 @@
 
         .btn-submit {
             width: 100%;
-            background: linear-gradient(135deg, var(--primary-orange), var(--primary-orange-hover));
+            background: linear-gradient(135deg, #10b981, #059669);
             color: #fff;
             padding: 18px;
             border: none;
             border-radius: 14px;
-            font-size: 19px;
+            font-size: 18px;
             font-weight: 900;
             cursor: pointer;
             margin-top: 35px;
-            box-shadow: 0 10px 25px rgba(255, 107, 0, 0.35);
+            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -310,8 +293,9 @@
         }
 
         .btn-submit:hover {
+            background: linear-gradient(135deg, #059669, #047857);
             transform: translateY(-2px);
-            box-shadow: 0 14px 30px rgba(255, 107, 0, 0.45);
+            box-shadow: 0 12px 25px rgba(16, 185, 129, 0.4);
         }
 
         .result-container {
@@ -327,7 +311,7 @@
             border-radius: 20px;
             padding: 35px;
             text-align: center;
-            border: 1px solid var(--primary-orange);
+            border: 1px solid var(--bfit-gold);
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
         }
 
@@ -347,7 +331,7 @@
 
         .score-metric-card .label { font-size: 13px; color: #94a3b8; margin-bottom: 5px; }
         .score-metric-card .value { font-size: 34px; font-weight: 900; color: #fff; }
-        .score-metric-card .value span { color: var(--primary-orange); }
+        .score-metric-card .value span { color: var(--bfit-gold); }
 
         .bio-age-highlight {
             font-size: 18px;
@@ -371,19 +355,18 @@
             background: rgba(0, 0, 0, 0.3);
             padding: 20px;
             border-radius: 12px;
-            border-right: 4px solid var(--primary-orange);
+            border-right: 4px solid var(--bfit-gold);
         }
 
         @media (max-width: 768px) {
             .assessment-container { padding: 22px 16px; }
             .brand-titles h1 { font-size: 20px; }
             .exercise-card { grid-template-columns: 1fr; justify-items: center; text-align: center; }
+            .exercise-preview-box { width: 100%; height: 160px; }
             .exercise-details { width: 100%; }
             .exercise-details h4 { justify-content: center; }
             .exercise-details p.sub-en { text-align: center; }
-            .exercise-avatar-box { width: 100%; height: 80px; flex-direction: row; gap: 15px; }
             .health-question-row { grid-template-columns: 1fr; text-align: center; }
-            .q-ar, .q-en { text-align: center; }
         }
     </style>
 </head>
@@ -436,11 +419,11 @@
             </div>
             <div class="input-box">
                 <label>الوزن (كجم) <span class="en">Weight (kg)</span></label>
-                <input type="number" id="weightInput" step="0.1" min="30" max="250" required placeholder="مثال: 72.9">
+                <input type="number" id="weightInput" step="0.1" min="30" max="250" required placeholder="مثال: 71.4">
             </div>
             <div class="input-box">
                 <label>الطول (سم) <span class="en">Height (cm)</span></label>
-                <input type="number" id="heightInput" step="0.1" min="100" max="230" required placeholder="مثال: 171">
+                <input type="number" id="heightInput" step="0.1" min="100" max="230" required placeholder="مثال: 179">
             </div>
             <div class="input-box">
                 <label>نسبة الدهون PBF (%) <span class="en">Body Fat %</span></label>
@@ -505,10 +488,10 @@
             <h2><i class="fa-solid fa-stopwatch"></i> 3. اختبارات التقييم البدني | Physical Assessment Tests</h2>
         </div>
 
+        <!-- Dynamic Male & Female Exercise Previews -->
         <div class="exercise-card">
-            <div class="exercise-avatar-box">
-                <i class="fa-solid fa-person-walking" id="avatar1"></i>
-                <span class="gender-badge" id="badge1">MALE</span>
+            <div class="exercise-preview-box">
+                <img id="exImg1" src="https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=400&q=80" alt="Single-Leg Stance">
             </div>
             <div class="exercise-details">
                 <h4>1. التوافق العصبي (إغلاق العينين والوقوف على قدم واحدة) <span class="target-tag">Target: 20s Total (10s/leg)</span></h4>
@@ -516,3 +499,337 @@
                 <div class="exercise-inputs">
                     <div class="input-box"><label>القدم اليمنى (ثواني) <span class="en">Right Leg (s)</span></label><input type="number" id="coordR" max="10" min="0" placeholder="أقصى 10" required></div>
                     <div class="input-box"><label>القدم اليسرى (ثواني) <span class="en">Left Leg (s)</span></label><input type="number" id="coordL" max="10" min="0" placeholder="أقصى 10" required></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="exercise-card">
+            <div class="exercise-preview-box">
+                <img id="exImg2" src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&w=400&q=80" alt="Static Superman">
+            </div>
+            <div class="exercise-details">
+                <h4>2. التوازن الاستاتيكي (تمرين سوبرمان الثابت) <span class="target-tag">Target: 120s Total (60s/set)</span></h4>
+                <p class="sub-en">Static Superman Core & Back Balance Test</p>
+                <div class="exercise-inputs">
+                    <div class="input-box"><label>الجولة 1 (ثواني) <span class="en">Set 1 (s)</span></label><input type="number" id="balSet1" max="60" min="0" placeholder="أقصى 60" required></div>
+                    <div class="input-box"><label>الجولة 2 (ثواني) <span class="en">Set 2 (s)</span></label><input type="number" id="balSet2" max="60" min="0" placeholder="أقصى 60" required></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="exercise-card">
+            <div class="exercise-preview-box">
+                <img id="exImg3" src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&w=400&q=80" alt="Push-Up Test">
+            </div>
+            <div class="exercise-details">
+                <h4>3. التحمل العضلي (تمرين الضغط) <span class="target-tag">Target: Set 2 >= 70% of Set 1</span></h4>
+                <p class="sub-en">Push-Up Upper Body Muscular Endurance Test</p>
+                <div class="exercise-inputs">
+                    <div class="input-box"><label>الجولة 1 (أقصى تكرار) <span class="en">Set 1 (Max Reps)</span></label><input type="number" id="pushSet1" min="1" required placeholder="أقصى عدد"></div>
+                    <div class="input-box"><label>الجولة 2 (تكرار فعلي) <span class="en">Set 2 (Reps)</span></label><input type="number" id="pushSet2" min="0" required placeholder="تكرارات الجولة 2"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="exercise-card">
+            <div class="exercise-preview-box">
+                <img id="exImg4" src="https://images.unsplash.com/photo-1566241142559-40e1dab266c6?auto=format&fit=crop&w=400&q=80" alt="Squat Hold">
+            </div>
+            <div class="exercise-details">
+                <h4>4. الثبات الاستاتيكي (ثبات الاسكوات 90 درجة) <span class="target-tag">Target: 120s Total (60s/set)</span></h4>
+                <p class="sub-en">Static Isometric Squat Hold Test (90°)</p>
+                <div class="exercise-inputs">
+                    <div class="input-box"><label>الجولة 1 (ثواني) <span class="en">Set 1 (s)</span></label><input type="number" id="squatSet1" max="60" min="0" required placeholder="أقصى 60 ثانية"></div>
+                    <div class="input-box"><label>الجولة 2 (ثواني) <span class="en">Set 2 (s)</span></label><input type="number" id="squatSet2" max="60" min="0" required placeholder="أقصى 60 ثانية"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="exercise-card">
+            <div class="exercise-preview-box">
+                <img id="exImg5" src="https://images.unsplash.com/photo-1599058945522-28d584b6f0ff?auto=format&fit=crop&w=400&q=80" alt="Sit-Up Test">
+            </div>
+            <div class="exercise-details">
+                <h4>5. قوة وتحمل عضلات البطن (تمرين Sit-Up) <span class="target-tag">Target: Set 1 >= 15 Reps</span></h4>
+                <p class="sub-en">Abdominal Sit-Up Endurance Test</p>
+                <div class="exercise-inputs">
+                    <div class="input-box"><label>الجولة 1 (أقصى تكرار >=15) <span class="en">Set 1 (Max Reps)</span></label><input type="number" id="sitSet1" min="1" required placeholder="أقصى عدد"></div>
+                    <div class="input-box"><label>الجولة 2 (تكرار فعلي) <span class="en">Set 2 (Reps)</span></label><input type="number" id="sitSet2" min="0" required placeholder="تكرارات الجولة 2"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="exercise-card">
+            <div class="exercise-preview-box">
+                <img id="exImg6" src="https://images.unsplash.com/photo-1434682881908-b43d0467b798?auto=format&fit=crop&w=400&q=80" alt="Walkout Test">
+            </div>
+            <div class="exercise-details">
+                <h4>6. كفاءة وقدرة عضلة القلب (تمرين Walkout) <span class="target-tag">Target Set 1: 12-15 Reps</span></h4>
+                <p class="sub-en">Cardiac Hand Walkout Cardiovascular Test</p>
+                <div class="exercise-inputs">
+                    <div class="input-box"><label>الجولة 1 (تكرار 12-15) <span class="en">Set 1 (12-15 Reps)</span></label><input type="number" id="cardiacSet1" max="15" min="0" required placeholder="من 12 إلى 15"></div>
+                    <div class="input-box"><label>الجولة 2 (تكرارات) <span class="en">Set 2 (Reps)</span></label><input type="number" id="cardiacSet2" max="15" min="0" required placeholder="الجولة 2"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="exercise-card">
+            <div class="exercise-preview-box">
+                <img id="exImg7" src="https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?auto=format&fit=crop&w=400&q=80" alt="Cuban Press">
+            </div>
+            <div class="exercise-details">
+                <h4>7. الذاكرة العضلية والاتزان (Dumbbell Cuban Press) <span class="target-tag">Target: 24 Reps Total (12/set)</span></h4>
+                <p class="sub-en">Muscle Memory & Shoulder Rotator Coordination Test</p>
+                <div class="exercise-inputs">
+                    <div class="input-box"><label>الجولة 1 (تكرارات) <span class="en">Set 1 (12 Reps)</span></label><input type="number" id="memSet1" max="12" min="0" required placeholder="أقصى 12"></div>
+                    <div class="input-box"><label>الجولة 2 (تكرارات) <span class="en">Set 2 (12 Reps)</span></label><input type="number" id="memSet2" max="12" min="0" required placeholder="أقصى 12"></div>
+                </div>
+            </div>
+        </div>
+
+        <button type="submit" class="btn-submit">
+            <i class="fa-solid fa-file-contract"></i> استخراج التقرير الشامل والعمر البيولوجي | Generate Assessment Report
+        </button>
+    </form>
+
+    <div class="result-container" id="resultArea">
+        <div class="result-card">
+            <h3>B FIT ASSESSMENT CLUB REPORT</h3>
+            <p id="reportHeaderInfo" style="color: #94a3b8; font-weight: 600; font-size: 14px; margin-top: 5px;"></p>
+
+            <div class="score-display-box">
+                <div class="score-metric-card">
+                    <div class="label">مستوى اللياقة الإجمالي | Fitness Score</div>
+                    <div class="value" id="overallScoreVal">0<span>%</span></div>
+                </div>
+                <div class="score-metric-card">
+                    <div class="label">العمر البيولوجي المقدر | Biological Age</div>
+                    <div class="value" id="bioAgeVal">-- <span>سنة</span></div>
+                </div>
+            </div>
+
+            <div id="bioAgeStatusBadge" class="bio-age-highlight bio-equal">--</div>
+
+            <div class="report-summary-text" id="detailedReportText"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const MALE_IMAGES = [
+        "https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=400&q=80",
+        "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&w=400&q=80",
+        "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&w=400&q=80",
+        "https://images.unsplash.com/photo-1566241142559-40e1dab266c6?auto=format&fit=crop&w=400&q=80",
+        "https://images.unsplash.com/photo-1599058945522-28d584b6f0ff?auto=format&fit=crop&w=400&q=80",
+        "https://images.unsplash.com/photo-1434682881908-b43d0467b798?auto=format&fit=crop&w=400&q=80",
+        "https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?auto=format&fit=crop&w=400&q=80"
+    ];
+
+    const FEMALE_IMAGES = [
+        "https://images.unsplash.com/photo-1518310383802-640c2de311b2?auto=format&fit=crop&w=400&q=80",
+        "https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=400&q=80",
+        "https://images.unsplash.com/photo-1594381898411-846e7d193883?auto=format&fit=crop&w=400&q=80",
+        "https://images.unsplash.com/photo-1574680096145-d05b474e2155?auto=format&fit=crop&w=400&q=80",
+        "https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=400&q=80",
+        "https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&w=400&q=80",
+        "https://images.unsplash.com/photo-1538805060514-97d9cc17730c?auto=format&fit=crop&w=400&q=80"
+    ];
+
+    function updateGenderTheme() {
+        const gender = document.getElementById('genderSelect').value;
+        const images = gender === 'female' ? FEMALE_IMAGES : MALE_IMAGES;
+        document.documentElement.style.setProperty('--accent-gender', gender === 'female' ? '#f472b6' : '#38bdf8');
+
+        for (let i = 1; i <= 7; i++) {
+            const imgEl = document.getElementById('exImg' + i);
+            if (imgEl) imgEl.src = images[i - 1];
+        }
+    }
+
+    function setOcrStatus(color, iconClass, message) {
+        const el = document.getElementById('ocrStatusMsg');
+        el.style.display = 'block';
+        el.style.color = color;
+        el.innerHTML = '<i class="' + iconClass + '"></i> ' + message;
+    }
+
+    // Direct Preprocessor Engine to Prevent Freeze/Freeze Crashes
+    function processInBodyOCR(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        setOcrStatus('#ff6b00', 'fa-solid fa-spinner fa-spin', 'جاري تحليل تقرير InBody 770... | Processing InBody...');
+
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const img = new Image();
+            img.onload = async function() {
+                try {
+                    const canvas = document.createElement('canvas');
+                    canvas.width = 1600;
+                    canvas.height = Math.round(img.height * (1600 / img.width));
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+                    // Image Contrast Adjustment
+                    const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                    const d = imgData.data;
+                    for (let i = 0; i < d.length; i += 4) {
+                        let g = 0.299 * d[i] + 0.587 * d[i + 1] + 0.114 * d[i + 2];
+                        g = g < 140 ? 0 : 255;
+                        d[i] = d[i + 1] = d[i + 2] = g;
+                    }
+                    ctx.putImageData(imgData, 0, 0);
+
+                    // Execute OCR
+                    const worker = await Tesseract.createWorker('eng');
+                    const ret = await worker.recognize(canvas.toDataURL('image/png'));
+                    const text = ret.data.text || '';
+                    await worker.terminate();
+
+                    function extractVal(patterns, min, max) {
+                        for (const p of patterns) {
+                            const m = text.match(p);
+                            if (m && m[1]) {
+                                const v = parseFloat(m[1]);
+                                if (v >= min && v <= max) return v;
+                            }
+                        }
+                        return null;
+                    }
+
+                    const parsed = {
+                        age: extractVal([/Age\s*[:\s]*(\d{2})/i, /\bAge\b\D{0,10}(\d{2})\b/i], 12, 90),
+                        weight: extractVal([/Weight\D{0,15}(\d{2,3}\.\d)/i, /\b(\d{2,3}\.\d)\s*kg\b/i], 30, 250),
+                        height: extractVal([/Height\D{0,15}(\d{3}(?:\.\d)?)/i, /\b(\d{3}(?:\.\d)?)\s*cm\b/i], 100, 230),
+                        smm: extractVal([/SMM\D{0,15}(\d{2}\.\d)/i, /Skeletal\s*Muscle\s*Mass\D{0,15}(\d{2}\.\d)/i], 10, 80),
+                        pbf: extractVal([/PBF\D{0,15}(\d{1,2}\.\d)/i, /Percent\s*Body\s*Fat\D{0,15}(\d{1,2}\.\d)/i], 3, 60)
+                    };
+
+                    const fields = { age: 'realAge', weight: 'weightInput', height: 'heightInput', smm: 'smmInput', pbf: 'fatInput' };
+                    let count = 0;
+                    for (const key in fields) {
+                        if (parsed[key] !== null) {
+                            document.getElementById(fields[key]).value = parsed[key];
+                            count++;
+                        }
+                    }
+
+                    if (/\bFemale\b/i.test(text)) document.getElementById('genderSelect').value = 'female';
+                    else if (/\bMale\b/i.test(text)) document.getElementById('genderSelect').value = 'male';
+                    updateGenderTheme();
+
+                    if (count > 0) {
+                        setOcrStatus('#10b981', 'fa-solid fa-check', 'تم استخراج وتسهيل البيانات من التقرير بنجاح! | Data extracted successfully.');
+                    } else {
+                        setOcrStatus('#f59e0b', 'fa-solid fa-triangle-exclamation', 'تم رفع الملف، يرجى استكمال البيانات يدوياً للتأكد.');
+                    }
+                } catch (err) {
+                    setOcrStatus('#ef4444', 'fa-solid fa-circle-xmark', 'حدث خروج مفاجئ، يرجى كتابة البيانات يدوياً.');
+                }
+            };
+            img.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+    }
+
+    function num(id, fallback) {
+        const v = parseFloat(document.getElementById(id).value);
+        return Number.isFinite(v) ? v : fallback;
+    }
+
+    function calculateAssessment(e) {
+        e.preventDefault();
+
+        const coach = document.getElementById('coachName').value.trim();
+        const client = document.getElementById('clientName').value.trim();
+        const gender = document.getElementById('genderSelect').value;
+        const realAge = Math.round(num('realAge', 30));
+        const weight = num('weightInput', 70);
+        const fat = num('fatInput', 20);
+        const smm = num('smmInput', 30);
+
+        const flags = [];
+        const flagLabels = {
+            hq1: 'عملية جراحية خلال 3-5 سنوات',
+            hq2: 'مشاكل عظام أو مفاصل تعوق الحركة',
+            hq3: 'خشونة مفاصل أو شرائح ومسامير',
+            hq4: 'سكري النوع الأول',
+            hq5: 'ضغط دم مرتفع أو أمراض قلب'
+        };
+        for (const k in flagLabels) {
+            if (document.querySelector('input[name="' + k + '"]:checked').value === 'yes') flags.push(flagLabels[k]);
+        }
+        const needsMedicalClearance = flags.includes(flagLabels.hq4) || flags.includes(flagLabels.hq5);
+
+        const coordScore = Math.min(((num('coordR', 0) + num('coordL', 0)) / 20) * 100, 100);
+        const balScore = Math.min(((num('balSet1', 0) + num('balSet2', 0)) / 120) * 100, 100);
+
+        const p1 = Math.max(num('pushSet1', 1), 1);
+        const pushScore = Math.min((num('pushSet2', 0) / (p1 * 0.70)) * 100, 100);
+
+        const squatScore = Math.min(((num('squatSet1', 0) + num('squatSet2', 0)) / 120) * 100, 100);
+
+        const s1 = Math.max(num('sitSet1', 1), 1);
+        const sitScore = Math.min((num('sitSet2', 0) / (s1 * 0.70)) * 100, 100);
+
+        const cardiacScore = Math.min(((num('cardiacSet1', 0) + num('cardiacSet2', 0)) / 30) * 100, 100);
+        const memScore = Math.min(((num('memSet1', 0) + num('memSet2', 0)) / 24) * 100, 100);
+
+        const testAverage = (coordScore + balScore + pushScore + squatScore + sitScore + cardiacScore + memScore) / 7;
+
+        const smmPercentage = (smm / weight) * 100;
+        const bodyFatScore = gender === 'male'
+            ? (fat <= 18 ? 100 : Math.max(0, 100 - (fat - 18) * 3))
+            : (fat <= 25 ? 100 : Math.max(0, 100 - (fat - 25) * 3));
+        const muscleScore = smmPercentage >= 40 ? 100 : (smmPercentage / 40) * 100;
+
+        const fitnessScore = Math.round((testAverage * 0.7) + (bodyFatScore * 0.15) + (muscleScore * 0.15));
+
+        const ageAdjustment = Math.round((fitnessScore - 70) / 7);
+        const biologicalAge = Math.max(12, realAge - ageAdjustment);
+
+        document.getElementById('reportHeaderInfo').innerText =
+            'المشترك: ' + client + ' (' + (gender === 'male' ? 'ذكر' : 'أنثى') + ') | العمر الحقيقي: ' + realAge +
+            ' | الكوتش: ' + coach + ' | الوزن: ' + weight + 'كجم | الدهون: ' + fat + '% | العضلات: ' + smm + 'كجم';
+        document.getElementById('overallScoreVal').innerHTML = fitnessScore + '<span>%</span>';
+        document.getElementById('bioAgeVal').innerHTML = biologicalAge + ' <span>سنة</span>';
+
+        const badge = document.getElementById('bioAgeStatusBadge');
+        let summaryHTML = '';
+
+        if (biologicalAge < realAge) {
+            badge.className = 'bio-age-highlight bio-younger';
+            badge.innerText = '🔥 ممتاز! عمرك البيولوجي أصغر من عمرك الحقيقي بمقدار (' + (realAge - biologicalAge) + ') سنوات.';
+            summaryHTML += 'أداء بدني وتكوين جسماني ممتاز. انخفاض نسبة الدهون وجودة الكتلة العضلية ساهمت في رفع كفاءة نتيجتك العامة.';
+        } else if (biologicalAge === realAge) {
+            badge.className = 'bio-age-highlight bio-equal';
+            badge.innerText = '👍 متطابق! عمرك البيولوجي يطابق عمرك الحقيقي (' + realAge + ' سنة).';
+            summaryHTML += 'مستوى متزن ومناسب للبدء في برنامج تدريبي متطور لرفع الكتلة العضلية وتقليل الدهون للوصول لنتائج أفضل في التقييمات القادمة.';
+        } else {
+            badge.className = 'bio-age-highlight bio-older';
+            badge.innerText = '⚠️ تنبيه: عمرك البيولوجي أعلى من عمرك الحقيقي بمقدار (' + (biologicalAge - realAge) + ') سنوات.';
+            summaryHTML += 'تشير المدخلات إلى وجود تراجع في بعض عناصر التحمل العضلي أو ارتفاع في الدهون. يُوصى ببرنامج تدريبي مخصص مع الكوتش.';
+        }
+
+        if (flags.length > 0) {
+            summaryHTML += '<br><br><strong>الملاحظات الصحية (' + flags.length + '):</strong><br>';
+            summaryHTML += flags.map(f => '• ' + f).join('<br>');
+            summaryHTML += '<br>يرجى تكييف التمارين بناءً عليها.';
+            if (needsMedicalClearance) {
+                summaryHTML += '<br><strong style="color:#f87171;">يُنصح بالحصول على موافقة طبية قبل بدء البرنامج التدريبي.</strong>';
+            }
+        }
+
+        document.getElementById('detailedReportText').innerHTML = summaryHTML;
+        const area = document.getElementById('resultArea');
+        area.style.display = 'block';
+        area.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    window.addEventListener('load', updateGenderTheme);
+</script>
+
+</body>
+</html>
