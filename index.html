@@ -9,9 +9,6 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;600;700;900&family=Montserrat:wght@400;600;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- Tesseract Engine v5 -->
-    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 
     <style>
         :root {
@@ -240,13 +237,13 @@
     <form id="bfitAssessmentForm" onsubmit="calculateAssessment(event)">
 
         <div class="section-header">
-            <h2><i class="fa-solid fa-id-card"></i> 1. البيانات العامة والإنبودي (InBody 770) | Member & InBody Profile</h2>
+            <h2><i class="fa-solid fa-id-card"></i> 1. البيانات العامة والإنبودي (InBody 770 Vision AI) | Member & InBody Profile</h2>
         </div>
 
         <div class="form-grid-4">
             <div class="input-box" style="grid-column: span 2;">
-                <label>إرفاق تقرير InBody 770 <span class="en">InBody 770 Scan</span></label>
-                <input type="file" id="inbodyFile" accept="image/*" onchange="processInBodyOCR(event)">
+                <label>إرفاق تقرير InBody 770 (مدعوم بـ Gemini AI) <span class="en">Gemini Vision Scan</span></label>
+                <input type="file" id="inbodyFile" accept="image/*" onchange="processInBodyWithGemini(event)">
                 <div id="ocrStatusMsg" class="ocr-status"></div>
             </div>
             <div class="input-box">
@@ -336,98 +333,4 @@
         </div>
 
         <div class="section-header">
-            <h2><i class="fa-solid fa-stopwatch"></i> 3. اختبارات التقييم البدني | Physical Assessment Tests</h2>
-        </div>
-
-        <!-- 1. Single-Leg Stance Balance Test -->
-        <div class="exercise-card">
-            <div class="exercise-avatar-box">
-                <i class="fa-solid fa-shoe-prints" id="avatar1"></i>
-                <span class="gender-badge" id="badge1">MALE</span>
-            </div>
-            <div class="exercise-details">
-                <h4>1. التوافق العصبي (إغلاق العينين والوقوف على قدم واحدة) <span class="target-tag">Target: 20s Total (10s/leg)</span></h4>
-                <p class="sub-en">Single-Leg Stance Balance Test (Closed Eyes)</p>
-                <div class="exercise-inputs">
-                    <div class="input-box"><label>القدم اليمنى (ثواني) <span class="en">Right Leg (s)</span></label><input type="number" id="coordR" max="10" min="0" placeholder="أقصى 10" required></div>
-                    <div class="input-box"><label>القدم اليسرى (ثواني) <span class="en">Left Leg (s)</span></label><input type="number" id="coordL" max="10" min="0" placeholder="أقصى 10" required></div>
-                </div>
-            </div>
-        </div>
-
-        <!-- 2. Static Superman Core & Back Balance Test -->
-        <div class="exercise-card">
-            <div class="exercise-avatar-box">
-                <i class="fa-solid fa-child-reaching" id="avatar2"></i>
-                <span class="gender-badge" id="badge2">MALE</span>
-            </div>
-            <div class="exercise-details">
-                <h4>2. التوازن الاستاتيكي (تمرين سوبرمان الثابت) <span class="target-tag">Target: 120s Total (60s/set)</span></h4>
-                <p class="sub-en">Static Superman Core & Back Balance Test</p>
-                <div class="exercise-inputs">
-                    <div class="input-box"><label>الجولة 1 (ثواني) <span class="en">Set 1 (s)</span></label><input type="number" id="balSet1" max="60" min="0" placeholder="أقصى 60" required></div>
-                    <div class="input-box"><label>الجولة 2 (ثواني) <span class="en">Set 2 (s)</span></label><input type="number" id="balSet2" max="60" min="0" placeholder="أقصى 60" required></div>
-                </div>
-            </div>
-        </div>
-
-        <!-- 3. Push-Up Upper Body Muscular Endurance Test -->
-        <div class="exercise-card">
-            <div class="exercise-avatar-box">
-                <i class="fa-solid fa-hand-fist" id="avatar3"></i>
-                <span class="gender-badge" id="badge3">MALE</span>
-            </div>
-            <div class="exercise-details">
-                <h4>3. التحمل العضلي (تمرين الضغط) <span class="target-tag">Target: Set 2 >= 70% of Set 1</span></h4>
-                <p class="sub-en">Push-Up Upper Body Muscular Endurance Test</p>
-                <div class="exercise-inputs">
-                    <div class="input-box"><label>الجولة 1 (أقصى تكرار) <span class="en">Set 1 (Max Reps)</span></label><input type="number" id="pushSet1" min="1" required placeholder="أقصى عدد"></div>
-                    <div class="input-box"><label>الجولة 2 (تكرار فعلي) <span class="en">Set 2 (Reps)</span></label><input type="number" id="pushSet2" min="0" required placeholder="تكرارات الجولة 2"></div>
-                </div>
-            </div>
-        </div>
-
-        <!-- 4. Static Isometric Squat Hold Test (90°) -->
-        <div class="exercise-card">
-            <div class="exercise-avatar-box">
-                <i class="fa-solid fa-chair" id="avatar4"></i>
-                <span class="gender-badge" id="badge4">MALE</span>
-            </div>
-            <div class="exercise-details">
-                <h4>4. الثبات الاستاتيكي (ثبات الاسكوات 90 درجة) <span class="target-tag">Target: 120s Total (60s/set)</span></h4>
-                <p class="sub-en">Static Isometric Squat Hold Test (90°)</p>
-                <div class="exercise-inputs">
-                    <div class="input-box"><label>الجولة 1 (ثواني) <span class="en">Set 1 (s)</span></label><input type="number" id="squatSet1" max="60" min="0" required placeholder="أقصى 60 ثانية"></div>
-                    <div class="input-box"><label>الجولة 2 (ثواني) <span class="en">Set 2 (s)</span></label><input type="number" id="squatSet2" max="60" min="0" required placeholder="أقصى 60 ثانية"></div>
-                </div>
-            </div>
-        </div>
-
-        <!-- 5. Abdominal Sit-Up Endurance Test -->
-        <div class="exercise-card">
-            <div class="exercise-avatar-box">
-                <i class="fa-solid fa-fire" id="avatar5"></i>
-                <span class="gender-badge" id="badge5">MALE</span>
-            </div>
-            <div class="exercise-details">
-                <h4>5. قوة وتحمل عضلات البطن (تمرين Sit-Up) <span class="target-tag">Target: Set 1 >= 15 Reps</span></h4>
-                <p class="sub-en">Abdominal Sit-Up Endurance Test</p>
-                <div class="exercise-inputs">
-                    <div class="input-box"><label>الجولة 1 (أقصى تكرار >=15) <span class="en">Set 1 (Max Reps)</span></label><input type="number" id="sitSet1" min="1" required placeholder="أقصى عدد"></div>
-                    <div class="input-box"><label>الجولة 2 (تكرار فعلي) <span class="en">Set 2 (Reps)</span></label><input type="number" id="sitSet2" min="0" required placeholder="تكرارات الجولة 2"></div>
-                </div>
-            </div>
-        </div>
-
-        <!-- 6. Cardiac Hand Walkout Cardiovascular Test -->
-        <div class="exercise-card">
-            <div class="exercise-avatar-box">
-                <i class="fa-solid fa-heart-pulse" id="avatar6"></i>
-                <span class="gender-badge" id="badge6">MALE</span>
-            </div>
-            <div class="exercise-details">
-                <h4>6. كفاءة وقدرة عضلة القلب (تمرين Walkout) <span class="target-tag">Target Set 1: 12-15 Reps</span></h4>
-                <p class="sub-en">Cardiac Hand Walkout Cardiovascular Test</p>
-                <div class="exercise-inputs">
-                    <div class="input-box"><label>الجولة 1 (تكرار 12-15) <span class="en">Set 1 (12-15 Reps)</span></label><input type="number" id="cardiacSet1" max="15" min="0" required placeholder="من 12 إلى 15"></div>
-                    <div class="input-box"><label>الجولة 2 (تكرارات) <span class="en">Set 2 (Reps)</span></label><input type="number" id="cardiacSet2" max="15" min="0" required placeholder="الجولة
+            <h2><i class="fa-solid fa-stopwatch"></i> 3. اختبارات التقييم البدني | Physical Assessment Tests
