@@ -3,22 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>B Fit - Real Sports Health & WOW Assessment</title>
+    <title>B FIT ASSESSMENT CLUB</title>
     <!-- Google Fonts & Font Awesome -->
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;600;700;900&family=Montserrat:wght@400;600;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
         :root {
-            /* B Fit Light Theme */
-            --bg-main: #f8fafc;
-            --card-bg: #ffffff;
+            /* B Fit Brand Colors */
+            --bg-main: #121820;
+            --card-bg: #1e2630;
+            --card-inner: #27313e;
             --primary-orange: #ff6b00;
-            --primary-navy: #0f172a;
-            --text-dark: #1e293b;
-            --text-muted: #64748b;
-            --border-light: #e2e8f0;
-            --accent-soft-blue: #f1f5f9;
+            --primary-orange-hover: #e05e00;
+            --text-white: #ffffff;
+            --text-muted: #94a3b8;
+            --border-color: #334155;
             --success-green: #10b981;
             --warning-red: #ef4444;
         }
@@ -28,29 +28,31 @@
             margin: 0;
             padding: 0;
             font-family: 'Tajawal', 'Montserrat', sans-serif;
-            transition: all 0.2s ease;
+            transition: all 0.25s ease;
         }
 
         body {
             background-color: var(--bg-main);
-            color: var(--text-dark);
+            color: var(--text-white);
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 40px 20px;
+            padding: 30px 15px;
             min-height: 100vh;
+            background-image: radial-gradient(circle at top right, rgba(255, 107, 0, 0.08), transparent 40%);
         }
 
         .assessment-container {
             width: 100%;
             max-width: 1000px;
             background: var(--card-bg);
-            border-radius: 20px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.06);
+            border-radius: 24px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
             padding: 40px;
-            border: 1px solid var(--border-light);
+            border: 1px solid var(--border-color);
         }
 
+        /* Brand Header */
         .brand-header {
             display: flex;
             justify-content: space-between;
@@ -63,56 +65,60 @@
         .brand-logo {
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 18px;
         }
 
         .brand-logo-icon {
-            width: 55px;
-            height: 55px;
+            width: 65px;
+            height: 65px;
             background: linear-gradient(135deg, var(--primary-orange), #ff8800);
-            border-radius: 14px;
+            border-radius: 18px;
             display: flex;
             justify-content: center;
             align-items: center;
             color: #fff;
-            font-size: 28px;
-            box-shadow: 0 6px 15px rgba(255, 107, 0, 0.3);
+            font-size: 32px;
+            box-shadow: 0 8px 25px rgba(255, 107, 0, 0.4);
         }
 
         .brand-titles h1 {
-            font-size: 26px;
+            font-size: 28px;
             font-weight: 900;
-            color: var(--primary-navy);
+            color: #fff;
+            letter-spacing: 1px;
         }
 
         .brand-titles p {
             font-size: 14px;
-            color: var(--text-muted);
-            font-weight: 600;
+            color: var(--primary-orange);
+            font-weight: 700;
+            font-family: 'Montserrat', sans-serif;
         }
 
+        /* Section Title */
         .section-header {
-            background: var(--accent-soft-blue);
-            padding: 12px 20px;
-            border-radius: 12px;
-            margin: 30px 0 20px 0;
+            background: var(--card-inner);
+            padding: 14px 22px;
+            border-radius: 14px;
+            margin: 35px 0 20px 0;
             display: flex;
             align-items: center;
-            border-right: 5px solid var(--primary-orange);
+            border-right: 6px solid var(--primary-orange);
         }
 
         .section-header h2 {
             font-size: 18px;
-            color: var(--primary-navy);
+            color: #fff;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
             font-weight: 900;
         }
 
-        .form-grid-3 {
+        /* Form Grid */
+        .form-grid-4 {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 18px;
             margin-bottom: 15px;
         }
@@ -120,13 +126,13 @@
         .input-box {
             display: flex;
             flex-direction: column;
-            gap: 6px;
+            gap: 8px;
         }
 
         .input-box label {
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 700;
-            color: var(--primary-navy);
+            color: #e2e8f0;
             display: flex;
             justify-content: space-between;
         }
@@ -138,43 +144,39 @@
         }
 
         .input-box input, .input-box select {
-            padding: 12px 15px;
-            border: 2px solid var(--border-light);
-            border-radius: 10px;
-            font-size: 15px;
-            background: #fafbfc;
+            padding: 12px 16px;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            font-size: 14px;
+            background: var(--bg-main);
+            color: #fff;
             outline: none;
         }
 
-        .input-box input:focus {
+        .input-box input:focus, .input-box select:focus {
             border-color: var(--primary-orange);
-            background: #fff;
+            box-shadow: 0 0 0 4px rgba(255, 107, 0, 0.15);
         }
 
-        /* Health Row Side-by-Side */
+        /* Health Questions */
         .health-question-row {
             display: grid;
             grid-template-columns: 1fr 140px 1fr;
             align-items: center;
-            background: #fafbfc;
-            border: 1px solid var(--border-light);
-            padding: 14px 18px;
+            background: var(--card-inner);
+            border: 1px solid var(--border-color);
+            padding: 14px 20px;
             border-radius: 12px;
             margin-bottom: 10px;
             gap: 15px;
         }
 
-        .health-question-row:hover {
-            border-color: var(--primary-orange);
-            background: #fff;
-        }
-
-        .q-ar { text-align: right; font-size: 14px; font-weight: 700; color: var(--text-dark); }
+        .q-ar { text-align: right; font-size: 14px; font-weight: 700; color: #fff; }
         .q-en { text-align: left; font-size: 13px; font-family: 'Montserrat', sans-serif; font-weight: 600; color: var(--text-muted); direction: ltr; }
-        
+
         .radio-btn-group {
             display: flex;
-            background: var(--border-light);
+            background: var(--bg-main);
             border-radius: 8px;
             padding: 3px;
         }
@@ -187,18 +189,43 @@
         .radio-btn-group input[type="radio"]:checked + label.yes-label { background: var(--warning-red); color: #fff; }
         .radio-btn-group input[type="radio"]:checked + label.no-label { background: var(--success-green); color: #fff; }
 
-        /* Exercise Cards */
+        /* Exercise Card Layout */
         .exercise-card {
-            background: #fafbfc;
-            border: 1px solid var(--border-light);
-            border-radius: 12px;
-            padding: 18px;
-            margin-bottom: 14px;
+            background: var(--card-inner);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 18px;
+            display: grid;
+            grid-template-columns: 120px 1fr;
+            gap: 20px;
+            align-items: center;
         }
 
-        .exercise-card h4 {
-            color: var(--primary-navy);
-            font-size: 15px;
+        .exercise-thumb {
+            width: 120px;
+            height: 100px;
+            background: var(--bg-main);
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border: 1px dashed var(--primary-orange);
+            color: var(--primary-orange);
+            font-size: 28px;
+        }
+
+        .exercise-thumb span {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-top: 6px;
+            font-weight: 700;
+        }
+
+        .exercise-details h4 {
+            color: #fff;
+            font-size: 16px;
             margin-bottom: 12px;
             display: flex;
             justify-content: space-between;
@@ -206,90 +233,84 @@
             flex-wrap: wrap;
         }
 
-        .exercise-card h4 span {
+        .exercise-details h4 span.target-tag {
             font-size: 12px;
-            background: #e2e8f0;
-            padding: 3px 8px;
+            background: rgba(255, 107, 0, 0.15);
+            color: var(--primary-orange);
+            padding: 4px 10px;
             border-radius: 6px;
-            color: var(--text-dark);
-            font-weight: 600;
+            font-weight: 700;
         }
 
         .exercise-inputs {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
             gap: 15px;
         }
 
         .btn-submit {
             width: 100%;
-            background: linear-gradient(135deg, var(--primary-orange), #e05e00);
+            background: linear-gradient(135deg, var(--primary-orange), var(--primary-orange-hover));
             color: #fff;
-            padding: 16px;
+            padding: 18px;
             border: none;
-            border-radius: 12px;
-            font-size: 18px;
+            border-radius: 14px;
+            font-size: 19px;
             font-weight: 900;
             cursor: pointer;
-            margin-top: 30px;
-            box-shadow: 0 8px 20px rgba(255, 107, 0, 0.25);
+            margin-top: 35px;
+            box-shadow: 0 10px 25px rgba(255, 107, 0, 0.35);
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
         }
 
         .btn-submit:hover {
             transform: translateY(-2px);
-            box-shadow: 0 12px 25px rgba(255, 107, 0, 0.35);
+            box-shadow: 0 14px 30px rgba(255, 107, 0, 0.45);
         }
 
         /* Results Display */
         .result-container {
             display: none;
-            margin-top: 40px;
-            border-top: 2px dashed var(--border-light);
-            padding-top: 30px;
+            margin-top: 45px;
+            border-top: 2px dashed var(--border-color);
+            padding-top: 35px;
         }
 
         .result-card {
-            background: linear-gradient(135deg, #0f172a, #1e293b);
+            background: linear-gradient(135deg, #18222d, #0f1720);
             color: #fff;
-            border-radius: 16px;
-            padding: 30px;
+            border-radius: 20px;
+            padding: 35px;
             text-align: center;
-            box-shadow: 0 12px 30px rgba(15, 23, 42, 0.2);
-        }
-
-        .result-card h3 {
-            color: var(--primary-orange);
-            font-size: 22px;
-            margin-bottom: 5px;
-            font-weight: 900;
+            border: 1px solid var(--primary-orange);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
         }
 
         .score-display-box {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            margin: 20px 0;
+            gap: 20px;
+            margin: 25px 0;
         }
 
         .score-metric-card {
-            background: rgba(255, 255, 255, 0.05);
-            padding: 18px;
-            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.04);
+            padding: 20px;
+            border-radius: 14px;
             border: 1px solid rgba(255, 255, 255, 0.08);
         }
 
         .score-metric-card .label { font-size: 13px; color: #94a3b8; margin-bottom: 5px; }
-        .score-metric-card .value { font-size: 32px; font-weight: 900; color: #fff; }
+        .score-metric-card .value { font-size: 34px; font-weight: 900; color: #fff; }
         .score-metric-card .value span { color: var(--primary-orange); }
 
         .bio-age-highlight {
             font-size: 18px;
             font-weight: 700;
-            padding: 12px 20px;
+            padding: 12px 22px;
             border-radius: 12px;
             display: inline-block;
             margin-top: 10px;
@@ -300,327 +321,128 @@
         .bio-equal { background: rgba(245, 158, 11, 0.2); color: #fbbf24; border: 1px solid #f59e0b; }
 
         .report-summary-text {
-            font-size: 14px;
+            font-size: 15px;
             line-height: 1.8;
             color: #cbd5e1;
-            margin-top: 20px;
+            margin-top: 25px;
             text-align: right;
-            background: rgba(0, 0, 0, 0.2);
-            padding: 18px;
-            border-radius: 10px;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 20px;
+            border-radius: 12px;
             border-right: 4px solid var(--primary-orange);
         }
 
         @media (max-width: 768px) {
+            .exercise-card { grid-template-columns: 1fr; }
+            .exercise-thumb { width: 100%; height: 80px; }
             .health-question-row { grid-template-columns: 1fr; text-align: center; }
-            .q-ar, .q-en { text-align: center; }
         }
     </style>
 </head>
 <body>
 
 <div class="assessment-container">
+    
+    <!-- Brand Header -->
     <div class="brand-header">
         <div class="brand-logo">
             <div class="brand-logo-icon">
-                <i class="fa-solid fa-heart-pulse"></i>
+                <i class="fa-solid fa-bolt"></i>
             </div>
             <div class="brand-titles">
-                <h1>B FIT CLUBS</h1>
-                <p>استبيان الوضع الصحي وتقييم اللياقة والعمر البيولوجي (Sports Readiness & Bio-Age)</p>
+                <h1>B FIT ASSESSMENT CLUB</h1>
+                <p>PHYSICAL PERFORMANCE & BIOLOGICAL AGE ASSESSMENT</p>
             </div>
         </div>
     </div>
 
-    <form id="assessmentForm" onsubmit="calculateAssessment(event)">
+    <form id="bfitAssessmentForm" onsubmit="calculateAssessment(event)">
         
-        <!-- General Member Info -->
+        <!-- General Member Profile -->
         <div class="section-header">
-            <h2><i class="fa-solid fa-user-tie"></i> البيانات العامة | General Info</h2>
+            <h2><i class="fa-solid fa-id-card"></i> 1. البيانات العامة والأنبوادي | Member & InBody Profile</h2>
         </div>
-        <div class="form-grid-3">
+
+        <div class="form-grid-4">
             <div class="input-box">
                 <label>اسم المدرب المختص <span class="en">Coach Name</span></label>
                 <input type="text" id="coachName" required placeholder="اسم المدرب">
             </div>
             <div class="input-box">
-                <label>اسم العميل <span class="en">Client Name</span></label>
-                <input type="text" id="clientName" required placeholder="اسم العميل بالكامل">
+                <label>اسم المشترك <span class="en">Client Name</span></label>
+                <input type="text" id="clientName" required placeholder="اسم المشترك">
             </div>
             <div class="input-box">
-                <label>العمر الحقيقي <span class="en">Chronological Age</span></label>
-                <input type="number" id="realAge" required min="12" max="90" placeholder="مثال: 30">
+                <label>الجنس <span class="en">Gender</span></label>
+                <select id="genderSelect" required>
+                    <option value="male">ذكر / Male</option>
+                    <option value="female">أنثى / Female</option>
+                </select>
+            </div>
+            <div class="input-box">
+                <label>العمر الحقيقي <span class="en">Age</span></label>
+                <input type="number" id="realAge" required min="12" max="90" placeholder="سنوات">
+            </div>
+            <div class="input-box">
+                <label>الوزن (كجم) <span class="en">Weight (kg)</span></label>
+                <input type="number" id="weightInput" step="0.1" required placeholder="مثال: 75.5">
+            </div>
+            <div class="input-box">
+                <label>الطول (سم) <span class="en">Height (cm)</span></label>
+                <input type="number" id="heightInput" required placeholder="مثال: 175">
+            </div>
+            <div class="input-box">
+                <label>نسبة الدهون (%) <span class="en">Body Fat %</span></label>
+                <input type="number" id="fatInput" step="0.1" required placeholder="مثال: 18.5">
+            </div>
+            <div class="input-box">
+                <label>إرفاق تقرير الإن بودي <span class="en">Upload InBody</span></label>
+                <input type="file" id="inbodyFile" accept="image/*,application/pdf">
             </div>
         </div>
 
-        <!-- Real Sports Health Questionnaire -->
+        <!-- Health History Questionnaire -->
         <div class="section-header">
-            <h2><i class="fa-solid fa-notes-medical"></i> 1. استبيان الوضع الصحي الرياضي | Health History</h2>
+            <h2><i class="fa-solid fa-notes-medical"></i> 2. استبيان الحالة الصحية والجاهزية | Health History</h2>
         </div>
 
-        <!-- Health Q1 -->
         <div class="health-question-row">
-            <div class="q-ar">هل أجريت عمليات جراحية خلال آخر 3 إلى 5 سنوات؟</div>
+            <div class="q-ar">هل أجريت عمليات جراحية خلال آخر 3-5 سنوات؟</div>
             <div class="radio-btn-group">
                 <input type="radio" id="hq1_yes" name="hq1" value="yes"><label for="hq1_yes" class="yes-label">نعم / Yes</label>
                 <input type="radio" id="hq1_no" name="hq1" value="no" checked><label for="hq1_no" class="no-label">لا / No</label>
             </div>
-            <div class="q-en">Surgeries within last 3-5 years?</div>
+            <div class="q-en">Surgeries in last 3-5 years?</div>
         </div>
 
-        <!-- Health Q2 -->
         <div class="health-question-row">
-            <div class="q-ar">هل تعاني من مشاكل في العظام أو المفاصل أو آلام تعوق الحركة؟</div>
+            <div class="q-ar">هل تعاني من مشاكل في العظام أو المفاصل تعوق الحركة؟</div>
             <div class="radio-btn-group">
                 <input type="radio" id="hq2_yes" name="hq2" value="yes"><label for="hq2_yes" class="yes-label">نعم / Yes</label>
                 <input type="radio" id="hq2_no" name="hq2" value="no" checked><label for="hq2_no" class="no-label">لا / No</label>
             </div>
-            <div class="q-en">Bone or joint issues limiting movement?</div>
+            <div class="q-en">Bone/joint issues limiting movement?</div>
         </div>
 
-        <!-- Health Q3 -->
         <div class="health-question-row">
-            <div class="q-ar">هل تعاني من خشونة بالمفاصل أو وجود مسامير/شرائح جراحية؟</div>
+            <div class="q-ar">هل تعاني من خشونة المفاصل أو شرائح ومسامير؟</div>
             <div class="radio-btn-group">
                 <input type="radio" id="hq3_yes" name="hq3" value="yes"><label for="hq3_yes" class="yes-label">نعم / Yes</label>
                 <input type="radio" id="hq3_no" name="hq3" value="no" checked><label for="hq3_no" class="no-label">لا / No</label>
             </div>
-            <div class="q-en">Joint osteoarthritis, surgical plates/screws?</div>
+            <div class="q-en">Joint arthritis or surgical plates?</div>
         </div>
 
-        <!-- Health Q4 -->
         <div class="health-question-row">
-            <div class="q-ar">هل تعاني من مرض السكري (النوع الأول العلاج بالإنسولين)؟</div>
+            <div class="q-ar">هل تعاني من سكري النوع الأول (علاج بالإنسولين)؟</div>
             <div class="radio-btn-group">
                 <input type="radio" id="hq4_yes" name="hq4" value="yes"><label for="hq4_yes" class="yes-label">نعم / Yes</label>
                 <input type="radio" id="hq4_no" name="hq4" value="no" checked><label for="hq4_no" class="no-label">لا / No</label>
             </div>
-            <div class="q-en">Type-1 Diabetes requiring insulin?</div>
+            <div class="q-en">Type-1 Diabetes (Insulin dependent)?</div>
         </div>
 
-        <!-- Health Q5 -->
         <div class="health-question-row">
-            <div class="q-ar">هل تعاني من ارتفاع ضغط الدم أو أمراض القلب والأوعية؟</div>
+            <div class="q-ar">هل تعاني من ارتفاع ضغط الدم أو أمراض القلب؟</div>
             <div class="radio-btn-group">
-                <input type="radio" id="hq5_yes" name="hq5" value="yes"><label for="hq5_yes" class="yes-label">نعم / Yes</label>
-                <input type="radio" id="hq5_no" name="hq5" value="no" checked><label for="hq5_no" class="no-label">لا / No</label>
-            </div>
-            <div class="q-en">High blood pressure or heart conditions?</div>
-        </div>
-
-        <!-- Health Q6 -->
-        <div class="health-question-row">
-            <div class="q-ar">هل لديك أي أمراض أخرى أو موانع تطلب استشارة طبية للتدريب؟</div>
-            <div class="radio-btn-group">
-                <input type="radio" id="hq6_yes" name="hq6" value="yes"><label for="hq6_yes" class="yes-label">نعم / Yes</label>
-                <input type="radio" id="hq6_no" name="hq6" value="no" checked><label for="hq6_no" class="no-label">لا / No</label>
-            </div>
-            <div class="q-en">Other medical conditions requiring clearance?</div>
-        </div>
-
-        <!-- Direct Blood Pressure & Notes Input -->
-        <div class="form-grid-3" style="margin-top: 15px;">
-            <div class="input-box">
-                <label>قياس ضغط الدم (اختياري) <span class="en">Blood Pressure (e.g. 120/80)</span></label>
-                <input type="text" id="bpInput" placeholder="مثال: 120/80 mmHg">
-            </div>
-        </div>
-
-        <!-- WOW Session Performance Tests -->
-        <div class="section-header">
-            <h2><i class="fa-solid fa-stopwatch"></i> 2. اختبارات WOW Session البدنية</h2>
-        </div>
-
-        <!-- Test 1: Coordination -->
-        <div class="exercise-card">
-            <h4>1. التوافق العضلي العصبي (إغلاق العينين على رجل واحدة) <span>Target: 20s Total (10s Each Leg)</span></h4>
-            <div class="exercise-inputs">
-                <div class="input-box"><label>القدم اليمنى (ثواني)</label><input type="number" id="coordR" max="10" min="0" placeholder="أقصى 10" required></div>
-                <div class="input-box"><label>القدم اليسرى (ثواني)</label><input type="number" id="coordL" max="10" min="0" placeholder="أقصى 10" required></div>
-            </div>
-        </div>
-
-        <!-- Test 2: Balance -->
-        <div class="exercise-card">
-            <h4>2. التوازن (سوبرمان ثابت) <span>Target: 120s Total</span></h4>
-            <div class="exercise-inputs">
-                <div class="input-box"><label>الجولة الأولى (ثواني)</label><input type="number" id="balSet1" max="60" min="0" placeholder="أقصى 60" required></div>
-                <div class="input-box"><label>الجولة الثانية (ثواني)</label><input type="number" id="balSet2" max="60" min="0" placeholder="أقصى 60" required></div>
-            </div>
-        </div>
-
-        <!-- Test 3: Muscular Endurance -->
-        <div class="exercise-card">
-            <h4>3. التحمل العضلي (تمرين الضغط Push-up) <span>Target: Set 2 reaches 70% of Set 1</span></h4>
-            <div class="exercise-inputs">
-                <div class="input-box"><label>الجولة 1 (أقصى تكرار)</label><input type="number" id="pushSet1" min="1" required placeholder="عدد التكرارات"></div>
-                <div class="input-box"><label>الجولة 2 (التكرار الفعلي)</label><input type="number" id="pushSet2" min="0" required placeholder="عدد التكرارات"></div>
-            </div>
-        </div>
-
-        <!-- Test 4: Stability -->
-        <div class="exercise-card">
-            <h4>4. الثبات الاستاتيكي (ثبات الاسكوات 90 درجة) <span>Target: 180s Total (90s Each)</span></h4>
-            <div class="exercise-inputs">
-                <div class="input-box"><label>الجولة الأولى (ثواني)</label><input type="number" id="squatSet1" max="90" min="0" required placeholder="أقصى 90"></div>
-                <div class="input-box"><label>الجولة الثانية (ثواني)</label><input type="number" id="squatSet2" max="90" min="0" required placeholder="أقصى 90"></div>
-            </div>
-        </div>
-
-        <!-- Test 5: Abdominal -->
-        <div class="exercise-card">
-            <h4>5. عضلات البطن (تمرين Sit-up) <span>Target: Set 2 reaches 70% of Set 1</span></h4>
-            <div class="exercise-inputs">
-                <div class="input-box"><label>الجولة 1 (أقصى تكرار)</label><input type="number" id="sitSet1" min="1" required placeholder="عدد التكرارات"></div>
-                <div class="input-box"><label>الجولة 2 (التكرار الفعلي)</label><input type="number" id="sitSet2" min="0" required placeholder="عدد التكرارات"></div>
-            </div>
-        </div>
-
-        <!-- Test 6: Cardiac Walkout -->
-        <div class="exercise-card">
-            <h4>6. عضلة القلب (تمرين Walkout) <span>Target: 30 Reps Total (15 Each)</span></h4>
-            <div class="exercise-inputs">
-                <div class="input-box"><label>الجولة الأولى (تكرارات)</label><input type="number" id="cardiacSet1" max="15" min="0" required placeholder="أقصى 15"></div>
-                <div class="input-box"><label>الجولة الثانية (تكرارات)</label><input type="number" id="cardiacSet2" max="15" min="0" required placeholder="أقصى 15"></div>
-            </div>
-        </div>
-
-        <!-- Test 7: Muscle Memory -->
-        <div class="exercise-card">
-            <h4>7. الذاكرة العضلية (Cuban Press) <span>Target: 24 Reps Total (12 Each)</span></h4>
-            <div class="exercise-inputs">
-                <div class="input-box"><label>الجولة الأولى (تكرارات)</label><input type="number" id="memSet1" max="12" min="0" required placeholder="أقصى 12"></div>
-                <div class="input-box"><label>الجولة الثانية (تكرارات)</label><input type="number" id="memSet2" max="12" min="0" required placeholder="أقصى 12"></div>
-            </div>
-        </div>
-
-        <button type="submit" class="btn-submit">
-            <i class="fa-solid fa-calculator"></i> اصدار التقرير الطبي والرياضي الشامل
-        </button>
-    </form>
-
-    <!-- Results Section -->
-    <div class="result-container" id="resultArea">
-        <div class="result-card">
-            <h3>B FIT ASSESSMENT REPORT</h3>
-            <p id="reportHeaderInfo" style="color: #94a3b8; font-weight: 600; font-size: 15px; margin-top: 5px;"></p>
-            
-            <div class="score-display-box">
-                <div class="score-metric-card">
-                    <div class="label">مستوى اللياقة الإجمالي | Fitness Score</div>
-                    <div class="value" id="overallScoreVal">0<span>%</span></div>
-                </div>
-                <div class="score-metric-card">
-                    <div class="label">العمر البيولوجي المقدر | Biological Age</div>
-                    <div class="value" id="bioAgeVal">-- <span>سنة</span></div>
-                </div>
-            </div>
-
-            <div id="bioAgeStatusBadge" class="bio-age-highlight bio-equal">--</div>
-
-            <div class="report-summary-text" id="detailedReportText">
-                جاري معالجة البيانات...
-            </div>
-        </div>
-    </div>
-</div>
-
-<script>
-    function calculateAssessment(e) {
-        e.preventDefault();
-
-        const realAge = parseInt(document.getElementById('realAge').value);
-        const client = document.getElementById('clientName').value;
-        const coach = document.getElementById('coachName').value;
-        const bp = document.getElementById('bpInput').value;
-
-        // Health Checks
-        const hq1 = document.querySelector('input[name="hq1"]:checked').value === 'yes';
-        const hq2 = document.querySelector('input[name="hq2"]:checked').value === 'yes';
-        const hq3 = document.querySelector('input[name="hq3"]:checked').value === 'yes';
-        const hq4 = document.querySelector('input[name="hq4"]:checked').value === 'yes';
-        const hq5 = document.querySelector('input[name="hq5"]:checked').value === 'yes';
-        const hq6 = document.querySelector('input[name="hq6"]:checked').value === 'yes';
-        
-        let riskCount = (hq1 ? 1 : 0) + (hq2 ? 1 : 0) + (hq3 ? 1 : 0) + (hq4 ? 1 : 0) + (hq5 ? 1 : 0) + (hq6 ? 1 : 0);
-
-        // 1. Coordination % (Target 20s total)
-        let coordR = parseFloat(document.getElementById('coordR').value) || 0;
-        let coordL = parseFloat(document.getElementById('coordL').value) || 0;
-        let coordScore = Math.min(((coordR + coordL) / 20) * 100, 100);
-
-        // 2. Balance % (Target 120s total)
-        let bal1 = parseFloat(document.getElementById('balSet1').value) || 0;
-        let bal2 = parseFloat(document.getElementById('balSet2').value) || 0;
-        let balScore = Math.min(((bal1 + bal2) / 120) * 100, 100);
-
-        // 3. Push Up % (Target: Set 2 reaches 70% of Set 1)
-        let p1 = parseFloat(document.getElementById('pushSet1').value) || 1;
-        let p2 = parseFloat(document.getElementById('pushSet2').value) || 0;
-        let pushScore = Math.min((p2 / (p1 * 0.70)) * 100, 100);
-
-        // 4. Squat Stability % (Target 180s total)
-        let sq1 = parseFloat(document.getElementById('squatSet1').value) || 0;
-        let sq2 = parseFloat(document.getElementById('squatSet2').value) || 0;
-        let squatScore = Math.min(((sq1 + sq2) / 180) * 100, 100);
-
-        // 5. Sit Up % (Target: Set 2 reaches 70% of Set 1)
-        let s1 = parseFloat(document.getElementById('sitSet1').value) || 1;
-        let s2 = parseFloat(document.getElementById('sitSet2').value) || 0;
-        let sitScore = Math.min((s2 / (s1 * 0.70)) * 100, 100);
-
-        // 6. Cardiac % (Target 30 reps)
-        let c1 = parseFloat(document.getElementById('cardiacSet1').value) || 0;
-        let c2 = parseFloat(document.getElementById('cardiacSet2').value) || 0;
-        let cardiacScore = Math.min(((c1 + c2) / 30) * 100, 100);
-
-        // 7. Muscle Memory % (Target 24 reps)
-        let m1 = parseFloat(document.getElementById('memSet1').value) || 0;
-        let m2 = parseFloat(document.getElementById('memSet2').value) || 0;
-        let memScore = Math.min(((m1 + m2) / 24) * 100, 100);
-
-        // Overall Score
-        let totalPoints = coordScore + balScore + pushScore + squatScore + sitScore + cardiacScore + memScore;
-        let fitnessScore = Math.round(totalPoints / 7);
-
-        // Realistic Bio Age formula
-        let fitnessDelta = fitnessScore - 70;
-        let ageAdjustment = Math.round(fitnessDelta / 8);
-        let biologicalAge = realAge - ageAdjustment;
-
-        // UI Updates
-        document.getElementById('reportHeaderInfo').innerText = `العميل: ${client} | الكوتش: ${coach} | العمر الحقيقي: ${realAge} سنة` + (bp ? ` | ضغط الدم: ${bp}` : '');
-        document.getElementById('overallScoreVal').innerHTML = fitnessScore + `<span>%</span>`;
-        document.getElementById('bioAgeVal').innerHTML = biologicalAge + ` <span>سنة</span>`;
-
-        const badge = document.getElementById('bioAgeStatusBadge');
-        let summaryHTML = "";
-
-        if (biologicalAge < realAge) {
-            badge.className = "bio-age-highlight bio-younger";
-            badge.innerText = `🔥 ممتاز! عمرك البيولوجي أصغر من عمرك الحقيقي بمقدار (${realAge - biologicalAge}) سنوات.`;
-            summaryHTML += `المشترك يمتلك مؤشرات بدنية وحركية متقدمة أعلى من عمره الزمني الفعلي.`;
-        } else if (biologicalAge === realAge) {
-            badge.className = "bio-age-highlight bio-equal";
-            badge.innerText = `👍 متطابق! عمرك البيولوجي يماثل تماماً عمرك الحقيقي (${realAge} سنة).`;
-            summaryHTML += `أداء المشترك طبيعي ومتوازن جداً مقارنة بفئته العمرية.`;
-        } else {
-            badge.className = "bio-age-highlight bio-older";
-            badge.innerText = `⚠️ تنبيه: عمرك البيولوجي أعلى من عمرك الحقيقي بمقدار (${biologicalAge - realAge}) سنوات.`;
-            summaryHTML += `تشير النتائج إلى وجود هبوط في بعض عناصر اللياقة مقارنة بالعمر الزمني، وينصح ببرنامج موجه لرفع التوازن والتحمل.`;
-        }
-
-        if (riskCount > 0) {
-            summaryHTML += `<br><br><strong>الملاحظات الصحية:</strong> تم تسجيل (${riskCount}) تنبيهات صحية من الاستبيان. يجب تصميم البرنامج التدريبي بحذر يراعي المفاصل والقيود الطبية السابقة.`;
-        } else {
-            summaryHTML += `<br><br><strong>الحالة الصحية:</strong> لا توجد موانع طبية مسجلة، والعميل جاهز تماماً للبدء في البرنامج التدريبي.`;
-        }
-
-        document.getElementById('detailedReportText').innerHTML = summaryHTML;
-        document.getElementById('resultArea').style.display = 'block';
-        document.getElementById('resultArea').scrollIntoView({ behavior: 'smooth' });
-    }
-</script>
-
-</body>
-</html>
+                <input type="radio" id="hq5_
