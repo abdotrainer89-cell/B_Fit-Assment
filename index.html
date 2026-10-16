@@ -8,6 +8,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;600;700;900&family=Montserrat:wght@400;600;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
+    <!-- Free Client-Side OCR Library (Tesseract.js) -->
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+
     <style>
         :root {
             --bg-main: #0f172a;
@@ -155,6 +158,14 @@
         .input-box input:focus, .input-box select:focus {
             border-color: var(--primary-orange);
             box-shadow: 0 0 0 4px rgba(255, 107, 0, 0.15);
+        }
+
+        .ocr-status {
+            font-size: 13px;
+            color: var(--primary-orange);
+            margin-top: 5px;
+            font-weight: 700;
+            display: none;
         }
 
         /* Health Questions */
@@ -371,6 +382,11 @@
         </div>
 
         <div class="form-grid-4">
+            <div class="input-box" style="grid-column: span 2;">
+                <label>إرفاق تقرير الإن بودي (قراءة تلقائية مجانية) <span class="en">Auto-Scan InBody File</span></label>
+                <input type="file" id="inbodyFile" accept="image/*" onchange="processInBodyOCR(event)">
+                <div id="ocrStatusMsg" class="ocr-status"><i class="fa-solid fa-spinner fa-spin"></i> جاري المسح الضوئي وقراءة بيانات الإن بودي تلقائياً...</div>
+            </div>
             <div class="input-box">
                 <label>اسم المدرب المختص <span class="en">Coach Name</span></label>
                 <input type="text" id="coachName" required placeholder="اسم المدرب">
@@ -405,10 +421,6 @@
             <div class="input-box">
                 <label>كتلة العضلات (كجم) <span class="en">SMM (Muscle Mass)</span></label>
                 <input type="number" id="smmInput" step="0.1" required placeholder="مثال: 32.4">
-            </div>
-            <div class="input-box" style="grid-column: span 2;">
-                <label>إرفاق تقرير الإن بودي <span class="en">Upload InBody Sheet</span></label>
-                <input type="file" id="inbodyFile" accept="image/*,application/pdf">
             </div>
         </div>
 
@@ -632,6 +644,42 @@
 </div>
 
 <script>
+    // InBody Auto OCR Scanner Logic
+    async function processInBodyOCR(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        const statusMsg = document.getElementById('ocrStatusMsg');
+        statusMsg.style.display = 'block';
+        statusMsg.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> جاري المسح الضوئي وقراءة بيانات الإن بودي تلقائياً...`;
+
+        try {
+            const worker = await Tesseract.createWorker('eng');
+            const ret = await worker.recognize(file);
+            const text = ret.data.text;
+            await worker.terminate();
+
+            // Regex parsing for InBody Metrics
+            const weightMatch = text.match(/(?:Weight|WT|Weight\(kg\))\s*[:=]?\s*(\d{2,3}\.?\d?)/i);
+            const heightMatch = text.match(/(?:Height|HT|Height\(cm\))\s*[:=]?\s*(\d{2,3}\.?\d?)/i);
+            const fatMatch = text.match(/(?:PBF|Percent Body Fat|Fat\s*%)\s*[:=]?\s*(\d{1,2}\.?\d?)/i);
+            const smmMatch = text.match(/(?:SMM|Skeletal Muscle Mass)\s*[:=]?\s*(\d{2,3}\.?\d?)/i);
+            const ageMatch = text.match(/(?:Age)\s*[:=]?\s*(\d{2})/i);
+
+            if (weightMatch) document.getElementById('weightInput').value = weightMatch[1];
+            if (heightMatch) document.getElementById('heightInput').value = heightMatch[1];
+            if (fatMatch) document.getElementById('fatInput').value = fatMatch[1];
+            if (smmMatch) document.getElementById('smmInput').value = smmMatch[1];
+            if (ageMatch) document.getElementById('realAge').value = ageMatch[1];
+
+            statusMsg.style.color = '#10b981';
+            statusMsg.innerHTML = `<i class="fa-solid fa-check"></i> تم استخراج القراءات المتاحة بنجاح! راجع الخانات للتأكيد.`;
+        } catch (err) {
+            statusMsg.style.color = '#ef4444';
+            statusMsg.innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i> يتعذر قراءة النص تلقائياً، يرجى ملء الخانات يدوياً.`;
+        }
+    }
+
     function calculateAssessment(e) {
         e.preventDefault();
 
@@ -683,14 +731,14 @@
 
         let testAverage = (coordScore + balScore + pushScore + squatScore + sitScore + cardiacScore + memScore) / 7;
 
-        // Scientific InBody Integration (70% Fitness Tests + 15% Body Fat + 15% Muscle Mass)
+        // InBody Integration
         let smmPercentage = (smm / weight) * 100;
         let bodyFatScore = gender === 'male' ? (fat <= 18 ? 100 : Math.max(0, 100 - (fat - 18) * 3)) : (fat <= 25 ? 100 : Math.max(0, 100 - (fat - 25) * 3));
         let muscleScore = smmPercentage >= 40 ? 100 : (smmPercentage / 40) * 100;
 
         let fitnessScore = Math.round((testAverage * 0.7) + (bodyFatScore * 0.15) + (muscleScore * 0.15));
 
-        // Biological Age Logic
+        // Biological Age Calculation
         let fitnessDelta = fitnessScore - 70;
         let ageAdjustment = Math.round(fitnessDelta / 7);
         let biologicalAge = realAge - ageAdjustment;
