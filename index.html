@@ -10,15 +10,14 @@
     
     <style>
         :root {
-            /* B Fit Brand Colors */
-            --bg-main: #121820;
-            --card-bg: #1e2630;
-            --card-inner: #27313e;
+            --bg-main: #0f172a;
+            --card-bg: #1e293b;
+            --card-inner: #334155;
             --primary-orange: #ff6b00;
             --primary-orange-hover: #e05e00;
             --text-white: #ffffff;
             --text-muted: #94a3b8;
-            --border-color: #334155;
+            --border-color: #475569;
             --success-green: #10b981;
             --warning-red: #ef4444;
         }
@@ -39,15 +38,15 @@
             align-items: center;
             padding: 30px 15px;
             min-height: 100vh;
-            background-image: radial-gradient(circle at top right, rgba(255, 107, 0, 0.08), transparent 40%);
+            background-image: radial-gradient(circle at top right, rgba(255, 107, 0, 0.12), transparent 50%);
         }
 
         .assessment-container {
             width: 100%;
-            max-width: 1000px;
+            max-width: 1050px;
             background: var(--card-bg);
             border-radius: 24px;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
             padding: 40px;
             border: 1px solid var(--border-color);
         }
@@ -118,7 +117,7 @@
         /* Form Grid */
         .form-grid-4 {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
             gap: 18px;
             margin-bottom: 15px;
         }
@@ -189,57 +188,65 @@
         .radio-btn-group input[type="radio"]:checked + label.yes-label { background: var(--warning-red); color: #fff; }
         .radio-btn-group input[type="radio"]:checked + label.no-label { background: var(--success-green); color: #fff; }
 
-        /* Exercise Card Layout */
+        /* Exercise Card Layout with SVG Vector Art */
         .exercise-card {
             background: var(--card-inner);
             border: 1px solid var(--border-color);
             border-radius: 16px;
-            padding: 20px;
-            margin-bottom: 18px;
+            padding: 22px;
+            margin-bottom: 20px;
             display: grid;
-            grid-template-columns: 120px 1fr;
-            gap: 20px;
+            grid-template-columns: 140px 1fr;
+            gap: 22px;
             align-items: center;
         }
 
-        .exercise-thumb {
-            width: 120px;
-            height: 100px;
-            background: var(--bg-main);
-            border-radius: 12px;
+        .exercise-illustration {
+            width: 140px;
+            height: 120px;
+            background: rgba(15, 23, 42, 0.6);
+            border-radius: 14px;
             display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
-            border: 1px dashed var(--primary-orange);
-            color: var(--primary-orange);
-            font-size: 28px;
+            border: 1px solid var(--primary-orange);
+            padding: 10px;
         }
 
-        .exercise-thumb span {
-            font-size: 11px;
-            color: var(--text-muted);
-            margin-top: 6px;
-            font-weight: 700;
+        .exercise-illustration svg {
+            width: 100%;
+            height: 100%;
         }
 
         .exercise-details h4 {
             color: #fff;
             font-size: 16px;
-            margin-bottom: 12px;
+            margin-bottom: 4px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .exercise-details p.sub-en {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+            direction: ltr;
+            text-align: right;
         }
 
         .exercise-details h4 span.target-tag {
             font-size: 12px;
-            background: rgba(255, 107, 0, 0.15);
+            background: rgba(255, 107, 0, 0.2);
             color: var(--primary-orange);
             padding: 4px 10px;
             border-radius: 6px;
             font-weight: 700;
+            border: 1px solid rgba(255, 107, 0, 0.4);
+            font-family: 'Montserrat', sans-serif;
         }
 
         .exercise-inputs {
@@ -280,13 +287,13 @@
         }
 
         .result-card {
-            background: linear-gradient(135deg, #18222d, #0f1720);
+            background: linear-gradient(135deg, #1e293b, #0f172a);
             color: #fff;
             border-radius: 20px;
             padding: 35px;
             text-align: center;
             border: 1px solid var(--primary-orange);
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
         }
 
         .score-display-box {
@@ -333,8 +340,8 @@
         }
 
         @media (max-width: 768px) {
-            .exercise-card { grid-template-columns: 1fr; }
-            .exercise-thumb { width: 100%; height: 80px; }
+            .exercise-card { grid-template-columns: 1fr; justify-items: center; text-align: center; }
+            .exercise-illustration { width: 100%; height: 100px; }
             .health-question-row { grid-template-columns: 1fr; text-align: center; }
         }
     </style>
@@ -360,7 +367,7 @@
         
         <!-- General Member Profile -->
         <div class="section-header">
-            <h2><i class="fa-solid fa-id-card"></i> 1. البيانات العامة والأنبوادي | Member & InBody Profile</h2>
+            <h2><i class="fa-solid fa-id-card"></i> 1. البيانات العامة والإنبودي | Member & InBody Profile</h2>
         </div>
 
         <div class="form-grid-4">
@@ -380,7 +387,7 @@
                 </select>
             </div>
             <div class="input-box">
-                <label>العمر الحقيقي <span class="en">Age</span></label>
+                <label>العمر الحقيقي <span class="en">Chronological Age</span></label>
                 <input type="number" id="realAge" required min="12" max="90" placeholder="سنوات">
             </div>
             <div class="input-box">
@@ -396,14 +403,18 @@
                 <input type="number" id="fatInput" step="0.1" required placeholder="مثال: 18.5">
             </div>
             <div class="input-box">
-                <label>إرفاق تقرير الإن بودي <span class="en">Upload InBody</span></label>
+                <label>كتلة العضلات (كجم) <span class="en">SMM (Muscle Mass)</span></label>
+                <input type="number" id="smmInput" step="0.1" required placeholder="مثال: 32.4">
+            </div>
+            <div class="input-box" style="grid-column: span 2;">
+                <label>إرفاق تقرير الإن بودي <span class="en">Upload InBody Sheet</span></label>
                 <input type="file" id="inbodyFile" accept="image/*,application/pdf">
             </div>
         </div>
 
         <!-- Health History Questionnaire -->
         <div class="section-header">
-            <h2><i class="fa-solid fa-notes-medical"></i> 2. استبيان الحالة الصحية والجاهزية | Health History</h2>
+            <h2><i class="fa-solid fa-notes-medical"></i> 2. استبيان الحالة الصحية والجاهزية | Health History Questionnaire</h2>
         </div>
 
         <div class="health-question-row">
@@ -458,105 +469,133 @@
 
         <!-- Test 1: Coordination -->
         <div class="exercise-card">
-            <div class="exercise-thumb">
-                <i class="fa-solid fa-child-reaching"></i>
-                <span>COORDINATION</span>
+            <div class="exercise-illustration">
+                <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="50" cy="20" r="8" fill="#ff6b00"/>
+                    <path d="M50 28 V60 M50 60 L38 90 M50 60 L62 75 L62 90" stroke="#ffffff" stroke-width="5" stroke-linecap="round"/>
+                    <path d="M25 40 L50 35 L75 40" stroke="#ff6b00" stroke-width="5" stroke-linecap="round"/>
+                </svg>
             </div>
             <div class="exercise-details">
-                <h4>التوافق العصبي العصبي (إغلاق العينين على رجل واحدة) <span class="target-tag">Target: 20s Total (10s/leg)</span></h4>
+                <h4>1. التوافق العصبي (إغلاق العينين والوقوف على قدم واحدة) <span class="target-tag">Target: 20s Total (10s/leg)</span></h4>
+                <p class="sub-en">Single-Leg Stance Balance Test (Closed Eyes)</p>
                 <div class="exercise-inputs">
-                    <div class="input-box"><label>القدم اليمنى (ثواني)</label><input type="number" id="coordR" max="10" min="0" placeholder="أقصى 10" required></div>
-                    <div class="input-box"><label>القدم اليسرى (ثواني)</label><input type="number" id="coordL" max="10" min="0" placeholder="أقصى 10" required></div>
+                    <div class="input-box"><label>القدم اليمنى (ثواني) <span class="en">Right Leg (s)</span></label><input type="number" id="coordR" max="10" min="0" placeholder="أقصى 10" required></div>
+                    <div class="input-box"><label>القدم اليسرى (ثواني) <span class="en">Left Leg (s)</span></label><input type="number" id="coordL" max="10" min="0" placeholder="أقصى 10" required></div>
                 </div>
             </div>
         </div>
 
-        <!-- Test 2: Balance -->
+        <!-- Test 2: Static Superman Balance -->
         <div class="exercise-card">
-            <div class="exercise-thumb">
-                <i class="fa-solid fa-person-rays"></i>
-                <span>BALANCE</span>
+            <div class="exercise-illustration">
+                <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="20" cy="40" r="7" fill="#ff6b00"/>
+                    <path d="M25 45 L50 48 L80 48" stroke="#ffffff" stroke-width="5" stroke-linecap="round"/>
+                    <path d="M50 48 L48 75 M70 48 L85 75" stroke="#ff6b00" stroke-width="4" stroke-linecap="round"/>
+                </svg>
             </div>
             <div class="exercise-details">
-                <h4>التوازن الاستاتيكي (تمرين سوبرمان الثابت) <span class="target-tag">Target: 120s Total (60s/set)</span></h4>
+                <h4>2. التوازن الاستاتيكي (تمرين سوبرمان الثابت) <span class="target-tag">Target: 120s Total (60s/set)</span></h4>
+                <p class="sub-en">Static Superman Core & Back Balance Test</p>
                 <div class="exercise-inputs">
-                    <div class="input-box"><label>الجولة 1 (ثواني)</label><input type="number" id="balSet1" max="60" min="0" placeholder="أقصى 60" required></div>
-                    <div class="input-box"><label>الجولة 2 (ثواني)</label><input type="number" id="balSet2" max="60" min="0" placeholder="أقصى 60" required></div>
+                    <div class="input-box"><label>الجولة 1 (ثواني) <span class="en">Set 1 (s)</span></label><input type="number" id="balSet1" max="60" min="0" placeholder="أقصى 60" required></div>
+                    <div class="input-box"><label>الجولة 2 (ثواني) <span class="en">Set 2 (s)</span></label><input type="number" id="balSet2" max="60" min="0" placeholder="أقصى 60" required></div>
                 </div>
             </div>
         </div>
 
-        <!-- Test 3: Muscular Endurance -->
+        <!-- Test 3: Push-Up Endurance -->
         <div class="exercise-card">
-            <div class="exercise-thumb">
-                <i class="fa-solid fa-dumbbell"></i>
-                <span>ENDURANCE</span>
+            <div class="exercise-illustration">
+                <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="80" cy="35" r="7" fill="#ff6b00"/>
+                    <path d="M20 65 L50 55 L75 42" stroke="#ffffff" stroke-width="5" stroke-linecap="round"/>
+                    <path d="M70 45 L70 65 M30 62 L20 75" stroke="#ff6b00" stroke-width="4" stroke-linecap="round"/>
+                </svg>
             </div>
             <div class="exercise-details">
-                <h4>التحمل العضلي (تمرين الضغط Push-Up) <span class="target-tag">Target: Set 2 >= 70% of Set 1</span></h4>
+                <h4>3. التحمل العضلي (تمرين الضغط) <span class="target-tag">Target: Set 2 >= 70% of Set 1</span></h4>
+                <p class="sub-en">Push-Up Upper Body Muscular Endurance Test</p>
                 <div class="exercise-inputs">
-                    <div class="input-box"><label>الجولة 1 (أقصى تكرار)</label><input type="number" id="pushSet1" min="1" required placeholder="أقصى عدد"></div>
-                    <div class="input-box"><label>الجولة 2 (تكرار فعلي)</label><input type="number" id="pushSet2" min="0" required placeholder="تكرارات الجولة 2"></div>
+                    <div class="input-box"><label>الجولة 1 (أقصى تكرار) <span class="en">Set 1 (Max Reps)</span></label><input type="number" id="pushSet1" min="1" required placeholder="أقصى عدد"></div>
+                    <div class="input-box"><label>الجولة 2 (تكرار فعلي) <span class="en">Set 2 (Reps)</span></label><input type="number" id="pushSet2" min="0" required placeholder="تكرارات الجولة 2"></div>
                 </div>
             </div>
         </div>
 
-        <!-- Test 4: Static Squat Stability -->
+        <!-- Test 4: Static Squat Hold -->
         <div class="exercise-card">
-            <div class="exercise-thumb">
-                <i class="fa-solid fa-person-falling"></i>
-                <span>STABILITY</span>
+            <div class="exercise-illustration">
+                <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="35" cy="25" r="7" fill="#ff6b00"/>
+                    <path d="M35 32 L35 55 L55 55 L55 85" stroke="#ffffff" stroke-width="5" stroke-linecap="round"/>
+                    <path d="M35 40 L20 50" stroke="#ff6b00" stroke-width="4" stroke-linecap="round"/>
+                </svg>
             </div>
             <div class="exercise-details">
-                <h4>الثبات الاستاتيكي (ثبات الاسكوات 90 درجة) <span class="target-tag">Target: 120s Total (60s/set)</span></h4>
+                <h4>4. الثبات الاستاتيكي (ثبات الاسكوات 90 درجة) <span class="target-tag">Target: 120s Total (60s/set)</span></h4>
+                <p class="sub-en">Static Isometric Squat Hold Test (90°)</p>
                 <div class="exercise-inputs">
-                    <div class="input-box"><label>الجولة 1 (ثواني)</label><input type="number" id="squatSet1" max="60" min="0" required placeholder="أقصى 60 ثانية"></div>
-                    <div class="input-box"><label>الجولة 2 (ثواني)</label><input type="number" id="squatSet2" max="60" min="0" required placeholder="أقصى 60 ثانية"></div>
+                    <div class="input-box"><label>الجولة 1 (ثواني) <span class="en">Set 1 (s)</span></label><input type="number" id="squatSet1" max="60" min="0" required placeholder="أقصى 60 ثانية"></div>
+                    <div class="input-box"><label>الجولة 2 (ثواني) <span class="en">Set 2 (s)</span></label><input type="number" id="squatSet2" max="60" min="0" required placeholder="أقصى 60 ثانية"></div>
                 </div>
             </div>
         </div>
 
-        <!-- Test 5: Abdominal -->
+        <!-- Test 5: Abdominal Sit-Up -->
         <div class="exercise-card">
-            <div class="exercise-thumb">
-                <i class="fa-solid fa-person"></i>
-                <span>ABDOMINALS</span>
+            <div class="exercise-illustration">
+                <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="40" cy="35" r="7" fill="#ff6b00"/>
+                    <path d="M25 70 L50 70 L40 42" stroke="#ffffff" stroke-width="5" stroke-linecap="round"/>
+                    <path d="M50 70 L70 50" stroke="#ff6b00" stroke-width="5" stroke-linecap="round"/>
+                </svg>
             </div>
             <div class="exercise-details">
-                <h4>عضلات البطن (تمرين Sit-Up) <span class="target-tag">Target Set 1 >= 15 Reps</span></h4>
+                <h4>5. قوة وتحمل عضلات البطن (تمرين Sit-Up) <span class="target-tag">Target: Set 1 >= 15 Reps</span></h4>
+                <p class="sub-en">Abdominal Sit-Up Endurance Test</p>
                 <div class="exercise-inputs">
-                    <div class="input-box"><label>الجولة 1 (أقصى تكرار >=15)</label><input type="number" id="sitSet1" min="1" required placeholder="أقصى عدد"></div>
-                    <div class="input-box"><label>الجولة 2 (تكرار فعلي)</label><input type="number" id="sitSet2" min="0" required placeholder="تكرارات الجولة 2"></div>
+                    <div class="input-box"><label>الجولة 1 (أقصى تكرار >=15) <span class="en">Set 1 (Max Reps)</span></label><input type="number" id="sitSet1" min="1" required placeholder="أقصى عدد"></div>
+                    <div class="input-box"><label>الجولة 2 (تكرار فعلي) <span class="en">Set 2 (Reps)</span></label><input type="number" id="sitSet2" min="0" required placeholder="تكرارات الجولة 2"></div>
                 </div>
             </div>
         </div>
 
-        <!-- Test 6: Cardiac Walkout -->
+        <!-- Test 6: Cardiac Hand Walkout -->
         <div class="exercise-card">
-            <div class="exercise-thumb">
-                <i class="fa-solid fa-heart-pulse"></i>
-                <span>CARDIAC</span>
+            <div class="exercise-illustration">
+                <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="75" cy="40" r="7" fill="#ff6b00"/>
+                    <path d="M25 80 L45 55 L70 46" stroke="#ffffff" stroke-width="5" stroke-linecap="round"/>
+                    <path d="M70 46 L75 75 M25 80 L15 80" stroke="#ff6b00" stroke-width="4" stroke-linecap="round"/>
+                </svg>
             </div>
             <div class="exercise-details">
-                <h4>كفاءة عضلة القلب (تمرين Walkout) <span class="target-tag">Target Set 1: 12-15 Reps</span></h4>
+                <h4>6. كفاءة وقدرة عضلة القلب (تمرين Walkout) <span class="target-tag">Target Set 1: 12-15 Reps</span></h4>
+                <p class="sub-en">Cardiac Hand Walkout Cardiovascular Test</p>
                 <div class="exercise-inputs">
-                    <div class="input-box"><label>الجولة 1 (تكرار 12-15)</label><input type="number" id="cardiacSet1" max="15" min="0" required placeholder="من 12 إلى 15"></div>
-                    <div class="input-box"><label>الجولة 2 (تكرارات)</label><input type="number" id="cardiacSet2" max="15" min="0" required placeholder="الجولة 2"></div>
+                    <div class="input-box"><label>الجولة 1 (تكرار 12-15) <span class="en">Set 1 (12-15 Reps)</span></label><input type="number" id="cardiacSet1" max="15" min="0" required placeholder="من 12 إلى 15"></div>
+                    <div class="input-box"><label>الجولة 2 (تكرارات) <span class="en">Set 2 (Reps)</span></label><input type="number" id="cardiacSet2" max="15" min="0" required placeholder="الجولة 2"></div>
                 </div>
             </div>
         </div>
 
-        <!-- Test 7: Muscle Memory -->
+        <!-- Test 7: Muscle Memory Cuban Press -->
         <div class="exercise-card">
-            <div class="exercise-thumb">
-                <i class="fa-solid fa-brain"></i>
-                <span>MEMORY</span>
+            <div class="exercise-illustration">
+                <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="50" cy="20" r="7" fill="#ff6b00"/>
+                    <path d="M50 27 V65 M50 65 L35 90 M50 65 L65 90" stroke="#ffffff" stroke-width="5" stroke-linecap="round"/>
+                    <path d="M20 30 L35 45 L50 45 L65 45 L80 30" stroke="#ff6b00" stroke-width="5" stroke-linecap="round"/>
+                </svg>
             </div>
             <div class="exercise-details">
-                <h4>الذاكرة العضلية والاتزان (Cuban Press) <span class="target-tag">Target: 24 Reps Total (12/set)</span></h4>
+                <h4>7. الذاكرة العضلية والاتزان (Dumbbell Cuban Press) <span class="target-tag">Target: 24 Reps Total (12/set)</span></h4>
+                <p class="sub-en">Muscle Memory & Shoulder Rotator Coordination Test</p>
                 <div class="exercise-inputs">
-                    <div class="input-box"><label>الجولة 1 (تكرارات)</label><input type="number" id="memSet1" max="12" min="0" required placeholder="أقصى 12"></div>
-                    <div class="input-box"><label>الجولة 2 (تكرارات)</label><input type="number" id="memSet2" max="12" min="0" required placeholder="أقصى 12"></div>
+                    <div class="input-box"><label>الجولة 1 (تكرارات) <span class="en">Set 1 (12 Reps)</span></label><input type="number" id="memSet1" max="12" min="0" required placeholder="أقصى 12"></div>
+                    <div class="input-box"><label>الجولة 2 (تكرارات) <span class="en">Set 2 (12 Reps)</span></label><input type="number" id="memSet2" max="12" min="0" required placeholder="أقصى 12"></div>
                 </div>
             </div>
         </div>
@@ -597,14 +636,15 @@
         e.preventDefault();
 
         const coach = document.getElementById('coachName').value;
-        const client = document.getElementById('clientName').value;
+        const client = document.getElementById('clientName').value.trim();
         const gender = document.getElementById('genderSelect').value;
         const realAge = parseInt(document.getElementById('realAge').value);
-        const weight = document.getElementById('weightInput').value;
-        const height = document.getElementById('heightInput').value;
-        const fat = document.getElementById('fatInput').value;
+        const weight = parseFloat(document.getElementById('weightInput').value);
+        const height = parseFloat(document.getElementById('heightInput').value);
+        const fat = parseFloat(document.getElementById('fatInput').value);
+        const smm = parseFloat(document.getElementById('smmInput').value);
 
-        // Health Risks Count
+        // Health Risks
         const hq1 = document.querySelector('input[name="hq1"]:checked').value === 'yes';
         const hq2 = document.querySelector('input[name="hq2"]:checked').value === 'yes';
         const hq3 = document.querySelector('input[name="hq3"]:checked').value === 'yes';
@@ -612,52 +652,51 @@
         const hq5 = document.querySelector('input[name="hq5"]:checked').value === 'yes';
         let riskCount = (hq1 ? 1 : 0) + (hq2 ? 1 : 0) + (hq3 ? 1 : 0) + (hq4 ? 1 : 0) + (hq5 ? 1 : 0);
 
-        // 1. Coordination (20s Total)
+        // Performance Tests Calculation
         let coordR = parseFloat(document.getElementById('coordR').value) || 0;
         let coordL = parseFloat(document.getElementById('coordL').value) || 0;
         let coordScore = Math.min(((coordR + coordL) / 20) * 100, 100);
 
-        // 2. Balance (120s Total)
         let bal1 = parseFloat(document.getElementById('balSet1').value) || 0;
         let bal2 = parseFloat(document.getElementById('balSet2').value) || 0;
         let balScore = Math.min(((bal1 + bal2) / 120) * 100, 100);
 
-        // 3. Push Up (70% Target)
         let p1 = parseFloat(document.getElementById('pushSet1').value) || 1;
         let p2 = parseFloat(document.getElementById('pushSet2').value) || 0;
         let pushScore = Math.min((p2 / (p1 * 0.70)) * 100, 100);
 
-        // 4. Squat Hold (Updated: 120s Total - 60s each)
         let sq1 = parseFloat(document.getElementById('squatSet1').value) || 0;
         let sq2 = parseFloat(document.getElementById('squatSet2').value) || 0;
         let squatScore = Math.min(((sq1 + sq2) / 120) * 100, 100);
 
-        // 5. Sit Up (Target >=15 set 1, 70% set 2)
         let s1 = parseFloat(document.getElementById('sitSet1').value) || 1;
         let s2 = parseFloat(document.getElementById('sitSet2').value) || 0;
         let sitScore = Math.min((s2 / (s1 * 0.70)) * 100, 100);
 
-        // 6. Cardiac Walkout (Target 12-15 reps)
         let c1 = parseFloat(document.getElementById('cardiacSet1').value) || 0;
         let c2 = parseFloat(document.getElementById('cardiacSet2').value) || 0;
         let cardiacScore = Math.min(((c1 + c2) / 30) * 100, 100);
 
-        // 7. Cuban Press (24 reps)
         let m1 = parseFloat(document.getElementById('memSet1').value) || 0;
         let m2 = parseFloat(document.getElementById('memSet2').value) || 0;
         let memScore = Math.min(((m1 + m2) / 24) * 100, 100);
 
-        // Total Fitness Score
-        let totalPoints = coordScore + balScore + pushScore + squatScore + sitScore + cardiacScore + memScore;
-        let fitnessScore = Math.round(totalPoints / 7);
+        let testAverage = (coordScore + balScore + pushScore + squatScore + sitScore + cardiacScore + memScore) / 7;
+
+        // Scientific InBody Integration (70% Fitness Tests + 15% Body Fat + 15% Muscle Mass)
+        let smmPercentage = (smm / weight) * 100;
+        let bodyFatScore = gender === 'male' ? (fat <= 18 ? 100 : Math.max(0, 100 - (fat - 18) * 3)) : (fat <= 25 ? 100 : Math.max(0, 100 - (fat - 25) * 3));
+        let muscleScore = smmPercentage >= 40 ? 100 : (smmPercentage / 40) * 100;
+
+        let fitnessScore = Math.round((testAverage * 0.7) + (bodyFatScore * 0.15) + (muscleScore * 0.15));
 
         // Biological Age Logic
         let fitnessDelta = fitnessScore - 70;
-        let ageAdjustment = Math.round(fitnessDelta / 8);
+        let ageAdjustment = Math.round(fitnessDelta / 7);
         let biologicalAge = realAge - ageAdjustment;
 
-        // Display Data
-        document.getElementById('reportHeaderInfo').innerText = `المشترك: ${client} (${gender === 'male' ? 'ذكر' : 'أنثى'}) | الكوتش: ${coach} | الوزن: ${weight}كجم | الطول: ${height}سم | نسبة الدهون: ${fat}%`;
+        // Display Header & Values
+        document.getElementById('reportHeaderInfo').innerText = `المشترك: ${client} (${gender === 'male' ? 'ذكر' : 'أنثى'}) | الكوتش: ${coach} | الوزن: ${weight}كجم | الدهون: ${fat}% | العضلات: ${smm}كجم`;
         document.getElementById('overallScoreVal').innerHTML = fitnessScore + `<span>%</span>`;
         document.getElementById('bioAgeVal').innerHTML = biologicalAge + ` <span>سنة</span>`;
 
@@ -667,21 +706,19 @@
         if (biologicalAge < realAge) {
             badge.className = "bio-age-highlight bio-younger";
             badge.innerText = `🔥 ممتاز! عمرك البيولوجي أصغر من عمرك الحقيقي بمقدار (${realAge - biologicalAge}) سنوات.`;
-            summaryHTML += `المشترك يمتلك مؤشرات أداء بدنية وتوافقية ممتازة تتفوق على معدل فئته العمرية. الكفاءة العضلية والدورية التنفسية في حالة جيدة جداً.`;
+            summaryHTML += `أداء بدني وتكوين جسماني ممتاز. انخفاض نسبة الدهون وجودة الكتلة العضلية ساهمت في رفع كفاءة نتيجتك العامة.`;
         } else if (biologicalAge === realAge) {
             badge.className = "bio-age-highlight bio-equal";
             badge.innerText = `👍 متطابق! عمرك البيولوجي يطابق عمرك الحقيقي (${realAge} سنة).`;
-            summaryHTML += `مستوى المشترك طبيعي ومستقر ومناسب للبدء في برنامج تدريبي متوازن للوصول لمعدل أداء أعلى.`;
+            summaryHTML += `مستوى متزن ومناسب للبدء في برنامج تدريبي متطور لرفع الكتلة العضلية وتقليل الدهون للوصول لنتائج أفضل في التقييمات القادمة.`;
         } else {
             badge.className = "bio-age-highlight bio-older";
             badge.innerText = `⚠️ تنبيه: عمرك البيولوجي أعلى من عمرك الحقيقي بمقدار (${biologicalAge - realAge}) سنوات.`;
-            summaryHTML += `تشير النتائج إلى وجود تراجع في عناصر الثبات والتحمل العضلي والتوازن، ويُنصح ببرنامج موجه لتقوية العضلات الأساسية وتحسين الاتزان العضلي.`;
+            summaryHTML += `تشير المدخلات إلى وجود تراجع في بعض عناصر التحمل العضلي أو ارتفاع في الدهون. يُوصى ببرنامج تدريبي مخصص مع الكوتش.`;
         }
 
         if (riskCount > 0) {
-            summaryHTML += `<br><br><strong>التنبيهات الصحية:</strong> تم تسجيل (${riskCount}) ملاحظة صحية من الاستبيان. يجب مراعاة هذه القيود وتكييف شدة التمارين مع الكوتش المختص.`;
-        } else {
-            summaryHTML += `<br><br><strong>الحالة الصحية:</strong> لا توجد موانع طبية مسجلة، والمشترك جاهز للبدء فوراً.`;
+            summaryHTML += `<br><br><strong>الملاحظات الصحية:</strong> تم تسجيل (${riskCount}) تنبيه صحي، يرجى تكييف التمارين بناءً عليها.`;
         }
 
         document.getElementById('detailedReportText').innerHTML = summaryHTML;
