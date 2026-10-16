@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>B FIT ASSESSMENT CLUB | Professional Evaluation</title>
-    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23dc2626'/%3E%3Cstop offset='1' stop-color='%23991b1b'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='14' fill='url(%23g)'/%3E%3Ctext x='32' y='40' font-family='Arial Black,Arial' font-weight='900' font-size='30' text-anchor='middle' fill='white'%3EB/FIT%3C/text%3E%3C/svg%3E">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;600;700;900&family=Montserrat:wght@400;600;700;900&display=swap" rel="stylesheet">
@@ -13,14 +12,14 @@
 
     <style>
         :root {
-            --bg-main: #0b0f19;
-            --card-bg: #131b2e;
-            --card-inner: #1e293b;
-            --primary-red: #dc2626;
-            --primary-red-hover: #b91c1c;
+            --bg-main: #0f172a;
+            --card-bg: #1e293b;
+            --card-inner: #334155;
+            --primary-gold: #ff6b00;
+            --primary-gold-hover: #e05e00;
             --text-white: #ffffff;
             --text-muted: #94a3b8;
-            --border-color: #334155;
+            --border-color: #475569;
             --success-green: #10b981;
             --warning-red: #ef4444;
             --accent-gender: #38bdf8;
@@ -31,10 +30,7 @@
             margin: 0;
             padding: 0;
             font-family: 'Tajawal', 'Montserrat', sans-serif;
-        }
-
-        input, select, button, label, .exercise-avatar-box {
-            transition: background-color 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease, color 0.25s ease, transform 0.25s ease;
+            transition: all 0.25s ease;
         }
 
         body {
@@ -45,7 +41,7 @@
             align-items: flex-start;
             padding: 30px 15px;
             min-height: 100vh;
-            background-image: radial-gradient(circle at top right, rgba(220, 38, 38, 0.12), transparent 60%);
+            background-image: radial-gradient(circle at top right, rgba(255, 107, 0, 0.12), transparent 60%);
         }
 
         .assessment-container {
@@ -62,7 +58,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 4px solid var(--primary-red);
+            border-bottom: 4px solid var(--primary-gold);
             padding-bottom: 20px;
             margin-bottom: 30px;
         }
@@ -74,26 +70,21 @@
         }
 
         .brand-logo-icon {
-            width: 75px;
-            height: 70px;
-            background: linear-gradient(135deg, var(--primary-red), #991b1b);
-            border-radius: 18px;
+            width: 90px;
+            height: 65px;
+            background: linear-gradient(135deg, var(--primary-gold), #ff8800);
+            border-radius: 16px;
             display: flex;
             justify-content: center;
             align-items: center;
             color: #fff;
-            box-shadow: 0 8px 25px rgba(220, 38, 38, 0.4);
+            box-shadow: 0 8px 25px rgba(255, 107, 0, 0.35);
             font-family: 'Montserrat', sans-serif;
             font-weight: 900;
-            font-size: 24px;
+            font-size: 22px;
             letter-spacing: 1px;
             flex-shrink: 0;
-        }
-
-        .brand-logo-icon span.slash {
-            margin: 0 2px;
-            color: rgba(255, 255, 255, 0.7);
-            font-weight: 400;
+            direction: ltr;
         }
 
         .brand-titles h1 {
@@ -106,7 +97,7 @@
 
         .brand-titles p {
             font-size: 13px;
-            color: var(--primary-red);
+            color: var(--primary-gold);
             font-weight: 700;
             font-family: 'Montserrat', sans-serif;
             letter-spacing: 0.5px;
@@ -119,7 +110,7 @@
             margin: 35px 0 20px 0;
             display: flex;
             align-items: center;
-            border-right: 6px solid var(--primary-red);
+            border-right: 6px solid var(--primary-gold);
         }
 
         .section-header h2 {
@@ -171,13 +162,13 @@
         }
 
         .input-box input:focus, .input-box select:focus {
-            border-color: var(--primary-red);
-            box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.15);
+            border-color: var(--primary-gold);
+            box-shadow: 0 0 0 4px rgba(255, 107, 0, 0.15);
         }
 
         .ocr-status {
             font-size: 13px;
-            color: var(--primary-red);
+            color: var(--primary-gold);
             margin-top: 5px;
             font-weight: 700;
             display: none;
@@ -229,7 +220,7 @@
         .exercise-avatar-box {
             width: 130px;
             height: 105px;
-            background: linear-gradient(135deg, rgba(15, 23, 42, 0.98), rgba(30, 41, 59, 0.98));
+            background: rgba(15, 23, 42, 0.95);
             border-radius: 12px;
             display: flex;
             flex-direction: column;
@@ -238,7 +229,7 @@
             border: 2px solid var(--accent-gender);
             color: var(--accent-gender);
             position: relative;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
         }
 
         .exercise-avatar-box i {
@@ -280,12 +271,12 @@
 
         .exercise-details h4 span.target-tag {
             font-size: 12px;
-            background: rgba(220, 38, 38, 0.2);
-            color: var(--primary-red);
+            background: rgba(255, 107, 0, 0.2);
+            color: var(--primary-gold);
             padding: 4px 10px;
             border-radius: 6px;
             font-weight: 700;
-            border: 1px solid rgba(220, 38, 38, 0.4);
+            border: 1px solid rgba(255, 107, 0, 0.4);
             font-family: 'Montserrat', sans-serif;
             direction: ltr;
         }
@@ -298,7 +289,7 @@
 
         .btn-submit {
             width: 100%;
-            background: linear-gradient(135deg, var(--primary-red), var(--primary-red-hover));
+            background: linear-gradient(135deg, var(--primary-gold), var(--primary-gold-hover));
             color: #fff;
             padding: 18px;
             border: none;
@@ -307,7 +298,7 @@
             font-weight: 900;
             cursor: pointer;
             margin-top: 35px;
-            box-shadow: 0 10px 25px rgba(220, 38, 38, 0.35);
+            box-shadow: 0 10px 25px rgba(255, 107, 0, 0.35);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -316,7 +307,7 @@
 
         .btn-submit:hover {
             transform: translateY(-2px);
-            box-shadow: 0 14px 30px rgba(220, 38, 38, 0.45);
+            box-shadow: 0 14px 30px rgba(255, 107, 0, 0.45);
         }
 
         .result-container {
@@ -332,7 +323,7 @@
             border-radius: 20px;
             padding: 35px;
             text-align: center;
-            border: 1px solid var(--primary-red);
+            border: 1px solid var(--primary-gold);
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
         }
 
@@ -352,7 +343,7 @@
 
         .score-metric-card .label { font-size: 13px; color: #94a3b8; margin-bottom: 5px; }
         .score-metric-card .value { font-size: 34px; font-weight: 900; color: #fff; }
-        .score-metric-card .value span { color: var(--primary-red); }
+        .score-metric-card .value span { color: var(--primary-gold); }
 
         .bio-age-highlight {
             font-size: 18px;
@@ -376,7 +367,7 @@
             background: rgba(0, 0, 0, 0.3);
             padding: 20px;
             border-radius: 12px;
-            border-right: 4px solid var(--primary-red);
+            border-right: 4px solid var(--primary-gold);
         }
 
         @media (max-width: 768px) {
@@ -388,7 +379,6 @@
             .exercise-details p.sub-en { text-align: center; }
             .exercise-avatar-box { width: 100%; height: 80px; flex-direction: row; gap: 15px; }
             .health-question-row { grid-template-columns: 1fr; text-align: center; }
-            .q-ar, .q-en { text-align: center; }
         }
     </style>
 </head>
@@ -399,7 +389,7 @@
     <div class="brand-header">
         <div class="brand-logo">
             <div class="brand-logo-icon">
-                <span>B</span><span class="slash">/</span><span>FIT</span>
+                B_FIT
             </div>
             <div class="brand-titles">
                 <h1>B FIT ASSESSMENT CLUB</h1>
@@ -683,34 +673,12 @@
 
                 const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
                 const d = imgData.data;
-                const hist = new Array(256).fill(0);
 
                 for (let i = 0; i < d.length; i += 4) {
                     const g = Math.round(0.299 * d[i] + 0.587 * d[i + 1] + 0.114 * d[i + 2]);
                     d[i] = d[i + 1] = d[i + 2] = g;
-                    hist[g]++;
                 }
 
-                const total = canvas.width * canvas.height;
-                let sum = 0;
-                for (let t = 0; t < 256; t++) sum += t * hist[t];
-                let sumB = 0, wB = 0, maxVar = 0, threshold = 128;
-                for (let t = 0; t < 256; t++) {
-                    wB += hist[t];
-                    if (wB === 0) continue;
-                    const wF = total - wB;
-                    if (wF === 0) break;
-                    sumB += t * hist[t];
-                    const mB = sumB / wB;
-                    const mF = (sum - sumB) / wF;
-                    const between = wB * wF * (mB - mF) * (mB - mF);
-                    if (between > maxVar) { maxVar = between; threshold = t; }
-                }
-
-                for (let i = 0; i < d.length; i += 4) {
-                    const v = d[i] > threshold ? 255 : 0;
-                    d[i] = d[i + 1] = d[i + 2] = v;
-                }
                 ctx.putImageData(imgData, 0, 0);
                 URL.revokeObjectURL(url);
                 resolve(canvas.toDataURL('image/png'));
@@ -727,7 +695,7 @@
         const file = event.target.files[0];
         if (!file) return;
 
-        setOcrStatus('#dc2626', 'fa-solid fa-spinner fa-spin', 'جاري قراءة تقرير InBody 770 بدقة عالية... | Reading InBody report...');
+        setOcrStatus('#ff6b00', 'fa-solid fa-spinner fa-spin', 'جاري قراءة تقرير InBody 770 بدقة عالية... | Reading InBody report...');
 
         let worker = null;
         try {
