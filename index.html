@@ -4,11 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>B FIT ASSESSMENT CLUB | Professional Evaluation</title>
-    <!-- Google Fonts & Font Awesome -->
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23ff6b00'/%3E%3Cstop offset='1' stop-color='%23ff9900'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='14' fill='url(%23g)'/%3E%3Ctext x='32' y='40' font-family='Arial Black,Arial' font-weight='900' font-size='34' text-anchor='middle' fill='white'%3EB%3C/text%3E%3Ctext x='32' y='56' font-family='Arial' font-weight='700' font-size='14' text-anchor='middle' fill='white'%3EFIT%3C/text%3E%3C/svg%3E">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;600;700;900&family=Montserrat:wght@400;600;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- Tesseract.js for High-Precision OCR -->
     <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 
     <style>
@@ -31,7 +31,10 @@
             margin: 0;
             padding: 0;
             font-family: 'Tajawal', 'Montserrat', sans-serif;
-            transition: all 0.25s ease;
+        }
+
+        input, select, button, label, .exercise-avatar-box {
+            transition: background-color 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease, color 0.25s ease, transform 0.25s ease;
         }
 
         body {
@@ -39,7 +42,7 @@
             color: var(--text-white);
             display: flex;
             justify-content: center;
-            align-items: center;
+            align-items: flex-start;
             padding: 30px 15px;
             min-height: 100vh;
             background-image: radial-gradient(circle at top right, rgba(255, 107, 0, 0.15), transparent 60%);
@@ -55,7 +58,6 @@
             border: 1px solid var(--border-color);
         }
 
-        /* B FIT Brand Header */
         .brand-header {
             display: flex;
             justify-content: space-between;
@@ -85,8 +87,10 @@
             font-family: 'Montserrat', sans-serif;
             font-weight: 900;
             letter-spacing: 1px;
+            flex-shrink: 0;
         }
 
+        .brand-logo-icon span { font-family: 'Montserrat', sans-serif; }
         .brand-logo-icon span.b-text { font-size: 26px; line-height: 1; }
         .brand-logo-icon span.fit-text { font-size: 13px; opacity: 0.9; }
 
@@ -95,6 +99,7 @@
             font-weight: 900;
             color: #fff;
             letter-spacing: 1px;
+            font-family: 'Montserrat', 'Tajawal', sans-serif;
         }
 
         .brand-titles p {
@@ -105,7 +110,6 @@
             letter-spacing: 0.5px;
         }
 
-        /* Section Title */
         .section-header {
             background: var(--card-inner);
             padding: 14px 22px;
@@ -125,7 +129,6 @@
             font-weight: 900;
         }
 
-        /* Form Grid */
         .form-grid-4 {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
@@ -145,6 +148,7 @@
             color: #e2e8f0;
             display: flex;
             justify-content: space-between;
+            gap: 6px;
         }
 
         .input-box label span.en {
@@ -161,6 +165,7 @@
             background: var(--bg-main);
             color: #fff;
             outline: none;
+            width: 100%;
         }
 
         .input-box input:focus, .input-box select:focus {
@@ -174,11 +179,9 @@
             margin-top: 5px;
             font-weight: 700;
             display: none;
-            direction: ltr;
-            text-align: right;
+            line-height: 1.7;
         }
 
-        /* Health Questions */
         .health-question-row {
             display: grid;
             grid-template-columns: 1fr 140px 1fr;
@@ -209,7 +212,6 @@
         .radio-btn-group input[type="radio"]:checked + label.yes-label { background: var(--warning-red); color: #fff; }
         .radio-btn-group input[type="radio"]:checked + label.no-label { background: var(--success-green); color: #fff; }
 
-        /* Exercise Card Layout with Avatars */
         .exercise-card {
             background: var(--card-inner);
             border: 1px solid var(--border-color);
@@ -283,6 +285,7 @@
             font-weight: 700;
             border: 1px solid rgba(255, 107, 0, 0.4);
             font-family: 'Montserrat', sans-serif;
+            direction: ltr;
         }
 
         .exercise-inputs {
@@ -314,7 +317,6 @@
             box-shadow: 0 14px 30px rgba(255, 107, 0, 0.45);
         }
 
-        /* Results Display */
         .result-container {
             display: none;
             margin-top: 45px;
@@ -376,17 +378,22 @@
         }
 
         @media (max-width: 768px) {
+            .assessment-container { padding: 22px 16px; }
+            .brand-titles h1 { font-size: 20px; }
             .exercise-card { grid-template-columns: 1fr; justify-items: center; text-align: center; }
+            .exercise-details { width: 100%; }
+            .exercise-details h4 { justify-content: center; }
+            .exercise-details p.sub-en { text-align: center; }
             .exercise-avatar-box { width: 100%; height: 80px; flex-direction: row; gap: 15px; }
             .health-question-row { grid-template-columns: 1fr; text-align: center; }
+            .q-ar, .q-en { text-align: center; }
         }
     </style>
 </head>
 <body>
 
 <div class="assessment-container">
-    
-    <!-- B FIT Brand Header -->
+
     <div class="brand-header">
         <div class="brand-logo">
             <div class="brand-logo-icon">
@@ -401,17 +408,16 @@
     </div>
 
     <form id="bfitAssessmentForm" onsubmit="calculateAssessment(event)">
-        
-        <!-- General Member Profile -->
+
         <div class="section-header">
             <h2><i class="fa-solid fa-id-card"></i> 1. البيانات العامة والإنبودي (InBody 770) | Member & InBody Profile</h2>
         </div>
 
         <div class="form-grid-4">
             <div class="input-box" style="grid-column: span 2;">
-                <label>إرفاق تقرير InBody 770 بدقة فائقة <span class="en">InBody 770 High-Precision Scan</span></label>
+                <label>إرفاق تقرير InBody 770 <span class="en">InBody 770 Scan</span></label>
                 <input type="file" id="inbodyFile" accept="image/*" onchange="processInBodyOCR(event)">
-                <div id="ocrStatusMsg" class="ocr-status">جاري معالجة وقراءة قياسات InBody بدقة... | Processing InBody...</div>
+                <div id="ocrStatusMsg" class="ocr-status"></div>
             </div>
             <div class="input-box">
                 <label>اسم المدرب المختص <span class="en">Coach Name</span></label>
@@ -434,23 +440,22 @@
             </div>
             <div class="input-box">
                 <label>الوزن (كجم) <span class="en">Weight (kg)</span></label>
-                <input type="number" id="weightInput" step="0.1" required placeholder="مثال: 72.9">
+                <input type="number" id="weightInput" step="0.1" min="30" max="250" required placeholder="مثال: 72.9">
             </div>
             <div class="input-box">
                 <label>الطول (سم) <span class="en">Height (cm)</span></label>
-                <input type="number" id="heightInput" step="0.1" required placeholder="مثال: 171">
+                <input type="number" id="heightInput" step="0.1" min="100" max="230" required placeholder="مثال: 171">
             </div>
             <div class="input-box">
                 <label>نسبة الدهون PBF (%) <span class="en">Body Fat %</span></label>
-                <input type="number" id="fatInput" step="0.1" required placeholder="مثال: 14.4">
+                <input type="number" id="fatInput" step="0.1" min="3" max="60" required placeholder="مثال: 14.4">
             </div>
             <div class="input-box">
                 <label>كتلة العضلات SMM (كجم) <span class="en">Muscle Mass</span></label>
-                <input type="number" id="smmInput" step="0.1" required placeholder="مثال: 34.9">
+                <input type="number" id="smmInput" step="0.1" min="10" max="80" required placeholder="مثال: 34.9">
             </div>
         </div>
 
-        <!-- Health History Questionnaire -->
         <div class="section-header">
             <h2><i class="fa-solid fa-notes-medical"></i> 2. استبيان الحالة الصحية والجاهزية | Health History Questionnaire</h2>
         </div>
@@ -500,12 +505,10 @@
             <div class="q-en">High blood pressure or heart conditions?</div>
         </div>
 
-        <!-- Physical Assessment Tests -->
         <div class="section-header">
             <h2><i class="fa-solid fa-stopwatch"></i> 3. اختبارات التقييم البدني | Physical Assessment Tests</h2>
         </div>
 
-        <!-- Test 1 -->
         <div class="exercise-card">
             <div class="exercise-avatar-box">
                 <i class="fa-solid fa-person-walking" id="avatar1"></i>
@@ -521,7 +524,6 @@
             </div>
         </div>
 
-        <!-- Test 2 -->
         <div class="exercise-card">
             <div class="exercise-avatar-box">
                 <i class="fa-solid fa-child-reaching" id="avatar2"></i>
@@ -537,7 +539,6 @@
             </div>
         </div>
 
-        <!-- Test 3 -->
         <div class="exercise-card">
             <div class="exercise-avatar-box">
                 <i class="fa-solid fa-dumbbell" id="avatar3"></i>
@@ -553,7 +554,6 @@
             </div>
         </div>
 
-        <!-- Test 4 -->
         <div class="exercise-card">
             <div class="exercise-avatar-box">
                 <i class="fa-solid fa-child" id="avatar4"></i>
@@ -569,7 +569,6 @@
             </div>
         </div>
 
-        <!-- Test 5 -->
         <div class="exercise-card">
             <div class="exercise-avatar-box">
                 <i class="fa-solid fa-fire" id="avatar5"></i>
@@ -585,7 +584,6 @@
             </div>
         </div>
 
-        <!-- Test 6 -->
         <div class="exercise-card">
             <div class="exercise-avatar-box">
                 <i class="fa-solid fa-heart-pulse" id="avatar6"></i>
@@ -601,7 +599,6 @@
             </div>
         </div>
 
-        <!-- Test 7 -->
         <div class="exercise-card">
             <div class="exercise-avatar-box">
                 <i class="fa-solid fa-brain" id="avatar7"></i>
@@ -622,12 +619,11 @@
         </button>
     </form>
 
-    <!-- Results Section -->
     <div class="result-container" id="resultArea">
         <div class="result-card">
             <h3>B FIT ASSESSMENT CLUB REPORT</h3>
             <p id="reportHeaderInfo" style="color: #94a3b8; font-weight: 600; font-size: 14px; margin-top: 5px;"></p>
-            
+
             <div class="score-display-box">
                 <div class="score-metric-card">
                     <div class="label">مستوى اللياقة الإجمالي | Fitness Score</div>
@@ -641,263 +637,255 @@
 
             <div id="bioAgeStatusBadge" class="bio-age-highlight bio-equal">--</div>
 
-            <div class="report-summary-text" id="detailedReportText">
-                جاري تحليل وتأكيد التقرير...
-            </div>
+            <div class="report-summary-text" id="detailedReportText"></div>
         </div>
     </div>
 </div>
 
 <script>
+    const GENDER_ICONS = {
+        male:   ['fa-person-walking', 'fa-child-reaching', 'fa-dumbbell', 'fa-child', 'fa-fire', 'fa-heart-pulse', 'fa-brain'],
+        female: ['fa-person-dress', 'fa-person-rays', 'fa-dumbbell', 'fa-person-arrow-down-to-line', 'fa-fire', 'fa-heart-pulse', 'fa-brain']
+    };
+
     function updateGenderTheme() {
-        const gender = document.getElementById('genderSelect').value;
-        const root = document.documentElement;
-        
+        const gender = document.getElementById('genderSelect').value === 'female' ? 'female' : 'male';
+        document.documentElement.style.setProperty('--accent-gender', gender === 'female' ? '#f472b6' : '#38bdf8');
+
         for (let i = 1; i <= 7; i++) {
-            const badge = document.getElementById(`badge${i}`);
-            const avatar = document.getElementById(`avatar${i}`);
-            
-            if (gender === 'female') {
-                root.style.setProperty('--accent-gender', '#f472b6');
-                badge.innerText = 'FEMALE';
-                if (i === 1) avatar.className = "fa-solid fa-person-dress";
-                else if (i === 2) avatar.className = "fa-solid fa-person-rays";
-                else if (i === 3) avatar.className = "fa-solid fa-dumbbell";
-                else if (i === 4) avatar.className = "fa-solid fa-person-arrow-down-to-line";
-                else if (i === 5) avatar.className = "fa-solid fa-fire";
-                else if (i === 6) avatar.className = "fa-solid fa-heart-pulse";
-                else avatar.className = "fa-solid fa-venus";
-            } else {
-                root.style.setProperty('--accent-gender', '#38bdf8');
-                badge.innerText = 'MALE';
-                if (i === 1) avatar.className = "fa-solid fa-person-walking";
-                else if (i === 2) avatar.className = "fa-solid fa-child-reaching";
-                else if (i === 3) avatar.className = "fa-solid fa-dumbbell";
-                else if (i === 4) avatar.className = "fa-solid fa-child";
-                else if (i === 5) avatar.className = "fa-solid fa-fire";
-                else if (i === 6) avatar.className = "fa-solid fa-heart-pulse";
-                else avatar.className = "fa-solid fa-brain";
-            }
+            document.getElementById('badge' + i).innerText = gender === 'female' ? 'FEMALE' : 'MALE';
+            document.getElementById('avatar' + i).className = 'fa-solid ' + GENDER_ICONS[gender][i - 1];
         }
     }
 
-    // High-Precision OCR Engine with Image Preprocessing & Strict Regex Matchers
+    function setOcrStatus(color, iconClass, message) {
+        const el = document.getElementById('ocrStatusMsg');
+        el.style.display = 'block';
+        el.style.color = color;
+        el.innerHTML = '<i class="' + iconClass + '"></i> ' + message;
+    }
+
+    function preprocessImage(file) {
+        return new Promise((resolve, reject) => {
+            const url = URL.createObjectURL(file);
+            const img = new Image();
+            img.onload = function () {
+                const MIN_WIDTH = 1800;
+                const MAX_WIDTH = 3200;
+                let scale = 1;
+                if (img.width < MIN_WIDTH) scale = MIN_WIDTH / img.width;
+                else if (img.width > MAX_WIDTH) scale = MAX_WIDTH / img.width;
+
+                const canvas = document.createElement('canvas');
+                canvas.width = Math.round(img.width * scale);
+                canvas.height = Math.round(img.height * scale);
+                const ctx = canvas.getContext('2d');
+                ctx.imageSmoothingQuality = 'high';
+                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+                const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                const d = imgData.data;
+                const hist = new Array(256).fill(0);
+
+                for (let i = 0; i < d.length; i += 4) {
+                    const g = Math.round(0.299 * d[i] + 0.587 * d[i + 1] + 0.114 * d[i + 2]);
+                    d[i] = d[i + 1] = d[i + 2] = g;
+                    hist[g]++;
+                }
+
+                // Otsu threshold: separates text from background
+                const total = canvas.width * canvas.height;
+                let sum = 0;
+                for (let t = 0; t < 256; t++) sum += t * hist[t];
+                let sumB = 0, wB = 0, maxVar = 0, threshold = 128;
+                for (let t = 0; t < 256; t++) {
+                    wB += hist[t];
+                    if (wB === 0) continue;
+                    const wF = total - wB;
+                    if (wF === 0) break;
+                    sumB += t * hist[t];
+                    const mB = sumB / wB;
+                    const mF = (sum - sumB) / wF;
+                    const between = wB * wF * (mB - mF) * (mB - mF);
+                    if (between > maxVar) { maxVar = between; threshold = t; }
+                }
+
+                for (let i = 0; i < d.length; i += 4) {
+                    const v = d[i] > threshold ? 255 : 0;
+                    d[i] = d[i + 1] = d[i + 2] = v;
+                }
+                ctx.putImageData(imgData, 0, 0);
+                URL.revokeObjectURL(url);
+                resolve(canvas.toDataURL('image/png'));
+            };
+            img.onerror = function () {
+                URL.revokeObjectURL(url);
+                reject(new Error('image-load-failed'));
+            };
+            img.src = url;
+        });
+    }
+
     async function processInBodyOCR(event) {
         const file = event.target.files[0];
         if (!file) return;
 
-        const statusMsg = document.getElementById('ocrStatusMsg');
-        statusMsg.style.display = 'block';
-        statusMsg.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> جاري فحص ومعالجة تقرير InBody 770 بدقة تامة...`;
+        setOcrStatus('#ff6b00', 'fa-solid fa-spinner fa-spin', 'جاري قراءة تقرير InBody... | Reading InBody report...');
 
+        let worker = null;
         try {
             const processedImageUrl = await preprocessImage(file);
 
-            const worker = await Tesseract.createWorker('eng');
+            worker = await Tesseract.createWorker('eng');
+            await worker.setParameters({ tessedit_pageseg_mode: '6', preserve_interword_spaces: '1' });
             const ret = await worker.recognize(processedImageUrl);
-            const text = ret.data.text;
-            await worker.terminate();
+            const text = ret.data.text || '';
 
-            const isValidInBody = /InBody|Weight|Height|SMM|PBF|Body|Fat|Water|BMR|Protein|Mineral/i.test(text);
+            const keywords = ['InBody', 'Weight', 'Height', 'SMM', 'PBF', 'Body Fat', 'Skeletal', 'Muscle', 'BMR', 'Protein', 'Mineral', 'Body Water'];
+            const hits = keywords.filter(k => new RegExp(k, 'i').test(text)).length;
 
-            if (!isValidInBody) {
-                statusMsg.style.color = '#ef4444';
-                statusMsg.innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i> خطأ: التقرير غير معتمد أو الصورة غير واضحة. يرجى رفع تقرير InBody صحيح.`;
+            if (hits < 3) {
+                setOcrStatus('#ef4444', 'fa-solid fa-triangle-exclamation', 'التقرير غير معتمد أو الصورة غير واضحة. يرجى رفع تقرير InBody صحيح. | Invalid or unclear report.');
                 return;
             }
 
-            function extractStrictNumber(patterns) {
-                for (let p of patterns) {
-                    let match = text.match(p);
-                    if (match && match[1]) {
-                        return parseFloat(match[1]);
+            function extractNumber(patterns, min, max) {
+                for (const p of patterns) {
+                    const m = text.match(p);
+                    if (m && m[1]) {
+                        const v = parseFloat(m[1]);
+                        if (v >= min && v <= max) return v;
                     }
                 }
                 return null;
             }
 
-            const parsedAge = extractStrictNumber([
-                /Age\D*(\d{2})\b/i,
-                /Age\s*[:\s]*(\d{2})/i,
-                /\bAge\s+(\d{2})\b/i
-            ]);
+            const parsed = {
+                age:    extractNumber([/\bAge\b\D{0,12}(\d{2})\b/i], 10, 90),
+                weight: extractNumber([/\bWeight\b[^\d]{0,25}(\d{2,3}\.\d)/i, /\b(\d{2,3}\.\d)\s*kg\b/i], 30, 250),
+                height: extractNumber([/\bHeight\b[^\d]{0,25}(\d{3}(?:\.\d)?)/i, /\b(\d{3}(?:\.\d)?)\s*cm\b/i], 100, 230),
+                smm:    extractNumber([/\bSMM\b[^\d]{0,25}(\d{2}\.\d)/i, /Skeletal\s*Muscle\s*Mass[^\d]{0,25}(\d{2}\.\d)/i], 10, 80),
+                pbf:    extractNumber([/\bPBF\b[^\d]{0,25}(\d{1,2}\.\d)/i, /Percent\s*Body\s*Fat[^\d]{0,25}(\d{1,2}\.\d)/i], 3, 60)
+            };
 
-            const parsedWeight = extractStrictNumber([
-                /Weight[^\d]*(\d{2,3}\.\d)/i,
-                /Weight\D+(\d{2,3}\.\d)/i,
-                /\b(\d{2,3}\.\d)\s*kg\b/i
-            ]);
-
-            const parsedHeight = extractStrictNumber([
-                /Height[^\d]*(\d{3}(?:\.\d)?)/i,
-                /\b(\d{3})\s*cm\b/i,
-                /Height\D+(\d{3})/i
-            ]);
-
-            const parsedSMM = extractStrictNumber([
-                /SMM[^\d]*(\d{2,3}\.\d)/i,
-                /Muscle[^\d]*(\d{2,3}\.\d)/i,
-                /Skeletal[^\d]*(\d{2,3}\.\d)/i
-            ]);
-
-            const parsedPBF = extractStrictNumber([
-                /PBF[^\d]*(\d{2,3}\.\d)/i,
-                /Percent[^\d]*(\d{2,3}\.\d)/i,
-                /Fat[^\d]*(\d{2,3}\.\d)%/i,
-                /\b(1[0-5]\.\d|2[0-5]\.\d|3[0-5]\.\d)\s*%/i
-            ]);
-
-            if (parsedAge && parsedAge >= 10 && parsedAge <= 90) {
-                document.getElementById('realAge').value = parsedAge;
-            }
-            if (parsedWeight && parsedWeight >= 30 && parsedWeight <= 250) {
-                document.getElementById('weightInput').value = parsedWeight;
-            }
-            if (parsedHeight && parsedHeight >= 100 && parsedHeight <= 230) {
-                document.getElementById('heightInput').value = parsedHeight;
-            }
-            if (parsedSMM && parsedSMM >= 10 && parsedSMM <= 80) {
-                document.getElementById('smmInput').value = parsedSMM;
-            }
-            if (parsedPBF && parsedPBF >= 3 && parsedPBF <= 60) {
-                document.getElementById('fatInput').value = parsedPBF;
+            const fields = { age: 'realAge', weight: 'weightInput', height: 'heightInput', smm: 'smmInput', pbf: 'fatInput' };
+            const missing = [];
+            for (const key in fields) {
+                if (parsed[key] !== null) document.getElementById(fields[key]).value = parsed[key];
+                else missing.push(key.toUpperCase());
             }
 
-            if (/Female/i.test(text)) {
-                document.getElementById('genderSelect').value = 'female';
-            } else if (/Male/i.test(text)) {
-                document.getElementById('genderSelect').value = 'male';
-            }
+            if (/\bFemale\b/i.test(text)) document.getElementById('genderSelect').value = 'female';
+            else if (/\bMale\b/i.test(text)) document.getElementById('genderSelect').value = 'male';
             updateGenderTheme();
 
-            statusMsg.style.color = '#10b981';
-            statusMsg.innerHTML = `<i class="fa-solid fa-check"></i> تم استخراج جميع قياسات InBody 770 بنجاح دقيق 100%!`;
-
+            if (missing.length === 0) {
+                setOcrStatus('#10b981', 'fa-solid fa-check', 'تم استخراج القياسات. يرجى مطابقتها مع التقرير قبل المتابعة. | Values extracted, please verify against the report.');
+            } else {
+                setOcrStatus('#f59e0b', 'fa-solid fa-triangle-exclamation', 'لم يتم التعرف على: ' + missing.join(', ') + '. يرجى إدخالها يدوياً. | Please enter manually.');
+            }
         } catch (err) {
-            statusMsg.style.color = '#ef4444';
-            statusMsg.innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i> حدث خطأ أثناء المعالجة، يرجى المحاولة بصورة أضوأ وأوضح.`;
+            setOcrStatus('#ef4444', 'fa-solid fa-triangle-exclamation', 'حدث خطأ أثناء المعالجة، حاول بصورة أوضح أو أدخل القياسات يدوياً.');
+        } finally {
+            if (worker) { try { await worker.terminate(); } catch (e) {} }
         }
     }
 
-    function preprocessImage(file) {
-        return new Promise((resolve) => {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const img = new Image();
-                img.onload = function() {
-                    const canvas = document.createElement('canvas');
-                    const ctx = canvas.getContext('2d');
-                    canvas.width = img.width;
-                    canvas.height = img.height;
-                    ctx.drawImage(img, 0, 0);
-                    
-                    let imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-                    let data = imgData.data;
-                    for (let i = 0; i < data.length; i += 4) {
-                        let avg = (data[i] + data[i+1] + data[i+2]) / 3;
-                        data[i] = data[i+1] = data[i+2] = avg; 
-                    }
-                    ctx.putImageData(imgData, 0, 0);
-                    resolve(canvas.toDataURL());
-                }
-                img.src = e.target.result;
-            }
-            reader.readAsDataURL(file);
-        });
+    function num(id, fallback) {
+        const v = parseFloat(document.getElementById(id).value);
+        return Number.isFinite(v) ? v : fallback;
     }
 
     function calculateAssessment(e) {
         e.preventDefault();
 
-        const coach = document.getElementById('coachName').value;
+        const coach = document.getElementById('coachName').value.trim();
         const client = document.getElementById('clientName').value.trim();
         const gender = document.getElementById('genderSelect').value;
-        const realAge = parseInt(document.getElementById('realAge').value) || 30;
-        const weight = parseFloat(document.getElementById('weightInput').value) || 70;
-        const height = parseFloat(document.getElementById('heightInput').value) || 170;
-        const fat = parseFloat(document.getElementById('fatInput').value) || 20;
-        const smm = parseFloat(document.getElementById('smmInput').value) || 30;
+        const realAge = Math.round(num('realAge', 30));
+        const weight = num('weightInput', 70);
+        const fat = num('fatInput', 20);
+        const smm = num('smmInput', 30);
 
-        const hq1 = document.querySelector('input[name="hq1"]:checked').value === 'yes';
-        const hq2 = document.querySelector('input[name="hq2"]:checked').value === 'yes';
-        const hq3 = document.querySelector('input[name="hq3"]:checked').value === 'yes';
-        const hq4 = document.querySelector('input[name="hq4"]:checked').value === 'yes';
-        const hq5 = document.querySelector('input[name="hq5"]:checked').value === 'yes';
-        let riskCount = (hq1 ? 1 : 0) + (hq2 ? 1 : 0) + (hq3 ? 1 : 0) + (hq4 ? 1 : 0) + (hq5 ? 1 : 0);
+        const flags = [];
+        const flagLabels = {
+            hq1: 'عملية جراحية خلال 3-5 سنوات',
+            hq2: 'مشاكل عظام أو مفاصل تعوق الحركة',
+            hq3: 'خشونة مفاصل أو شرائح ومسامير',
+            hq4: 'سكري النوع الأول',
+            hq5: 'ضغط دم مرتفع أو أمراض قلب'
+        };
+        for (const k in flagLabels) {
+            if (document.querySelector('input[name="' + k + '"]:checked').value === 'yes') flags.push(flagLabels[k]);
+        }
+        const needsMedicalClearance = flags.includes(flagLabels.hq4) || flags.includes(flagLabels.hq5);
 
-        let coordR = parseFloat(document.getElementById('coordR').value) || 0;
-        let coordL = parseFloat(document.getElementById('coordL').value) || 0;
-        let coordScore = Math.min(((coordR + coordL) / 20) * 100, 100);
+        const coordScore = Math.min(((num('coordR', 0) + num('coordL', 0)) / 20) * 100, 100);
+        const balScore = Math.min(((num('balSet1', 0) + num('balSet2', 0)) / 120) * 100, 100);
 
-        let bal1 = parseFloat(document.getElementById('balSet1').value) || 0;
-        let bal2 = parseFloat(document.getElementById('balSet2').value) || 0;
-        let balScore = Math.min(((bal1 + bal2) / 120) * 100, 100);
+        const p1 = Math.max(num('pushSet1', 1), 1);
+        const pushScore = Math.min((num('pushSet2', 0) / (p1 * 0.70)) * 100, 100);
 
-        let p1 = parseFloat(document.getElementById('pushSet1').value) || 1;
-        let p2 = parseFloat(document.getElementById('pushSet2').value) || 0;
-        let pushScore = Math.min((p2 / (p1 * 0.70)) * 100, 100);
+        const squatScore = Math.min(((num('squatSet1', 0) + num('squatSet2', 0)) / 120) * 100, 100);
 
-        let sq1 = parseFloat(document.getElementById('squatSet1').value) || 0;
-        let sq2 = parseFloat(document.getElementById('squatSet2').value) || 0;
-        let squatScore = Math.min(((sq1 + sq2) / 120) * 100, 100);
+        const s1 = Math.max(num('sitSet1', 1), 1);
+        const sitScore = Math.min((num('sitSet2', 0) / (s1 * 0.70)) * 100, 100);
 
-        let s1 = parseFloat(document.getElementById('sitSet1').value) || 1;
-        let s2 = parseFloat(document.getElementById('sitSet2').value) || 0;
-        let sitScore = Math.min((s2 / (s1 * 0.70)) * 100, 100);
+        const cardiacScore = Math.min(((num('cardiacSet1', 0) + num('cardiacSet2', 0)) / 30) * 100, 100);
+        const memScore = Math.min(((num('memSet1', 0) + num('memSet2', 0)) / 24) * 100, 100);
 
-        let c1 = parseFloat(document.getElementById('cardiacSet1').value) || 0;
-        let c2 = parseFloat(document.getElementById('cardiacSet2').value) || 0;
-        let cardiacScore = Math.min(((c1 + c2) / 30) * 100, 100);
+        const testAverage = (coordScore + balScore + pushScore + squatScore + sitScore + cardiacScore + memScore) / 7;
 
-        let m1 = parseFloat(document.getElementById('memSet1').value) || 0;
-        let m2 = parseFloat(document.getElementById('memSet2').value) || 0;
-        let memScore = Math.min(((m1 + m2) / 24) * 100, 100);
+        const smmPercentage = (smm / weight) * 100;
+        const bodyFatScore = gender === 'male'
+            ? (fat <= 18 ? 100 : Math.max(0, 100 - (fat - 18) * 3))
+            : (fat <= 25 ? 100 : Math.max(0, 100 - (fat - 25) * 3));
+        const muscleScore = smmPercentage >= 40 ? 100 : (smmPercentage / 40) * 100;
 
-        let testAverage = (coordScore + balScore + pushScore + squatScore + sitScore + cardiacScore + memScore) / 7;
+        const fitnessScore = Math.round((testAverage * 0.7) + (bodyFatScore * 0.15) + (muscleScore * 0.15));
 
-        let smmPercentage = (smm / weight) * 100;
-        let bodyFatScore = gender === 'male' ? (fat <= 18 ? 100 : Math.max(0, 100 - (fat - 18) * 3)) : (fat <= 25 ? 100 : Math.max(0, 100 - (fat - 25) * 3));
-        let muscleScore = smmPercentage >= 40 ? 100 : (smmPercentage / 40) * 100;
+        const ageAdjustment = Math.round((fitnessScore - 70) / 7);
+        const biologicalAge = Math.max(12, realAge - ageAdjustment);
 
-        let fitnessScore = Math.round((testAverage * 0.7) + (bodyFatScore * 0.15) + (muscleScore * 0.15));
-
-        let fitnessDelta = fitnessScore - 70;
-        let ageAdjustment = Math.round(fitnessDelta / 7);
-        let biologicalAge = realAge - ageAdjustment;
-
-        document.getElementById('reportHeaderInfo').innerText = `المشترك: ${client} (${gender === 'male' ? 'ذكر' : 'أنثى'}) | العمر الحقيقي: ${realAge} | الكوتش: ${coach} | الوزن: ${weight}كجم | الدهون: ${fat}% | العضلات: ${smm}كجم`;
-        document.getElementById('overallScoreVal').innerHTML = fitnessScore + `<span>%</span>`;
-        document.getElementById('bioAgeVal').innerHTML = biologicalAge + ` <span>سنة</span>`;
+        document.getElementById('reportHeaderInfo').innerText =
+            'المشترك: ' + client + ' (' + (gender === 'male' ? 'ذكر' : 'أنثى') + ') | العمر الحقيقي: ' + realAge +
+            ' | الكوتش: ' + coach + ' | الوزن: ' + weight + 'كجم | الدهون: ' + fat + '% | العضلات: ' + smm + 'كجم';
+        document.getElementById('overallScoreVal').innerHTML = fitnessScore + '<span>%</span>';
+        document.getElementById('bioAgeVal').innerHTML = biologicalAge + ' <span>سنة</span>';
 
         const badge = document.getElementById('bioAgeStatusBadge');
-        let summaryHTML = "";
+        let summaryHTML = '';
 
         if (biologicalAge < realAge) {
-            badge.className = "bio-age-highlight bio-younger";
-            badge.innerText = `🔥 ممتاز! عمرك البيولوجي أصغر من عمرك الحقيقي بمقدار (${realAge - biologicalAge}) سنوات.`;
-            summaryHTML += `أداء بدني وتكوين جسماني ممتاز. انخفاض نسبة الدهون وجودة الكتلة العضلية ساهمت في رفع كفاءة نتيجتك العامة.`;
+            badge.className = 'bio-age-highlight bio-younger';
+            badge.innerText = '🔥 ممتاز! عمرك البيولوجي أصغر من عمرك الحقيقي بمقدار (' + (realAge - biologicalAge) + ') سنوات.';
+            summaryHTML += 'أداء بدني وتكوين جسماني ممتاز. انخفاض نسبة الدهون وجودة الكتلة العضلية ساهمت في رفع كفاءة نتيجتك العامة.';
         } else if (biologicalAge === realAge) {
-            badge.className = "bio-age-highlight bio-equal";
-            badge.innerText = `👍 متطابق! عمرك البيولوجي يطابق عمرك الحقيقي (${realAge} سنة).`;
-            summaryHTML += `مستوى متزن ومناسب للبدء في برنامج تدريبي متطور لرفع الكتلة العضلية وتقليل الدهون للوصول لنتائج أفضل في التقييمات القادمة.`;
+            badge.className = 'bio-age-highlight bio-equal';
+            badge.innerText = '👍 متطابق! عمرك البيولوجي يطابق عمرك الحقيقي (' + realAge + ' سنة).';
+            summaryHTML += 'مستوى متزن ومناسب للبدء في برنامج تدريبي متطور لرفع الكتلة العضلية وتقليل الدهون للوصول لنتائج أفضل في التقييمات القادمة.';
         } else {
-            badge.className = "bio-age-highlight bio-older";
-            badge.innerText = `⚠️ تنبيه: عمرك البيولوجي أعلى من عمرك الحقيقي بمقدار (${biologicalAge - realAge}) سنوات.`;
-            summaryHTML += `تشير المدخلات إلى وجود تراجع في بعض عناصر التحمل العضلي أو ارتفاع في الدهون. يُوصى ببرنامج تدريبي مخصص مع الكوتش.`;
+            badge.className = 'bio-age-highlight bio-older';
+            badge.innerText = '⚠️ تنبيه: عمرك البيولوجي أعلى من عمرك الحقيقي بمقدار (' + (biologicalAge - realAge) + ') سنوات.';
+            summaryHTML += 'تشير المدخلات إلى وجود تراجع في بعض عناصر التحمل العضلي أو ارتفاع في الدهون. يُوصى ببرنامج تدريبي مخصص مع الكوتش.';
         }
 
-        if (riskCount > 0) {
-            summaryHTML += `<br><br><strong>الملاحظات الصحية:</strong> تم تسجيل (${riskCount}) تنبيه صحي، يرجى تكييف التمارين بناءً عليها.`;
+        if (flags.length > 0) {
+            summaryHTML += '<br><br><strong>الملاحظات الصحية (' + flags.length + '):</strong><br>';
+            summaryHTML += flags.map(f => '• ' + f).join('<br>');
+            summaryHTML += '<br>يرجى تكييف التمارين بناءً عليها.';
+            if (needsMedicalClearance) {
+                summaryHTML += '<br><strong style="color:#f87171;">يُنصح بالحصول على موافقة طبية قبل بدء البرنامج التدريبي.</strong>';
+            }
         }
 
         document.getElementById('detailedReportText').innerHTML = summaryHTML;
-        document.getElementById('resultArea').style.display = 'block';
-        document.getElementById('resultArea').scrollIntoView({ behavior: 'smooth' });
+        const area = document.getElementById('resultArea');
+        area.style.display = 'block';
+        area.scrollIntoView({ behavior: 'smooth' });
     }
 
-    window.onload = function() {
-        updateGenderTheme();
-    };
+    window.addEventListener('load', updateGenderTheme);
 </script>
 
 </body>
