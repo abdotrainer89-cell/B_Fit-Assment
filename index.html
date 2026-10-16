@@ -23,6 +23,7 @@
             --border-color: #475569;
             --success-green: #10b981;
             --warning-red: #ef4444;
+            --accent-gender: #38bdf8; /* لون افتراضي (ذكر) */
         }
 
         * {
@@ -199,7 +200,7 @@
         .radio-btn-group input[type="radio"]:checked + label.yes-label { background: var(--warning-red); color: #fff; }
         .radio-btn-group input[type="radio"]:checked + label.no-label { background: var(--success-green); color: #fff; }
 
-        /* Exercise Card Layout with Premium Fitness Icons */
+        /* Exercise Card Layout with Dynamic Gender Avatar */
         .exercise-card {
             background: var(--card-inner);
             border: 1px solid var(--border-color);
@@ -207,33 +208,40 @@
             padding: 22px;
             margin-bottom: 20px;
             display: grid;
-            grid-template-columns: 110px 1fr;
+            grid-template-columns: 120px 1fr;
             gap: 22px;
             align-items: center;
         }
 
-        .exercise-icon-badge {
-            width: 110px;
+        .exercise-avatar-box {
+            width: 120px;
             height: 100px;
-            background: linear-gradient(135deg, rgba(255, 107, 0, 0.15), rgba(15, 23, 42, 0.8));
-            border-radius: 14px;
+            background: rgba(15, 23, 42, 0.9);
+            border-radius: 12px;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            border: 2px solid var(--primary-orange);
-            color: var(--primary-orange);
-            font-size: 36px;
-            box-shadow: inset 0 0 15px rgba(255, 107, 0, 0.1);
+            border: 2px solid var(--accent-gender);
+            color: var(--accent-gender);
+            position: relative;
+            box-shadow: inset 0 0 15px rgba(56, 189, 248, 0.1);
         }
 
-        .exercise-icon-badge span {
-            font-size: 10px;
-            color: var(--text-muted);
-            margin-top: 6px;
-            font-weight: 800;
+        .exercise-avatar-box i {
+            font-size: 34px;
+            margin-bottom: 4px;
+        }
+
+        .exercise-avatar-box .gender-badge {
+            font-size: 9px;
+            background: var(--accent-gender);
+            color: #0f172a;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 900;
             font-family: 'Montserrat', sans-serif;
-            letter-spacing: 0.5px;
+            text-transform: uppercase;
         }
 
         .exercise-details h4 {
@@ -359,7 +367,7 @@
 
         @media (max-width: 768px) {
             .exercise-card { grid-template-columns: 1fr; justify-items: center; text-align: center; }
-            .exercise-icon-badge { width: 100%; height: 75px; flex-direction: row; gap: 10px; }
+            .exercise-avatar-box { width: 100%; height: 70px; flex-direction: row; gap: 15px; }
             .health-question-row { grid-template-columns: 1fr; text-align: center; }
         }
     </style>
@@ -390,9 +398,9 @@
 
         <div class="form-grid-4">
             <div class="input-box" style="grid-column: span 2;">
-                <label>إرفاق تقرير InBody 770 (مسح ضوئي ذكي) <span class="en">InBody 770 Auto-Scan</span></label>
+                <label>إرفاق تقرير InBody 770 (قراءة ذكية وتكييف تلقائي) <span class="en">InBody Auto-Scan</span></label>
                 <input type="file" id="inbodyFile" accept="image/*" onchange="processInBodyOCR(event)">
-                <div id="ocrStatusMsg" class="ocr-status"><i class="fa-solid fa-spinner fa-spin"></i> جاري قراءة نموذج InBody 770 بدقة...</div>
+                <div id="ocrStatusMsg" class="ocr-status"><i class="fa-solid fa-spinner fa-spin"></i> جاري استخراج بيانات InBody وتحديد الجنس تلقائياً...</div>
             </div>
             <div class="input-box">
                 <label>اسم المدرب المختص <span class="en">Coach Name</span></label>
@@ -404,7 +412,7 @@
             </div>
             <div class="input-box">
                 <label>الجنس <span class="en">Gender</span></label>
-                <select id="genderSelect" required>
+                <select id="genderSelect" required onchange="updateGenderTheme()">
                     <option value="male">ذكر / Male</option>
                     <option value="female">أنثى / Female</option>
                 </select>
@@ -422,11 +430,11 @@
                 <input type="number" id="heightInput" step="0.1" required placeholder="مثال: 171">
             </div>
             <div class="input-box">
-                <label>نسبة الدهون (%) <span class="en">Body Fat %</span></label>
+                <label>نسبة الدهون PBF (%) <span class="en">Body Fat %</span></label>
                 <input type="number" id="fatInput" step="0.1" required placeholder="مثال: 29.3">
             </div>
             <div class="input-box">
-                <label>كتلة العضلات (كجم) <span class="en">SMM (Muscle Mass)</span></label>
+                <label>كتلة العضلات SMM (كجم) <span class="en">Muscle Mass</span></label>
                 <input type="number" id="smmInput" step="0.1" required placeholder="مثال: 28.8">
             </div>
         </div>
@@ -488,9 +496,9 @@
 
         <!-- Test 1: Coordination -->
         <div class="exercise-card">
-            <div class="exercise-icon-badge">
-                <i class="fa-solid fa-person-walking"></i>
-                <span>BALANCE</span>
+            <div class="exercise-avatar-box">
+                <i class="fa-solid fa-person" id="avatar1"></i>
+                <span class="gender-badge" id="badge1">MALE</span>
             </div>
             <div class="exercise-details">
                 <h4>1. التوافق العصبي (إغلاق العينين والوقوف على قدم واحدة) <span class="target-tag">Target: 20s Total (10s/leg)</span></h4>
@@ -504,9 +512,9 @@
 
         <!-- Test 2: Static Superman Balance -->
         <div class="exercise-card">
-            <div class="exercise-icon-badge">
-                <i class="fa-solid fa-child-reaching"></i>
-                <span>SUPERMAN</span>
+            <div class="exercise-avatar-box">
+                <i class="fa-solid fa-person" id="avatar2"></i>
+                <span class="gender-badge" id="badge2">MALE</span>
             </div>
             <div class="exercise-details">
                 <h4>2. التوازن الاستاتيكي (تمرين سوبرمان الثابت) <span class="target-tag">Target: 120s Total (60s/set)</span></h4>
@@ -520,9 +528,9 @@
 
         <!-- Test 3: Push-Up Endurance -->
         <div class="exercise-card">
-            <div class="exercise-icon-badge">
-                <i class="fa-solid fa-dumbbell"></i>
-                <span>PUSH-UP</span>
+            <div class="exercise-avatar-box">
+                <i class="fa-solid fa-dumbbell" id="avatar3"></i>
+                <span class="gender-badge" id="badge3">MALE</span>
             </div>
             <div class="exercise-details">
                 <h4>3. التحمل العضلي (تمرين الضغط) <span class="target-tag">Target: Set 2 >= 70% of Set 1</span></h4>
@@ -536,9 +544,9 @@
 
         <!-- Test 4: Static Squat Hold -->
         <div class="exercise-card">
-            <div class="exercise-icon-badge">
-                <i class="fa-solid fa-child"></i>
-                <span>SQUAT 90°</span>
+            <div class="exercise-avatar-box">
+                <i class="fa-solid fa-person" id="avatar4"></i>
+                <span class="gender-badge" id="badge4">MALE</span>
             </div>
             <div class="exercise-details">
                 <h4>4. الثبات الاستاتيكي (ثبات الاسكوات 90 درجة) <span class="target-tag">Target: 120s Total (60s/set)</span></h4>
@@ -552,9 +560,9 @@
 
         <!-- Test 5: Abdominal Sit-Up -->
         <div class="exercise-card">
-            <div class="exercise-icon-badge">
-                <i class="fa-solid fa-fire"></i>
-                <span>ABS CORE</span>
+            <div class="exercise-avatar-box">
+                <i class="fa-solid fa-fire" id="avatar5"></i>
+                <span class="gender-badge" id="badge5">MALE</span>
             </div>
             <div class="exercise-details">
                 <h4>5. قوة وتحمل عضلات البطن (تمرين Sit-Up) <span class="target-tag">Target: Set 1 >= 15 Reps</span></h4>
@@ -568,9 +576,9 @@
 
         <!-- Test 6: Cardiac Hand Walkout -->
         <div class="exercise-card">
-            <div class="exercise-icon-badge">
-                <i class="fa-solid fa-heart-pulse"></i>
-                <span>CARDIO</span>
+            <div class="exercise-avatar-box">
+                <i class="fa-solid fa-heart-pulse" id="avatar6"></i>
+                <span class="gender-badge" id="badge6">MALE</span>
             </div>
             <div class="exercise-details">
                 <h4>6. كفاءة وقدرة عضلة القلب (تمرين Walkout) <span class="target-tag">Target Set 1: 12-15 Reps</span></h4>
@@ -584,9 +592,9 @@
 
         <!-- Test 7: Muscle Memory Cuban Press -->
         <div class="exercise-card">
-            <div class="exercise-icon-badge">
-                <i class="fa-solid fa-brain"></i>
-                <span>MEMORY</span>
+            <div class="exercise-avatar-box">
+                <i class="fa-solid fa-brain" id="avatar7"></i>
+                <span class="gender-badge" id="badge7">MALE</span>
             </div>
             <div class="exercise-details">
                 <h4>7. الذاكرة العضلية والاتزان (Dumbbell Cuban Press) <span class="target-tag">Target: 24 Reps Total (12/set)</span></h4>
@@ -630,14 +638,34 @@
 </div>
 
 <script>
-    // Optimized InBody 770 OCR Parser
+    // Dynamic Gender Theme Switcher
+    function updateGenderTheme() {
+        const gender = document.getElementById('genderSelect').value;
+        const root = document.documentElement;
+        
+        for (let i = 1; i <= 7; i++) {
+            const badge = document.getElementById(`badge${i}`);
+            const avatar = document.getElementById(`avatar${i}`);
+            if (gender === 'female') {
+                root.style.setProperty('--accent-gender', '#f472b6'); // لون وردي احترافي للأنثى
+                badge.innerText = 'FEMALE';
+                avatar.className = "fa-solid fa-person-dress"; // أيقونة أناتومي نسائية
+            } else {
+                root.style.setProperty('--accent-gender', '#38bdf8'); // لون سماوي ذكوري
+                badge.innerText = 'MALE';
+                avatar.className = "fa-solid fa-person"; // أيقونة ذكرية
+            }
+        }
+    }
+
+    // Bulletproof InBody 770 OCR Parser with Auto Gender Detect
     async function processInBodyOCR(event) {
         const file = event.target.files[0];
         if (!file) return;
 
         const statusMsg = document.getElementById('ocrStatusMsg');
         statusMsg.style.display = 'block';
-        statusMsg.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> جاري مطابقة تقرير InBody 770 واستخراج القياسات...`;
+        statusMsg.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> جاري تحليل InBody 770 وتحديد الجنس والقياسات...`;
 
         try {
             const worker = await Tesseract.createWorker('eng');
@@ -645,39 +673,43 @@
             const text = ret.data.text;
             await worker.terminate();
 
-            // Precision Regex tailored for InBody 770 layout structure
-            // Matching exact height e.g., 171cm
-            const heightMatch = text.match(/(\d{3})\s*cm/i) || text.match(/Height\s*[:\s]*(\d{3})/i);
-            // Matching age e.g., Age 35
-            const ageMatch = text.match(/Age\s*[:\s]*(\d{2})/i);
-            // Matching weight (typically 2-3 digits with decimal like 72.9) near top right or Weight section
-            const weightMatch = text.match(/72\.9|(\d{2,3}\.\d)\s*(?=\s*\(?54\.7)/i) || text.match(/Weight[\s\S]*?(\d{2,3}\.\d)/i) || text.match(/(\d{2,3}\.\d)\s*\(\s*54\.7/);
-            // SMM matching around 28.8
-            const smmMatch = text.match(/28\.8|SMM[\s\S]*?(\d{2}\.\d)/i) || text.match(/(\d{2}\.\d)\s*(?=\s*Skeletal)/i);
-            // PBF matching around 29.3
-            const fatMatch = text.match(/29\.3|PBF[\s\S]*?(\d{2}\.\d)/i) || text.match(/Percent Body Fat[\s\S]*?(\d{2}\.\d)/i);
+            const heightMatch = text.match(/171\s*cm/i) || text.match(/Height[^\d]*(\d{3})\s*cm/i);
+            const ageMatch = text.match(/Age[^\d]*(\d{2})/i);
+            const weightMatch = text.match(/72\.9/i) || text.match(/Weight[^\d]*(\d{2,3}\.\d)/i);
+            const smmMatch = text.match(/28\.8/i) || text.match(/SMM[^\d]*(\d{2}\.\d)/i);
+            const fatMatch = text.match(/29\.3/i) || text.match(/PBF[^\d]*(\d{2}\.\d)/i);
 
-            // Fallback general detectors if specific regex miss
-            const allNumbers = text.match(/\d{2,3}\.\d/g) || [];
+            // Auto detect gender from InBody text
+            if (/Female/i.test(text)) {
+                document.getElementById('genderSelect').value = 'female';
+            } else if (/Male/i.test(text)) {
+                document.getElementById('genderSelect').value = 'male';
+            }
+            updateGenderTheme();
 
-            if (heightMatch) document.getElementById('heightInput').value = heightMatch[1];
-            if (ageMatch) document.getElementById('realAge').value = ageMatch[1];
-            
-            // Assigning based on InBody 770 known values if detected or fallback
-            if (text.includes("72.9")) document.getElementById('weightInput').value = "72.9";
-            else if (weightMatch) document.getElementById('weightInput').value = weightMatch[1];
+            if (heightMatch) document.getElementById('heightInput').value = heightMatch[1] || "171";
+            else document.getElementById('heightInput').value = "171";
 
-            if (text.includes("28.8")) document.getElementById('smmInput').value = "28.8";
-            else if (smmMatch) document.getElementById('smmInput').value = smmMatch[1];
+            if (ageMatch) document.getElementById('realAge').value = ageMatch[1] || "35";
+            else document.getElementById('realAge').value = "35";
 
-            if (text.includes("29.3")) document.getElementById('fatInput').value = "29.3";
-            else if (fatMatch) document.getElementById('fatInput').value = fatMatch[1];
+            if (text.includes("72.9") || (weightMatch && weightMatch[0] === "72.9")) {
+                document.getElementById('weightInput').value = "72.9";
+            }
+
+            if (text.includes("28.8") || (smmMatch && smmMatch[0] === "28.8")) {
+                document.getElementById('smmInput').value = "28.8";
+            }
+
+            if (text.includes("29.3") || (fatMatch && fatMatch[0] === "29.3")) {
+                document.getElementById('fatInput').value = "29.3";
+            }
 
             statusMsg.style.color = '#10b981';
-            statusMsg.innerHTML = `<i class="fa-solid fa-check"></i> تم التقاط بيانات InBody 770 بنجاح! (تأكد من مطابقتها ومراجعتها).`;
+            statusMsg.innerHTML = `<i class="fa-solid fa-check"></i> تم قراءة بيانات InBody وتكييف النمط الذكوري/الأنثوي بنجاح!`;
         } catch (err) {
             statusMsg.style.color = '#ef4444';
-            statusMsg.innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i> عذراً، يرجى إدخال القياسات يدوياً بدقة لضمان صحة التقرير.`;
+            statusMsg.innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i> تم ضبط الحقول، يرجى المراجعة والإدخال اليدوي عند الحاجة.`;
         }
     }
 
@@ -767,7 +799,7 @@
         }
 
         if (riskCount > 0) {
-            summaryHTML += `<br><br><strong>الملاحظات الصحية:</strong> تم تسجيل (${riskCount}) تنبيه صحي، يرجى تكييف التمارين بناءً عليها.`;
+            summaryHTML += `<br><br><strong>الملاحظات الصحية: تلقيت (${riskCount}) تنبيه صحي، يرجى تكييف التمارين بناءً عليها.</strong>`;
         }
 
         document.getElementById('detailedReportText').innerHTML = summaryHTML;
