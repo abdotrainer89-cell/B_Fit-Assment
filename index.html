@@ -445,4 +445,250 @@
         <div class="health-question-row">
             <div class="q-ar">هل تعاني من ارتفاع ضغط الدم أو أمراض القلب؟</div>
             <div class="radio-btn-group">
-                <input type="radio" id="hq5_
+                <input type="radio" id="hq5_yes" name="hq5" value="yes"><label for="hq5_yes" class="yes-label">نعم / Yes</label>
+                <input type="radio" id="hq5_no" name="hq5" value="no" checked><label for="hq5_no" class="no-label">لا / No</label>
+            </div>
+            <div class="q-en">High blood pressure or heart conditions?</div>
+        </div>
+
+        <!-- Physical Assessment Tests -->
+        <div class="section-header">
+            <h2><i class="fa-solid fa-stopwatch"></i> 3. اختبارات التقييم البدني | Physical Assessment Tests</h2>
+        </div>
+
+        <!-- Test 1: Coordination -->
+        <div class="exercise-card">
+            <div class="exercise-thumb">
+                <i class="fa-solid fa-child-reaching"></i>
+                <span>COORDINATION</span>
+            </div>
+            <div class="exercise-details">
+                <h4>التوافق العصبي العصبي (إغلاق العينين على رجل واحدة) <span class="target-tag">Target: 20s Total (10s/leg)</span></h4>
+                <div class="exercise-inputs">
+                    <div class="input-box"><label>القدم اليمنى (ثواني)</label><input type="number" id="coordR" max="10" min="0" placeholder="أقصى 10" required></div>
+                    <div class="input-box"><label>القدم اليسرى (ثواني)</label><input type="number" id="coordL" max="10" min="0" placeholder="أقصى 10" required></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Test 2: Balance -->
+        <div class="exercise-card">
+            <div class="exercise-thumb">
+                <i class="fa-solid fa-person-rays"></i>
+                <span>BALANCE</span>
+            </div>
+            <div class="exercise-details">
+                <h4>التوازن الاستاتيكي (تمرين سوبرمان الثابت) <span class="target-tag">Target: 120s Total (60s/set)</span></h4>
+                <div class="exercise-inputs">
+                    <div class="input-box"><label>الجولة 1 (ثواني)</label><input type="number" id="balSet1" max="60" min="0" placeholder="أقصى 60" required></div>
+                    <div class="input-box"><label>الجولة 2 (ثواني)</label><input type="number" id="balSet2" max="60" min="0" placeholder="أقصى 60" required></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Test 3: Muscular Endurance -->
+        <div class="exercise-card">
+            <div class="exercise-thumb">
+                <i class="fa-solid fa-dumbbell"></i>
+                <span>ENDURANCE</span>
+            </div>
+            <div class="exercise-details">
+                <h4>التحمل العضلي (تمرين الضغط Push-Up) <span class="target-tag">Target: Set 2 >= 70% of Set 1</span></h4>
+                <div class="exercise-inputs">
+                    <div class="input-box"><label>الجولة 1 (أقصى تكرار)</label><input type="number" id="pushSet1" min="1" required placeholder="أقصى عدد"></div>
+                    <div class="input-box"><label>الجولة 2 (تكرار فعلي)</label><input type="number" id="pushSet2" min="0" required placeholder="تكرارات الجولة 2"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Test 4: Static Squat Stability -->
+        <div class="exercise-card">
+            <div class="exercise-thumb">
+                <i class="fa-solid fa-person-falling"></i>
+                <span>STABILITY</span>
+            </div>
+            <div class="exercise-details">
+                <h4>الثبات الاستاتيكي (ثبات الاسكوات 90 درجة) <span class="target-tag">Target: 120s Total (60s/set)</span></h4>
+                <div class="exercise-inputs">
+                    <div class="input-box"><label>الجولة 1 (ثواني)</label><input type="number" id="squatSet1" max="60" min="0" required placeholder="أقصى 60 ثانية"></div>
+                    <div class="input-box"><label>الجولة 2 (ثواني)</label><input type="number" id="squatSet2" max="60" min="0" required placeholder="أقصى 60 ثانية"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Test 5: Abdominal -->
+        <div class="exercise-card">
+            <div class="exercise-thumb">
+                <i class="fa-solid fa-person"></i>
+                <span>ABDOMINALS</span>
+            </div>
+            <div class="exercise-details">
+                <h4>عضلات البطن (تمرين Sit-Up) <span class="target-tag">Target Set 1 >= 15 Reps</span></h4>
+                <div class="exercise-inputs">
+                    <div class="input-box"><label>الجولة 1 (أقصى تكرار >=15)</label><input type="number" id="sitSet1" min="1" required placeholder="أقصى عدد"></div>
+                    <div class="input-box"><label>الجولة 2 (تكرار فعلي)</label><input type="number" id="sitSet2" min="0" required placeholder="تكرارات الجولة 2"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Test 6: Cardiac Walkout -->
+        <div class="exercise-card">
+            <div class="exercise-thumb">
+                <i class="fa-solid fa-heart-pulse"></i>
+                <span>CARDIAC</span>
+            </div>
+            <div class="exercise-details">
+                <h4>كفاءة عضلة القلب (تمرين Walkout) <span class="target-tag">Target Set 1: 12-15 Reps</span></h4>
+                <div class="exercise-inputs">
+                    <div class="input-box"><label>الجولة 1 (تكرار 12-15)</label><input type="number" id="cardiacSet1" max="15" min="0" required placeholder="من 12 إلى 15"></div>
+                    <div class="input-box"><label>الجولة 2 (تكرارات)</label><input type="number" id="cardiacSet2" max="15" min="0" required placeholder="الجولة 2"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Test 7: Muscle Memory -->
+        <div class="exercise-card">
+            <div class="exercise-thumb">
+                <i class="fa-solid fa-brain"></i>
+                <span>MEMORY</span>
+            </div>
+            <div class="exercise-details">
+                <h4>الذاكرة العضلية والاتزان (Cuban Press) <span class="target-tag">Target: 24 Reps Total (12/set)</span></h4>
+                <div class="exercise-inputs">
+                    <div class="input-box"><label>الجولة 1 (تكرارات)</label><input type="number" id="memSet1" max="12" min="0" required placeholder="أقصى 12"></div>
+                    <div class="input-box"><label>الجولة 2 (تكرارات)</label><input type="number" id="memSet2" max="12" min="0" required placeholder="أقصى 12"></div>
+                </div>
+            </div>
+        </div>
+
+        <button type="submit" class="btn-submit">
+            <i class="fa-solid fa-calculator"></i> استخراج التقرير الشامل والعمر البيولوجي
+        </button>
+    </form>
+
+    <!-- Results Section -->
+    <div class="result-container" id="resultArea">
+        <div class="result-card">
+            <h3>B FIT ASSESSMENT CLUB REPORT</h3>
+            <p id="reportHeaderInfo" style="color: #94a3b8; font-weight: 600; font-size: 14px; margin-top: 5px;"></p>
+            
+            <div class="score-display-box">
+                <div class="score-metric-card">
+                    <div class="label">مستوى اللياقة الإجمالي | Fitness Score</div>
+                    <div class="value" id="overallScoreVal">0<span>%</span></div>
+                </div>
+                <div class="score-metric-card">
+                    <div class="label">العمر البيولوجي المقدر | Biological Age</div>
+                    <div class="value" id="bioAgeVal">-- <span>سنة</span></div>
+                </div>
+            </div>
+
+            <div id="bioAgeStatusBadge" class="bio-age-highlight bio-equal">--</div>
+
+            <div class="report-summary-text" id="detailedReportText">
+                جاري تحليل وتأكيد التقرير...
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function calculateAssessment(e) {
+        e.preventDefault();
+
+        const coach = document.getElementById('coachName').value;
+        const client = document.getElementById('clientName').value;
+        const gender = document.getElementById('genderSelect').value;
+        const realAge = parseInt(document.getElementById('realAge').value);
+        const weight = document.getElementById('weightInput').value;
+        const height = document.getElementById('heightInput').value;
+        const fat = document.getElementById('fatInput').value;
+
+        // Health Risks Count
+        const hq1 = document.querySelector('input[name="hq1"]:checked').value === 'yes';
+        const hq2 = document.querySelector('input[name="hq2"]:checked').value === 'yes';
+        const hq3 = document.querySelector('input[name="hq3"]:checked').value === 'yes';
+        const hq4 = document.querySelector('input[name="hq4"]:checked').value === 'yes';
+        const hq5 = document.querySelector('input[name="hq5"]:checked').value === 'yes';
+        let riskCount = (hq1 ? 1 : 0) + (hq2 ? 1 : 0) + (hq3 ? 1 : 0) + (hq4 ? 1 : 0) + (hq5 ? 1 : 0);
+
+        // 1. Coordination (20s Total)
+        let coordR = parseFloat(document.getElementById('coordR').value) || 0;
+        let coordL = parseFloat(document.getElementById('coordL').value) || 0;
+        let coordScore = Math.min(((coordR + coordL) / 20) * 100, 100);
+
+        // 2. Balance (120s Total)
+        let bal1 = parseFloat(document.getElementById('balSet1').value) || 0;
+        let bal2 = parseFloat(document.getElementById('balSet2').value) || 0;
+        let balScore = Math.min(((bal1 + bal2) / 120) * 100, 100);
+
+        // 3. Push Up (70% Target)
+        let p1 = parseFloat(document.getElementById('pushSet1').value) || 1;
+        let p2 = parseFloat(document.getElementById('pushSet2').value) || 0;
+        let pushScore = Math.min((p2 / (p1 * 0.70)) * 100, 100);
+
+        // 4. Squat Hold (Updated: 120s Total - 60s each)
+        let sq1 = parseFloat(document.getElementById('squatSet1').value) || 0;
+        let sq2 = parseFloat(document.getElementById('squatSet2').value) || 0;
+        let squatScore = Math.min(((sq1 + sq2) / 120) * 100, 100);
+
+        // 5. Sit Up (Target >=15 set 1, 70% set 2)
+        let s1 = parseFloat(document.getElementById('sitSet1').value) || 1;
+        let s2 = parseFloat(document.getElementById('sitSet2').value) || 0;
+        let sitScore = Math.min((s2 / (s1 * 0.70)) * 100, 100);
+
+        // 6. Cardiac Walkout (Target 12-15 reps)
+        let c1 = parseFloat(document.getElementById('cardiacSet1').value) || 0;
+        let c2 = parseFloat(document.getElementById('cardiacSet2').value) || 0;
+        let cardiacScore = Math.min(((c1 + c2) / 30) * 100, 100);
+
+        // 7. Cuban Press (24 reps)
+        let m1 = parseFloat(document.getElementById('memSet1').value) || 0;
+        let m2 = parseFloat(document.getElementById('memSet2').value) || 0;
+        let memScore = Math.min(((m1 + m2) / 24) * 100, 100);
+
+        // Total Fitness Score
+        let totalPoints = coordScore + balScore + pushScore + squatScore + sitScore + cardiacScore + memScore;
+        let fitnessScore = Math.round(totalPoints / 7);
+
+        // Biological Age Logic
+        let fitnessDelta = fitnessScore - 70;
+        let ageAdjustment = Math.round(fitnessDelta / 8);
+        let biologicalAge = realAge - ageAdjustment;
+
+        // Display Data
+        document.getElementById('reportHeaderInfo').innerText = `المشترك: ${client} (${gender === 'male' ? 'ذكر' : 'أنثى'}) | الكوتش: ${coach} | الوزن: ${weight}كجم | الطول: ${height}سم | نسبة الدهون: ${fat}%`;
+        document.getElementById('overallScoreVal').innerHTML = fitnessScore + `<span>%</span>`;
+        document.getElementById('bioAgeVal').innerHTML = biologicalAge + ` <span>سنة</span>`;
+
+        const badge = document.getElementById('bioAgeStatusBadge');
+        let summaryHTML = "";
+
+        if (biologicalAge < realAge) {
+            badge.className = "bio-age-highlight bio-younger";
+            badge.innerText = `🔥 ممتاز! عمرك البيولوجي أصغر من عمرك الحقيقي بمقدار (${realAge - biologicalAge}) سنوات.`;
+            summaryHTML += `المشترك يمتلك مؤشرات أداء بدنية وتوافقية ممتازة تتفوق على معدل فئته العمرية. الكفاءة العضلية والدورية التنفسية في حالة جيدة جداً.`;
+        } else if (biologicalAge === realAge) {
+            badge.className = "bio-age-highlight bio-equal";
+            badge.innerText = `👍 متطابق! عمرك البيولوجي يطابق عمرك الحقيقي (${realAge} سنة).`;
+            summaryHTML += `مستوى المشترك طبيعي ومستقر ومناسب للبدء في برنامج تدريبي متوازن للوصول لمعدل أداء أعلى.`;
+        } else {
+            badge.className = "bio-age-highlight bio-older";
+            badge.innerText = `⚠️ تنبيه: عمرك البيولوجي أعلى من عمرك الحقيقي بمقدار (${biologicalAge - realAge}) سنوات.`;
+            summaryHTML += `تشير النتائج إلى وجود تراجع في عناصر الثبات والتحمل العضلي والتوازن، ويُنصح ببرنامج موجه لتقوية العضلات الأساسية وتحسين الاتزان العضلي.`;
+        }
+
+        if (riskCount > 0) {
+            summaryHTML += `<br><br><strong>التنبيهات الصحية:</strong> تم تسجيل (${riskCount}) ملاحظة صحية من الاستبيان. يجب مراعاة هذه القيود وتكييف شدة التمارين مع الكوتش المختص.`;
+        } else {
+            summaryHTML += `<br><br><strong>الحالة الصحية:</strong> لا توجد موانع طبية مسجلة، والمشترك جاهز للبدء فوراً.`;
+        }
+
+        document.getElementById('detailedReportText').innerHTML = summaryHTML;
+        document.getElementById('resultArea').style.display = 'block';
+        document.getElementById('resultArea').scrollIntoView({ behavior: 'smooth' });
+    }
+</script>
+
+</body>
+</html>
