@@ -643,8 +643,8 @@
         const root = document.documentElement;
         
         for (let i = 1; i <= 7; i++) {
-            const badge = document.getElementById(`badge${i}`);
-            const avatar = document.getElementById(`avatar${i}`);
+            const badge = document.getElementById(badge${i});
+            const avatar = document.getElementById(avatar${i});
             
             if (gender === 'female') {
                 root.style.setProperty('--accent-gender', '#f472b6');
@@ -673,7 +673,7 @@
 
         const statusMsg = document.getElementById('ocrStatusMsg');
         statusMsg.style.display = 'block';
-        statusMsg.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> جاري استخراج بيانات InBody 770 بدقة... | Processing InBody 770...`;
+        statusMsg.innerHTML = <i class="fa-solid fa-spinner fa-spin"></i> جاري استخراج بيانات InBody 770 بدقة... | Processing InBody 770...;
 
         // تعبئة البيانات القياسية للنموذج الذي أرسلته فوراً وبدون تعليق
         setTimeout(() => {
@@ -686,7 +686,7 @@
             updateGenderTheme();
 
             statusMsg.style.color = '#10b981';
-            statusMsg.innerHTML = `<i class="fa-solid fa-check"></i> تم استخراج القياسات وتعبئتها بنجاح! | Data successfully loaded!`;
+            statusMsg.innerHTML = <i class="fa-solid fa-check"></i> تم استخراج القياسات وتعبئتها بنجاح! | Data successfully loaded!;
         }, 600);
     }
 
@@ -749,8 +749,8 @@
         let ageAdjustment = Math.round(fitnessDelta / 7);
         let biologicalAge = realAge - ageAdjustment;
 
-        document.getElementById('reportHeaderInfo').innerText = `المشترك: ${client} (${gender === 'male' ? 'ذكر' : 'أنثى'}) | العمر الحقيقي: ${realAge} | الكوتش: ${coach} | الوزن: ${weight}كجم | الدهون: ${fat}% | العضلات: ${smm}كجم`;
-        document.getElementById('overallScoreVal').innerHTML = fitnessScore + `<span>%</span>`;
+        document.getElementById('reportHeaderInfo').innerText = المشترك: ${client} (${gender === 'male' ? 'ذكر' : 'أنثى'}) | العمر الحقيقي: ${realAge} | الكوتش: ${coach} | الوزن: ${weight}كجم | الدهون: ${fat}% | العضلات: ${smm}كجم;
+        document.getElementById('overallScoreVal').innerHTML = fitnessScore + <span>%</span>;
         document.getElementById('bioAgeVal').innerHTML = biologicalAge + ` <span>سنة</span>`;
 
         const badge = document.getElementById('bioAgeStatusBadge');
@@ -758,20 +758,20 @@
 
         if (biologicalAge < realAge) {
             badge.className = "bio-age-highlight bio-younger";
-            badge.innerText = `🔥 ممتاز! عمرك البيولوجي أصغر من عمرك الحقيقي بمقدار (${realAge - biologicalAge}) سنوات.`;
-            summaryHTML += `أداء بدني وتكوين جسماني ممتاز. انخفاض نسبة الدهون وجودة الكتلة العضلية ساهمت في رفع كفاءة نتيجتك العامة.`;
+            badge.innerText = 🔥 ممتاز! عمرك البيولوجي أصغر من عمرك الحقيقي بمقدار (${realAge - biologicalAge}) سنوات.;
+            summaryHTML += أداء بدني وتكوين جسماني ممتاز. انخفاض نسبة الدهون وجودة الكتلة العضلية ساهمت في رفع كفاءة نتيجتك العامة.;
         } else if (biologicalAge === realAge) {
             badge.className = "bio-age-highlight bio-equal";
-            badge.innerText = `👍 متطابق! عمرك البيولوجي يطابق عمرك الحقيقي (${realAge} سنة).`;
-            summaryHTML += `مستوى متزن ومناسب للبدء في برنامج تدريبي متطور لرفع الكتلة العضلية وتقليل الدهون للوصول لنتائج أفضل في التقييمات القادمة.`;
+            badge.innerText = 👍 متطابق! عمرك البيولوجي يطابق عمرك الحقيقي (${realAge} سنة).;
+            summaryHTML += مستوى متزن ومناسب للبدء في برنامج تدريبي متطور لرفع الكتلة العضلية وتقليل الدهون للوصول لنتائج أفضل في التقييمات القادمة.;
         } else {
             badge.className = "bio-age-highlight bio-older";
-            badge.innerText = `⚠️ تنبيه: عمرك البيولوجي أعلى من عمرك الحقيقي بمقدار (${biologicalAge - realAge}) سنوات.`;
-            summaryHTML += `تشير المدخلات إلى وجود تراجع في بعض عناصر التحمل العضلي أو ارتفاع في الدهون. يُوصى ببرنامج تدريبي مخصص مع الكوتش.`;
+            badge.innerText = ⚠️ تنبيه: عمرك البيولوجي أعلى من عمرك الحقيقي بمقدار (${biologicalAge - realAge}) سنوات.;
+            summaryHTML += تشير المدخلات إلى وجود تراجع في بعض عناصر التحمل العضلي أو ارتفاع في الدهون. يُوصى ببرنامج تدريبي مخصص مع الكوتش.;
         }
 
         if (riskCount > 0) {
-            summaryHTML += `<br><br><strong>الملاحظات الصحية:</strong> تم تسجيل (${riskCount}) تنبيه صحي، يرجى تكييف التمارين بناءً عليها.`;
+            summaryHTML += <br><br><strong>الملاحظات الصحية:</strong> تم تسجيل (${riskCount}) تنبيه صحي، يرجى تكييف التمارين بناءً عليها.;
         }
 
         document.getElementById('detailedReportText').innerHTML = summaryHTML;
