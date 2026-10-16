@@ -8,8 +8,6 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;600;700;900&family=Montserrat:wght@400;600;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- Tesseract OCR Engine -->
     <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 
     <style>
@@ -17,8 +15,8 @@
             --bg-main: #0b0f19;
             --card-bg: #131b2e;
             --card-inner: #1e293b;
-            --bfit-orange: #ff6b00;
-            --bfit-orange-soft: #e05e00;
+            --primary-gold: #ff6b00;
+            --primary-gold-hover: #e05e00;
             --text-white: #ffffff;
             --text-muted: #94a3b8;
             --border-color: #334155;
@@ -32,7 +30,10 @@
             margin: 0;
             padding: 0;
             font-family: 'Tajawal', 'Montserrat', sans-serif;
-            transition: all 0.25s ease;
+        }
+
+        input, select, button, label, .exercise-avatar-box {
+            transition: background-color 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease, color 0.25s ease, transform 0.25s ease;
         }
 
         body {
@@ -43,12 +44,12 @@
             align-items: flex-start;
             padding: 30px 15px;
             min-height: 100vh;
-            background-image: radial-gradient(circle at top right, rgba(255, 107, 0, 0.1), transparent 60%);
+            background-image: radial-gradient(circle at top right, rgba(255, 107, 0, 0.12), transparent 60%);
         }
 
         .assessment-container {
             width: 100%;
-            max-width: 1100px;
+            max-width: 1050px;
             background: var(--card-bg);
             border-radius: 24px;
             box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6);
@@ -56,12 +57,11 @@
             border: 1px solid var(--border-color);
         }
 
-        /* B FIT Brand Header */
         .brand-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 4px solid var(--bfit-orange);
+            border-bottom: 4px solid var(--primary-gold);
             padding-bottom: 20px;
             margin-bottom: 30px;
         }
@@ -73,9 +73,9 @@
         }
 
         .brand-logo-icon {
-            width: 95px;
+            width: 90px;
             height: 65px;
-            background: linear-gradient(135deg, var(--bfit-orange), #ff8800);
+            background: linear-gradient(135deg, var(--primary-gold), #ff8800);
             border-radius: 16px;
             display: flex;
             justify-content: center;
@@ -100,7 +100,7 @@
 
         .brand-titles p {
             font-size: 13px;
-            color: var(--bfit-orange);
+            color: var(--primary-gold);
             font-weight: 700;
             font-family: 'Montserrat', sans-serif;
             letter-spacing: 0.5px;
@@ -113,7 +113,7 @@
             margin: 35px 0 20px 0;
             display: flex;
             align-items: center;
-            border-right: 6px solid var(--bfit-orange);
+            border-right: 6px solid var(--primary-gold);
         }
 
         .section-header h2 {
@@ -165,20 +165,19 @@
         }
 
         .input-box input:focus, .input-box select:focus {
-            border-color: var(--bfit-orange);
+            border-color: var(--primary-gold);
             box-shadow: 0 0 0 4px rgba(255, 107, 0, 0.15);
         }
 
         .ocr-status {
             font-size: 13px;
-            color: var(--bfit-orange);
-            margin-top: 6px;
+            color: var(--primary-gold);
+            margin-top: 5px;
             font-weight: 700;
             display: none;
             line-height: 1.7;
         }
 
-        /* Health Questions */
         .health-question-row {
             display: grid;
             grid-template-columns: 1fr 140px 1fr;
@@ -209,51 +208,48 @@
         .radio-btn-group input[type="radio"]:checked + label.yes-label { background: var(--warning-red); color: #fff; }
         .radio-btn-group input[type="radio"]:checked + label.no-label { background: var(--success-green); color: #fff; }
 
-        /* Exercise Card Layout with Real Dynamic Graphic Cards */
         .exercise-card {
             background: var(--card-inner);
             border: 1px solid var(--border-color);
-            border-radius: 18px;
+            border-radius: 16px;
             padding: 22px;
-            margin-bottom: 22px;
+            margin-bottom: 20px;
             display: grid;
-            grid-template-columns: 220px 1fr;
+            grid-template-columns: 130px 1fr;
             gap: 22px;
             align-items: center;
         }
 
-        .exercise-preview-box {
-            width: 100%;
-            height: 140px;
-            background: #000;
-            border-radius: 14px;
-            overflow: hidden;
-            border: 2px solid var(--bfit-orange);
-            position: relative;
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+        .exercise-avatar-box {
+            width: 130px;
+            height: 105px;
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.98), rgba(30, 41, 59, 0.98));
+            border-radius: 12px;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
+            border: 2px solid var(--accent-gender);
+            color: var(--accent-gender);
+            position: relative;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
         }
 
-        .exercise-preview-box img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
+        .exercise-avatar-box i {
+            font-size: 38px;
+            margin-bottom: 6px;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
         }
 
-        .exercise-preview-box .target-muscles-tag {
-            position: absolute;
-            bottom: 6px;
-            right: 6px;
-            background: rgba(15, 23, 42, 0.88);
-            color: var(--bfit-orange);
+        .exercise-avatar-box .gender-badge {
             font-size: 10px;
-            padding: 3px 8px;
-            border-radius: 6px;
-            font-weight: 800;
+            background: var(--accent-gender);
+            color: #0f172a;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: 900;
             font-family: 'Montserrat', sans-serif;
-            border: 1px solid rgba(255, 107, 0, 0.4);
+            text-transform: uppercase;
         }
 
         .exercise-details h4 {
@@ -278,12 +274,12 @@
 
         .exercise-details h4 span.target-tag {
             font-size: 12px;
-            background: rgba(255, 107, 0, 0.15);
-            color: var(--bfit-orange);
+            background: rgba(255, 107, 0, 0.2);
+            color: var(--primary-gold);
             padding: 4px 10px;
             border-radius: 6px;
             font-weight: 700;
-            border: 1px solid rgba(255, 107, 0, 0.3);
+            border: 1px solid rgba(255, 107, 0, 0.4);
             font-family: 'Montserrat', sans-serif;
             direction: ltr;
         }
@@ -294,7 +290,6 @@
             gap: 15px;
         }
 
-        /* Subdued & Elegant Submit Button */
         .btn-submit {
             width: 100%;
             background: linear-gradient(135deg, #10b981, #059669);
@@ -302,11 +297,11 @@
             padding: 18px;
             border: none;
             border-radius: 14px;
-            font-size: 18px;
+            font-size: 19px;
             font-weight: 900;
             cursor: pointer;
             margin-top: 35px;
-            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
+            box-shadow: 0 10px 25px rgba(16, 185, 129, 0.3);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -316,7 +311,7 @@
         .btn-submit:hover {
             background: linear-gradient(135deg, #059669, #047857);
             transform: translateY(-2px);
-            box-shadow: 0 12px 25px rgba(16, 185, 129, 0.4);
+            box-shadow: 0 14px 30px rgba(16, 185, 129, 0.4);
         }
 
         .result-container {
@@ -332,7 +327,7 @@
             border-radius: 20px;
             padding: 35px;
             text-align: center;
-            border: 1px solid var(--bfit-orange);
+            border: 1px solid var(--primary-gold);
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
         }
 
@@ -352,7 +347,7 @@
 
         .score-metric-card .label { font-size: 13px; color: #94a3b8; margin-bottom: 5px; }
         .score-metric-card .value { font-size: 34px; font-weight: 900; color: #fff; }
-        .score-metric-card .value span { color: var(--bfit-orange); }
+        .score-metric-card .value span { color: var(--primary-gold); }
 
         .bio-age-highlight {
             font-size: 18px;
@@ -376,17 +371,17 @@
             background: rgba(0, 0, 0, 0.3);
             padding: 20px;
             border-radius: 12px;
-            border-right: 4px solid var(--bfit-orange);
+            border-right: 4px solid var(--primary-gold);
         }
 
         @media (max-width: 768px) {
             .assessment-container { padding: 22px 16px; }
             .brand-titles h1 { font-size: 20px; }
             .exercise-card { grid-template-columns: 1fr; justify-items: center; text-align: center; }
-            .exercise-preview-box { width: 100%; height: 160px; }
             .exercise-details { width: 100%; }
             .exercise-details h4 { justify-content: center; }
             .exercise-details p.sub-en { text-align: center; }
+            .exercise-avatar-box { width: 100%; height: 80px; flex-direction: row; gap: 15px; }
             .health-question-row { grid-template-columns: 1fr; text-align: center; }
         }
     </style>
@@ -440,11 +435,11 @@
             </div>
             <div class="input-box">
                 <label>الوزن (كجم) <span class="en">Weight (kg)</span></label>
-                <input type="number" id="weightInput" step="0.1" min="30" max="250" required placeholder="مثال: 71.4">
+                <input type="number" id="weightInput" step="0.1" min="30" max="250" required placeholder="مثال: 72.9">
             </div>
             <div class="input-box">
                 <label>الطول (سم) <span class="en">Height (cm)</span></label>
-                <input type="number" id="heightInput" step="0.1" min="100" max="230" required placeholder="مثال: 179">
+                <input type="number" id="heightInput" step="0.1" min="100" max="230" required placeholder="مثال: 171">
             </div>
             <div class="input-box">
                 <label>نسبة الدهون PBF (%) <span class="en">Body Fat %</span></label>
@@ -509,11 +504,10 @@
             <h2><i class="fa-solid fa-stopwatch"></i> 3. اختبارات التقييم البدني | Physical Assessment Tests</h2>
         </div>
 
-        <!-- Dynamic Test Cards with Visual Previews -->
         <div class="exercise-card">
-            <div class="exercise-preview-box">
-                <img src="https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=400&q=80" alt="Single-Leg Stance">
-                <span class="target-muscles-tag">Core & Ankle</span>
+            <div class="exercise-avatar-box">
+                <i class="fa-solid fa-person-walking" id="avatar1"></i>
+                <span class="gender-badge" id="badge1">MALE</span>
             </div>
             <div class="exercise-details">
                 <h4>1. التوافق العصبي (إغلاق العينين والوقوف على قدم واحدة) <span class="target-tag">Target: 20s Total (10s/leg)</span></h4>
@@ -526,9 +520,9 @@
         </div>
 
         <div class="exercise-card">
-            <div class="exercise-preview-box">
-                <img src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&w=400&q=80" alt="Static Superman">
-                <span class="target-muscles-tag">Lower Back & Glutes</span>
+            <div class="exercise-avatar-box">
+                <i class="fa-solid fa-child-reaching" id="avatar2"></i>
+                <span class="gender-badge" id="badge2">MALE</span>
             </div>
             <div class="exercise-details">
                 <h4>2. التوازن الاستاتيكي (تمرين سوبرمان الثابت) <span class="target-tag">Target: 120s Total (60s/set)</span></h4>
@@ -541,10 +535,70 @@
         </div>
 
         <div class="exercise-card">
-            <div class="exercise-preview-box">
-                <img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&w=400&q=80" alt="Push-Up Test">
-                <span class="target-muscles-tag">Chest, Shoulders & Triceps</span>
+            <div class="exercise-avatar-box">
+                <i class="fa-solid fa-dumbbell" id="avatar3"></i>
+                <span class="gender-badge" id="badge3">MALE</span>
             </div>
             <div class="exercise-details">
                 <h4>3. التحمل العضلي (تمرين الضغط) <span class="target-tag">Target: Set 2 >= 70% of Set 1</span></h4>
-                <p class="sub-en">Push-Up Upper Body Muscular Endurance Test
+                <p class="sub-en">Push-Up Upper Body Muscular Endurance Test</p>
+                <div class="exercise-inputs">
+                    <div class="input-box"><label>الجولة 1 (أقصى تكرار) <span class="en">Set 1 (Max Reps)</span></label><input type="number" id="pushSet1" min="1" required placeholder="أقصى عدد"></div>
+                    <div class="input-box"><label>الجولة 2 (تكرار فعلي) <span class="en">Set 2 (Reps)</span></label><input type="number" id="pushSet2" min="0" required placeholder="تكرارات الجولة 2"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="exercise-card">
+            <div class="exercise-avatar-box">
+                <i class="fa-solid fa-child" id="avatar4"></i>
+                <span class="gender-badge" id="badge4">MALE</span>
+            </div>
+            <div class="exercise-details">
+                <h4>4. الثبات الاستاتيكي (ثبات الاسكوات 90 درجة) <span class="target-tag">Target: 120s Total (60s/set)</span></h4>
+                <p class="sub-en">Static Isometric Squat Hold Test (90°)</p>
+                <div class="exercise-inputs">
+                    <div class="input-box"><label>الجولة 1 (ثواني) <span class="en">Set 1 (s)</span></label><input type="number" id="squatSet1" max="60" min="0" required placeholder="أقصى 60 ثانية"></div>
+                    <div class="input-box"><label>الجولة 2 (ثواني) <span class="en">Set 2 (s)</span></label><input type="number" id="squatSet2" max="60" min="0" required placeholder="أقصى 60 ثانية"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="exercise-card">
+            <div class="exercise-avatar-box">
+                <i class="fa-solid fa-fire" id="avatar5"></i>
+                <span class="gender-badge" id="badge5">MALE</span>
+            </div>
+            <div class="exercise-details">
+                <h4>5. قوة وتحمل عضلات البطن (تمرين Sit-Up) <span class="target-tag">Target: Set 1 >= 15 Reps</span></h4>
+                <p class="sub-en">Abdominal Sit-Up Endurance Test</p>
+                <div class="exercise-inputs">
+                    <div class="input-box"><label>الجولة 1 (أقصى تكرار >=15) <span class="en">Set 1 (Max Reps)</span></label><input type="number" id="sitSet1" min="1" required placeholder="أقصى عدد"></div>
+                    <div class="input-box"><label>الجولة 2 (تكرار فعلي) <span class="en">Set 2 (Reps)</span></label><input type="number" id="sitSet2" min="0" required placeholder="تكرارات الجولة 2"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="exercise-card">
+            <div class="exercise-avatar-box">
+                <i class="fa-solid fa-heart-pulse" id="avatar6"></i>
+                <span class="gender-badge" id="badge6">MALE</span>
+            </div>
+            <div class="exercise-details">
+                <h4>6. كفاءة وقدرة عضلة القلب (تمرين Walkout) <span class="target-tag">Target Set 1: 12-15 Reps</span></h4>
+                <p class="sub-en">Cardiac Hand Walkout Cardiovascular Test</p>
+                <div class="exercise-inputs">
+                    <div class="input-box"><label>الجولة 1 (تكرار 12-15) <span class="en">Set 1 (12-15 Reps)</span></label><input type="number" id="cardiacSet1" max="15" min="0" required placeholder="من 12 إلى 15"></div>
+                    <div class="input-box"><label>الجولة 2 (تكرارات) <span class="en">Set 2 (Reps)</span></label><input type="number" id="cardiacSet2" max="15" min="0" required placeholder="الجولة 2"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="exercise-card">
+            <div class="exercise-avatar-box">
+                <i class="fa-solid fa-brain" id="avatar7"></i>
+                <span class="gender-badge" id="badge7">MALE</span>
+            </div>
+            <div class="exercise-details">
+                <h4>7. الذاكرة العضلية والاتزان (Dumbbell Cuban Press) <span class="target-tag">Target: 24 Reps Total (12/set)</span></h4>
+                <p class="sub-en">Muscle Memory & Shoulder Rotator Coordination Test</p
