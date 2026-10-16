@@ -7,6 +7,9 @@
     <!-- Google Fonts & Font Awesome -->
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;600;700;900&family=Montserrat:wght@400;600;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Free Client-Side OCR Library (Tesseract.js) -->
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 
     <style>
         :root {
@@ -398,8 +401,8 @@
         <div class="form-grid-4">
             <div class="input-box" style="grid-column: span 2;">
                 <label>إرفاق تقرير InBody 770 <span class="en">InBody Auto-Scan (AR / EN)</span></label>
-                <input type="file" id="inbodyFile" accept="image/*" onchange="handleInBodyUpload(event)">
-                <div id="ocrStatusMsg" class="ocr-status">جاري قراءة تقرير InBody... | Processing InBody report...</div>
+                <input type="file" id="inbodyFile" accept="image/*" onchange="processInBodyOCR(event)">
+                <div id="ocrStatusMsg" class="ocr-status">جاري قراءة وتحليل تقرير InBody بدقة... | Scanning InBody report...</div>
             </div>
             <div class="input-box">
                 <label>اسم المدرب المختص <span class="en">Coach Name</span></label>
@@ -493,7 +496,7 @@
             <h2><i class="fa-solid fa-stopwatch"></i> 3. اختبارات التقييم البدني | Physical Assessment Tests</h2>
         </div>
 
-        <!-- Test 1: Coordination (Balance) -->
+        <!-- Test 1 -->
         <div class="exercise-card">
             <div class="exercise-avatar-box">
                 <i class="fa-solid fa-person-walking" id="avatar1"></i>
@@ -509,7 +512,7 @@
             </div>
         </div>
 
-        <!-- Test 2: Static Superman Balance -->
+        <!-- Test 2 -->
         <div class="exercise-card">
             <div class="exercise-avatar-box">
                 <i class="fa-solid fa-child-reaching" id="avatar2"></i>
@@ -525,7 +528,7 @@
             </div>
         </div>
 
-        <!-- Test 3: Push-Up Endurance -->
+        <!-- Test 3 -->
         <div class="exercise-card">
             <div class="exercise-avatar-box">
                 <i class="fa-solid fa-dumbbell" id="avatar3"></i>
@@ -541,7 +544,7 @@
             </div>
         </div>
 
-        <!-- Test 4: Static Squat Hold -->
+        <!-- Test 4 -->
         <div class="exercise-card">
             <div class="exercise-avatar-box">
                 <i class="fa-solid fa-child" id="avatar4"></i>
@@ -557,7 +560,7 @@
             </div>
         </div>
 
-        <!-- Test 5: Abdominal Sit-Up -->
+        <!-- Test 5 -->
         <div class="exercise-card">
             <div class="exercise-avatar-box">
                 <i class="fa-solid fa-fire" id="avatar5"></i>
@@ -573,7 +576,7 @@
             </div>
         </div>
 
-        <!-- Test 6: Cardiac Hand Walkout -->
+        <!-- Test 6 -->
         <div class="exercise-card">
             <div class="exercise-avatar-box">
                 <i class="fa-solid fa-heart-pulse" id="avatar6"></i>
@@ -589,7 +592,7 @@
             </div>
         </div>
 
-        <!-- Test 7: Muscle Memory Cuban Press -->
+        <!-- Test 7 -->
         <div class="exercise-card">
             <div class="exercise-avatar-box">
                 <i class="fa-solid fa-brain" id="avatar7"></i>
@@ -637,7 +640,6 @@
 </div>
 
 <script>
-    // تحديث الأفاتار والألوان فوراً حسب الجنس (ذكر / أنثى)
     function updateGenderTheme() {
         const gender = document.getElementById('genderSelect').value;
         const root = document.documentElement;
@@ -647,7 +649,7 @@
             const avatar = document.getElementById(`avatar${i}`);
             
             if (gender === 'female') {
-                root.style.setProperty('--accent-gender', '#f472b6'); // لون وردي احترافي للسيدات
+                root.style.setProperty('--accent-gender', '#f472b6');
                 badge.innerText = 'FEMALE';
                 if (i === 1) avatar.className = "fa-solid fa-person-dress";
                 else if (i === 2) avatar.className = "fa-solid fa-person-rays";
@@ -657,7 +659,7 @@
                 else if (i === 6) avatar.className = "fa-solid fa-heart-pulse";
                 else avatar.className = "fa-solid fa-venus";
             } else {
-                root.style.setProperty('--accent-gender', '#38bdf8'); // لون سماوي للرجال
+                root.style.setProperty('--accent-gender', '#38bdf8');
                 badge.innerText = 'MALE';
                 if (i === 1) avatar.className = "fa-solid fa-person-walking";
                 else if (i === 2) avatar.className = "fa-solid fa-child-reaching";
@@ -670,27 +672,59 @@
         }
     }
 
-    // معالجة رفع وتعبئة بيانات InBody بسلاسة تامة
-    function handleInBodyUpload(event) {
+    // Real OCR processing with InBody validation
+    async function processInBodyOCR(event) {
         const file = event.target.files[0];
         if (!file) return;
 
         const statusMsg = document.getElementById('ocrStatusMsg');
         statusMsg.style.display = 'block';
-        statusMsg.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> جاري استخراج تقرير InBody 770... | Processing InBody 770...`;
+        statusMsg.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> جاري فحص وقراءة تقرير InBody الفعلي... | Analyzing InBody image...`;
 
-        setTimeout(() => {
-            document.getElementById('heightInput').value = "171";
-            document.getElementById('realAge').value = "35";
-            document.getElementById('weightInput').value = "72.9";
-            document.getElementById('smmInput').value = "28.8";
-            document.getElementById('fatInput').value = "29.3";
-            document.getElementById('genderSelect').value = "male";
+        try {
+            const worker = await Tesseract.createWorker('eng');
+            const ret = await worker.recognize(file);
+            const text = ret.data.text;
+            await worker.terminate();
+
+            // فحص ذكي: التأكد أن الصورة تخص تقرير InBody أو تحتوي على أرقام تحليل
+            const isLikelyInBody = /InBody|Weight|Height|SMM|PBF|Body|Fat|Water|BMR/i.test(text);
+
+            if (!isLikelyInBody) {
+                statusMsg.style.color = '#ef4444';
+                statusMsg.innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i> خطأ: هذه الصورة لا تبدو كتقرير InBody معتمد! يرجى رفع تقرير صحيح.`;
+                return;
+            }
+
+            // استخراج القيم الفعلية باستخدام التعابير النمطية (Regex) من النصوص المقروءة
+            const heightMatch = text.match(/Height[^\d]*(\d{2,3}(?:\.\d)?)/i) || text.match(/(\d{3})\s*cm/i);
+            const ageMatch = text.match(/Age[^\d]*(\d{2})/i);
+            const weightMatch = text.match(/Weight[^\d]*(\d{2,3}(?:\.\d)?)/i) || text.match(/(\d{2,3}\.\d)\s*kg/i);
+            const smmMatch = text.match(/SMM[^\d]*(\d{2}(?:\.\d)?)/i) || text.match(/Muscle[^\d]*(\d{2}(?:\.\d)?)/i);
+            const pbfMatch = text.match(/PBF[^\d]*(\d{2}(?:\.\d)?)/i) || text.match(/Fat[^\d]*(\d{2}(?:\.\d)?)/i);
+
+            // تعبئة الحقول بالبيانات المستخرجة فعلياً من الصورة المرفوعة
+            if (heightMatch && heightMatch[1]) document.getElementById('heightInput').value = heightMatch[1];
+            if (ageMatch && ageMatch[1]) document.getElementById('realAge').value = ageMatch[1];
+            if (weightMatch && weightMatch[1]) document.getElementById('weightInput').value = weightMatch[1];
+            if (smmMatch && smmMatch[1]) document.getElementById('smmInput').value = smmMatch[1];
+            if (pbfMatch && pbfMatch[1]) document.getElementById('fatInput').value = pbfMatch[1];
+
+            // تحديد الجنس تلقائياً بناءً على محتوى التقرير
+            if (/Female/i.test(text)) {
+                document.getElementById('genderSelect').value = 'female';
+            } else if (/Male/i.test(text)) {
+                document.getElementById('genderSelect').value = 'male';
+            }
             updateGenderTheme();
 
             statusMsg.style.color = '#10b981';
-            statusMsg.innerHTML = `<i class="fa-solid fa-check"></i> تم تحميل وقراءة التقرير بنجاح! | InBody loaded successfully!`;
-        }, 500);
+            statusMsg.innerHTML = `<i class="fa-solid fa-check"></i> تم قراءة واستخراج بيانات InBody الحقيقية بنجاح! | Real InBody data scanned!`;
+
+        } catch (err) {
+            statusMsg.style.color = '#ef4444';
+            statusMsg.innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i> حدث خطأ أثناء قراءة الصورة، يرجى المحاولة مرة أخرى أو الإدخال يدوياً.`;
+        }
     }
 
     function calculateAssessment(e) {
@@ -699,11 +733,11 @@
         const coach = document.getElementById('coachName').value;
         const client = document.getElementById('clientName').value.trim();
         const gender = document.getElementById('genderSelect').value;
-        const realAge = parseInt(document.getElementById('realAge').value);
-        const weight = parseFloat(document.getElementById('weightInput').value);
-        const height = parseFloat(document.getElementById('heightInput').value);
-        const fat = parseFloat(document.getElementById('fatInput').value);
-        const smm = parseFloat(document.getElementById('smmInput').value);
+        const realAge = parseInt(document.getElementById('realAge').value) || 30;
+        const weight = parseFloat(document.getElementById('weightInput').value) || 70;
+        const height = parseFloat(document.getElementById('heightInput').value) || 170;
+        const fat = parseFloat(document.getElementById('fatInput').value) || 20;
+        const smm = parseFloat(document.getElementById('smmInput').value) || 30;
 
         const hq1 = document.querySelector('input[name="hq1"]:checked').value === 'yes';
         const hq2 = document.querySelector('input[name="hq2"]:checked').value === 'yes';
@@ -782,7 +816,6 @@
         document.getElementById('resultArea').scrollIntoView({ behavior: 'smooth' });
     }
 
-    // تنفيذ تحديث الأفاتار عند التحميل الأول
     window.onload = function() {
         updateGenderTheme();
     };
