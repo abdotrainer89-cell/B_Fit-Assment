@@ -415,7 +415,8 @@
         <div class="form-grid-4">
             <div class="input-box" style="grid-column: span 2;">
                 <label>إرفاق تقرير InBody 770 (تحليل ذكي فوري) <span class="en">Gemini Vision AI</span></label>
-                <input type="file" id="inbodyFile" accept="image/*">
+                <!-- تم ربط الحدث مباشرة بخاصية onchange لضمان الاستجابة الفورية -->
+                <input type="file" id="inbodyFile" accept="image/*" onchange="handleInBodyUpload(event)">
                 <div id="ocrStatusMsg" class="ocr-status"></div>
             </div>
             <div class="input-box">
@@ -664,92 +665,88 @@
         el.innerHTML = '<i class="' + iconClass + '"></i> ' + message;
     }
 
-    document.addEventListener('DOMContentLoaded', () => {
-        const fileInput = document.getElementById('inbodyFile');
-        if (fileInput) {
-            fileInput.addEventListener('change', async function(event) {
-                const file = event.target.files[0];
-                if (!file) return;
+    // دالة معالجة واستخراج بيانات الـ InBody المباشرة والمضمونة
+    async function handleInBodyUpload(event) {
+        const file = event.target.files[0];
+        if (!file) return;
 
-                setOcrStatus('#ff6b00', 'fa-solid fa-spinner fa-spin', 'جاري معالجة وتمرير التقرير لـ Gemini Vision AI عبر بوابة جوجل...');
+        setOcrStatus('#ff6b00', 'fa-solid fa-spinner fa-spin', 'جاري معالجة وتمرير التقرير لـ Gemini Vision AI عبر بوابة جوجل...');
 
-                try {
-                    const base64Data = await new Promise((resolve, reject) => {
-                        const reader = new FileReader();
-                        reader.onload = function(e) {
-                            const img = new Image();
-                            img.onload = function() {
-                                const canvas = document.createElement('canvas');
-                                const MAX_DIM = 1000;
-                                let w = img.width;
-                                let h = img.height;
-                                if (w > MAX_DIM || h > MAX_DIM) {
-                                    if (w > h) { h = Math.round((h * MAX_DIM) / w); w = MAX_DIM; }
-                                    else { w = Math.round((w * MAX_DIM) / h); h = MAX_DIM; }
-                                }
-                                canvas.width = w;
-                                canvas.height = h;
-                                const ctx = canvas.getContext('2d');
-                                ctx.drawImage(img, 0, 0, w, h);
-                                resolve(canvas.toDataURL('image/jpeg', 0.85).split(',')[1]);
-                            };
-                            img.onerror = reject;
-                            img.src = e.target.result;
-                        };
-                        reader.onerror = reject;
-                        reader.readAsDataURL(file);
-                    });
-
-                    // رابط بوابة Google Apps Script الجديد
-                    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz-ra0qO0N5xT_LD9uaPxGYWf32bDrTVlTFPgIXd_bMnnD681SJb_VnFpErwbTqGxkC/exec";
-
-                    const response = await fetch(APPS_SCRIPT_URL, {
-                        method: 'POST',
-                        body: JSON.stringify({ image: base64Data })
-                    });
-
-                    const responseText = await response.text();
-                    let resJson;
-                    try {
-                        resJson = JSON.parse(responseText);
-                    } catch (errParse) {
-                        throw new Error("استجابة غير صالحة من السيرفر: " + responseText.substring(0, 100));
-                    }
-                    
-                    if (resJson.error) {
-                        throw new Error(typeof resJson.error === 'object' ? JSON.stringify(resJson.error) : resJson.error);
-                    }
-
-                    let rawText = "";
-                    if (resJson.candidates && resJson.candidates[0].content.parts[0].text) {
-                        rawText = resJson.candidates[0].content.parts[0].text;
-                    } else {
-                        rawText = JSON.stringify(resJson);
-                    }
-
-                    const cleaned = rawText.replace(/```json/gi, '').replace(/```/g, '').trim();
-                    const result = JSON.parse(cleaned);
-
-                    if (result.age) document.getElementById('realAge').value = result.age;
-                    if (result.weight) document.getElementById('weightInput').value = result.weight;
-                    if (result.height) document.getElementById('heightInput').value = result.height;
-                    if (result.smm) document.getElementById('smmInput').value = result.smm;
-                    if (result.pbf) document.getElementById('fatInput').value = result.pbf;
-                    if (result.gender) {
-                        const g = String(result.gender).toLowerCase();
-                        document.getElementById('genderSelect').value = (g.includes('fem') || g.includes('أنثى')) ? 'female' : 'male';
-                        updateGenderTheme();
-                    }
-
-                    setOcrStatus('#10b981', 'fa-solid fa-circle-check', 'تم قراءة واستخراج بيانات InBody بدقة بصرية واقعية تامة!');
-
-                } catch (err) {
-                    console.error("Detailed Gateway Error:", err);
-                    setOcrStatus('#ef4444', 'fa-solid fa-circle-xmark', 'خطأ: ' + err.message);
-                }
+        try {
+            const base64Data = await new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = new Image();
+                    img.onload = function() {
+                        const canvas = document.createElement('canvas');
+                        const MAX_DIM = 1000;
+                        let w = img.width;
+                        let h = img.height;
+                        if (w > MAX_DIM || h > MAX_DIM) {
+                            if (w > h) { h = Math.round((h * MAX_DIM) / w); w = MAX_DIM; }
+                            else { w = Math.round((w * MAX_DIM) / h); h = MAX_DIM; }
+                        }
+                        canvas.width = w;
+                        canvas.height = h;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, w, h);
+                        resolve(canvas.toDataURL('image/jpeg', 0.85).split(',')[1]);
+                    };
+                    img.onerror = reject;
+                    img.src = e.target.result;
+                };
+                reader.onerror = reject;
+                reader.readAsDataURL(file);
             });
+
+            // رابط بوابة Google Apps Script المحدث
+            const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz-ra0qO0N5xT_LD9uaPxGYWf32bDrTVlTFPgIXd_bMnnD681SJb_VnFpErwbTqGxkC/exec";
+
+            const response = await fetch(APPS_SCRIPT_URL, {
+                method: 'POST',
+                body: JSON.stringify({ image: base64Data })
+            });
+
+            const responseText = await response.text();
+            let resJson;
+            try {
+                resJson = JSON.parse(responseText);
+            } catch (errParse) {
+                throw new Error("استجابة غير صالحة من السيرفر: " + responseText.substring(0, 100));
+            }
+            
+            if (resJson.error) {
+                throw new Error(typeof resJson.error === 'object' ? JSON.stringify(resJson.error) : resJson.error);
+            }
+
+            let rawText = "";
+            if (resJson.candidates && resJson.candidates[0].content.parts[0].text) {
+                rawText = resJson.candidates[0].content.parts[0].text;
+            } else {
+                rawText = JSON.stringify(resJson);
+            }
+
+            const cleaned = rawText.replace(/```json/gi, '').replace(/```/g, '').trim();
+            const result = JSON.parse(cleaned);
+
+            if (result.age) document.getElementById('realAge').value = result.age;
+            if (result.weight) document.getElementById('weightInput').value = result.weight;
+            if (result.height) document.getElementById('heightInput').value = result.height;
+            if (result.smm) document.getElementById('smmInput').value = result.smm;
+            if (result.pbf) document.getElementById('fatInput').value = result.pbf;
+            if (result.gender) {
+                const g = String(result.gender).toLowerCase();
+                document.getElementById('genderSelect').value = (g.includes('fem') || g.includes('أنثى')) ? 'female' : 'male';
+                updateGenderTheme();
+            }
+
+            setOcrStatus('#10b981', 'fa-solid fa-circle-check', 'تم قراءة واستخراج بيانات InBody بدقة بصرية واقعية تامة!');
+
+        } catch (err) {
+            console.error("Detailed Gateway Error:", err);
+            setOcrStatus('#ef4444', 'fa-solid fa-circle-xmark', 'خطأ: ' + err.message);
         }
-    });
+    }
 
     function num(id, fallback) {
         const v = parseFloat(document.getElementById(id).value);
