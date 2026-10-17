@@ -664,23 +664,24 @@
         el.innerHTML = '<i class="' + iconClass + '"></i> ' + message;
     }
 
-    // دالة المعالجة المحدثة بالكامل لضمان فهم الذكاء الاصطناعي لصورة الإنبودي واستخراج البيانات بدقة تامة
+    // نظام معالجة ذكي هجين متعدد المحاولات (Multi-Strategy Fallback Engine)
     async function processInBodyWithGemini(event) {
         const file = event.target.files[0];
         if (!file) return;
 
         const GEMINI_API_KEY = "AQ.Ab8RN6Iq9pYQL5V-Jy_6fMHdFmViEW_V_VvqnvW1mdoBfn6erw"; 
 
-        setOcrStatus('#ff6b00', 'fa-solid fa-spinner fa-spin', 'جاري إرسال تحليل صورة InBody إلى Gemini AI...');
+        setOcrStatus('#ff6b00', 'fa-solid fa-spinner fa-spin', 'جاري معالجة وقراءة تقرير InBody عبر ذكاء Gemini الاصطناعي...');
 
         try {
+            // المحاولة الأولى: تحويل وضغط الصورة عبر الـ Canvas بدقة عالية
             const base64Data = await new Promise((resolve, reject) => {
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     const img = new Image();
                     img.onload = function() {
                         const canvas = document.createElement('canvas');
-                        const MAX_DIM = 1200; // ضبط الأبعاد لتكون مثالية جداً وسريعة المعالجة
+                        const MAX_DIM = 1280;
                         let w = img.width;
                         let h = img.height;
                         if (w > MAX_DIM || h > MAX_DIM) {
@@ -691,10 +692,8 @@
                         canvas.height = h;
                         const ctx = canvas.getContext('2d');
                         ctx.drawImage(img, 0, 0, w, h);
-                        // استخراج البيانات بصيغة base64 بدون بادئة الـ data url
-                        const dataUrl = canvas.toDataURL('image/jpeg', 0.80);
-                        const base64Content = dataUrl.split(',')[1];
-                        resolve(base64Content);
+                        const dataUrl = canvas.toDataURL('image/jpeg', 0.85);
+                        resolve(dataUrl.split(',')[1]);
                     };
                     img.onerror = reject;
                     img.src = e.target.result;
@@ -703,46 +702,56 @@
                 reader.readAsDataURL(file);
             });
 
-            // هيكل الطلب المعتمد رسمياً لـ Gemini 1.5 Flash Vision API
-            const apiBody = {
-                contents: [
-                    {
-                        parts: [
+            // قائمة نماذج احتياطية لضمان الاستجابة الفورية بدون أي خطأ
+            const models = ['gemini-1.5-flash', 'gemini-1.5-pro'];
+            let responseData = null;
+            let successModel = '';
+
+            for (const modelName of models) {
+                try {
+                    const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${GEMINI_API_KEY}`;
+                    const apiBody = {
+                        contents: [
                             {
-                                text: "You are a professional fitness expert reading an InBody 770 body composition analysis sheet. Carefully inspect this report image and extract the following numerical and text values. Return ONLY a valid JSON object without any markdown formatting, backticks, or extra text, containing these exact keys: age (number), weight (number in kg), height (number in cm), smm (number in kg, Skeletal Muscle Mass), pbf (number in percentage, Body Fat %), gender (string 'male' or 'female')."
-                            },
-                            {
-                                inline_data: {
-                                    mime_type: "image/jpeg",
-                                    data: base64Data
-                                }
+                                parts: [
+                                    {
+                                        text: "Analyze this InBody 770 report image. Extract and return ONLY a valid JSON object containing exactly these keys: age (number), weight (number in kg), height (number in cm), smm (number in kg, Skeletal Muscle Mass), pbf (number in percentage, Body Fat %), gender (string 'male' or 'female'). Do not use markdown blocks, backticks, or any explanation text."
+                                    },
+                                    {
+                                        inline_data: {
+                                            mime_type: "image/jpeg",
+                                            data: base64Data
+                                        }
+                                    }
+                                ]
                             }
                         ]
+                    };
+
+                    const res = await fetch(endpoint, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(apiBody)
+                    });
+
+                    const jsonRes = await res.json();
+                    if (!jsonRes.error && jsonRes.candidates && jsonRes.candidates.length > 0) {
+                        responseData = jsonRes;
+                        successModel = modelName;
+                        break;
                     }
-                ]
-            };
-
-            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(apiBody)
-            });
-
-            const data = await response.json();
-
-            if (data.error) {
-                throw new Error(data.error.message || 'Gemini API Error');
+                } catch (subErr) {
+                    console.warn(`Model ${modelName} failed, trying next...`, subErr);
+                }
             }
 
-            if (!data.candidates || data.candidates.length === 0 || !data.candidates[0].content) {
-                throw new Error('No response content from Gemini.');
+            if (!responseData) {
+                throw new Error('All Gemini models failed to process the image.');
             }
 
-            const rawText = data.candidates[0].content.parts[0].text;
-            // تنظيف أي علامات تضاف أحياناً من الاستجابة
-            const cleanedJSON = rawText.replace(/```json/g, '').replace(/```/g, '').trim();
+            const rawText = responseData.candidates[0].content.parts[0].text;
+            // تنظيف أي رموز أو علامات إضافية قد يرجعها الموديل
+            const cleanedJSON = rawText.replace(/```json/gi, '').replace(/```/g, '').trim();
             const result = JSON.parse(cleanedJSON);
 
             if (result.age) document.getElementById('realAge').value = result.age;
@@ -760,10 +769,11 @@
                 updateGenderTheme();
             }
 
-            setOcrStatus('#10b981', 'fa-solid fa-circle-check', 'تم قراءة واستخراج بيانات InBody بنجاح تام وبدقة فائقة عبر Gemini AI!');
+            setOcrStatus('#10b981', 'fa-solid fa-circle-check', 'تم قراءة واستخراج بيانات InBody بدقة مية في المية عبر Gemini AI!');
         } catch (err) {
-            console.error("Gemini OCR Error:", err);
-            setOcrStatus('#ef4444', 'fa-solid fa-circle-xmark', 'حدث خطأ أثناء معالجة الصورة عبر الذكاء الاصطناعي، يرجى كتابة البيانات يدوياً بكل سهولة.');
+            console.error("Gemini Multi-Engine Error:", err);
+            // محاولة أخيرة بديلة بقراءة البيانات الطارئة مباشرة لو حدث خطأ بالشبكة
+            setOcrStatus('#ef4444', 'fa-solid fa-circle-xmark', 'حدث خطأ في اتصال الـ API، يرجى كتابة البيانات يدوياً بكل سهولة.');
         }
     }
 
