@@ -1,4 +1,4 @@
-‏<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
@@ -449,7 +449,7 @@
         }
         @keyframes glassDrift {
             from { transform: translate3d(-1.5%, -1%, 0) scale(1); }
-            to { transform: translate3d(1.5%, 1.2%, 0) scale(1.06); }
+            to   { transform: translate3d(1.5%, 1.2%, 0) scale(1.06); }
         }
         @media (prefers-reduced-motion: reduce) { body::before { animation: none; } }
 
@@ -627,6 +627,233 @@
             .zone-row { grid-template-columns: 70px 1fr; }
             .zone-row .zr-bpm { grid-column: 1 / -1; text-align: left; }
         }
+
+        /* ===== B_FIT RGB light theme ===== */
+        @property --bf-a { syntax: "<angle>"; inherits: false; initial-value: 0deg; }
+        :root {
+            --rgb-r: #ff6b9d;
+            --rgb-v: #9b7bff;
+            --rgb-b: #4cb8ff;
+            --rgb-g: #3ddcb0;
+            --rgb-strip: linear-gradient(90deg, #ff6b9d, #9b7bff, #4cb8ff, #3ddcb0, #ff6b9d);
+            --rgb-strip-v: linear-gradient(180deg, #ff6b9d, #9b7bff, #4cb8ff);
+            --rgb-glow: 0 0 0 4px rgba(155, 123, 255, 0.16), 0 0 22px rgba(255, 107, 157, 0.20), 0 0 26px rgba(76, 184, 255, 0.20);
+            --rose-text: #b8336a;
+        }
+        @keyframes bfFlow { from { background-position: 0% 50%; } to { background-position: 300% 50%; } }
+        @keyframes bfSpin { to { --bf-a: 360deg; } }
+
+        body { background-image: linear-gradient(135deg, #fff1f7 0%, #eef4ff 45%, #f1efff 100%); }
+        body::before {
+            background:
+                radial-gradient(38% 34% at 10% 12%, rgba(255, 107, 157, 0.50), transparent 70%),
+                radial-gradient(34% 30% at 90% 10%, rgba(76, 184, 255, 0.50), transparent 70%),
+                radial-gradient(40% 36% at 84% 88%, rgba(155, 123, 255, 0.46), transparent 70%),
+                radial-gradient(34% 30% at 8% 90%, rgba(61, 220, 176, 0.38), transparent 70%);
+        }
+        body::after {
+            content: "";
+            position: fixed; top: 0; left: 0; right: 0; height: 3px; z-index: 50; pointer-events: none;
+            background: var(--rgb-strip); background-size: 300% 100%;
+            box-shadow: 0 0 14px rgba(155, 123, 255, 0.55), 0 0 28px rgba(255, 107, 157, 0.35);
+            animation: bfFlow 14s linear infinite;
+        }
+
+        .assessment-container {
+            box-shadow: 0 30px 80px rgba(110, 90, 180, 0.22), 0 0 70px rgba(155, 123, 255, 0.16), 0 0 90px rgba(76, 184, 255, 0.10), inset 0 1px 0 rgba(255, 255, 255, 0.95), inset 0 -1px 0 rgba(255, 255, 255, 0.4);
+        }
+        .assessment-container::after {
+            content: "";
+            position: absolute; inset: 0; z-index: 0; border-radius: inherit; padding: 1.5px; pointer-events: none;
+            background: conic-gradient(from var(--bf-a), #ff6b9d, #9b7bff, #4cb8ff, #3ddcb0, #4cb8ff, #9b7bff, #ff6b9d);
+            -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+            -webkit-mask-composite: xor;
+            mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+            opacity: 0.75;
+            animation: bfSpin 18s linear infinite;
+        }
+
+        .brand-header { border-bottom: 0; position: relative; }
+        .brand-header::after {
+            content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 3px; border-radius: 3px;
+            background: var(--rgb-strip); background-size: 300% 100%;
+            box-shadow: 0 0 12px rgba(155, 123, 255, 0.45), 0 0 18px rgba(255, 107, 157, 0.30);
+            animation: bfFlow 16s linear infinite;
+        }
+        .brand-titles p {
+            background: linear-gradient(90deg, #e0457f, #8a63f0, #2f9be8);
+            -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent;
+        }
+
+        .section-header { position: relative; overflow: hidden; border-right: 1px solid rgba(255, 255, 255, 0.80); }
+        .section-header::after {
+            content: ""; position: absolute; top: 0; bottom: 0; right: 0; width: 6px;
+            background: var(--rgb-strip-v); box-shadow: 0 0 14px rgba(155, 123, 255, 0.6);
+        }
+
+        .section-header, .health-question-row, .exercise-card, .score-metric-card, .calc-panel, .calc-card, .zone-row, .report-extra {
+            box-shadow: 0 8px 24px rgba(110, 90, 180, 0.10), 0 0 0 1px rgba(155, 123, 255, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.95);
+        }
+        .exercise-card, .health-question-row, .calc-card { transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease; }
+        .exercise-card:hover, .health-question-row:hover {
+            transform: translateY(-2px);
+            border-color: rgba(155, 123, 255, 0.55);
+            box-shadow: 0 14px 32px rgba(110, 90, 180, 0.16), 0 0 26px rgba(155, 123, 255, 0.20), 0 0 30px rgba(76, 184, 255, 0.14), inset 0 1px 0 #fff;
+        }
+        .calc-card:hover { transform: translateY(-2px); box-shadow: 0 10px 24px rgba(110, 90, 180, 0.16), 0 0 20px rgba(76, 184, 255, 0.20), inset 0 1px 0 #fff; }
+
+        .input-box input:hover, .input-box select:hover { border-color: rgba(155, 123, 255, 0.55); }
+        .input-box input:focus, .input-box select:focus {
+            border-color: #9b7bff;
+            box-shadow: 0 0 0 4px rgba(155, 123, 255, 0.18), 0 0 20px rgba(255, 107, 157, 0.20), 0 0 22px rgba(76, 184, 255, 0.22);
+        }
+        .ocr-status { color: #7a56e0; }
+
+        .radio-btn-group input[type="radio"]:checked + label.yes-label { background: linear-gradient(135deg, #ff7aa6, #ef4f86); box-shadow: 0 4px 12px rgba(255, 107, 157, 0.45); }
+        .radio-btn-group input[type="radio"]:checked + label.no-label { background: linear-gradient(135deg, #4fe0b8, #20b98f); box-shadow: 0 4px 12px rgba(61, 220, 176, 0.45); }
+
+        .exercise-avatar-box { box-shadow: 0 10px 24px rgba(110, 90, 180, 0.16), 0 0 22px color-mix(in srgb, var(--accent-gender) 38%, transparent), inset 0 1px 0 #fff; }
+        .exercise-details h4 span.target-tag {
+            background: linear-gradient(135deg, rgba(255, 107, 157, 0.14), rgba(155, 123, 255, 0.14), rgba(76, 184, 255, 0.14));
+            color: #7a3fc4; border: 1px solid rgba(155, 123, 255, 0.40);
+        }
+
+        .btn-submit {
+            background: linear-gradient(110deg, #ff6b9d, #9b7bff, #4cb8ff, #9b7bff, #ff6b9d);
+            background-size: 300% 100%;
+            animation: bfFlow 10s linear infinite;
+            text-shadow: 0 1px 2px rgba(60, 30, 120, 0.30);
+            box-shadow: 0 12px 28px rgba(155, 123, 255, 0.34), 0 0 30px rgba(255, 107, 157, 0.26), 0 0 34px rgba(76, 184, 255, 0.24), inset 0 1px 0 rgba(255, 255, 255, 0.55), inset 0 -2px 6px rgba(70, 40, 140, 0.18);
+        }
+        .btn-submit:hover { box-shadow: 0 16px 36px rgba(155, 123, 255, 0.42), 0 0 40px rgba(255, 107, 157, 0.34), 0 0 44px rgba(76, 184, 255, 0.32), inset 0 1px 0 rgba(255, 255, 255, 0.6); }
+        .btn-submit:active { transform: translateY(0) scale(0.995); }
+
+        .input-box label.upload-zone { border: 2px dashed rgba(155, 123, 255, 0.65); background: linear-gradient(135deg, rgba(255, 107, 157, 0.06), rgba(155, 123, 255, 0.06), rgba(76, 184, 255, 0.08)); }
+        .input-box label.upload-zone:hover, .input-box label.upload-zone.drag { background: linear-gradient(135deg, rgba(255, 107, 157, 0.12), rgba(155, 123, 255, 0.12), rgba(76, 184, 255, 0.14)); box-shadow: 0 0 26px rgba(155, 123, 255, 0.25); }
+        .sr-file:focus-visible + label.upload-zone { box-shadow: 0 0 0 4px rgba(155, 123, 255, 0.30); }
+        .upload-icon { background: linear-gradient(135deg, #ff6b9d, #9b7bff 60%, #4cb8ff); box-shadow: 0 6px 16px rgba(155, 123, 255, 0.40), 0 0 18px rgba(255, 107, 157, 0.28), inset 0 1px 1px rgba(255, 255, 255, 0.5); }
+        .ocr-progress > div { background: linear-gradient(90deg, #ff6b9d, #9b7bff, #4cb8ff); box-shadow: 0 0 10px rgba(155, 123, 255, 0.6); }
+        .input-box input.field-ok { border-color: #3ddcb0; box-shadow: 0 0 0 3px rgba(61, 220, 176, 0.20), 0 0 14px rgba(61, 220, 176, 0.25); }
+
+        .result-container { border-top: 0; position: relative; }
+        .result-container::before {
+            content: ""; position: absolute; top: 0; left: 0; right: 0; height: 2px; border-radius: 2px; opacity: 0.8;
+            background: var(--rgb-strip); background-size: 300% 100%; animation: bfFlow 16s linear infinite;
+        }
+        .result-card { border: 1px solid rgba(155, 123, 255, 0.45); box-shadow: 0 18px 44px rgba(110, 90, 180, 0.18), 0 0 44px rgba(155, 123, 255, 0.16), 0 0 50px rgba(76, 184, 255, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.95); }
+        .score-metric-card .value span { color: #7a56e0; }
+        .report-summary-text { border-right: 4px solid transparent; border-image: var(--rgb-strip-v) 1; }
+
+        .calc-card.main { border-color: rgba(155, 123, 255, 0.50); background: linear-gradient(135deg, rgba(255, 238, 246, 0.80), rgba(238, 240, 255, 0.80), rgba(232, 246, 255, 0.80)); box-shadow: 0 6px 20px rgba(155, 123, 255, 0.18), 0 0 20px rgba(255, 107, 157, 0.14), inset 0 1px 0 #fff; }
+        .calc-card .value.mp { color: #d6336f; }
+        .calc-card .value.mc { color: #2587d9; }
+        .calc-card .value.mf { color: #12a07a; }
+        .macro-bar { box-shadow: inset 0 1px 3px rgba(110, 90, 180, 0.2), 0 0 16px rgba(155, 123, 255, 0.18); }
+        .macro-bar i.mp { background: linear-gradient(135deg, #ff7aa6, #ef4f86); }
+        .macro-bar i.mc { background: linear-gradient(135deg, #6ec6ff, #3c9cf0); }
+        .macro-bar i.mf { background: linear-gradient(135deg, #5fe6bf, #22bf93); }
+
+        .zone-row { position: relative; overflow: hidden; }
+        .zone-row::before { content: ""; position: absolute; top: 0; bottom: 0; right: 0; width: 4px; background: var(--zc, #9b7bff); box-shadow: 0 0 10px var(--zc, #9b7bff); }
+        .zone-row:nth-child(1) { --zc: #4cb8ff; }
+        .zone-row:nth-child(2) { --zc: #3ddcb0; }
+        .zone-row:nth-child(3) { --zc: #9b7bff; }
+        .zone-row:nth-child(4) { --zc: #ff8fc0; }
+        .zone-row:nth-child(5) { --zc: #ff5b8f; }
+        .zone-row.active { background: rgba(255, 255, 255, 0.85); border-color: var(--zc, #9b7bff); box-shadow: 0 0 0 3px rgba(155, 123, 255, 0.14), 0 0 22px color-mix(in srgb, var(--zc, #9b7bff) 40%, transparent); }
+        .zone-row .zr-pct { color: color-mix(in srgb, var(--zc, #9b7bff) 70%, #1d2433); }
+
+        @media (max-width: 768px) {
+            .assessment-container::after { opacity: 0.6; }
+            .zone-row::before { width: 3px; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            body::after, .assessment-container::after, .brand-header::after, .btn-submit, .result-container::before { animation: none; }
+        }
+
+        /* ===== Food calculator ===== */
+        .food-search-box { position: relative; }
+        .food-list {
+            position: absolute; top: 100%; left: 0; right: 0; z-index: 30; margin-top: 6px; list-style: none; max-height: 320px; overflow-y: auto;
+            background: rgba(255, 255, 255, 0.92); -webkit-backdrop-filter: blur(22px) saturate(170%); backdrop-filter: blur(22px) saturate(170%);
+            border: 1px solid rgba(155, 123, 255, 0.40); border-radius: 14px;
+            box-shadow: 0 18px 40px rgba(110, 90, 180, 0.22), 0 0 26px rgba(155, 123, 255, 0.16);
+        }
+        .food-list[hidden] { display: none; }
+        .food-list li { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 10px 14px; cursor: pointer; font-size: 14px; color: var(--ink); border-bottom: 1px solid rgba(140, 152, 185, 0.18); }
+        .food-list li:last-child { border-bottom: 0; }
+        .food-list li.hi, .food-list li:hover { background: linear-gradient(90deg, rgba(255, 107, 157, 0.12), rgba(155, 123, 255, 0.12), rgba(76, 184, 255, 0.12)); }
+        .food-list li small { font-family: 'Montserrat', sans-serif; color: var(--text-muted); font-weight: 500; margin-inline-start: 6px; }
+        .food-list .fl-name { font-weight: 700; }
+        .food-list .fl-meta { font-size: 12px; color: var(--text-muted); white-space: nowrap; direction: ltr; }
+        .food-list .food-empty { cursor: default; color: var(--text-muted); font-size: 13px; }
+        .food-pick-card { margin-top: 16px; padding: 18px; border-radius: 16px; background: rgba(255, 255, 255, 0.55); border: 1px solid rgba(255, 255, 255, 0.85); box-shadow: 0 6px 18px rgba(110, 90, 180, 0.10), inset 0 1px 0 #fff; }
+        .food-pick-head { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; margin-bottom: 8px; font-size: 16px; color: var(--ink); }
+        .food-tag { font-size: 12px; font-weight: 700; padding: 3px 10px; border-radius: 6px; color: #7a3fc4; border: 1px solid rgba(155, 123, 255, 0.40); background: linear-gradient(135deg, rgba(255, 107, 157, 0.12), rgba(76, 184, 255, 0.12)); }
+        .seg { display: flex; padding: 3px; border-radius: 12px; background: rgba(255, 255, 255, 0.60); box-shadow: inset 0 1px 2px rgba(112, 96, 150, 0.12); border: 1.5px solid rgba(140, 152, 185, 0.35); }
+        .seg button { flex: 1; border: 0; background: transparent; padding: 9px 8px; border-radius: 9px; font-size: 13px; font-weight: 700; color: var(--text-muted); cursor: pointer; }
+        .seg button.on { color: #fff; background: linear-gradient(135deg, #ff6b9d, #9b7bff 60%, #4cb8ff); box-shadow: 0 4px 12px rgba(155, 123, 255, 0.40); }
+        .btn-soft {
+            display: inline-flex; align-items: center; gap: 8px; margin-top: 14px; padding: 11px 20px; border: 0; border-radius: 12px; cursor: pointer;
+            font-size: 14px; font-weight: 900; color: #fff; background: linear-gradient(135deg, #ff6b9d, #9b7bff 60%, #4cb8ff);
+            box-shadow: 0 8px 20px rgba(155, 123, 255, 0.30), inset 0 1px 0 rgba(255, 255, 255, 0.5);
+        }
+        .btn-soft:hover { transform: translateY(-1px); box-shadow: 0 12px 26px rgba(155, 123, 255, 0.40), 0 0 24px rgba(255, 107, 157, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.55); }
+        .btn-soft.ghost { color: var(--rose-text); background: rgba(255, 255, 255, 0.6); border: 1px solid rgba(255, 107, 157, 0.45); box-shadow: none; }
+        .btn-ghost-toggle { margin: 16px 0 0; }
+        .micro-row { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0 0; }
+        .micro-chip { font-size: 12px; padding: 5px 10px; border-radius: 999px; color: var(--ink); background: rgba(255, 255, 255, 0.65); border: 1px solid rgba(155, 123, 255, 0.25); direction: ltr; }
+        .micro-chip b { font-weight: 700; color: var(--text-muted); margin-inline-end: 4px; }
+        .calc-note.conv { font-weight: 700; color: #6a45d0; direction: rtl; }
+        #customForm { margin-top: 14px; padding: 16px; border-radius: 16px; background: rgba(255, 255, 255, 0.5); border: 1px dashed rgba(155, 123, 255, 0.55); }
+        #customForm[hidden] { display: none; }
+        .cf-save { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--ink); margin: 4px 0 8px; cursor: pointer; }
+        .cf-save input { width: auto; accent-color: #9b7bff; }
+        #mealOut { margin-top: 20px; }
+        .meal-wrap { overflow-x: auto; border-radius: 14px; border: 1px solid rgba(255, 255, 255, 0.85); background: rgba(255, 255, 255, 0.55); }
+        .meal-table { width: 100%; border-collapse: collapse; font-size: 14px; color: var(--ink); min-width: 460px; }
+        .meal-table th { font-size: 12px; color: var(--text-muted); font-weight: 700; padding: 10px 12px; text-align: right; border-bottom: 1px solid rgba(140, 152, 185, 0.25); }
+        .meal-table td { padding: 10px 12px; text-align: right; border-bottom: 1px solid rgba(140, 152, 185, 0.15); }
+        .meal-table td[dir="ltr"], .meal-table th:nth-child(n+2) { text-align: center; }
+        .meal-table tfoot td { font-weight: 900; background: linear-gradient(90deg, rgba(255, 107, 157, 0.10), rgba(155, 123, 255, 0.10), rgba(76, 184, 255, 0.10)); border-bottom: 0; }
+        .meal-del { width: 28px; height: 28px; border: 0; border-radius: 8px; cursor: pointer; font-size: 18px; line-height: 1; color: #d6336f; background: rgba(255, 107, 157, 0.12); }
+        .meal-del:hover { background: rgba(255, 107, 157, 0.25); }
+        .plan-box { margin-top: 16px; padding: 14px 16px; border-radius: 14px; background: rgba(255, 255, 255, 0.55); border: 1px solid rgba(255, 255, 255, 0.85); }
+        .plan-box h5 { font-size: 14px; font-weight: 900; color: var(--ink); margin-bottom: 10px; }
+        .plan-row { display: grid; grid-template-columns: 120px 1fr 190px; align-items: center; gap: 10px; margin-bottom: 8px; font-size: 13px; color: var(--ink); }
+        .plan-bar { height: 10px; border-radius: 8px; background: rgba(140, 152, 185, 0.22); overflow: hidden; direction: ltr; }
+        .plan-bar i { display: block; height: 100%; border-radius: 8px; }
+        .plan-bar i.mc0 { background: linear-gradient(90deg, #ff6b9d, #9b7bff, #4cb8ff); }
+        .plan-bar i.mp { background: linear-gradient(135deg, #ff7aa6, #ef4f86); }
+        .plan-bar i.mc { background: linear-gradient(135deg, #6ec6ff, #3c9cf0); }
+        .plan-bar i.mf { background: linear-gradient(135deg, #5fe6bf, #22bf93); }
+        .plan-bar i.over { box-shadow: 0 0 10px rgba(239, 68, 68, 0.6); filter: saturate(1.2) hue-rotate(-12deg); }
+        .plan-row .pr-val { direction: ltr; text-align: left; font-weight: 700; font-family: 'Montserrat', sans-serif; font-size: 12px; }
+        @media (max-width: 768px) {
+            .plan-row { grid-template-columns: 1fr; gap: 4px; }
+            .plan-row .pr-val { text-align: right; }
+        }
+
+        /* ===== Nutrition Facts label (white box, black text) ===== */
+        .nutri-label { background: #fff; color: #000; border: 2px solid #000; border-radius: 6px; padding: 10px 14px 8px; max-width: 420px; margin: 16px auto 4px; font-family: 'Montserrat', 'Tajawal', Arial, sans-serif; box-shadow: 0 10px 28px rgba(110, 90, 180, 0.18); }
+        .nutri-label em { font-style: normal; font-weight: 500; font-family: 'Tajawal', 'Montserrat', sans-serif; }
+        .nl-title { font-size: 30px; font-weight: 900; line-height: 1.05; letter-spacing: -0.5px; }
+        .nl-title em { font-size: 15px; margin-inline-start: 8px; letter-spacing: 0; }
+        .nl-serving { font-size: 13px; line-height: 1.5; padding: 4px 0 6px; border-bottom: 0; }
+        .nl-thick { height: 8px; background: #000; margin: 2px 0; }
+        .nl-medium { height: 4px; background: #000; margin: 2px 0; }
+        .nl-cal { display: flex; justify-content: space-between; align-items: flex-end; padding: 2px 0; }
+        .nl-cal span { display: flex; flex-direction: column; font-size: 20px; }
+        .nl-cal small { font-size: 11px; font-weight: 700; }
+        .nl-cal strong { font-size: 42px; font-weight: 900; line-height: 1; }
+        .nl-dvhead { text-align: right; font-size: 12px; font-weight: 900; padding: 2px 0; border-bottom: 1px solid #000; }
+        .nl-row { display: flex; justify-content: space-between; gap: 10px; font-size: 14px; padding: 3px 0; border-bottom: 1px solid #000; }
+        .nl-row.sub { padding-inline-start: 18px; }
+        .nl-row .nl-dv { font-weight: 900; min-width: 40px; text-align: right; }
+        .nl-foot { font-size: 11px; line-height: 1.55; margin-top: 4px; color: #000; }
+        .qty-chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 4px 0 6px; }
+        .qty-chips button { border: 1px solid rgba(155, 123, 255, 0.45); background: rgba(255, 255, 255, 0.7); color: var(--ink); border-radius: 999px; padding: 6px 14px; font-size: 13px; font-weight: 700; cursor: pointer; direction: ltr; }
+        .qty-chips button:hover { background: linear-gradient(135deg, rgba(255, 107, 157, 0.15), rgba(76, 184, 255, 0.15)); }
     </style>
 </head>
 <body>
@@ -880,10 +1107,15 @@
                 <div class="input-box">
                     <label>الهدف <span class="en">Goal</span></label>
                     <select id="goalSelect">
-                        <option value="maintain">ثبات الوزن / Maintain</option>
-                        <option value="cut">تنشيف / Fat Loss</option>
-                        <option value="bulk">زيادة عضل / Muscle Gain</option>
+                        <option value="maintain">تثبيت الوزن / Weight Maintenance</option>
+                        <option value="cut">خسارة دهون / Fat Loss</option>
+                        <option value="lose">خسارة وزن / Weight Loss</option>
+                        <option value="bulk">زيادة كتلة عضلية / Muscle Mass Gain</option>
                     </select>
+                </div>
+                <div class="input-box">
+                    <label>الوزن المراد الوصول إليه (كجم) <span class="en">Target Weight (kg)</span></label>
+                    <input type="number" id="targetWeight" step="any" inputmode="decimal" placeholder="مثال: 65">
                 </div>
             </div>
             <div id="nutritionOut"></div>
@@ -896,14 +1128,30 @@
             <div class="form-grid-4">
                 <div class="input-box">
                     <label>معدل القلب وقت الراحة (نبضة/دقيقة) <span class="en">Resting Heart Rate (bpm)</span></label>
-                    <input type="number" id="restHR" min="30" max="120" step="1" placeholder="مثال: 65">
+                    <input type="number" id="restHR" step="any" inputmode="decimal" placeholder="مثال: 65">
                 </div>
                 <div class="input-box">
                     <label>نسبة الشدة المطلوبة (%) <span class="en">Target Intensity (%)</span></label>
-                    <input type="number" id="intensityPct" min="30" max="100" step="1" value="70">
+                    <input type="number" id="intensityPct" step="any" inputmode="decimal" value="70">
                 </div>
             </div>
             <div id="karvonenOut"></div>
+        </div>
+
+        <div class="section-header">
+            <h2><i class="fa-solid fa-bowl-food"></i> 6. حاسبة الغذاء | Food Calculator</h2>
+        </div>
+        <div class="calc-panel">
+            <div class="input-box food-search-box">
+                <label>ابحث عن طعام (عربي أو إنجليزي) <span class="en">Search food (Arabic or English)</span></label>
+                <input type="text" id="foodSearch" autocomplete="off" role="combobox" aria-expanded="false" aria-controls="foodList" placeholder="مثال: أرز، دجاج، rice، chicken">
+                <ul id="foodList" class="food-list" role="listbox" hidden></ul>
+            </div>
+            <div id="foodPick"></div>
+            <button type="button" class="btn-soft ghost btn-ghost-toggle" id="customToggle" aria-expanded="false"><i class="fa-solid fa-pen-to-square"></i> طعام مخصص | Custom food</button>
+            <div id="customForm" hidden></div>
+            <div id="mealOut"></div>
+            <p class="calc-note">القيم تقريبية لكل 100 جم (متوسطات مرجعية). معامل الطبخ = وزن المطبوخ ÷ وزن الخام ويمكن تعديله حسب طريقة الطبخ. | Values are approximate per 100 g. Yield = cooked weight ÷ raw weight and can be adjusted.</p>
         </div>
 
         <button type="submit" class="btn-submit">
@@ -943,7 +1191,7 @@
     ];
 
     const AV_STYLE = {
-        male: { torso: 16, thigh: 9.5, arm: 7, head: 9.5, hipR: 0, shoulder: 22, waist: 14, hip: 14 },
+        male:   { torso: 16,   thigh: 9.5, arm: 7,   head: 9.5, hipR: 0,   shoulder: 22, waist: 14, hip: 14 },
         female: { torso: 12.5, thigh: 8.5, arm: 5.6, head: 8.8, hipR: 7.5, shoulder: 17, waist: 10, hip: 16 }
     };
     const AV_HAIR = '#334155';
@@ -953,50 +1201,50 @@
         1: {
             kind: 'side', dir: 1, eyesClosed: true,
             head: [101, 19], neck: [100, 31], sh: [100, 36], hip: [100, 72],
-            legFar: [[100, 72], [100, 95], [100, 117], [109, 117]],
+            legFar:  [[100, 72], [100, 95], [100, 117], [109, 117]],
             legNear: [[100, 72], [124, 74], [124, 97], [133, 97]],
-            armFar: [[100, 38], [84, 47], [68, 42]],
+            armFar:  [[100, 38], [84, 47], [68, 42]],
             armNear: [[100, 38], [117, 47], [134, 42]]
         },
         2: {
             kind: 'side', dir: 1, mat: true,
             head: [137, 84], neck: [129, 92], sh: [120, 98], hip: [78, 106],
-            legFar: [[78, 108], [52, 100], [26, 91], [19, 88]],
+            legFar:  [[78, 108], [52, 100], [26, 91], [19, 88]],
             legNear: [[78, 106], [52, 97], [26, 88], [19, 85]],
-            armFar: [[118, 100], [144, 94], [170, 88]],
+            armFar:  [[118, 100], [144, 94], [170, 88]],
             armNear: [[120, 98], [146, 91], [172, 84]]
         },
         3: {
             kind: 'side', dir: 1,
             head: [131, 71], neck: [121, 75], sh: [116, 78], hip: [72, 95],
-            legFar: [[72, 95], [50, 103], [28, 112], [22, 113]],
+            legFar:  [[72, 95], [50, 103], [28, 112], [22, 113]],
             legNear: [[72, 95], [50, 103], [28, 112], [22, 113]],
-            armFar: [[111, 78], [111, 97], [111, 114]],
+            armFar:  [[111, 78], [111, 97], [111, 114]],
             armNear: [[116, 78], [116, 97], [116, 114]]
         },
         4: {
             kind: 'side', dir: 1,
             head: [81, 29], neck: [77, 40], sh: [74, 45], hip: [62, 80],
-            legFar: [[62, 80], [92, 80], [92, 112], [102, 113]],
+            legFar:  [[62, 80], [92, 80], [92, 112], [102, 113]],
             legNear: [[62, 80], [96, 80], [96, 112], [106, 113]],
-            armFar: [[74, 44], [96, 44], [118, 44]],
+            armFar:  [[74, 44], [96, 44], [118, 44]],
             armNear: [[74, 47], [96, 47], [118, 47]],
             marker: 'squat'
         },
         5: {
             kind: 'side', dir: -1, mat: true,
             head: [50, 62], neck: [57, 70], sh: [62, 76], hip: [86, 108],
-            legFar: [[86, 108], [107, 82], [125, 111], [135, 112]],
+            legFar:  [[86, 108], [107, 82], [125, 111], [135, 112]],
             legNear: [[86, 108], [110, 80], [128, 110], [138, 111]],
-            armFar: [[62, 80], [80, 80], [100, 78]],
+            armFar:  [[62, 80], [80, 80], [100, 78]],
             armNear: [[62, 78], [82, 78], [102, 76]]
         },
         6: {
             kind: 'side', dir: 1,
             head: [117, 87], neck: [110, 80], sh: [104, 74], hip: [72, 44],
-            legFar: [[72, 44], [48, 79], [27, 113], [38, 114]],
+            legFar:  [[72, 44], [48, 79], [27, 113], [38, 114]],
             legNear: [[72, 44], [51, 79], [30, 113], [41, 114]],
-            armFar: [[100, 78], [106, 96], [112, 113]],
+            armFar:  [[100, 78], [106, 96], [112, 113]],
             armNear: [[104, 76], [110, 95], [116, 113]],
             marker: 'walk'
         },
@@ -1229,10 +1477,10 @@
         zones: {
             labels: [0.20, 0.072, 0.52, 0.090],
             height: [0.2245, 0.0895, 0.290, 0.1045],
-            age: [0.3285, 0.0895, 0.362, 0.1045],
+            age:    [0.3285, 0.0895, 0.362, 0.1045],
             gender: [0.398, 0.0895, 0.455, 0.1045],
             weight: [0.548, 0.1930, 0.600, 0.2065],
-            bfm: [0.185, 0.2395, 0.240, 0.2545],
+            bfm:    [0.185, 0.2395, 0.240, 0.2545],
             calories: [0.780, 0.7690, 0.826, 0.7860]
         },
         rows: { weight: [0.3298, 0.3363], smm: [0.3581, 0.3650], pbf: [0.4856, 0.4921] }
@@ -1591,9 +1839,10 @@
 
     // ===== Nutrition (calories + macros) and Karvonen target heart rate =====
     const GOAL_FACTORS = {
-        maintain: { f: 1.00, ar: 'ثبات الوزن', en: 'Maintain' },
-        cut: { f: 0.85, ar: 'تنشيف', en: 'Fat Loss' },
-        bulk: { f: 1.10, ar: 'زيادة عضل', en: 'Muscle Gain' }
+        maintain: { f: 1.00, dir: 0,  ar: 'تثبيت الوزن',       en: 'Weight Maintenance' },
+        cut:      { f: 0.85, dir: -1, ar: 'خسارة دهون',        en: 'Fat Loss' },
+        lose:     { f: 0.80, dir: -1, ar: 'خسارة وزن',         en: 'Weight Loss' },
+        bulk:     { f: 1.10, dir: 1,  ar: 'زيادة كتلة عضلية',  en: 'Muscle Mass Gain' }
     };
     const HR_ZONES = [
         [50, 60, 'إحماء', 'Warm-up'],
@@ -1621,7 +1870,15 @@
         const pK = proteinG * 4, fK = fatG * 9, cK = carbsG * 4, tot = pK + fK + cK;
         const pPct = Math.round(pK / tot * 100), fPct = Math.round(fK / tot * 100);
         const cPct = Math.max(0, 100 - pPct - fPct);
-        return { base: Math.round(base), kcal: kcal, goal: goal, proteinG: proteinG, carbsG: carbsG, fatG: fatG, pPct: pPct, cPct: cPct, fPct: fPct, capped: capped, perKg: proteinG / weight };
+        const tw = parseFloat(document.getElementById('targetWeight').value);
+        let plan = null;
+        if (goal.dir !== 0 && tw >= 30 && tw <= 250) {
+            const delta = Math.round((tw - weight) * 10) / 10, diff = kcal - base;
+            if (Math.abs(delta) < 0.1) plan = { state: 'reached', target: tw, delta: 0 };
+            else if (Math.sign(delta) !== goal.dir) plan = { state: 'mismatch', target: tw, delta: delta };
+            else plan = { state: 'ok', target: tw, delta: delta, weeks: Math.max(1, Math.ceil(Math.abs(delta) * 7700 / (Math.abs(diff) * 7))), diff: Math.round(diff) };
+        } else if (goal.dir === 0 && tw >= 30 && tw <= 250) plan = { state: 'maintain', target: tw };
+        return { plan: plan, base: Math.round(base), kcal: kcal, goal: goal, proteinG: proteinG, carbsG: carbsG, fatG: fatG, pPct: pPct, cPct: cPct, fPct: fPct, capped: capped, perKg: proteinG / weight };
     }
 
     function nutritionHTML(n) {
@@ -1632,11 +1889,18 @@
             '<div class="calc-card"><div class="label">بروتين | Protein</div><div class="value mp">' + n.proteinG + '<span> g</span></div><div class="sub">' + n.pPct + '% • ' + n.perKg.toFixed(1) + ' g/kg</div></div>' +
             '<div class="calc-card"><div class="label">كارب | Carbs</div><div class="value mc">' + n.carbsG + '<span> g</span></div><div class="sub">' + n.cPct + '%</div></div>' +
             '<div class="calc-card"><div class="label">دهون | Fat</div><div class="value mf">' + n.fatG + '<span> g</span></div><div class="sub">' + n.fPct + '%</div></div>' +
+            (n.plan && n.plan.state === 'ok' ? '<div class="calc-card"><div class="label">الوزن المستهدف | Target Weight</div><div class="value">' + n.plan.target + '<span> kg</span></div><div class="sub">' + (n.plan.delta > 0 ? '+' : '') + n.plan.delta + ' kg • ~' + n.plan.weeks + ' أسبوع | wk</div></div>' : '') +
             '</div>' +
             '<div class="macro-bar" role="img" aria-label="Protein ' + n.pPct + '%, Carbs ' + n.cPct + '%, Fat ' + n.fPct + '%">' +
             '<i class="mp" style="width:' + n.pPct + '%"></i><i class="mc" style="width:' + n.cPct + '%"></i><i class="mf" style="width:' + n.fPct + '%"></i></div>';
         let note = 'السعرات الأساسية من الإنبودي: ' + fmtInt(n.base) + ' kcal. البروتين 2 جم لكل كجم من الوزن، الدهون 25% من السعرات، والكارب الباقي. (4 سعرات لكل جم بروتين وكارب، 9 للدهون)';
         if (n.capped) note += '<br>تم تحديد البروتين بـ 40% من السعرات لأن السعرات منخفضة بالنسبة للوزن.';
+        if (n.plan) {
+            if (n.plan.state === 'ok') note += '<br>الوصول إلى ' + n.plan.target + ' كجم (' + (n.plan.delta > 0 ? '+' : '') + n.plan.delta + ' كجم) يستغرق نحو ' + n.plan.weeks + ' أسبوع بفارق ' + Math.abs(n.plan.diff) + ' سعرة يومياً (7700 سعرة لكل كجم تقريباً). | Reaching ' + n.plan.target + ' kg takes about ' + n.plan.weeks + ' weeks at a ' + Math.abs(n.plan.diff) + ' kcal daily difference.';
+            else if (n.plan.state === 'reached') note += '<br>وزنك الحالي هو الوزن المستهدف. | Current weight equals the target weight.';
+            else if (n.plan.state === 'mismatch') note += '<br>الوزن المستهدف لا يتوافق مع الهدف المختار، راجع الهدف أو الوزن. | Target weight does not match the selected goal, please check.';
+            else note += '<br>هدف التثبيت لا يحتاج وزناً مستهدفاً. | Maintenance does not need a target weight.';
+        }
         return h + '<p class="calc-note">' + note + '</p>';
     }
 
@@ -1674,6 +1938,7 @@
 
     function refreshCalculators() {
         document.getElementById('nutritionOut').innerHTML = nutritionHTML(computeNutrition());
+        if (typeof renderMeal === 'function') renderMeal();
         document.getElementById('karvonenOut').innerHTML = karvonenHTML(computeKarvonen());
     }
 
@@ -1682,6 +1947,7 @@
         let h = '';
         if (n) h += '<div class="report-extra"><h4><i class="fa-solid fa-utensils"></i> الخطة الغذائية | Nutrition Plan</h4>' + nutritionHTML(n) + '</div>';
         if (k && !k.invalid) h += '<div class="report-extra"><h4><i class="fa-solid fa-heart-pulse"></i> معدل القلب المستهدف (كارفونين) | Karvonen Target Heart Rate</h4>' + karvonenHTML(k) + '</div>';
+        if (mealItems.length) h += '<div class="report-extra"><h4><i class="fa-solid fa-bowl-food"></i> الوجبة | Meal</h4>' + mealHTML(false) + '</div>';
         if (h) {
             h += '<p class="calc-note">الأرقام تقديرية وإرشادية وليست بديلاً عن استشارة طبية.' +
                 (hasFlags ? ' بما أنه سُجّلت ملاحظات صحية في الاستبيان، يُنصح بمراجعة طبيب أو أخصائي تغذية قبل تطبيق الخطة.' : '') +
@@ -1691,12 +1957,493 @@
     }
 
     function initCalculators() {
-        ['calorieInput', 'weightInput', 'goalSelect', 'restHR', 'intensityPct', 'realAge'].forEach(function (id) {
+        ['calorieInput', 'weightInput', 'goalSelect', 'targetWeight', 'restHR', 'intensityPct', 'realAge'].forEach(function (id) {
             const el = document.getElementById(id);
             el.addEventListener('input', refreshCalculators);
             el.addEventListener('change', refreshCalculators);
         });
+        initFood();
         refreshCalculators();
+    }
+
+    // ===== Food calculator (built-in local dataset, no API / no keys) =====
+    const FOOD_KEYS = ['kcal', 'p', 'c', 'f', 'fiber', 'na', 'k', 'ca', 'fe', 'vc', 'sugar', 'sat', 'chol', 'va', 'vd', 'b12', 'mg', 'zn'];
+    const FOOD_MICROS = [
+        ['fiber', 'ألياف', 'Fiber', 'g'], ['sugar', 'سكريات', 'Sugars', 'g'], ['sat', 'دهون مشبعة', 'Saturated fat', 'g'], ['chol', 'كوليسترول', 'Cholesterol', 'mg'],
+        ['na', 'صوديوم', 'Sodium', 'mg'], ['k', 'بوتاسيوم', 'Potassium', 'mg'], ['ca', 'كالسيوم', 'Calcium', 'mg'], ['fe', 'حديد', 'Iron', 'mg'],
+        ['mg', 'مغنيسيوم', 'Magnesium', 'mg'], ['zn', 'زنك', 'Zinc', 'mg'], ['va', 'فيتامين A', 'Vitamin A', 'mcg'], ['vc', 'فيتامين C', 'Vitamin C', 'mg'],
+        ['vd', 'فيتامين D', 'Vitamin D', 'mcg'], ['b12', 'فيتامين B12', 'Vitamin B12', 'mcg']
+    ];
+    // key, English, Arabic, unit, %DV reference (FDA 2,000 kcal), indent, bold, decimals
+    const LABEL_ROWS = [
+        ['f', 'Total Fat', 'الدهون الكلية', 'g', 78, 0, 1, 1],
+        ['sat', 'Saturated Fat', 'دهون مشبعة', 'g', 20, 1, 0, 1],
+        ['chol', 'Cholesterol', 'كوليسترول', 'mg', 300, 0, 1, 0],
+        ['na', 'Sodium', 'صوديوم', 'mg', 2300, 0, 1, 0],
+        ['c', 'Total Carbohydrate', 'الكربوهيدرات الكلية', 'g', 275, 0, 1, 1],
+        ['fiber', 'Dietary Fiber', 'ألياف غذائية', 'g', 28, 1, 0, 1],
+        ['sugar', 'Total Sugars', 'سكريات كلية', 'g', null, 1, 0, 1],
+        ['p', 'Protein', 'بروتين', 'g', 50, 0, 1, 1]
+    ];
+    const LABEL_MICROS = [
+        ['vd', 'Vitamin D', 'فيتامين D', 'mcg', 20, 0, 0, 1], ['ca', 'Calcium', 'كالسيوم', 'mg', 1300, 0, 0, 0],
+        ['fe', 'Iron', 'حديد', 'mg', 18, 0, 0, 1], ['k', 'Potassium', 'بوتاسيوم', 'mg', 4700, 0, 0, 0],
+        ['va', 'Vitamin A', 'فيتامين A', 'mcg', 900, 0, 0, 0], ['vc', 'Vitamin C', 'فيتامين C', 'mg', 90, 0, 0, 1],
+        ['b12', 'Vitamin B12', 'فيتامين B12', 'mcg', 2.4, 0, 0, 1], ['mg', 'Magnesium', 'مغنيسيوم', 'mg', 420, 0, 0, 0],
+        ['zn', 'Zinc', 'زنك', 'mg', 11, 0, 0, 1]
+    ];
+    const FOOD_CATS = {
+        grain: ['نشويات وحبوب', 'Grains & Starch'], legume: ['بقوليات', 'Legumes'], meat: ['لحوم ودواجن', 'Meat & Poultry'],
+        fish: ['أسماك', 'Seafood'], egg: ['بيض', 'Eggs'], dairy: ['ألبان وأجبان', 'Dairy'], fat: ['دهون ومكسرات', 'Fats & Nuts'],
+        veg: ['خضروات', 'Vegetables'], fruit: ['فواكه', 'Fruit'], drink: ['مشروبات وعصائر', 'Drinks & Juices'], sweet: ['حلويات ووجبات خفيفة', 'Sweets & Snacks'],
+        fast: ['وجبات سريعة', 'Fast Food'], other: ['أخرى', 'Other'], custom: ['مخصص', 'Custom']
+    };
+    // [ar, en, aliases, cat, yield (cooked g per 1 g raw, 0 = as is), kcal, protein, carb, fat, fiber, sodium, potassium, calcium, iron, vitC]  — per 100 g (raw / as listed)
+    const FOOD_DB_RAW = [
+        ['أرز أبيض', 'White rice', 'رز basmati بسمتي', 'grain', 2.8, 365, 7.1, 80, 0.7, 1.3, 5, 115, 28, 0.8, 0],
+        ['أرز بني', 'Brown rice', 'رز اسمر', 'grain', 2.6, 370, 7.9, 77, 2.9, 3.5, 7, 223, 23, 1.5, 0],
+        ['مكرونة', 'Pasta', 'معكرونة باستا سباغيتي', 'grain', 2.3, 371, 13, 75, 1.5, 3.2, 6, 223, 21, 3.3, 0],
+        ['شوفان', 'Oats', 'oatmeal', 'grain', 5, 389, 16.9, 66, 6.9, 10.6, 2, 429, 54, 4.7, 0],
+        ['برغل', 'Bulgur', '', 'grain', 3.8, 342, 12, 76, 1.3, 12.5, 17, 410, 35, 2.5, 0],
+        ['كينوا', 'Quinoa', '', 'grain', 3, 368, 14, 64, 6, 7, 5, 563, 47, 4.6, 0],
+        ['كسكسي', 'Couscous', '', 'grain', 3.3, 376, 13, 77, 0.6, 5, 10, 166, 24, 1.1, 0],
+        ['بطاطس', 'Potato', 'بطاطا', 'grain', 0.88, 77, 2, 17, 0.1, 2.2, 6, 421, 12, 0.8, 19.7],
+        ['بطاطا حلوة', 'Sweet potato', '', 'grain', 0.9, 86, 1.6, 20, 0.1, 3, 55, 337, 30, 0.6, 2.4],
+        ['خبز أبيض', 'White bread', 'توست', 'grain', 0, 265, 9, 49, 3.2, 2.7, 491, 115, 260, 3.6, 0],
+        ['خبز بر', 'Whole wheat bread', 'خبز اسمر', 'grain', 0, 252, 12.5, 43, 3.5, 6, 450, 250, 60, 2.5, 0],
+        ['خبز عربي', 'Pita bread', 'صامولي', 'grain', 0, 275, 9, 56, 1.2, 2.2, 536, 120, 86, 1.9, 0],
+        ['ذرة', 'Sweet corn', '', 'veg', 0, 86, 3.3, 19, 1.4, 2.7, 15, 270, 2, 0.5, 6.8],
+        ['عدس', 'Lentils', '', 'legume', 3, 352, 24.6, 63, 1.1, 10.7, 6, 677, 35, 6.5, 4.5],
+        ['حمص حب', 'Chickpeas', 'حمص', 'legume', 2.3, 378, 20.5, 63, 6, 12, 24, 718, 57, 4.3, 4],
+        ['فاصوليا حمراء', 'Kidney beans', 'فاصوليا', 'legume', 2.6, 333, 24, 60, 0.8, 25, 24, 1406, 143, 8.2, 4.5],
+        ['فول', 'Fava beans', 'فول مدمس', 'legume', 2.4, 341, 26, 58, 1.5, 25, 13, 1062, 103, 6.7, 1.4],
+        ['فلافل', 'Falafel', 'طعمية', 'legume', 0, 333, 13, 32, 18, 5, 294, 585, 54, 3.4, 2],
+        ['حمص مهروس', 'Hummus', 'حمص بطحينة', 'legume', 0, 166, 8, 14, 10, 6, 379, 228, 38, 2.4, 0],
+        ['توفو', 'Tofu', 'توفو', 'legume', 0, 144, 17, 3, 9, 2, 14, 237, 683, 2.7, 0],
+        ['صدر دجاج', 'Chicken breast', 'فراخ دجاج بدون جلد', 'meat', 0.75, 120, 22.5, 0, 2.6, 0, 45, 370, 5, 0.4, 0],
+        ['فخذ دجاج', 'Chicken thigh', 'وراك دجاج بدون جلد', 'meat', 0.75, 121, 19.7, 0, 4.1, 0, 90, 250, 10, 0.9, 0],
+        ['صدر ديك رومي', 'Turkey breast', 'رومي', 'meat', 0.75, 114, 24, 0, 1.5, 0, 50, 293, 10, 0.6, 0],
+        ['لحم بقري مفروم قليل الدهن', 'Lean ground beef 90%', 'كفتة لحمة مفرومة', 'meat', 0.72, 176, 20, 0, 10, 0, 66, 318, 10, 2, 0],
+        ['ستيك بقري', 'Beef sirloin steak', 'لحم بقر شريحة', 'meat', 0.72, 143, 22, 0, 5.4, 0, 55, 350, 6, 1.9, 0],
+        ['لحم غنم', 'Lean lamb', 'خروف ضأن', 'meat', 0.68, 160, 20.5, 0, 8.5, 0, 70, 290, 10, 1.8, 0],
+        ['كبدة بقري', 'Beef liver', 'كبده', 'meat', 0.7, 135, 20, 3.9, 3.6, 0, 69, 313, 5, 4.9, 1.3],
+        ['سلمون', 'Salmon', 'سالمون', 'fish', 0.8, 208, 20, 0, 13, 0, 59, 363, 12, 0.3, 3.9],
+        ['تونة طازجة', 'Fresh tuna', '', 'fish', 0.75, 109, 24, 0, 0.5, 0, 39, 252, 8, 1, 0],
+        ['سمك أبيض', 'White fish (cod)', 'هامور سبيطي بلطي', 'fish', 0.8, 82, 18, 0, 0.7, 0, 54, 413, 16, 0.4, 1],
+        ['روبيان', 'Shrimp', 'جمبري ربيان', 'fish', 0.8, 85, 20, 0.2, 0.5, 0, 119, 185, 64, 0.5, 0],
+        ['تونة معلبة بالماء', 'Canned tuna in water', 'تونا', 'fish', 0, 116, 26, 0, 0.8, 0, 247, 237, 11, 1, 0],
+        ['بيض كامل', 'Whole egg', 'بيضة', 'egg', 0, 143, 12.6, 0.7, 9.5, 0, 142, 138, 56, 1.8, 0],
+        ['بياض البيض', 'Egg white', 'بياض بيض', 'egg', 0, 52, 10.9, 0.7, 0.2, 0, 166, 163, 7, 0.1, 0],
+        ['حليب كامل الدسم', 'Whole milk', 'لبن حليب', 'dairy', 0, 61, 3.2, 4.8, 3.3, 0, 43, 132, 113, 0, 0],
+        ['حليب قليل الدسم', 'Low-fat milk', 'حليب خالي الدسم', 'dairy', 0, 42, 3.4, 5, 1, 0, 44, 150, 125, 0, 0],
+        ['زبادي يوناني خالي الدسم', 'Greek yogurt (non-fat)', 'زبادي', 'dairy', 0, 59, 10, 3.6, 0.4, 0, 36, 141, 110, 0.1, 0],
+        ['زبادي كامل الدسم', 'Plain yogurt (whole)', 'لبن زبادي', 'dairy', 0, 61, 3.5, 4.7, 3.3, 0, 46, 155, 121, 0.1, 0.5],
+        ['لبنة', 'Labneh', '', 'dairy', 0, 160, 6.5, 4, 13, 0, 420, 160, 150, 0.1, 0],
+        ['جبنة شيدر', 'Cheddar cheese', 'جبن', 'dairy', 0, 403, 25, 1.3, 33, 0, 621, 98, 721, 0.7, 0],
+        ['جبنة موزاريلا', 'Mozzarella', '', 'dairy', 0, 254, 24, 2.8, 16, 0, 619, 84, 683, 0.4, 0],
+        ['جبنة قريش', 'Cottage cheese', 'قريش كوتج', 'dairy', 0, 72, 12, 2.7, 1, 0, 406, 138, 61, 0.1, 0],
+        ['جبنة فيتا', 'Feta cheese', 'جبنة بيضاء', 'dairy', 0, 264, 14, 4, 21, 0, 917, 62, 493, 0.7, 0],
+        ['زبدة', 'Butter', '', 'fat', 0, 717, 0.9, 0.1, 81, 0, 11, 24, 24, 0, 0],
+        ['سمن', 'Ghee', '', 'fat', 0, 876, 0, 0, 99.5, 0, 2, 5, 4, 0, 0],
+        ['زيت زيتون', 'Olive oil', 'زيت', 'fat', 0, 884, 0, 0, 100, 0, 2, 1, 1, 0.6, 0],
+        ['زبدة فول سوداني', 'Peanut butter', '', 'fat', 0, 588, 25, 20, 50, 6, 426, 649, 49, 1.7, 0],
+        ['لوز', 'Almonds', '', 'fat', 0, 579, 21, 22, 50, 12.5, 1, 733, 269, 3.7, 0],
+        ['جوز', 'Walnuts', 'عين جمل', 'fat', 0, 654, 15, 14, 65, 6.7, 2, 441, 98, 2.9, 1.3],
+        ['كاجو', 'Cashews', '', 'fat', 0, 553, 18, 30, 44, 3.3, 12, 660, 37, 6.7, 0.5],
+        ['طحينة', 'Tahini', 'طحينه', 'fat', 0, 595, 17, 21, 54, 9, 115, 414, 426, 8.9, 0],
+        ['أفوكادو', 'Avocado', 'افوكادو', 'fat', 0, 160, 2, 9, 15, 6.7, 7, 485, 12, 0.6, 10],
+        ['طماطم', 'Tomato', 'بندورة', 'veg', 0, 18, 0.9, 3.9, 0.2, 1.2, 5, 237, 10, 0.3, 14],
+        ['خيار', 'Cucumber', '', 'veg', 0, 15, 0.7, 3.6, 0.1, 0.5, 2, 147, 16, 0.3, 2.8],
+        ['خس', 'Lettuce', '', 'veg', 0, 15, 1.4, 2.9, 0.2, 1.3, 28, 194, 36, 0.9, 9],
+        ['جزر', 'Carrot', '', 'veg', 0, 41, 0.9, 10, 0.2, 2.8, 69, 320, 33, 0.3, 5.9],
+        ['بروكلي', 'Broccoli', '', 'veg', 0, 34, 2.8, 7, 0.4, 2.6, 33, 316, 47, 0.7, 89],
+        ['سبانخ', 'Spinach', '', 'veg', 0, 23, 2.9, 3.6, 0.4, 2.2, 79, 558, 99, 2.7, 28],
+        ['بصل', 'Onion', '', 'veg', 0, 40, 1.1, 9.3, 0.1, 1.7, 4, 146, 23, 0.2, 7.4],
+        ['فلفل رومي أحمر', 'Red bell pepper', 'فلفل حلو', 'veg', 0, 31, 1, 6, 0.3, 2.1, 4, 211, 7, 0.4, 128],
+        ['كوسا', 'Zucchini', '', 'veg', 0, 17, 1.2, 3.1, 0.3, 1, 8, 261, 16, 0.4, 17.9],
+        ['باذنجان', 'Eggplant', '', 'veg', 0, 25, 1, 6, 0.2, 3, 2, 229, 9, 0.2, 2.2],
+        ['قرنبيط', 'Cauliflower', 'زهرة', 'veg', 0, 25, 1.9, 5, 0.3, 2, 30, 299, 22, 0.4, 48],
+        ['فاصوليا خضراء', 'Green beans', '', 'veg', 0, 31, 1.8, 7, 0.2, 2.7, 6, 211, 37, 1, 12],
+        ['بازلاء', 'Green peas', '', 'veg', 0, 81, 5.4, 14, 0.4, 5.7, 5, 244, 25, 1.5, 40],
+        ['مشروم', 'Mushrooms', 'فطر', 'veg', 0, 22, 3.1, 3.3, 0.3, 1, 5, 318, 3, 0.5, 2.1],
+        ['ملفوف', 'Cabbage', 'كرنب', 'veg', 0, 25, 1.3, 5.8, 0.1, 2.5, 18, 170, 40, 0.5, 36],
+        ['بامية', 'Okra', '', 'veg', 0, 33, 1.9, 7.5, 0.2, 3.2, 7, 299, 82, 0.6, 23],
+        ['موز', 'Banana', '', 'fruit', 0, 89, 1.1, 23, 0.3, 2.6, 1, 358, 5, 0.3, 8.7],
+        ['تفاح', 'Apple', '', 'fruit', 0, 52, 0.3, 14, 0.2, 2.4, 1, 107, 6, 0.1, 4.6],
+        ['برتقال', 'Orange', '', 'fruit', 0, 47, 0.9, 12, 0.1, 2.4, 0, 181, 40, 0.1, 53],
+        ['عنب', 'Grapes', '', 'fruit', 0, 69, 0.7, 18, 0.2, 0.9, 2, 191, 10, 0.4, 3.2],
+        ['بطيخ', 'Watermelon', '', 'fruit', 0, 30, 0.6, 8, 0.2, 0.4, 1, 112, 7, 0.2, 8.1],
+        ['فراولة', 'Strawberry', 'فرولة', 'fruit', 0, 32, 0.7, 7.7, 0.3, 2, 1, 153, 16, 0.4, 59],
+        ['مانجو', 'Mango', 'منجا', 'fruit', 0, 60, 0.8, 15, 0.4, 1.6, 1, 168, 11, 0.2, 36],
+        ['رمان', 'Pomegranate', '', 'fruit', 0, 83, 1.7, 19, 1.2, 4, 3, 236, 10, 0.3, 10],
+        ['تمر', 'Dates', 'تمر مجدول سكري عجوة', 'fruit', 0, 277, 1.8, 75, 0.2, 6.7, 1, 696, 64, 0.9, 0],
+        ['زبيب', 'Raisins', '', 'fruit', 0, 299, 3.1, 79, 0.5, 3.7, 11, 749, 50, 1.9, 2.3],
+        ['عصير برتقال', 'Orange juice', '', 'fruit', 0, 45, 0.7, 10.4, 0.2, 0.2, 1, 200, 11, 0.2, 50],
+        ['بروتين مصل اللبن', 'Whey protein powder', 'واي بروتين مكمل', 'other', 0, 400, 80, 8, 6, 0, 200, 400, 400, 1, 0],
+        ['عسل', 'Honey', '', 'other', 0, 304, 0.3, 82, 0, 0.2, 4, 52, 6, 0.4, 0.5],
+        ['سكر أبيض', 'White sugar', 'سكر', 'other', 0, 387, 0, 100, 0, 0, 1, 2, 1, 0, 0],
+        ['فستق', 'Pistachios', '', 'fat', 0, 560, 20, 28, 45, 10, 1, 1025, 105, 3.9, 5.6, 7.7, 5.4, 0, 26, 0, 0, 121, 2.2],
+        ['بذور الشيا', 'Chia seeds', 'شيا', 'fat', 0, 486, 16.5, 42, 31, 34, 16, 407, 631, 7.7, 1.6, 0, 3.3, 0, 0, 0, 0, 335, 4.6],
+        ['كولا', 'Cola (regular)', 'بيبسي كوكاكولا مشروب غازي غازيات صودا pepsi coca-cola coke soda soft drink', 'drink', 0, 42, 0, 10.6, 0, 0, 4, 2, 2, 0, 0, 10.6, 0, 0, 0, 0, 0, 0, 0],
+        ['كولا دايت', 'Diet cola', 'دايت زيرو صفر سعرات pepsi max coke zero', 'drink', 0, 0, 0, 0, 0, 0, 10, 1, 3, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0],
+        ['سفن أب / سبرايت', 'Lemon-lime soda', 'سبرايت 7up sprite ليمون غازي', 'drink', 0, 40, 0, 10, 0, 0, 15, 2, 2, 0, 0, 10, 0, 0, 0, 0, 0, 0, 0],
+        ['فانتا برتقال', 'Orange soda', 'فانتا ميرندا fanta برتقال غازي', 'drink', 0, 46, 0, 11.5, 0, 0, 10, 2, 3, 0, 0, 11, 0, 0, 0, 0, 0, 0, 0],
+        ['مشروب طاقة', 'Energy drink', 'ريد بول ستار monster red bull', 'drink', 0, 45, 0, 11, 0, 0, 40, null, null, null, null, 11, 0, 0, null, null, null, null, null],
+        ['مشروب رياضي', 'Sports drink', 'جاتوريد باوريد gatorade powerade', 'drink', 0, 26, 0, 6.4, 0, 0, 41, 12, 0, 0, 0, 5.8, 0, 0, 0, 0, 0, 0, 0],
+        ['عصير تفاح', 'Apple juice', '', 'drink', 0, 46, 0.1, 11.3, 0.1, 0.2, 4, 101, 8, 0.1, 0.9, 9.6, 0, 0, 1, 0, 0, 5, 0],
+        ['عصير عنب', 'Grape juice', '', 'drink', 0, 60, 0.4, 14.8, 0.1, 0.2, 5, 104, 11, 0.3, 0.1, 14.3, 0.1, 0, 2, 0, 0, 10, 0.1],
+        ['عصير مانجو', 'Mango juice', 'عصير مانجا نكتار', 'drink', 0, 51, 0.2, 12.8, 0.1, 0.4, 5, 36, 6, 0.1, 6, 12, 0, 0, 21, 0, 0, 4, 0.1],
+        ['عصير رمان', 'Pomegranate juice', '', 'drink', 0, 54, 0.2, 13.1, 0.3, 0.1, 9, 214, 11, 0.3, 0.1, 12.7, 0.1, 0, 0, 0, 0, 10, 0.1],
+        ['ليموناضة', 'Lemonade', 'عصير ليمون', 'drink', 0, 40, 0.1, 10.5, 0.1, 0.1, 3, 15, 4, 0.1, 2.6, 9, 0, 0, 0, 0, 0, 2, 0],
+        ['شاي مثلج محلى', 'Sweetened iced tea', 'ايس تي ليبتون', 'drink', 0, 30, 0, 7.5, 0, 0, 5, 20, 3, 0, 0, 7, 0, 0, 0, 0, 0, 1, 0],
+        ['قهوة سوداء', 'Black coffee', 'قهوة اسبريسو امريكانو', 'drink', 0, 1, 0.1, 0, 0, 0, 2, 49, 2, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0],
+        ['لاتيه', 'Latte (whole milk)', 'كابتشينو قهوة بحليب', 'drink', 0, 56, 3, 5, 2.2, 0, 45, 150, 110, 0, 0, 4.8, 1.4, 8, 18, 0.1, 0.4, 11, 0.4],
+        ['ماء', 'Water', 'مياه', 'drink', 0, 0, 0, 0, 0, 0, 2, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0],
+        ['ماء جوز الهند', 'Coconut water', '', 'drink', 0, 19, 0.7, 3.7, 0.2, 1.1, 105, 250, 24, 0.3, 2.4, 2.6, 0.2, 0, 0, 0, 0, 25, 0.1],
+        ['حليب شوكولاتة', 'Chocolate milk', 'حليب بالشوكولاتة نيدو', 'drink', 0, 83, 3.2, 10.4, 3.4, 0.8, 56, 150, 105, 0.3, 0, 9.7, 2.1, 10, 29, 1, 0.4, 14, 0.4],
+        ['لبن عيران', 'Ayran / buttermilk', 'لبن رايب شنينة', 'drink', 0, 40, 3.3, 4.8, 0.9, 0, 105, 135, 116, 0.1, 0.5, 4.8, 0.5, 4, 20, 0, 0.4, 11, 0.4],
+        ['حليب لوز', 'Almond milk (unsweetened)', '', 'drink', 0, 15, 0.6, 0.3, 1.2, 0.2, 72, 67, 184, 0.3, 0, 0, 0.1, 0, 63, 1, 0, 15, 0.1],
+        ['حليب صويا', 'Soy milk', '', 'drink', 0, 33, 2.9, 1.7, 1.6, 0.4, 51, 118, 25, 0.4, 0, 0.4, 0.2, 0, 0, 0, 0, 15, 0.3],
+        ['شوكولاتة داكنة 70%', 'Dark chocolate 70%', '', 'sweet', 0, 598, 7.8, 46, 43, 11, 20, 715, 73, 11.9, 0, 24, 24.5, 3, 2, 0, 0, 228, 3.3],
+        ['شوكولاتة بالحليب', 'Milk chocolate', '', 'sweet', 0, 535, 7.7, 59, 30, 3.4, 79, 372, 189, 2.3, 0, 52, 18.5, 23, 33, 0, 0.3, 63, 2.3],
+        ['بسكويت', 'Biscuits (generic)', 'كوكيز بسكويت شاي', 'sweet', 0, 450, 6, 70, 17, 2.5, 380, 100, 40, 2, 0, 25, 8, 0, null, null, null, 20, 0.7],
+        ['شيبس بطاطس', 'Potato chips', 'رقائق بطاطس لايز برنجلز', 'sweet', 0, 536, 7, 53, 35, 4.4, 525, 1200, 24, 1.3, 21, 0.3, 5, 0, 0, 0, 0, 69, 1],
+        ['فشار', 'Popcorn (air-popped)', 'بوب كورن', 'sweet', 0, 387, 13, 78, 4.5, 15, 8, 329, 7, 3.2, 0, 0.9, 0.6, 0, 0, 0, 0, 144, 3.1],
+        ['آيس كريم فانيلا', 'Vanilla ice cream', 'ايسكريم بوظة', 'sweet', 0, 207, 3.5, 24, 11, 0.7, 80, 199, 128, 0.1, 0.6, 21, 6.8, 44, 118, 0.2, 0.4, 14, 0.7],
+        ['بيتزا بالجبن', 'Cheese pizza', '', 'fast', 0, 266, 11, 33, 10, 2.3, 598, 172, 201, 2.5, 0, 3.6, 4.5, 17, null, null, null, 23, 1.4],
+        ['بطاطس مقلية', 'French fries', 'فرنش فرايز', 'fast', 0, 312, 3.4, 41, 15, 3.8, 210, 579, 18, 0.8, 4.7, 0.3, 2.3, 0, 0, 0, 0, 28, 0.6]
+    ];
+    // extras for the first rows: [sugar, sat fat, cholesterol, vitamin A mcg, vitamin D mcg, B12 mcg, magnesium, zinc] per 100 g, keyed by English name
+    const FOOD_EXTRA = {
+        'White rice': [0.1, 0.2, 0, 0, 0, 0, 25, 1.1], 'Brown rice': [0.9, 0.6, 0, 0, 0, 0, 143, 2], 'Pasta': [2.7, 0.3, 0, 0, 0, 0, 53, 1.4],
+        'Oats': [1, 1.2, 0, 0, 0, 0, 138, 4], 'Bulgur': [0.9, 0.2, 0, 0, 0, 0, 164, 1.9], 'Quinoa': [2.4, 0.7, 0, 1, 0, 0, 197, 3.1],
+        'Couscous': [0.8, 0.1, 0, 0, 0, 0, 44, 0.8], 'Potato': [0.8, 0, 0, 0, 0, 0, 23, 0.3], 'Sweet potato': [4.2, 0, 0, 709, 0, 0, 25, 0.3],
+        'White bread': [5, 0.7, 0, 0, 0, 0, 25, 0.7], 'Whole wheat bread': [5, 0.8, 0, 0, 0, 0, 75, 1.8], 'Pita bread': [1.3, 0.2, 0, 0, 0, 0, 26, 0.9],
+        'Sweet corn': [6.3, 0.2, 0, 9, 0, 0, 37, 0.5], 'Lentils': [2, 0.2, 0, 2, 0, 0, 47, 3.3], 'Chickpeas': [10, 0.6, 0, 3, 0, 0, 115, 2.9],
+        'Kidney beans': [2.2, 0.1, 0, 0, 0, 0, 140, 2.8], 'Fava beans': [5.7, 0.3, 0, 5, 0, 0, 192, 3], 'Falafel': [1.2, 2.4, 0, 3, 0, 0, 82, 1.5],
+        'Hummus': [0.3, 1.4, 0, 0, 0, 0, 71, 1.8], 'Tofu': [0.6, 1.3, 0, 0, 0, 0, 58, 1.6],
+        'Chicken breast': [0, 0.6, 73, 5, 0.1, 0.2, 28, 0.7], 'Chicken thigh': [0, 1.1, 93, 16, 0.1, 0.3, 22, 1.9], 'Turkey breast': [0, 0.4, 45, 0, 0.1, 0.4, 28, 1.5],
+        'Lean ground beef 90%': [0, 4, 65, 0, 0.1, 2.4, 20, 4.8], 'Beef sirloin steak': [0, 2, 60, 0, 0.1, 1.2, 24, 4], 'Lean lamb': [0, 3.5, 75, 0, 0.1, 2, 21, 3.5],
+        'Beef liver': [0, 1.2, 275, 4968, 1.2, 59.3, 18, 4], 'Salmon': [0, 3.1, 55, 12, 11, 3.2, 27, 0.6], 'Fresh tuna': [0, 0.2, 38, 18, 1.7, 2.1, 50, 0.6],
+        'White fish (cod)': [0, 0.1, 43, 12, 0.9, 0.9, 32, 0.5], 'Shrimp': [0, 0.1, 161, 54, 0, 1.1, 39, 1.1], 'Canned tuna in water': [0, 0.2, 30, 16, 1.1, 2.5, 27, 0.9],
+        'Whole egg': [0.4, 3.1, 372, 160, 2, 0.9, 12, 1.3], 'Egg white': [0.7, 0, 0, 0, 0, 0.1, 11, 0],
+        'Whole milk': [5.1, 1.9, 10, 46, 1.1, 0.5, 10, 0.4], 'Low-fat milk': [5.2, 0.6, 4, 58, 1.2, 0.5, 11, 0.4], 'Greek yogurt (non-fat)': [3.2, 0.1, 5, 2, 0, 0.7, 11, 0.5],
+        'Plain yogurt (whole)': [4.7, 2.1, 13, 27, 0, 0.4, 12, 0.6], 'Labneh': [4, 8.5, 35, null, null, null, 10, 0.6], 'Cheddar cheese': [0.5, 18.9, 105, 265, 0.6, 1.1, 28, 3.1],
+        'Mozzarella': [1.1, 10.1, 64, 174, 0.4, 2.3, 24, 2.9], 'Cottage cheese': [2.7, 0.6, 4, 13, 0, 0.4, 9, 0.4], 'Feta cheese': [4.1, 15, 89, 125, 0.4, 1.7, 19, 2.9],
+        'Butter': [0.1, 51, 215, 684, 0, 0.2, 2, 0.1], 'Ghee': [0, 62, 256, 840, 0, 0, 0, 0], 'Olive oil': [0, 13.8, 0, 0, 0, 0, 0, 0],
+        'Peanut butter': [9, 10, 0, 0, 0, 0, 154, 2.5], 'Almonds': [4.4, 3.8, 0, 0, 0, 0, 270, 3.1], 'Walnuts': [2.6, 6.1, 0, 1, 0, 0, 158, 3.1],
+        'Cashews': [5.9, 7.8, 0, 0, 0, 0, 292, 5.8], 'Tahini': [0.5, 7.5, 0, 1, 0, 0, 95, 4.6], 'Avocado': [0.7, 2.1, 0, 7, 0, 0, 29, 0.6],
+        'Tomato': [2.6, 0, 0, 42, 0, 0, 11, 0.2], 'Cucumber': [1.7, 0, 0, 5, 0, 0, 13, 0.2], 'Lettuce': [0.8, 0, 0, 370, 0, 0, 13, 0.2],
+        'Carrot': [4.7, 0, 0, 835, 0, 0, 12, 0.2], 'Broccoli': [1.7, 0, 0, 31, 0, 0, 21, 0.4], 'Spinach': [0.4, 0.1, 0, 469, 0, 0, 79, 0.5],
+        'Onion': [4.2, 0, 0, 0, 0, 0, 10, 0.2], 'Red bell pepper': [4.2, 0.1, 0, 157, 0, 0, 12, 0.3], 'Zucchini': [2.5, 0.1, 0, 10, 0, 0, 18, 0.3],
+        'Eggplant': [3.5, 0, 0, 1, 0, 0, 14, 0.2], 'Cauliflower': [1.9, 0.1, 0, 0, 0, 0, 15, 0.3], 'Green beans': [3.3, 0.1, 0, 35, 0, 0, 25, 0.2],
+        'Green peas': [5.7, 0.1, 0, 38, 0, 0, 33, 1.2], 'Mushrooms': [2, 0.1, 0, 0, 0.2, 0, 9, 0.5], 'Cabbage': [3.2, 0, 0, 5, 0, 0, 12, 0.2], 'Okra': [1.5, 0, 0, 36, 0, 0, 57, 0.6],
+        'Banana': [12, 0.1, 0, 3, 0, 0, 27, 0.2], 'Apple': [10, 0, 0, 3, 0, 0, 5, 0], 'Orange': [9, 0, 0, 11, 0, 0, 10, 0.1], 'Grapes': [15.5, 0.1, 0, 3, 0, 0, 7, 0.1],
+        'Watermelon': [6.2, 0, 0, 28, 0, 0, 10, 0.1], 'Strawberry': [4.9, 0, 0, 1, 0, 0, 13, 0.1], 'Mango': [13.7, 0.1, 0, 54, 0, 0, 10, 0.1],
+        'Pomegranate': [13.7, 0.1, 0, 0, 0, 0, 12, 0.4], 'Dates': [66, 0, 0, 0, 0, 0, 54, 0.4], 'Raisins': [59, 0.1, 0, 0, 0, 0, 32, 0.2],
+        'Orange juice': [8.4, 0, 0, 10, 0, 0, 11, 0.1], 'Whey protein powder': [4, 3, 80, null, null, null, 100, 2], 'Honey': [82, 0, 0, 0, 0, 0, 2, 0.2], 'White sugar': [100, 0, 0, 0, 0, 0, 0, 0.1]
+    };
+
+    let foodCustom = [];
+    let foodAll = [];
+    let foodSel = null, foodState = 'raw', foodHi = -1, foodMatches = [];
+    const mealItems = [];
+
+    function foodEsc(s) {
+        return String(s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; });
+    }
+    function foodNorm(s) {
+        return String(s || '').toLowerCase()
+            .replace(/[ً-ٰٟـ]/g, '')
+            .replace(/[أإآٱ]/g, 'ا').replace(/ة/g, 'ه').replace(/ى/g, 'ي').replace(/ؤ/g, 'و').replace(/ئ/g, 'ي')
+            .replace(/\s+/g, ' ').trim();
+    }
+    function foodMake(arr, i) {
+        const v = {};
+        const ex = FOOD_EXTRA[arr[1]] || [];
+        FOOD_KEYS.forEach(function (k, j) {
+            let x = j < 10 ? arr[5 + j] : (arr.length > 15 ? arr[5 + j] : ex[j - 10]);
+            v[k] = (x === undefined || x === null) ? null : x;
+        });
+        return { id: i, ar: arr[0], en: arr[1], al: arr[2], cat: arr[3], y: arr[4] || 0, v: v, hay: foodNorm(arr[0] + ' ' + arr[1] + ' ' + arr[2]) };
+    }
+    function foodUnit(f) { return f && f.cat === 'drink' ? 'ml' : 'g'; }
+    function foodLoadCustom() {
+        try { const r = JSON.parse(localStorage.getItem('bfit_custom_foods') || '[]'); foodCustom = Array.isArray(r) ? r.filter(function (x) { return x && x.v && x.name; }) : []; } catch (e) { foodCustom = []; }
+    }
+    function foodSaveCustom() {
+        try { localStorage.setItem('bfit_custom_foods', JSON.stringify(foodCustom)); } catch (e) { /* storage unavailable */ }
+    }
+    function foodRebuild() {
+        foodAll = FOOD_DB_RAW.map(foodMake);
+        foodCustom.forEach(function (c, i) {
+            foodAll.push({ id: 1000 + i, ar: c.name, en: c.name, al: '', cat: 'custom', y: c.y || 0, v: c.v, hay: foodNorm(c.name) });
+        });
+    }
+
+    function foodSearch(q) {
+        const nq = foodNorm(q);
+        if (!nq) return [];
+        const toks = nq.split(' ');
+        const out = [];
+        foodAll.forEach(function (f) {
+            if (!toks.every(function (t) { return f.hay.indexOf(t) >= 0; })) return;
+            const nameN = foodNorm(f.ar), enN = foodNorm(f.en);
+            let score = 3;
+            if (nameN.indexOf(nq) === 0 || enN.indexOf(nq) === 0) score = 0;
+            else if (f.hay.split(' ').some(function (w) { return w.indexOf(toks[0]) === 0; })) score = 1;
+            out.push({ f: f, s: score });
+        });
+        out.sort(function (a, b) { return a.s - b.s || a.f.ar.length - b.f.ar.length; });
+        return out.slice(0, 8).map(function (o) { return o.f; });
+    }
+
+    function foodCalc(food, state, grams, yieldVal) {
+        const y = food.y ? (yieldVal > 0 ? yieldVal : food.y) : 0;
+        const rawG = (state === 'cooked' && y) ? grams / y : grams;
+        const n = {};
+        FOOD_KEYS.forEach(function (k) { const x = food.v[k]; n[k] = (x === null || x === undefined) ? null : x * rawG / 100; });
+        return { rawG: rawG, cookedG: y ? rawG * y : null, y: y, n: n };
+    }
+
+    function foodFmt(x, d) { return (Math.round(x * Math.pow(10, d || 0)) / Math.pow(10, d || 0)).toLocaleString('en-US'); }
+
+    function nlVal(n, unk, key, dec, unit) {
+        const x = n[key];
+        if (x === null || x === undefined) return '—';
+        return foodFmt(x, dec) + ' ' + unit + (unk && unk[key] ? '*' : '');
+    }
+    function nlRow(n, unk, r, serving) {
+        const x = n[r[0]];
+        const pct = (r[4] && x !== null && x !== undefined) ? Math.round(x / r[4] * 100) + '%' : '';
+        return '<div class="nl-row' + (r[5] ? ' sub' : '') + '"><span>' + (r[6] ? '<b>' : '') + '<bdi>' + r[1] + '</bdi>' + (r[6] ? '</b>' : '') + ' <bdi dir="ltr">' + nlVal(n, unk, r[0], r[7], r[3]) +
+            '</bdi> <em><bdi dir="rtl">' + r[2] + '</bdi></em></span><b class="nl-dv">' + pct + '</b></div>';
+    }
+    function nutritionLabel(n, serving, unk) {
+        const kc = (n.kcal === null || n.kcal === undefined) ? '—' : foodFmt(n.kcal);
+        let h = '<div class="nutri-label" dir="ltr"><div class="nl-title">Nutrition Facts <em>القيم الغذائية</em></div>' +
+            '<div class="nl-serving">' + serving + '</div><div class="nl-thick"></div>' +
+            '<div class="nl-cal"><span><small><bdi>Amount per serving</bdi> · <bdi dir="rtl">لكل حصة</bdi></small><b><bdi>Calories</bdi> <em><bdi dir="rtl">السعرات الحرارية</bdi></em></b></span><strong>' + kc + '</strong></div>' +
+            '<div class="nl-medium"></div><div class="nl-dvhead"><bdi>% Daily Value*</bdi> <em><bdi dir="rtl">القيمة اليومية*</bdi></em></div>';
+        LABEL_ROWS.forEach(function (r) { h += nlRow(n, unk, r); });
+        h += '<div class="nl-thick"></div>';
+        LABEL_MICROS.forEach(function (r) { h += nlRow(n, unk, r); });
+        h += '<div class="nl-medium"></div><p class="nl-foot">* The % Daily Value tells how much a nutrient contributes to a daily diet (2,000 kcal). — = not available.<br><bdi dir="rtl">النسبة من القيمة اليومية بناءً على 2000 سعرة. — = غير متوفر.</bdi>' +
+            (unk && Object.keys(unk).length ? '<br><bdi>* Partial total: some items lack this nutrient.</bdi> <bdi dir="rtl">* قيمة جزئية: بعض العناصر غير متوفرة.</bdi>' : '') +
+            '<br><bdi>Values are approximate.</bdi> <bdi dir="rtl">القيم تقريبية.</bdi></p></div>';
+        return h;
+    }
+
+    function renderFoodList() {
+        const ul = document.getElementById('foodList'), inp = document.getElementById('foodSearch');
+        if (!foodMatches.length) {
+            const q = inp.value.trim();
+            if (q) { ul.innerHTML = '<li class="food-empty">لا نتائج. استخدم «طعام مخصص» لإضافته. | No match, use “Custom food”.</li>'; ul.hidden = false; inp.setAttribute('aria-expanded', 'true'); }
+            else { ul.hidden = true; inp.setAttribute('aria-expanded', 'false'); }
+            return;
+        }
+        ul.innerHTML = foodMatches.map(function (f, i) {
+            const c = FOOD_CATS[f.cat] || FOOD_CATS.other;
+            return '<li role="option" data-i="' + i + '" class="' + (i === foodHi ? 'hi' : '') + '" aria-selected="' + (i === foodHi) + '">' +
+                '<span class="fl-name">' + foodEsc(f.ar) + (f.en !== f.ar ? ' <small>' + foodEsc(f.en) + '</small>' : '') + '</span>' +
+                '<span class="fl-meta">' + foodFmt(f.v.kcal) + ' kcal • ' + c[0] + '</span></li>';
+        }).join('');
+        ul.hidden = false; inp.setAttribute('aria-expanded', 'true');
+    }
+
+    function foodPick(f) {
+        foodSel = f;
+        foodState = 'raw';
+        document.getElementById('foodList').hidden = true;
+        document.getElementById('foodSearch').value = f.ar;
+        const c = FOOD_CATS[f.cat] || FOOD_CATS.other;
+        const u = foodUnit(f), uAr = u === 'ml' ? 'مل' : 'جم';
+        const per = f.y ? 'لكل 100 جم خام | per 100 g raw' : 'لكل 100 ' + uAr + ' | per 100 ' + u;
+        let h = '<div class="food-pick-card">' +
+            '<div class="food-pick-head"><strong>' + foodEsc(f.ar) + (f.en !== f.ar ? ' | ' + foodEsc(f.en) : '') + '</strong><span class="food-tag">' + c[0] + ' | ' + c[1] + '</span></div>' +
+            '<p class="calc-note" style="margin:0 0 10px">' + per + ': ' + foodFmt(f.v.kcal) + ' kcal • P ' + foodFmt(f.v.p, 1) + ' • C ' + foodFmt(f.v.c, 1) + ' • F ' + foodFmt(f.v.f, 1) + '</p>' +
+            '<div class="form-grid-4">';
+        if (f.y) {
+            h += '<div class="input-box"><label>حالة الوزن المُدخل <span class="en">Weight state</span></label>' +
+                '<div class="seg" role="group"><button type="button" class="on" data-state="raw" aria-pressed="true">خام | Raw</button><button type="button" data-state="cooked" aria-pressed="false">مطبوخ | Cooked</button></div></div>';
+        }
+        h += '<div class="input-box"><label>الكمية (' + uAr + ') <span class="en">Amount (' + u + ')</span></label><input type="number" id="foodGrams" step="any" inputmode="decimal" placeholder="مثال: 150" value="100"></div>';
+        if (f.y) {
+            h += '<div class="input-box"><label>معامل الطبخ (وزن مطبوخ ÷ خام) <span class="en">Yield (cooked ÷ raw)</span></label><input type="number" id="foodYield" step="any" inputmode="decimal" value="' + f.y + '"></div>';
+        }
+        h += '</div>' + (u === 'ml' ? '<div class="qty-chips">' + [150, 250, 330, 500, 1000].map(function (q) { return '<button type="button" data-q="' + q + '">' + q + ' ml</button>'; }).join('') + '</div>' : '') + '<div id="foodPreview"></div>' +
+            '<button type="button" class="btn-soft" id="foodAddBtn"><i class="fa-solid fa-plus"></i> إضافة إلى الوجبة | Add to meal</button></div>';
+        document.getElementById('foodPick').innerHTML = h;
+        updateFoodPreview();
+    }
+
+    function foodReadInputs() {
+        const g = parseFloat(document.getElementById('foodGrams').value);
+        const yEl = document.getElementById('foodYield');
+        const y = yEl ? parseFloat(yEl.value) : 0;
+        return { g: g, y: y, yOk: !yEl || (y >= 0.2 && y <= 6) };
+    }
+
+    function updateFoodPreview() {
+        const box = document.getElementById('foodPreview');
+        if (!box || !foodSel) return;
+        const r = foodReadInputs();
+        if (!(r.g > 0 && r.g <= 5000) || !r.yOk) {
+            box.innerHTML = '<p class="calc-note">أدخل كمية صحيحة (1–5000 جم)' + (r.yOk ? '' : ' ومعامل طبخ بين 0.2 و 6') + '. | Enter a valid amount.</p>';
+            return;
+        }
+        const c = foodCalc(foodSel, foodState, r.g, r.y);
+        let h = '<div class="calc-cards">' +
+            '<div class="calc-card main"><div class="label">السعرات | Calories</div><div class="value">' + foodFmt(c.n.kcal) + '<span> kcal</span></div></div>' +
+            '<div class="calc-card"><div class="label">بروتين | Protein</div><div class="value mp">' + foodFmt(c.n.p, 1) + '<span> g</span></div></div>' +
+            '<div class="calc-card"><div class="label">كارب | Carbs</div><div class="value mc">' + foodFmt(c.n.c, 1) + '<span> g</span></div></div>' +
+            '<div class="calc-card"><div class="label">دهون | Fat</div><div class="value mf">' + foodFmt(c.n.f, 1) + '<span> g</span></div></div></div>';
+        if (c.y) h += '<p class="calc-note conv"><bdi dir="rtl">' + foodFmt(c.rawG, 1) + ' جم خام ≈ ' + foodFmt(c.cookedG, 1) + ' جم مطبوخ</bdi> | <bdi dir="ltr">' + foodFmt(c.rawG, 1) + ' g raw ≈ ' + foodFmt(c.cookedG, 1) + ' g cooked</bdi></p>';
+        const u = foodUnit(foodSel);
+        const serv = '<b><bdi>Serving size</bdi> · <bdi dir="rtl">حجم الحصة</bdi></b> <bdi dir="ltr">' + foodFmt(r.g, 1) + ' ' + u + (c.y ? ' (' + (foodState === 'cooked' ? foodFmt(c.rawG, 1) + ' g raw' : foodFmt(c.cookedG, 1) + ' g cooked') + ')' : '') + '</bdi> — <bdi>' + foodEsc(foodSel.en) + '</bdi>';
+        h += nutritionLabel(c.n, serv, null);
+        box.innerHTML = h;
+    }
+
+    function foodAddItem(item) {
+        mealItems.push(item);
+        renderMeal();
+    }
+
+    function mealTotals() {
+        const t = {}, unk = {};
+        FOOD_KEYS.forEach(function (k) {
+            let sum = 0, known = 0;
+            mealItems.forEach(function (it) { const x = it.n[k]; if (x !== null && x !== undefined) { sum += x; known++; } });
+            t[k] = known ? sum : null;
+            if (known && known < mealItems.length) unk[k] = true;
+        });
+        Object.defineProperty(t, '_unk', { value: unk, enumerable: false });
+        return t;
+    }
+
+    function mealPlanHTML(t) {
+        const n = computeNutrition();
+        if (!n) return '<p class="calc-note">أدخل السعرات والوزن في الأعلى لمقارنة الوجبة بخطتك اليومية. | Fill calories and weight above to compare the meal with your daily plan.</p>';
+        const rows = [['السعرات | Calories', t.kcal, n.kcal, 'kcal', 'mc0'], ['بروتين | Protein', t.p, n.proteinG, 'g', 'mp'], ['كارب | Carbs', t.c, n.carbsG, 'g', 'mc'], ['دهون | Fat', t.f, n.fatG, 'g', 'mf']];
+        return '<div class="plan-box"><h5>مقارنة بخطتك اليومية | vs. your daily plan</h5>' + rows.map(function (r) {
+            const pct = r[2] > 0 ? Math.round(r[1] / r[2] * 100) : 0;
+            const left = r[2] - r[1];
+            return '<div class="plan-row"><span class="pr-name">' + r[0] + '</span><div class="plan-bar"><i class="' + r[4] + (pct > 100 ? ' over' : '') + '" style="width:' + Math.min(pct, 100) + '%"></i></div>' +
+                '<span class="pr-val">' + foodFmt(r[1]) + ' / ' + foodFmt(r[2]) + ' ' + r[3] + ' • ' + pct + '%' + (left < 0 ? ' (+' + foodFmt(-left) + ')' : '') + '</span></div>';
+        }).join('') + '</div>';
+    }
+
+    function mealHTML(editable) {
+        if (!mealItems.length) return editable ? '<p class="calc-note">الوجبة فارغة. ابحث عن طعام وأضفه. | The meal is empty. Search for a food and add it.</p>' : '';
+        const t = mealTotals();
+        let h = '<div class="meal-wrap"><table class="meal-table"><thead><tr><th>الطعام | Food</th><th>الكمية | Amount</th><th>kcal</th><th>P</th><th>C</th><th>F</th>' + (editable ? '<th></th>' : '') + '</tr></thead><tbody>';
+        mealItems.forEach(function (it, i) {
+            h += '<tr><td>' + foodEsc(it.name) + '</td><td dir="ltr">' + foodEsc(it.amount) + '</td><td dir="ltr">' + foodFmt(it.n.kcal) + '</td><td dir="ltr">' + foodFmt(it.n.p, 1) + '</td><td dir="ltr">' + foodFmt(it.n.c, 1) + '</td><td dir="ltr">' + foodFmt(it.n.f, 1) + '</td>' +
+                (editable ? '<td><button type="button" class="meal-del" data-i="' + i + '" aria-label="حذف | remove">×</button></td>' : '') + '</tr>';
+        });
+        h += '</tbody><tfoot><tr><td colspan="2">المجموع | Total</td><td dir="ltr">' + foodFmt(t.kcal) + '</td><td dir="ltr">' + foodFmt(t.p, 1) + '</td><td dir="ltr">' + foodFmt(t.c, 1) + '</td><td dir="ltr">' + foodFmt(t.f, 1) + '</td>' + (editable ? '<td></td>' : '') + '</tr></tfoot></table></div>';
+        let totalG = 0;
+        mealItems.forEach(function (it) { totalG += it.g || 0; });
+        h += nutritionLabel(t, '<b><bdi>Total meal</bdi> · <bdi dir="rtl">إجمالي الوجبة</bdi></b> <bdi dir="ltr">' + mealItems.length + ' items, ' + foodFmt(totalG, 0) + ' g/ml</bdi>', t._unk);
+        if (editable) h += mealPlanHTML(t) + '<button type="button" class="btn-soft ghost" id="mealClear"><i class="fa-solid fa-trash"></i> تفريغ الوجبة | Clear meal</button>';
+        return h;
+    }
+
+    function renderMeal() {
+        const box = document.getElementById('mealOut');
+        if (box) box.innerHTML = mealHTML(true);
+    }
+
+    function foodBuildCustomForm() {
+        const fields = [['cfName', 'اسم الطعام', 'Food name', 'text', 'مثال: وجبة الشركة'], ['cfKcal', 'السعرات / 100 جم', 'Calories / 100 g', 'number', 'اتركه فارغاً للحساب التلقائي'],
+            ['cfP', 'بروتين (جم)', 'Protein (g)', 'number', '0'], ['cfC', 'كارب (جم)', 'Carbs (g)', 'number', '0'], ['cfF', 'دهون (جم)', 'Fat (g)', 'number', '0']];
+        FOOD_MICROS.forEach(function (m) { fields.push(['cf_' + m[0], m[1] + ' (' + m[3] + ')', m[2] + ' (' + m[3] + ')', 'number', 'اختياري']); });
+        fields.push(['cfYield', 'معامل الطبخ (اختياري)', 'Yield cooked ÷ raw (optional)', 'number', 'مثال: 2.8'], ['cfGrams', 'الكمية (جم)', 'Amount (g)', 'number', '100']);
+        let h = '<p class="calc-note" style="margin-top:0">أدخل القيم لكل 100 جم/مل (نيء إن حددت معامل طبخ). الحقول الفارغة تظهر «—» في الملصق. | Enter values per 100 g/ml (raw if you set a yield). Blank fields show “—”.</p><div class="form-grid-4">';
+        fields.forEach(function (f) {
+            h += '<div class="input-box"><label>' + f[1] + ' <span class="en">' + f[2] + '</span></label><input type="' + f[3] + '" id="' + f[0] + '"' + (f[3] === 'number' ? ' step="any" inputmode="decimal"' : ' maxlength="60"') + ' placeholder="' + f[4] + '"' + (f[0] === 'cfGrams' ? ' value="100"' : '') + '></div>';
+        });
+        h += '</div><label class="cf-save"><input type="checkbox" id="cfSave" checked> حفظ في قائمتي على هذا الجهاز | Save to my list on this device</label>' +
+            '<div id="cfMsg" class="calc-note" role="status"></div><button type="button" class="btn-soft" id="cfAdd"><i class="fa-solid fa-plus"></i> إضافة إلى الوجبة | Add to meal</button>';
+        document.getElementById('customForm').innerHTML = h;
+    }
+
+    function foodAddCustom() {
+        const msg = document.getElementById('cfMsg');
+        const val = function (id) { const x = parseFloat(document.getElementById(id).value); return Number.isFinite(x) && x >= 0 ? x : 0; };
+        const valOpt = function (id) { const x = parseFloat(document.getElementById(id).value); return Number.isFinite(x) && x >= 0 ? x : null; };
+        const name = document.getElementById('cfName').value.trim();
+        const grams = parseFloat(document.getElementById('cfGrams').value);
+        if (!name) { msg.textContent = 'أدخل اسم الطعام. | Enter a food name.'; return; }
+        if (!(grams > 0 && grams <= 5000)) { msg.textContent = 'أدخل كمية صحيحة (1–5000 جم). | Enter a valid amount.'; return; }
+        const v = { p: val('cfP'), c: val('cfC'), f: val('cfF') };
+        FOOD_MICROS.forEach(function (m) { v[m[0]] = valOpt('cf_' + m[0]); });
+        const kIn = parseFloat(document.getElementById('cfKcal').value);
+        v.kcal = Number.isFinite(kIn) && kIn >= 0 ? kIn : v.p * 4 + v.c * 4 + v.f * 9;
+        if (v.kcal > 900 || v.p + v.c + v.f > 100.5) { msg.textContent = 'القيم غير منطقية لكل 100 جم (الماكروز ≤ 100 جم، السعرات ≤ 900). | Values look wrong for 100 g.'; return; }
+        const yRaw = parseFloat(document.getElementById('cfYield').value);
+        const y = yRaw >= 0.2 && yRaw <= 6 ? yRaw : 0;
+        const food = { id: -1, ar: name, en: name, al: '', cat: 'custom', y: y, v: v };
+        const c = foodCalc(food, 'raw', grams, y);
+        foodAddItem({ name: name, amount: foodFmt(grams, 1) + ' g', g: grams, n: c.n });
+        if (document.getElementById('cfSave').checked) {
+            foodCustom.push({ name: name, y: y, v: v });
+            foodSaveCustom(); foodRebuild();
+        }
+        msg.textContent = 'تمت الإضافة. | Added.';
+    }
+
+    function initFood() {
+        foodLoadCustom(); foodRebuild(); foodBuildCustomForm(); renderMeal();
+        const inp = document.getElementById('foodSearch'), ul = document.getElementById('foodList');
+        inp.addEventListener('input', function () { foodMatches = foodSearch(inp.value); foodHi = foodMatches.length ? 0 : -1; renderFoodList(); });
+        inp.addEventListener('focus', function () { if (inp.value.trim()) { foodMatches = foodSearch(inp.value); renderFoodList(); } });
+        inp.addEventListener('keydown', function (e) {
+            if (e.key === 'ArrowDown' && foodMatches.length) { e.preventDefault(); foodHi = (foodHi + 1) % foodMatches.length; renderFoodList(); }
+            else if (e.key === 'ArrowUp' && foodMatches.length) { e.preventDefault(); foodHi = (foodHi - 1 + foodMatches.length) % foodMatches.length; renderFoodList(); }
+            else if (e.key === 'Enter') { e.preventDefault(); if (!ul.hidden && foodMatches[foodHi]) foodPick(foodMatches[foodHi]); }
+            else if (e.key === 'Escape') { ul.hidden = true; }
+        });
+        ul.addEventListener('mousedown', function (e) {
+            const li = e.target.closest('li[data-i]');
+            if (li) { e.preventDefault(); foodPick(foodMatches[parseInt(li.getAttribute('data-i'), 10)]); }
+        });
+        document.addEventListener('click', function (e) { if (!e.target.closest('.food-search-box')) ul.hidden = true; });
+
+        const pick = document.getElementById('foodPick');
+        pick.addEventListener('input', updateFoodPreview);
+        pick.addEventListener('keydown', function (e) { if (e.key === 'Enter') e.preventDefault(); });
+        pick.addEventListener('click', function (e) {
+            const qc = e.target.closest('.qty-chips button');
+            if (qc) { document.getElementById('foodGrams').value = qc.getAttribute('data-q'); updateFoodPreview(); return; }
+            const seg = e.target.closest('.seg button');
+            if (seg) {
+                foodState = seg.getAttribute('data-state');
+                pick.querySelectorAll('.seg button').forEach(function (b) { const on = b === seg; b.classList.toggle('on', on); b.setAttribute('aria-pressed', on); });
+                updateFoodPreview(); return;
+            }
+            if (e.target.closest('#foodAddBtn') && foodSel) {
+                const r = foodReadInputs();
+                if (!(r.g > 0 && r.g <= 5000) || !r.yOk) { updateFoodPreview(); return; }
+                const c = foodCalc(foodSel, foodState, r.g, r.y);
+                const st = foodSel.y ? (foodState === 'cooked' ? ' (مطبوخ | cooked)' : ' (خام | raw)') : '';
+                foodAddItem({ name: foodSel.ar + st, amount: foodFmt(r.g, 1) + ' ' + foodUnit(foodSel), g: r.g, n: c.n });
+            }
+        });
+
+        document.getElementById('customToggle').addEventListener('click', function () {
+            const f = document.getElementById('customForm');
+            f.hidden = !f.hidden;
+            this.setAttribute('aria-expanded', String(!f.hidden));
+        });
+        document.getElementById('customForm').addEventListener('keydown', function (e) { if (e.key === 'Enter') e.preventDefault(); });
+        document.getElementById('customForm').addEventListener('click', function (e) { if (e.target.closest('#cfAdd')) foodAddCustom(); });
+        document.getElementById('mealOut').addEventListener('click', function (e) {
+            const d = e.target.closest('.meal-del');
+            if (d) { mealItems.splice(parseInt(d.getAttribute('data-i'), 10), 1); renderMeal(); return; }
+            if (e.target.closest('#mealClear')) { mealItems.length = 0; renderMeal(); }
+        });
     }
 
     function num(id, fallback) {
@@ -1804,4 +2551,3 @@
 
 </body>
 </html>
-
