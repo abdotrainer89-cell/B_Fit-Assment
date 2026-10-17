@@ -627,149 +627,6 @@
             .zone-row { grid-template-columns: 70px 1fr; }
             .zone-row .zr-bpm { grid-column: 1 / -1; text-align: left; }
         }
-
-        /* ===== B_FIT RGB light theme ===== */
-        @property --bf-a { syntax: "<angle>"; inherits: false; initial-value: 0deg; }
-        :root {
-            --rgb-r: #ff6b9d;
-            --rgb-v: #9b7bff;
-            --rgb-b: #4cb8ff;
-            --rgb-g: #3ddcb0;
-            --rgb-strip: linear-gradient(90deg, #ff6b9d, #9b7bff, #4cb8ff, #3ddcb0, #ff6b9d);
-            --rgb-strip-v: linear-gradient(180deg, #ff6b9d, #9b7bff, #4cb8ff);
-            --rgb-glow: 0 0 0 4px rgba(155, 123, 255, 0.16), 0 0 22px rgba(255, 107, 157, 0.20), 0 0 26px rgba(76, 184, 255, 0.20);
-            --rose-text: #b8336a;
-        }
-        @keyframes bfFlow { from { background-position: 0% 50%; } to { background-position: 300% 50%; } }
-        @keyframes bfSpin { to { --bf-a: 360deg; } }
-
-        body { background-image: linear-gradient(135deg, #fff1f7 0%, #eef4ff 45%, #f1efff 100%); }
-        body::before {
-            background:
-                radial-gradient(38% 34% at 10% 12%, rgba(255, 107, 157, 0.50), transparent 70%),
-                radial-gradient(34% 30% at 90% 10%, rgba(76, 184, 255, 0.50), transparent 70%),
-                radial-gradient(40% 36% at 84% 88%, rgba(155, 123, 255, 0.46), transparent 70%),
-                radial-gradient(34% 30% at 8% 90%, rgba(61, 220, 176, 0.38), transparent 70%);
-        }
-        body::after {
-            content: "";
-            position: fixed; top: 0; left: 0; right: 0; height: 3px; z-index: 50; pointer-events: none;
-            background: var(--rgb-strip); background-size: 300% 100%;
-            box-shadow: 0 0 14px rgba(155, 123, 255, 0.55), 0 0 28px rgba(255, 107, 157, 0.35);
-            animation: bfFlow 14s linear infinite;
-        }
-
-        .assessment-container {
-            box-shadow: 0 30px 80px rgba(110, 90, 180, 0.22), 0 0 70px rgba(155, 123, 255, 0.16), 0 0 90px rgba(76, 184, 255, 0.10), inset 0 1px 0 rgba(255, 255, 255, 0.95), inset 0 -1px 0 rgba(255, 255, 255, 0.4);
-        }
-        .assessment-container::after {
-            content: "";
-            position: absolute; inset: 0; z-index: 0; border-radius: inherit; padding: 1.5px; pointer-events: none;
-            background: conic-gradient(from var(--bf-a), #ff6b9d, #9b7bff, #4cb8ff, #3ddcb0, #4cb8ff, #9b7bff, #ff6b9d);
-            -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-            -webkit-mask-composite: xor;
-            mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
-            opacity: 0.75;
-            animation: bfSpin 18s linear infinite;
-        }
-
-        .brand-header { border-bottom: 0; position: relative; }
-        .brand-header::after {
-            content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 3px; border-radius: 3px;
-            background: var(--rgb-strip); background-size: 300% 100%;
-            box-shadow: 0 0 12px rgba(155, 123, 255, 0.45), 0 0 18px rgba(255, 107, 157, 0.30);
-            animation: bfFlow 16s linear infinite;
-        }
-        .brand-titles p {
-            background: linear-gradient(90deg, #e0457f, #8a63f0, #2f9be8);
-            -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent;
-        }
-
-        .section-header { position: relative; overflow: hidden; border-right: 1px solid rgba(255, 255, 255, 0.80); }
-        .section-header::after {
-            content: ""; position: absolute; top: 0; bottom: 0; right: 0; width: 6px;
-            background: var(--rgb-strip-v); box-shadow: 0 0 14px rgba(155, 123, 255, 0.6);
-        }
-
-        .section-header, .health-question-row, .exercise-card, .score-metric-card, .calc-panel, .calc-card, .zone-row, .report-extra {
-            box-shadow: 0 8px 24px rgba(110, 90, 180, 0.10), 0 0 0 1px rgba(155, 123, 255, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.95);
-        }
-        .exercise-card, .health-question-row, .calc-card { transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease; }
-        .exercise-card:hover, .health-question-row:hover {
-            transform: translateY(-2px);
-            border-color: rgba(155, 123, 255, 0.55);
-            box-shadow: 0 14px 32px rgba(110, 90, 180, 0.16), 0 0 26px rgba(155, 123, 255, 0.20), 0 0 30px rgba(76, 184, 255, 0.14), inset 0 1px 0 #fff;
-        }
-        .calc-card:hover { transform: translateY(-2px); box-shadow: 0 10px 24px rgba(110, 90, 180, 0.16), 0 0 20px rgba(76, 184, 255, 0.20), inset 0 1px 0 #fff; }
-
-        .input-box input:hover, .input-box select:hover { border-color: rgba(155, 123, 255, 0.55); }
-        .input-box input:focus, .input-box select:focus {
-            border-color: #9b7bff;
-            box-shadow: 0 0 0 4px rgba(155, 123, 255, 0.18), 0 0 20px rgba(255, 107, 157, 0.20), 0 0 22px rgba(76, 184, 255, 0.22);
-        }
-        .ocr-status { color: #7a56e0; }
-
-        .radio-btn-group input[type="radio"]:checked + label.yes-label { background: linear-gradient(135deg, #ff7aa6, #ef4f86); box-shadow: 0 4px 12px rgba(255, 107, 157, 0.45); }
-        .radio-btn-group input[type="radio"]:checked + label.no-label { background: linear-gradient(135deg, #4fe0b8, #20b98f); box-shadow: 0 4px 12px rgba(61, 220, 176, 0.45); }
-
-        .exercise-avatar-box { box-shadow: 0 10px 24px rgba(110, 90, 180, 0.16), 0 0 22px color-mix(in srgb, var(--accent-gender) 38%, transparent), inset 0 1px 0 #fff; }
-        .exercise-details h4 span.target-tag {
-            background: linear-gradient(135deg, rgba(255, 107, 157, 0.14), rgba(155, 123, 255, 0.14), rgba(76, 184, 255, 0.14));
-            color: #7a3fc4; border: 1px solid rgba(155, 123, 255, 0.40);
-        }
-
-        .btn-submit {
-            background: linear-gradient(110deg, #ff6b9d, #9b7bff, #4cb8ff, #9b7bff, #ff6b9d);
-            background-size: 300% 100%;
-            animation: bfFlow 10s linear infinite;
-            text-shadow: 0 1px 2px rgba(60, 30, 120, 0.30);
-            box-shadow: 0 12px 28px rgba(155, 123, 255, 0.34), 0 0 30px rgba(255, 107, 157, 0.26), 0 0 34px rgba(76, 184, 255, 0.24), inset 0 1px 0 rgba(255, 255, 255, 0.55), inset 0 -2px 6px rgba(70, 40, 140, 0.18);
-        }
-        .btn-submit:hover { box-shadow: 0 16px 36px rgba(155, 123, 255, 0.42), 0 0 40px rgba(255, 107, 157, 0.34), 0 0 44px rgba(76, 184, 255, 0.32), inset 0 1px 0 rgba(255, 255, 255, 0.6); }
-        .btn-submit:active { transform: translateY(0) scale(0.995); }
-
-        .input-box label.upload-zone { border: 2px dashed rgba(155, 123, 255, 0.65); background: linear-gradient(135deg, rgba(255, 107, 157, 0.06), rgba(155, 123, 255, 0.06), rgba(76, 184, 255, 0.08)); }
-        .input-box label.upload-zone:hover, .input-box label.upload-zone.drag { background: linear-gradient(135deg, rgba(255, 107, 157, 0.12), rgba(155, 123, 255, 0.12), rgba(76, 184, 255, 0.14)); box-shadow: 0 0 26px rgba(155, 123, 255, 0.25); }
-        .sr-file:focus-visible + label.upload-zone { box-shadow: 0 0 0 4px rgba(155, 123, 255, 0.30); }
-        .upload-icon { background: linear-gradient(135deg, #ff6b9d, #9b7bff 60%, #4cb8ff); box-shadow: 0 6px 16px rgba(155, 123, 255, 0.40), 0 0 18px rgba(255, 107, 157, 0.28), inset 0 1px 1px rgba(255, 255, 255, 0.5); }
-        .ocr-progress > div { background: linear-gradient(90deg, #ff6b9d, #9b7bff, #4cb8ff); box-shadow: 0 0 10px rgba(155, 123, 255, 0.6); }
-        .input-box input.field-ok { border-color: #3ddcb0; box-shadow: 0 0 0 3px rgba(61, 220, 176, 0.20), 0 0 14px rgba(61, 220, 176, 0.25); }
-
-        .result-container { border-top: 0; position: relative; }
-        .result-container::before {
-            content: ""; position: absolute; top: 0; left: 0; right: 0; height: 2px; border-radius: 2px; opacity: 0.8;
-            background: var(--rgb-strip); background-size: 300% 100%; animation: bfFlow 16s linear infinite;
-        }
-        .result-card { border: 1px solid rgba(155, 123, 255, 0.45); box-shadow: 0 18px 44px rgba(110, 90, 180, 0.18), 0 0 44px rgba(155, 123, 255, 0.16), 0 0 50px rgba(76, 184, 255, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.95); }
-        .score-metric-card .value span { color: #7a56e0; }
-        .report-summary-text { border-right: 4px solid transparent; border-image: var(--rgb-strip-v) 1; }
-
-        .calc-card.main { border-color: rgba(155, 123, 255, 0.50); background: linear-gradient(135deg, rgba(255, 238, 246, 0.80), rgba(238, 240, 255, 0.80), rgba(232, 246, 255, 0.80)); box-shadow: 0 6px 20px rgba(155, 123, 255, 0.18), 0 0 20px rgba(255, 107, 157, 0.14), inset 0 1px 0 #fff; }
-        .calc-card .value.mp { color: #d6336f; }
-        .calc-card .value.mc { color: #2587d9; }
-        .calc-card .value.mf { color: #12a07a; }
-        .macro-bar { box-shadow: inset 0 1px 3px rgba(110, 90, 180, 0.2), 0 0 16px rgba(155, 123, 255, 0.18); }
-        .macro-bar i.mp { background: linear-gradient(135deg, #ff7aa6, #ef4f86); }
-        .macro-bar i.mc { background: linear-gradient(135deg, #6ec6ff, #3c9cf0); }
-        .macro-bar i.mf { background: linear-gradient(135deg, #5fe6bf, #22bf93); }
-
-        .zone-row { position: relative; overflow: hidden; }
-        .zone-row::before { content: ""; position: absolute; top: 0; bottom: 0; right: 0; width: 4px; background: var(--zc, #9b7bff); box-shadow: 0 0 10px var(--zc, #9b7bff); }
-        .zone-row:nth-child(1) { --zc: #4cb8ff; }
-        .zone-row:nth-child(2) { --zc: #3ddcb0; }
-        .zone-row:nth-child(3) { --zc: #9b7bff; }
-        .zone-row:nth-child(4) { --zc: #ff8fc0; }
-        .zone-row:nth-child(5) { --zc: #ff5b8f; }
-        .zone-row.active { background: rgba(255, 255, 255, 0.85); border-color: var(--zc, #9b7bff); box-shadow: 0 0 0 3px rgba(155, 123, 255, 0.14), 0 0 22px color-mix(in srgb, var(--zc, #9b7bff) 40%, transparent); }
-        .zone-row .zr-pct { color: color-mix(in srgb, var(--zc, #9b7bff) 70%, #1d2433); }
-
-        @media (max-width: 768px) {
-            .assessment-container::after { opacity: 0.6; }
-            .zone-row::before { width: 3px; }
-        }
-        @media (prefers-reduced-motion: reduce) {
-            body::after, .assessment-container::after, .brand-header::after, .btn-submit, .result-container::before { animation: none; }
-        }
     </style>
 </head>
 <body>
@@ -1917,4 +1774,33 @@
             summaryHTML += 'مستوى متزن ومناسب للبدء في برنامج تدريبي متطور لرفع الكتلة العضلية وتقليل الدهون للوصول لنتائج أفضل في التقييمات القادمة.';
         } else {
             badge.className = 'bio-age-highlight bio-older';
-            badge.inne
+            badge.innerText = '⚠️ تنبيه: عمرك البيولوجي أعلى من عمرك الحقيقي بمقدار (' + (biologicalAge - realAge) + ') سنوات.';
+            summaryHTML += 'تشير المدخلات إلى وجود تراجع في بعض عناصر التحمل العضلي أو ارتفاع في الدهون. يُوصى ببرنامج تدريبي مخصص مع الكوتش.';
+        }
+
+        if (flags.length > 0) {
+            summaryHTML += '<br><br><strong>الملاحظات الصحية (' + flags.length + '):</strong><br>';
+            summaryHTML += flags.map(f => '• ' + f).join('<br>');
+            summaryHTML += '<br>يرجى تكييف التمارين بناءً عليها.';
+            if (needsMedicalClearance) {
+                summaryHTML += '<br><strong style="color:#dc2626;">يُنصح بالحصول على موافقة طبية قبل بدء البرنامج التدريبي.</strong>';
+            }
+        }
+
+        document.getElementById('detailedReportText').innerHTML = summaryHTML;
+        renderReportExtras(flags.length > 0, needsMedicalClearance);
+        const area = document.getElementById('resultArea');
+        area.style.display = 'block';
+        area.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    window.addEventListener('load', function () {
+        updateGenderTheme();
+        initUploadZone();
+        initCalculators();
+        setTimeout(function () { inbodyGetWorker().catch(function () {}); }, 1500);
+    });
+</script>
+
+</body>
+</html>
