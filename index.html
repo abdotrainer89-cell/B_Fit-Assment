@@ -16,8 +16,8 @@
             --bg-main: #0b0f19;
             --card-bg: #131b2e;
             --card-inner: #1e293b;
-            --primary-orange: #ff6b00;
-            --primary-orange-hover: #e05e00;
+            --primary-orange: #e8657b;
+            --primary-orange-hover: #c9475f;
             --text-white: #ffffff;
             --text-muted: #94a3b8;
             --border-color: #334155;
@@ -45,7 +45,7 @@
             align-items: flex-start;
             padding: 30px 15px;
             min-height: 100vh;
-            background-image: radial-gradient(circle at top right, rgba(255, 107, 0, 0.15), transparent 60%);
+            background-image: radial-gradient(circle at top right, rgba(232, 101, 123, 0.15), transparent 60%);
         }
 
         .assessment-container {
@@ -169,7 +169,7 @@
 
         .input-box input:focus, .input-box select:focus {
             border-color: var(--primary-orange);
-            box-shadow: 0 0 0 4px rgba(255, 107, 0, 0.15);
+            box-shadow: 0 0 0 4px rgba(232, 101, 123, 0.15);
         }
 
         .ocr-status {
@@ -279,12 +279,12 @@
 
         .exercise-details h4 span.target-tag {
             font-size: 12px;
-            background: rgba(255, 107, 0, 0.2);
-            color: var(--primary-orange);
+            background: rgba(232, 101, 123, 0.2);
+            color: #ffa3b3;
             padding: 4px 10px;
             border-radius: 6px;
             font-weight: 700;
-            border: 1px solid rgba(255, 107, 0, 0.4);
+            border: 1px solid rgba(232, 101, 123, 0.4);
             font-family: 'Montserrat', sans-serif;
             direction: ltr;
         }
@@ -306,7 +306,7 @@
             font-weight: 900;
             cursor: pointer;
             margin-top: 35px;
-            box-shadow: 0 10px 25px rgba(255, 107, 0, 0.35);
+            box-shadow: 0 10px 25px rgba(232, 101, 123, 0.35);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -315,7 +315,7 @@
 
         .btn-submit:hover {
             transform: translateY(-2px);
-            box-shadow: 0 14px 30px rgba(255, 107, 0, 0.45);
+            box-shadow: 0 14px 30px rgba(232, 101, 123, 0.45);
         }
 
         .result-container {
@@ -401,22 +401,22 @@
         .input-box label.upload-zone {
             display: flex; align-items: center; justify-content: flex-start; gap: 16px;
             padding: 18px 20px; cursor: pointer; border-radius: 14px;
-            border: 2px dashed var(--primary-orange); background: rgba(255, 107, 0, 0.07);
+            border: 2px dashed var(--primary-orange); background: rgba(232, 101, 123, 0.07);
             font-size: 14px; color: #fff;
         }
-        .input-box label.upload-zone:hover, .input-box label.upload-zone.drag { background: rgba(255, 107, 0, 0.16); border-style: solid; }
-        .sr-file:focus-visible + label.upload-zone { box-shadow: 0 0 0 4px rgba(255, 107, 0, 0.3); }
+        .input-box label.upload-zone:hover, .input-box label.upload-zone.drag { background: rgba(232, 101, 123, 0.16); border-style: solid; }
+        .sr-file:focus-visible + label.upload-zone { box-shadow: 0 0 0 4px rgba(232, 101, 123, 0.3); }
         .upload-icon {
             width: 52px; height: 52px; border-radius: 14px; flex-shrink: 0;
             display: flex; align-items: center; justify-content: center; font-size: 22px;
-            background: linear-gradient(135deg, var(--primary-orange), #ff9900); color: #fff;
+            background: linear-gradient(135deg, var(--primary-orange), #f4788a); color: #fff;
         }
         .upload-text { display: flex; flex-direction: column; gap: 3px; flex: 1; min-width: 0; }
         .upload-text strong { font-size: 15px; font-weight: 900; }
         .upload-text span { font-size: 12px; color: var(--text-muted); overflow-wrap: anywhere; }
         .upload-thumb { display: none; width: 56px; height: 56px; object-fit: cover; object-position: top; border-radius: 10px; border: 2px solid var(--border-color); flex-shrink: 0; }
         .ocr-progress { display: none; height: 6px; border-radius: 6px; background: var(--bg-main); overflow: hidden; margin-top: 8px; }
-        .ocr-progress > div { height: 100%; width: 4%; background: linear-gradient(90deg, var(--primary-orange), #ffb347); transition: width 0.3s ease; }
+        .ocr-progress > div { height: 100%; width: 4%; background: linear-gradient(90deg, var(--primary-orange), #f7a1ae); transition: width 0.3s ease; }
         .input-box input.field-ok { border-color: var(--success-green); box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15); }
         .input-box input.field-check { border-color: #f59e0b; box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.2); }
 
@@ -708,7 +708,7 @@
     ];
 
     const AV_STYLE = {
-        male:   { torso: 16,   thigh: 9.5, arm: 7,   head: 9.5, hipR: 0,   shoulder: 22, waist: 14, hip: 14 },
+        male: { torso: 16, thigh: 9.5, arm: 7, head: 9.5, hipR: 0, shoulder: 22, waist: 14, hip: 14 },
         female: { torso: 12.5, thigh: 8.5, arm: 5.6, head: 8.8, hipR: 7.5, shoulder: 17, waist: 10, hip: 16 }
     };
     const AV_HAIR = '#e2e8f0';
@@ -718,50 +718,50 @@
         1: {
             kind: 'side', dir: 1, eyesClosed: true,
             head: [101, 19], neck: [100, 31], sh: [100, 36], hip: [100, 72],
-            legFar:  [[100, 72], [100, 95], [100, 117], [109, 117]],
+            legFar: [[100, 72], [100, 95], [100, 117], [109, 117]],
             legNear: [[100, 72], [124, 74], [124, 97], [133, 97]],
-            armFar:  [[100, 38], [84, 47], [68, 42]],
+            armFar: [[100, 38], [84, 47], [68, 42]],
             armNear: [[100, 38], [117, 47], [134, 42]]
         },
         2: {
             kind: 'side', dir: 1, mat: true,
             head: [137, 84], neck: [129, 92], sh: [120, 98], hip: [78, 106],
-            legFar:  [[78, 108], [52, 100], [26, 91], [19, 88]],
+            legFar: [[78, 108], [52, 100], [26, 91], [19, 88]],
             legNear: [[78, 106], [52, 97], [26, 88], [19, 85]],
-            armFar:  [[118, 100], [144, 94], [170, 88]],
+            armFar: [[118, 100], [144, 94], [170, 88]],
             armNear: [[120, 98], [146, 91], [172, 84]]
         },
         3: {
             kind: 'side', dir: 1,
             head: [131, 71], neck: [121, 75], sh: [116, 78], hip: [72, 95],
-            legFar:  [[72, 95], [50, 103], [28, 112], [22, 113]],
+            legFar: [[72, 95], [50, 103], [28, 112], [22, 113]],
             legNear: [[72, 95], [50, 103], [28, 112], [22, 113]],
-            armFar:  [[111, 78], [111, 97], [111, 114]],
+            armFar: [[111, 78], [111, 97], [111, 114]],
             armNear: [[116, 78], [116, 97], [116, 114]]
         },
         4: {
             kind: 'side', dir: 1,
             head: [81, 29], neck: [77, 40], sh: [74, 45], hip: [62, 80],
-            legFar:  [[62, 80], [92, 80], [92, 112], [102, 113]],
+            legFar: [[62, 80], [92, 80], [92, 112], [102, 113]],
             legNear: [[62, 80], [96, 80], [96, 112], [106, 113]],
-            armFar:  [[74, 44], [96, 44], [118, 44]],
+            armFar: [[74, 44], [96, 44], [118, 44]],
             armNear: [[74, 47], [96, 47], [118, 47]],
             marker: 'squat'
         },
         5: {
             kind: 'side', dir: -1, mat: true,
             head: [50, 62], neck: [57, 70], sh: [62, 76], hip: [86, 108],
-            legFar:  [[86, 108], [107, 82], [125, 111], [135, 112]],
+            legFar: [[86, 108], [107, 82], [125, 111], [135, 112]],
             legNear: [[86, 108], [110, 80], [128, 110], [138, 111]],
-            armFar:  [[62, 80], [80, 80], [100, 78]],
+            armFar: [[62, 80], [80, 80], [100, 78]],
             armNear: [[62, 78], [82, 78], [102, 76]]
         },
         6: {
             kind: 'side', dir: 1,
             head: [117, 87], neck: [110, 80], sh: [104, 74], hip: [72, 44],
-            legFar:  [[72, 44], [48, 79], [27, 113], [38, 114]],
+            legFar: [[72, 44], [48, 79], [27, 113], [38, 114]],
             legNear: [[72, 44], [51, 79], [30, 113], [41, 114]],
-            armFar:  [[100, 78], [106, 96], [112, 113]],
+            armFar: [[100, 78], [106, 96], [112, 113]],
             armNear: [[104, 76], [110, 95], [116, 113]],
             marker: 'walk'
         },
@@ -943,14 +943,14 @@
         thumb.src = inbodyPreviewUrl;
         thumb.style.display = 'block';
         setOcrProgress(4);
-        setOcrStatus('#ff6b00', 'fa-solid fa-spinner fa-spin', 'جاري قراءة تقرير InBody... | Reading InBody report...');
+        setOcrStatus('#f08a9b', 'fa-solid fa-spinner fa-spin', 'جاري قراءة تقرير InBody... | Reading InBody report...');
 
         try {
             const canvas = await inbodyLoadCanvas(file);
             const worker = await inbodyGetWorker();
             const res = await readInBodyReport(canvas, worker, function (step, total, label) {
                 setOcrProgress(10 + (step / total) * 90);
-                setOcrStatus('#ff6b00', 'fa-solid fa-spinner fa-spin', 'جاري قراءة: ' + label + ' (' + step + '/' + total + ')');
+                setOcrStatus('#f08a9b', 'fa-solid fa-spinner fa-spin', 'جاري قراءة: ' + label + ' (' + step + '/' + total + ')');
             });
             applyInBodyResult(res);
         } catch (err) {
@@ -993,10 +993,10 @@
         zones: {
             labels: [0.20, 0.072, 0.52, 0.090],
             height: [0.2245, 0.0895, 0.290, 0.1045],
-            age:    [0.3285, 0.0895, 0.362, 0.1045],
+            age: [0.3285, 0.0895, 0.362, 0.1045],
             gender: [0.398, 0.0895, 0.455, 0.1045],
             weight: [0.548, 0.1930, 0.600, 0.2065],
-            bfm:    [0.185, 0.2395, 0.240, 0.2545]
+            bfm: [0.185, 0.2395, 0.240, 0.2545]
         },
         rows: { weight: [0.3298, 0.3363], smm: [0.3581, 0.3650], pbf: [0.4856, 0.4921] }
     };
