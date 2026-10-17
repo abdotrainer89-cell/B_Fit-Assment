@@ -9,8 +9,6 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;600;700;900&family=Montserrat:wght@400;600;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- استدعاء مكتبة القراءة البصرية المحلية المضمونة لمنع أي أخطاء اتصال -->
-    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 
     <style>
         :root {
@@ -411,13 +409,13 @@
     <form id="bfitAssessmentForm" onsubmit="calculateAssessment(event)">
 
         <div class="section-header">
-            <h2><i class="fa-solid fa-id-card"></i> 1. البيانات العامة والإنبودي (InBody 770 Local Scan) | Member & InBody Profile</h2>
+            <h2><i class="fa-solid fa-id-card"></i> 1. البيانات العامة والإنبودي (Gemini Vision AI Smart Proxy) | Member & InBody Profile</h2>
         </div>
 
         <div class="form-grid-4">
             <div class="input-box" style="grid-column: span 2;">
-                <label>إرفاق تقرير InBody 770 (تحليل ذكي فوري) <span class="en">Smart OCR Scan</span></label>
-                <input type="file" id="inbodyFile" accept="image/*" onchange="processInBodySmartOCR(event)">
+                <label>إرفاق تقرير InBody 770 (تحليل دقيق بالذكاء الاصطناعي) <span class="en">Gemini AI Vision</span></label>
+                <input type="file" id="inbodyFile" accept="image/*" onchange="processInBodyGeminiSmart(event)">
                 <div id="ocrStatusMsg" class="ocr-status"></div>
             </div>
             <div class="input-box">
@@ -666,56 +664,105 @@
         el.innerHTML = '<i class="' + iconClass + '"></i> ' + message;
     }
 
-    // دالة المعالجة الفورية المضمونة لاستخراج بيانات الإنبودي بدون أخطاء اتصال خارجية
-    async function processInBodySmartOCR(event) {
+    // ضغط الصورة وإرسالها بالصيغة والحجم المثالي لنموذج Gemini AI عبر البروكسي الآمن
+    async function processInBodyGeminiSmart(event) {
         const file = event.target.files[0];
         if (!file) return;
 
-        setOcrStatus('#ff6b00', 'fa-solid fa-spinner fa-spin', 'جاري فحص وقراءة تقرير InBody بدقة فائقة...');
+        const GEMINI_API_KEY = "AQ.Ab8RN6Iq9pYQL5V-Jy_6fMHdFmViEW_V_VvqnvW1mdoBfn6erw";
+
+        setOcrStatus('#ff6b00', 'fa-solid fa-spinner fa-spin', 'جاري معالجة وضغط الصورة وإرسالها لنموذج الذكاء الاصطناعي...');
 
         try {
-            const worker = await Tesseract.createWorker('eng');
-            const ret = await worker.recognize(file);
-            await worker.terminate();
-            const text = ret.data.text || '';
+            // ضغط الصورة وتصغيرها إلى أبعاد مثالية (1000 بكسل) لتلائم متطلبات النموذج بدقة سرعة وعالية
+            const base64Data = await new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const img = new Image();
+                    img.onload = function() {
+                        const canvas = document.createElement('canvas');
+                        const MAX_DIM = 1000;
+                        let w = img.width;
+                        let h = img.height;
+                        if (w > MAX_DIM || h > MAX_DIM) {
+                            if (w > h) { h = Math.round((h * MAX_DIM) / w); w = MAX_DIM; }
+                            else { w = Math.round((w * MAX_DIM) / h); h = MAX_DIM; }
+                        }
+                        canvas.width = w;
+                        canvas.height = h;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, w, h);
+                        resolve(canvas.toDataURL('image/jpeg', 0.85).split(',')[1]);
+                    };
+                    img.onerror = reject;
+                    img.src = e.target.result;
+                };
+                reader.onerror = reject;
+                reader.readAsDataURL(file);
+            });
 
-            function extractNum(patterns, min, max) {
-                for (const p of patterns) {
-                    const m = text.match(p);
-                    if (m && m[1]) {
-                        const v = parseFloat(m[1]);
-                        if (v >= min && v <= max) return v;
+            // رابط الـ API المباشر مع بروكسي الآمن لتجاوز قيود المتصفح (CORS Proxy)
+            const targetUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
+            const proxyUrl = `https://api.allorigins.win/raw?url=` + encodeURIComponent(targetUrl);
+
+            const payload = {
+                contents: [
+                    {
+                        parts: [
+                            {
+                                text: "You are an expert sports nutritionist and InBody 770 analyst. Inspect this body composition report image carefully. Extract and return ONLY a clean JSON object containing these exact keys with accurate numeric/text values: age (number), weight (number in kg), height (number in cm), smm (number in kg, Skeletal Muscle Mass), pbf (number in percentage, Body Fat %), gender (string 'male' or 'female'). Do NOT include markdown backticks like ```json, only raw JSON."
+                            },
+                            {
+                                inline_data: {
+                                    mime_type: "image/jpeg",
+                                    data: base64Data
+                                }
+                            }
+                        ]
                     }
-                }
-                return null;
-            }
-
-            const parsed = {
-                age:    extractNum([/\bAge\b\D{0,12}(\d{2})\b/i, /\b(\d{2})\s*Years?\b/i], 12, 90),
-                weight: extractNum([/\bWeight\b[^\d]{0,25}(\d{2,3}\.\d)/i, /\b(\d{2,3}\.\d)\s*kg\b/i], 30, 250),
-                height: extractNum([/\bHeight\b[^\d]{0,25}(\d{3}(?:\.\d)?)/i, /\b(\d{3}(?:\.\d)?)\s*cm\b/i], 100, 230),
-                smm:    extractNum([/\bSMM\b[^\d]{0,25}(\d{2}\.\d)/i, /Skeletal\s*Muscle\s*Mass[^\d]{0,25}(\d{2}\.\d)/i], 10, 80),
-                pbf:    extractNum([/\bPBF\b[^\d]{0,25}(\d{1,2}\.\d)/i, /Percent\s*Body\s*Fat[^\d]{0,25}(\d{1,2}\.\d)/i], 3, 60)
+                ]
             };
 
-            if (parsed.age !== null) document.getElementById('realAge').value = parsed.age;
-            if (parsed.weight !== null) document.getElementById('weightInput').value = parsed.weight;
-            if (parsed.height !== null) document.getElementById('heightInput').value = parsed.height;
-            if (parsed.smm !== null) document.getElementById('smmInput').value = parsed.smm;
-            if (parsed.pbf !== null) document.getElementById('fatInput').value = parsed.pbf;
+            const response = await fetch(proxyUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
 
-            if (/\bFemale\b/i.test(text) || /\bأنثى\b/i.test(text)) {
-                document.getElementById('genderSelect').value = 'female';
-            } else if (/\bMale\b/i.test(text) || /\bذكر\b/i.test(text)) {
-                document.getElementById('genderSelect').value = 'male';
+            if (!response.ok) {
+                throw new Error(`HTTP Error: ${response.status}`);
             }
-            updateGenderTheme();
 
-            setOcrStatus('#10b981', 'fa-solid fa-circle-check', 'تم قراءة واستخراج بيانات InBody بنجاح تام وفوري!');
+            const data = await response.json();
+
+            if (data.error) {
+                throw new Error(data.error.message);
+            }
+
+            if (!data.candidates || !data.candidates[0].content) {
+                throw new Error('Invalid AI Response structure.');
+            }
+
+            const rawText = data.candidates[0].content.parts[0].text;
+            const cleanedJSON = rawText.replace(/```json/gi, '').replace(/```/g, '').trim();
+            const result = JSON.parse(cleanedJSON);
+
+            if (result.age) document.getElementById('realAge').value = result.age;
+            if (result.weight) document.getElementById('weightInput').value = result.weight;
+            if (result.height) document.getElementById('heightInput').value = result.height;
+            if (result.smm) document.getElementById('smmInput').value = result.smm;
+            if (result.pbf) document.getElementById('fatInput').value = result.pbf;
+            if (result.gender) {
+                const g = String(result.gender).toLowerCase();
+                document.getElementById('genderSelect').value = (g.includes('fem') || g.includes('أنثى')) ? 'female' : 'male';
+                updateGenderTheme();
+            }
+
+            setOcrStatus('#10b981', 'fa-solid fa-circle-check', 'تم قراءة تقرير InBody بالذكاء الاصطناعي بنجاح وبأعلى دقة واقعية!');
 
         } catch (err) {
-            console.error("OCR Processing Error:", err);
-            setOcrStatus('#ef4444', 'fa-solid fa-circle-xmark', 'تعذر قراءة بعض الحقول تلقائياً، يرجى استكمالها بكل سهولة.');
+            console.error("Gemini AI Smart Error:", err);
+            setOcrStatus('#ef4444', 'fa-solid fa-circle-xmark', 'حدث خطأ في الاتصال بالسيرفر، يرجى كتابة البيانات يدوياً بكل سهولة.');
         }
     }
 
