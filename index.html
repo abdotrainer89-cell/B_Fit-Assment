@@ -9,6 +9,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;600;700;900&family=Montserrat:wght@400;600;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 
     <style>
         :root {
@@ -218,14 +219,16 @@
             padding: 22px;
             margin-bottom: 20px;
             display: grid;
-            grid-template-columns: 130px 1fr;
+            grid-template-columns: 190px 1fr;
             gap: 22px;
             align-items: center;
         }
 
         .exercise-avatar-box {
-            width: 130px;
-            height: 105px;
+            width: 190px;
+            min-height: 160px;
+            padding: 8px 6px 10px;
+            gap: 4px;
             background: linear-gradient(135deg, rgba(15, 23, 42, 0.98), rgba(30, 41, 59, 0.98));
             border-radius: 12px;
             display: flex;
@@ -376,6 +379,48 @@
             border-right: 4px solid var(--primary-orange);
         }
 
+
+        .avatar-svg { width: 100%; line-height: 0; }
+        .avatar-svg svg { width: 100%; height: auto; display: block; }
+        .avatar-cap {
+            font-size: 10px;
+            color: #cbd5e1;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            letter-spacing: 0.4px;
+            direction: ltr;
+            text-align: center;
+        }
+
+        .input-box.upload-box { grid-column: 1 / -1; }
+        .upload-title { font-size: 13px; font-weight: 700; color: #e2e8f0; display: flex; justify-content: space-between; gap: 6px; }
+        .upload-title .en { font-family: 'Montserrat', sans-serif; color: var(--text-muted); font-weight: 500; }
+        .input-box input.sr-file {
+            position: absolute; width: 1px; height: 1px; padding: 0; border: 0; margin: -1px;
+            overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; opacity: 0;
+        }
+        .input-box label.upload-zone {
+            display: flex; align-items: center; justify-content: flex-start; gap: 16px;
+            padding: 18px 20px; cursor: pointer; border-radius: 14px;
+            border: 2px dashed var(--primary-orange); background: rgba(255, 107, 0, 0.07);
+            font-size: 14px; color: #fff;
+        }
+        .input-box label.upload-zone:hover, .input-box label.upload-zone.drag { background: rgba(255, 107, 0, 0.16); border-style: solid; }
+        .sr-file:focus-visible + label.upload-zone { box-shadow: 0 0 0 4px rgba(255, 107, 0, 0.3); }
+        .upload-icon {
+            width: 52px; height: 52px; border-radius: 14px; flex-shrink: 0;
+            display: flex; align-items: center; justify-content: center; font-size: 22px;
+            background: linear-gradient(135deg, var(--primary-orange), #ff9900); color: #fff;
+        }
+        .upload-text { display: flex; flex-direction: column; gap: 3px; flex: 1; min-width: 0; }
+        .upload-text strong { font-size: 15px; font-weight: 900; }
+        .upload-text span { font-size: 12px; color: var(--text-muted); overflow-wrap: anywhere; }
+        .upload-thumb { display: none; width: 56px; height: 56px; object-fit: cover; object-position: top; border-radius: 10px; border: 2px solid var(--border-color); flex-shrink: 0; }
+        .ocr-progress { display: none; height: 6px; border-radius: 6px; background: var(--bg-main); overflow: hidden; margin-top: 8px; }
+        .ocr-progress > div { height: 100%; width: 4%; background: linear-gradient(90deg, var(--primary-orange), #ffb347); transition: width 0.3s ease; }
+        .input-box input.field-ok { border-color: var(--success-green); box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15); }
+        .input-box input.field-check { border-color: #f59e0b; box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.2); }
+
         @media (max-width: 768px) {
             .assessment-container { padding: 22px 16px; }
             .brand-titles h1 { font-size: 20px; }
@@ -383,7 +428,7 @@
             .exercise-details { width: 100%; }
             .exercise-details h4 { justify-content: center; }
             .exercise-details p.sub-en { text-align: center; }
-            .exercise-avatar-box { width: 100%; height: 80px; flex-direction: row; gap: 15px; }
+            .exercise-avatar-box { width: 100%; max-width: 280px; min-height: 0; margin: 0 auto; }
             .health-question-row { grid-template-columns: 1fr; text-align: center; }
             .q-ar, .q-en { text-align: center; }
         }
@@ -409,13 +454,22 @@
     <form id="bfitAssessmentForm" onsubmit="calculateAssessment(event)">
 
         <div class="section-header">
-            <h2><i class="fa-solid fa-id-card"></i> 1. البيانات العامة والإنبودي (Gemini Vision AI Gateway) | Member & InBody Profile</h2>
+            <h2><i class="fa-solid fa-id-card"></i> 1. البيانات العامة والإنبودي (InBody 770) | Member & InBody Profile</h2>
         </div>
 
         <div class="form-grid-4">
-            <div class="input-box" style="grid-column: span 2;">
-                <label for="inbodyFile">إرفاق تقرير InBody 770 (تحليل ذكي فوري) <span class="en">Gemini Vision AI</span></label>
-                <input type="file" id="inbodyFile" accept="image/*">
+            <div class="input-box upload-box">
+                <span class="upload-title">إرفاق تقرير InBody 770 <span class="en">InBody 770 Scan</span></span>
+                <input type="file" id="inbodyFile" class="sr-file" accept="image/*" onchange="handleInBodyFile(this.files[0])">
+                <label class="upload-zone" id="uploadZone" for="inbodyFile">
+                    <span class="upload-icon"><i class="fa-solid fa-file-arrow-up"></i></span>
+                    <span class="upload-text">
+                        <strong>اضغط لاختيار صورة التقرير أو اسحبها هنا</strong>
+                        <span id="uploadName">JPG / PNG — لقطة شاشة أو صورة مستقيمة للتقرير كاملاً</span>
+                    </span>
+                    <img id="uploadThumb" class="upload-thumb" alt="">
+                </label>
+                <div class="ocr-progress" id="ocrProgress"><div id="ocrProgressBar"></div></div>
                 <div id="ocrStatusMsg" class="ocr-status"></div>
             </div>
             <div class="input-box">
@@ -510,8 +564,9 @@
 
         <div class="exercise-card">
             <div class="exercise-avatar-box">
-                <i class="fa-solid fa-person-walking" id="avatar1"></i>
+                <div class="avatar-svg" id="avatar1"></div>
                 <span class="gender-badge" id="badge1">MALE</span>
+                <span class="avatar-cap" id="cap1"></span>
             </div>
             <div class="exercise-details">
                 <h4>1. التوافق العصبي (إغلاق العينين والوقوف على قدم واحدة) <span class="target-tag">Target: 20s Total (10s/leg)</span></h4>
@@ -520,3 +575,865 @@
                     <div class="input-box"><label>القدم اليمنى (ثواني) <span class="en">Right Leg (s)</span></label><input type="number" id="coordR" max="10" min="0" placeholder="أقصى 10" required></div>
                     <div class="input-box"><label>القدم اليسرى (ثواني) <span class="en">Left Leg (s)</span></label><input type="number" id="coordL" max="10" min="0" placeholder="أقصى 10" required></div>
                 </div>
+            </div>
+        </div>
+
+        <div class="exercise-card">
+            <div class="exercise-avatar-box">
+                <div class="avatar-svg" id="avatar2"></div>
+                <span class="gender-badge" id="badge2">MALE</span>
+                <span class="avatar-cap" id="cap2"></span>
+            </div>
+            <div class="exercise-details">
+                <h4>2. التوازن الاستاتيكي (تمرين سوبرمان الثابت) <span class="target-tag">Target: 120s Total (60s/set)</span></h4>
+                <p class="sub-en">Static Superman Core & Back Balance Test</p>
+                <div class="exercise-inputs">
+                    <div class="input-box"><label>الجولة 1 (ثواني) <span class="en">Set 1 (s)</span></label><input type="number" id="balSet1" max="60" min="0" placeholder="أقصى 60" required></div>
+                    <div class="input-box"><label>الجولة 2 (ثواني) <span class="en">Set 2 (s)</span></label><input type="number" id="balSet2" max="60" min="0" placeholder="أقصى 60" required></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="exercise-card">
+            <div class="exercise-avatar-box">
+                <div class="avatar-svg" id="avatar3"></div>
+                <span class="gender-badge" id="badge3">MALE</span>
+                <span class="avatar-cap" id="cap3"></span>
+            </div>
+            <div class="exercise-details">
+                <h4>3. التحمل العضلي (تمرين الضغط) <span class="target-tag">Target: Set 2 >= 70% of Set 1</span></h4>
+                <p class="sub-en">Push-Up Upper Body Muscular Endurance Test</p>
+                <div class="exercise-inputs">
+                    <div class="input-box"><label>الجولة 1 (أقصى تكرار) <span class="en">Set 1 (Max Reps)</span></label><input type="number" id="pushSet1" min="1" required placeholder="أقصى عدد"></div>
+                    <div class="input-box"><label>الجولة 2 (تكرار فعلي) <span class="en">Set 2 (Reps)</span></label><input type="number" id="pushSet2" min="0" required placeholder="تكرارات الجولة 2"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="exercise-card">
+            <div class="exercise-avatar-box">
+                <div class="avatar-svg" id="avatar4"></div>
+                <span class="gender-badge" id="badge4">MALE</span>
+                <span class="avatar-cap" id="cap4"></span>
+            </div>
+            <div class="exercise-details">
+                <h4>4. الثبات الاستاتيكي (ثبات الاسكوات 90 درجة) <span class="target-tag">Target: 120s Total (60s/set)</span></h4>
+                <p class="sub-en">Static Isometric Squat Hold Test (90°)</p>
+                <div class="exercise-inputs">
+                    <div class="input-box"><label>الجولة 1 (ثواني) <span class="en">Set 1 (s)</span></label><input type="number" id="squatSet1" max="60" min="0" required placeholder="أقصى 60 ثانية"></div>
+                    <div class="input-box"><label>الجولة 2 (ثواني) <span class="en">Set 2 (s)</span></label><input type="number" id="squatSet2" max="60" min="0" required placeholder="أقصى 60 ثانية"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="exercise-card">
+            <div class="exercise-avatar-box">
+                <div class="avatar-svg" id="avatar5"></div>
+                <span class="gender-badge" id="badge5">MALE</span>
+                <span class="avatar-cap" id="cap5"></span>
+            </div>
+            <div class="exercise-details">
+                <h4>5. قوة وتحمل عضلات البطن (تمرين Sit-Up) <span class="target-tag">Target: Set 1 >= 15 Reps</span></h4>
+                <p class="sub-en">Abdominal Sit-Up Endurance Test</p>
+                <div class="exercise-inputs">
+                    <div class="input-box"><label>الجولة 1 (أقصى تكرار >=15) <span class="en">Set 1 (Max Reps)</span></label><input type="number" id="sitSet1" min="1" required placeholder="أقصى عدد"></div>
+                    <div class="input-box"><label>الجولة 2 (تكرار فعلي) <span class="en">Set 2 (Reps)</span></label><input type="number" id="sitSet2" min="0" required placeholder="تكرارات الجولة 2"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="exercise-card">
+            <div class="exercise-avatar-box">
+                <div class="avatar-svg" id="avatar6"></div>
+                <span class="gender-badge" id="badge6">MALE</span>
+                <span class="avatar-cap" id="cap6"></span>
+            </div>
+            <div class="exercise-details">
+                <h4>6. كفاءة وقدرة عضلة القلب (تمرين Walkout) <span class="target-tag">Target Set 1: 12-15 Reps</span></h4>
+                <p class="sub-en">Cardiac Hand Walkout Cardiovascular Test</p>
+                <div class="exercise-inputs">
+                    <div class="input-box"><label>الجولة 1 (تكرار 12-15) <span class="en">Set 1 (12-15 Reps)</span></label><input type="number" id="cardiacSet1" max="15" min="0" required placeholder="من 12 إلى 15"></div>
+                    <div class="input-box"><label>الجولة 2 (تكرارات) <span class="en">Set 2 (Reps)</span></label><input type="number" id="cardiacSet2" max="15" min="0" required placeholder="الجولة 2"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="exercise-card">
+            <div class="exercise-avatar-box">
+                <div class="avatar-svg" id="avatar7"></div>
+                <span class="gender-badge" id="badge7">MALE</span>
+                <span class="avatar-cap" id="cap7"></span>
+            </div>
+            <div class="exercise-details">
+                <h4>7. الذاكرة العضلية والاتزان (Dumbbell Cuban Press) <span class="target-tag">Target: 24 Reps Total (12/set)</span></h4>
+                <p class="sub-en">Muscle Memory & Shoulder Rotator Coordination Test</p>
+                <div class="exercise-inputs">
+                    <div class="input-box"><label>الجولة 1 (تكرارات) <span class="en">Set 1 (12 Reps)</span></label><input type="number" id="memSet1" max="12" min="0" required placeholder="أقصى 12"></div>
+                    <div class="input-box"><label>الجولة 2 (تكرارات) <span class="en">Set 2 (12 Reps)</span></label><input type="number" id="memSet2" max="12" min="0" required placeholder="أقصى 12"></div>
+                </div>
+            </div>
+        </div>
+
+        <button type="submit" class="btn-submit">
+            <i class="fa-solid fa-calculator"></i> استخراج التقرير الشامل والعمر البيولوجي | Generate Assessment Report
+        </button>
+    </form>
+
+    <div class="result-container" id="resultArea">
+        <div class="result-card">
+            <h3>B FIT ASSESSMENT CLUB REPORT</h3>
+            <p id="reportHeaderInfo" style="color: #94a3b8; font-weight: 600; font-size: 14px; margin-top: 5px;"></p>
+
+            <div class="score-display-box">
+                <div class="score-metric-card">
+                    <div class="label">مستوى اللياقة الإجمالي | Fitness Score</div>
+                    <div class="value" id="overallScoreVal">0<span>%</span></div>
+                </div>
+                <div class="score-metric-card">
+                    <div class="label">العمر البيولوجي المقدر | Biological Age</div>
+                    <div class="value" id="bioAgeVal">-- <span>سنة</span></div>
+                </div>
+            </div>
+
+            <div id="bioAgeStatusBadge" class="bio-age-highlight bio-equal">--</div>
+
+            <div class="report-summary-text" id="detailedReportText"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // ===== Exercise avatars (inline SVG, male / female) =====
+    const AVATAR_CAPTIONS = [
+        'SINGLE-LEG STANCE', 'SUPERMAN HOLD', 'PUSH-UP', 'SQUAT HOLD 90°',
+        'SIT-UP', 'HAND WALKOUT', 'CUBAN PRESS'
+    ];
+
+    const AV_STYLE = {
+        male: { torso: 16, thigh: 9.5, arm: 7, head: 9.5, hipR: 0, shoulder: 22, waist: 14, hip: 14 },
+        female: { torso: 12.5, thigh: 8.5, arm: 5.6, head: 8.8, hipR: 7.5, shoulder: 17, waist: 10, hip: 16 }
+    };
+    const AV_HAIR = '#e2e8f0';
+    const AV_FLOOR = '#475569';
+
+    const AV_POSES = {
+        1: {
+            kind: 'side', dir: 1, eyesClosed: true,
+            head: [101, 19], neck: [100, 31], sh: [100, 36], hip: [100, 72],
+            legFar: [[100, 72], [100, 95], [100, 117], [109, 117]],
+            legNear: [[100, 72], [124, 74], [124, 97], [133, 97]],
+            armFar: [[100, 38], [84, 47], [68, 42]],
+            armNear: [[100, 38], [117, 47], [134, 42]]
+        },
+        2: {
+            kind: 'side', dir: 1, mat: true,
+            head: [137, 84], neck: [129, 92], sh: [120, 98], hip: [78, 106],
+            legFar: [[78, 108], [52, 100], [26, 91], [19, 88]],
+            legNear: [[78, 106], [52, 97], [26, 88], [19, 85]],
+            armFar: [[118, 100], [144, 94], [170, 88]],
+            armNear: [[120, 98], [146, 91], [172, 84]]
+        },
+        3: {
+            kind: 'side', dir: 1,
+            head: [131, 71], neck: [121, 75], sh: [116, 78], hip: [72, 95],
+            legFar: [[72, 95], [50, 103], [28, 112], [22, 113]],
+            legNear: [[72, 95], [50, 103], [28, 112], [22, 113]],
+            armFar: [[111, 78], [111, 97], [111, 114]],
+            armNear: [[116, 78], [116, 97], [116, 114]]
+        },
+        4: {
+            kind: 'side', dir: 1,
+            head: [81, 29], neck: [77, 40], sh: [74, 45], hip: [62, 80],
+            legFar: [[62, 80], [92, 80], [92, 112], [102, 113]],
+            legNear: [[62, 80], [96, 80], [96, 112], [106, 113]],
+            armFar: [[74, 44], [96, 44], [118, 44]],
+            armNear: [[74, 47], [96, 47], [118, 47]],
+            marker: 'squat'
+        },
+        5: {
+            kind: 'side', dir: -1, mat: true,
+            head: [50, 62], neck: [57, 70], sh: [62, 76], hip: [86, 108],
+            legFar: [[86, 108], [107, 82], [125, 111], [135, 112]],
+            legNear: [[86, 108], [110, 80], [128, 110], [138, 111]],
+            armFar: [[62, 80], [80, 80], [100, 78]],
+            armNear: [[62, 78], [82, 78], [102, 76]]
+        },
+        6: {
+            kind: 'side', dir: 1,
+            head: [117, 87], neck: [110, 80], sh: [104, 74], hip: [72, 44],
+            legFar: [[72, 44], [48, 79], [27, 113], [38, 114]],
+            legNear: [[72, 44], [51, 79], [30, 113], [41, 114]],
+            armFar: [[100, 78], [106, 96], [112, 113]],
+            armNear: [[104, 76], [110, 95], [116, 113]],
+            marker: 'walk'
+        },
+        7: { kind: 'front' }
+    };
+
+    function avPoly(pts, w, extra) {
+        return '<polyline points="' + pts.map(function (p) { return p.join(','); }).join(' ') +
+            '" fill="none" stroke="currentColor" stroke-width="' + w +
+            '" stroke-linecap="round" stroke-linejoin="round" ' + (extra || '') + '/>';
+    }
+
+    function avHead(cx, cy, g, dir, eyesClosed) {
+        const s = AV_STYLE[g], r = s.head;
+        let o = '<circle cx="' + cx + '" cy="' + cy + '" r="' + r + '" fill="currentColor"/>';
+        o += '<path d="M' + (cx - r) + ' ' + (cy + 1) + ' A' + r + ' ' + r + ' 0 0 1 ' + (cx + r) + ' ' + (cy + 1) +
+            ' Q' + (cx + dir * 2) + ' ' + (cy - r * 0.9) + ' ' + (cx - r) + ' ' + (cy + 1) + 'Z" fill="' + AV_HAIR + '"/>';
+        if (g === 'female') {
+            o += '<path d="M' + (cx - dir * r * 0.75) + ' ' + (cy - r * 0.45) + ' q' + (-dir * 12) + ' -1 ' + (-dir * 10) + ' ' + (r * 1.3) +
+                '" fill="none" stroke="' + AV_HAIR + '" stroke-width="4.5" stroke-linecap="round"/>';
+        }
+        if (eyesClosed) {
+            o += '<path d="M' + (cx + dir * 2) + ' ' + (cy + 1) + ' q' + (dir * 3) + ' 2.4 ' + (dir * 6) + ' 0" fill="none" stroke="#0f172a" stroke-width="1.7" stroke-linecap="round"/>';
+        }
+        return o;
+    }
+
+    function avMarkers(kind) {
+        if (kind === 'squat') {
+            return '<path d="M80 80 A16 16 0 0 0 96 96" fill="none" stroke="#e2e8f0" stroke-width="1.8" stroke-dasharray="3 2"/>' +
+                '<text x="64" y="104" font-size="10" font-family="Montserrat,sans-serif" font-weight="700" fill="#e2e8f0">90°</text>';
+        }
+        if (kind === 'walk') {
+            return '<path d="M126 104 h26" stroke="#94a3b8" stroke-width="2" stroke-linecap="round" stroke-dasharray="4 3"/>' +
+                '<polygon points="152,99 162,104 152,109" fill="#94a3b8"/>';
+        }
+        return '';
+    }
+
+    function avSide(p, g) {
+        const s = AV_STYLE[g];
+        let o = '<line x1="8" y1="119" x2="192" y2="119" stroke="' + AV_FLOOR + '" stroke-width="2" stroke-linecap="round"/>';
+        if (p.mat) o += '<rect x="12" y="114" width="176" height="5" rx="2.5" fill="#334155"/>';
+        o += avPoly(p.legFar, s.thigh, 'opacity="0.55"') + avPoly(p.armFar, s.arm, 'opacity="0.55"');
+        o += avPoly([p.hip, p.sh], s.torso);
+        if (s.hipR) o += '<circle cx="' + p.hip[0] + '" cy="' + p.hip[1] + '" r="' + s.hipR + '" fill="currentColor"/>';
+        o += avPoly([p.sh, p.neck], 6);
+        o += avHead(p.head[0], p.head[1], g, p.dir, p.eyesClosed);
+        o += avPoly(p.legNear, s.thigh) + avPoly(p.armNear, s.arm);
+        o += avMarkers(p.marker);
+        return o;
+    }
+
+    function avDumbbell(x, y) {
+        return '<line x1="' + (x - 9) + '" y1="' + y + '" x2="' + (x + 9) + '" y2="' + y + '" stroke="' + AV_HAIR + '" stroke-width="3" stroke-linecap="round"/>' +
+            '<rect x="' + (x - 13) + '" y="' + (y - 6) + '" width="5" height="12" rx="1.5" fill="' + AV_HAIR + '"/>' +
+            '<rect x="' + (x + 8) + '" y="' + (y - 6) + '" width="5" height="12" rx="1.5" fill="' + AV_HAIR + '"/>';
+    }
+
+    function avFront(g) {
+        const s = AV_STYLE[g], cx = 100;
+        const torso = [[cx - s.shoulder, 38], [cx + s.shoulder, 38], [cx + s.waist, 70], [cx + s.hip, 82], [cx - s.hip, 82], [cx - s.waist, 70]];
+        let o = '<line x1="8" y1="119" x2="192" y2="119" stroke="' + AV_FLOOR + '" stroke-width="2" stroke-linecap="round"/>';
+        o += avPoly([[cx - 6, 82], [cx - 8, 100], [cx - 9, 117], [cx - 16, 117]], s.thigh);
+        o += avPoly([[cx + 6, 82], [cx + 8, 100], [cx + 9, 117], [cx + 16, 117]], s.thigh);
+        o += '<polygon points="' + torso.map(function (p) { return p.join(','); }).join(' ') +
+            '" fill="currentColor" stroke="currentColor" stroke-width="6" stroke-linejoin="round"/>';
+        const lx = cx - s.shoulder - 24, rx = cx + s.shoulder + 24;
+        o += avPoly([[cx - s.shoulder + 2, 40], [lx, 40], [lx, 16]], s.arm);
+        o += avPoly([[cx + s.shoulder - 2, 40], [rx, 40], [rx, 16]], s.arm);
+        o += avDumbbell(lx, 14) + avDumbbell(rx, 14);
+        o += '<path d="M' + (lx + 12) + ' 52 A15 15 0 0 1 ' + (lx + 12) + ' 28" fill="none" stroke="#94a3b8" stroke-width="1.6" stroke-dasharray="3 2"/>';
+        o += '<path d="M' + (rx - 12) + ' 52 A15 15 0 0 0 ' + (rx - 12) + ' 28" fill="none" stroke="#94a3b8" stroke-width="1.6" stroke-dasharray="3 2"/>';
+        o += avPoly([[cx, 30], [cx, 38]], 6);
+        o += avHead(cx, 20, g, 1, false);
+        if (g === 'female') {
+            o += '<path d="M' + (cx - s.head + 1) + ' 22 q-3 14 0 20" fill="none" stroke="' + AV_HAIR + '" stroke-width="3.2" stroke-linecap="round"/>';
+            o += '<path d="M' + (cx + s.head - 1) + ' 22 q3 14 0 20" fill="none" stroke="' + AV_HAIR + '" stroke-width="3.2" stroke-linecap="round"/>';
+        }
+        return o;
+    }
+
+    function exerciseAvatarSVG(index, gender) {
+        const g = gender === 'female' ? 'female' : 'male';
+        const p = AV_POSES[index];
+        const body = p.kind === 'front' ? avFront(g) : avSide(p, g);
+        return '<svg viewBox="0 0 200 130" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="' +
+            AVATAR_CAPTIONS[index - 1] + ' ' + g + '">' + body + '</svg>';
+    }
+
+    function updateGenderTheme() {
+        const gender = document.getElementById('genderSelect').value === 'female' ? 'female' : 'male';
+        document.documentElement.style.setProperty('--accent-gender', gender === 'female' ? '#f472b6' : '#38bdf8');
+
+        for (let i = 1; i <= 7; i++) {
+            document.getElementById('badge' + i).innerText = gender === 'female' ? 'FEMALE' : 'MALE';
+            document.getElementById('avatar' + i).innerHTML = exerciseAvatarSVG(i, gender);
+            document.getElementById('cap' + i).innerText = AVATAR_CAPTIONS[i - 1];
+        }
+    }
+
+    function setOcrStatus(color, iconClass, message) {
+        const el = document.getElementById('ocrStatusMsg');
+        el.style.display = 'block';
+        el.style.color = color;
+        el.innerHTML = '<i class="' + iconClass + '"></i> ' + message;
+    }
+
+    function setOcrProgress(pct) {
+        const box = document.getElementById('ocrProgress');
+        if (pct === null) { box.style.display = 'none'; return; }
+        box.style.display = 'block';
+        document.getElementById('ocrProgressBar').style.width = Math.max(4, Math.min(100, pct)) + '%';
+    }
+
+    const INBODY_FIELDS = { age: 'realAge', height: 'heightInput', weight: 'weightInput', smm: 'smmInput', pbf: 'fatInput' };
+    const INBODY_FIELD_LABELS = { age: 'العمر', height: 'الطول', weight: 'الوزن', smm: 'SMM', pbf: 'PBF' };
+    const INBODY_UNITS = { age: '', height: ' سم', weight: ' كجم', smm: ' كجم', pbf: '%' };
+
+    function markField(id, state) {
+        const el = document.getElementById(id);
+        el.classList.remove('field-ok', 'field-check');
+        if (state) el.classList.add(state === 'ok' ? 'field-ok' : 'field-check');
+    }
+
+    function applyInBodyResult(res) {
+        Object.keys(INBODY_FIELDS).forEach(function (k) { markField(INBODY_FIELDS[k], null); });
+
+        if (res.notInBody) {
+            setOcrStatus('#ef4444', 'fa-solid fa-triangle-exclamation',
+                'هذه الصورة ليست تقرير InBody 770 بالتصميم المعتمد. ارفع صورة التقرير كاملة ومستقيمة، أو أدخل القياسات يدوياً. | Not a valid InBody 770 report.');
+            return;
+        }
+        if (res.lowQuality) {
+            setOcrStatus('#f59e0b', 'fa-solid fa-triangle-exclamation',
+                'الصورة غير واضحة بما يكفي لقراءة آمنة، فلم يتم ملء أي رقم. استخدم لقطة شاشة أو صورة مستقيمة وعالية الجودة، أو أدخل القياسات يدوياً. | Image too unclear, please enter manually.');
+            return;
+        }
+
+        const v = res.values, shown = [], missing = [];
+        Object.keys(INBODY_FIELDS).forEach(function (k) {
+            if (v[k] === null) { missing.push(INBODY_FIELD_LABELS[k]); return; }
+            document.getElementById(INBODY_FIELDS[k]).value = v[k];
+            markField(INBODY_FIELDS[k], res.check.indexOf(k) >= 0 ? 'check' : 'ok');
+            shown.push(INBODY_FIELD_LABELS[k] + ' ' + v[k] + INBODY_UNITS[k]);
+        });
+        if (v.gender) document.getElementById('genderSelect').value = v.gender;
+        updateGenderTheme();
+
+        const summary = shown.join(' • ');
+        if (missing.length === 0 && res.check.length === 0) {
+            setOcrStatus('#10b981', 'fa-solid fa-check',
+                'تم استخراج: ' + summary + '<br>راجعها مع التقرير قبل المتابعة. | Please verify against the report.');
+        } else {
+            let msg = 'تم استخراج: ' + summary;
+            if (res.check.length) msg += '<br>الحقول المظللة بالأصفر تحتاج مطابقة مع التقرير' + (res.pbfCalculated ? ' (نسبة الدهون محسوبة من كتلة الدهون ÷ الوزن)' : '') + '.';
+            if (missing.length) msg += '<br>لم تُقرأ: ' + missing.join('، ') + ' — أدخلها يدوياً.';
+            setOcrStatus('#f59e0b', 'fa-solid fa-triangle-exclamation', msg);
+        }
+    }
+
+    let inbodyBusy = false, inbodyPreviewUrl = null;
+
+    async function handleInBodyFile(file) {
+        if (!file) return;
+        if (inbodyBusy) {
+            setOcrStatus('#f59e0b', 'fa-solid fa-hourglass-half', 'جاري معالجة تقرير سابق، انتظر لحظة ثم أعد الاختيار.');
+            return;
+        }
+        if (!/^image\//.test(file.type) && !/\.(jpe?g|png|webp|bmp|gif)$/i.test(file.name)) {
+            setOcrStatus('#ef4444', 'fa-solid fa-triangle-exclamation', 'الملف المختار ليس صورة. اختر صورة تقرير InBody بصيغة JPG أو PNG.');
+            return;
+        }
+        inbodyBusy = true;
+        document.getElementById('uploadName').innerText = file.name;
+        const thumb = document.getElementById('uploadThumb');
+        if (inbodyPreviewUrl) URL.revokeObjectURL(inbodyPreviewUrl);
+        inbodyPreviewUrl = URL.createObjectURL(file);
+        thumb.src = inbodyPreviewUrl;
+        thumb.style.display = 'block';
+        setOcrProgress(4);
+        setOcrStatus('#ff6b00', 'fa-solid fa-spinner fa-spin', 'جاري قراءة تقرير InBody... | Reading InBody report...');
+
+        try {
+            const canvas = await inbodyLoadCanvas(file);
+            const worker = await inbodyGetWorker();
+            const res = await readInBodyReport(canvas, worker, function (step, total, label) {
+                setOcrProgress(10 + (step / total) * 90);
+                setOcrStatus('#ff6b00', 'fa-solid fa-spinner fa-spin', 'جاري قراءة: ' + label + ' (' + step + '/' + total + ')');
+            });
+            applyInBodyResult(res);
+        } catch (err) {
+            const m = String(err && err.message || err);
+            if (m.indexOf('image-load-failed') >= 0) {
+                setOcrStatus('#ef4444', 'fa-solid fa-triangle-exclamation', 'تعذر فتح الصورة. جرّب لقطة شاشة أو صورة JPG / PNG.');
+            } else if (m.indexOf('engine-missing') >= 0) {
+                setOcrStatus('#ef4444', 'fa-solid fa-wifi', 'تعذر تحميل محرك القراءة. يلزم اتصال بالإنترنت في أول استخدام. أدخل القياسات يدوياً الآن.');
+            } else {
+                setOcrStatus('#ef4444', 'fa-solid fa-triangle-exclamation', 'حدث خطأ أثناء القراءة. أعد المحاولة بصورة أوضح أو أدخل القياسات يدوياً.');
+            }
+        } finally {
+            inbodyBusy = false;
+            setOcrProgress(null);
+            document.getElementById('inbodyFile').value = '';
+        }
+    }
+
+    function initUploadZone() {
+        const zone = document.getElementById('uploadZone');
+        ['dragenter', 'dragover'].forEach(function (ev) {
+            zone.addEventListener(ev, function (e) { e.preventDefault(); zone.classList.add('drag'); });
+        });
+        ['dragleave', 'drop'].forEach(function (ev) {
+            zone.addEventListener(ev, function (e) { e.preventDefault(); zone.classList.remove('drag'); });
+        });
+        zone.addEventListener('drop', function (e) {
+            const f = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
+            if (f) handleInBodyFile(f);
+        });
+        Object.keys(INBODY_FIELDS).forEach(function (k) {
+            document.getElementById(INBODY_FIELDS[k]).addEventListener('input', function () { markField(INBODY_FIELDS[k], null); });
+        });
+    }
+
+
+    // ===== InBody 770 reader: fixed-layout zones + digit-only OCR =====
+    const INBODY_LAYOUT = {
+        vTop: 0.0684, vBottom: 0.9732, uLeft: 0.0026, uRight: 0.9967,
+        zones: {
+            labels: [0.20, 0.072, 0.52, 0.090],
+            height: [0.2245, 0.0895, 0.290, 0.1045],
+            age: [0.3285, 0.0895, 0.362, 0.1045],
+            gender: [0.398, 0.0895, 0.455, 0.1045],
+            weight: [0.548, 0.1930, 0.600, 0.2065],
+            bfm: [0.185, 0.2395, 0.240, 0.2545]
+        },
+        rows: { weight: [0.3298, 0.3363], smm: [0.3581, 0.3650], pbf: [0.4856, 0.4921] }
+    };
+    const INBODY_STEPS = 9;
+
+    function inbodyIsRed(r, g, b, th) { return r > 80 && r - Math.max(g, b) > (th || 45); }
+
+    function inbodyLoadCanvas(file) {
+        return new Promise(function (resolve, reject) {
+            const url = URL.createObjectURL(file);
+            const img = new Image();
+            img.onload = function () {
+                const w = img.naturalWidth, h = img.naturalHeight;
+                let k = 1;
+                if (Math.max(w, h) > 2600) k = 2600 / Math.max(w, h);
+                else if (w < 900) k = 1200 / w;
+                const c = document.createElement('canvas');
+                c.width = Math.round(w * k);
+                c.height = Math.round(h * k);
+                const ctx = c.getContext('2d', { willReadFrequently: true });
+                ctx.fillStyle = '#fff';
+                ctx.fillRect(0, 0, c.width, c.height);
+                ctx.imageSmoothingQuality = 'high';
+                ctx.drawImage(img, 0, 0, c.width, c.height);
+                URL.revokeObjectURL(url);
+                resolve(c);
+            };
+            img.onerror = function () { URL.revokeObjectURL(url); reject(new Error('image-load-failed')); };
+            img.src = url;
+        });
+    }
+
+    function inbodyPixels(canvas) {
+        return canvas.getContext('2d', { willReadFrequently: true }).getImageData(0, 0, canvas.width, canvas.height);
+    }
+
+    function inbodyRotate(canvas, angle) {
+        const c = document.createElement('canvas');
+        c.width = canvas.width;
+        c.height = canvas.height;
+        const ctx = c.getContext('2d', { willReadFrequently: true });
+        ctx.fillStyle = '#fff';
+        ctx.fillRect(0, 0, c.width, c.height);
+        ctx.imageSmoothingQuality = 'high';
+        ctx.translate(c.width / 2, c.height / 2);
+        ctx.rotate(angle);
+        ctx.drawImage(canvas, -c.width / 2, -c.height / 2);
+        return c;
+    }
+
+    // Finds horizontal red rules (top rule under the logo, footer rule), tolerant to blur / JPEG loss
+    function inbodyRules(img, th) {
+        const d = img.data, W = img.width, H = img.height;
+        const cnt = new Int32Array(H);
+        for (let y = 0; y < H; y++) {
+            let c = 0;
+            for (let x = 0, i = y * W * 4; x < W; x++, i += 4) {
+                if (inbodyIsRed(d[i], d[i + 1], d[i + 2], th)) c++;
+            }
+            cnt[y] = c;
+        }
+        const groups = [];
+        for (let y = 0; y < H; y++) {
+            if (cnt[y] > 0.40 * W) {
+                const last = groups[groups.length - 1];
+                if (last && y - last.y1 <= 3) { last.y1 = y; last.max = Math.max(last.max, cnt[y]); }
+                else groups.push({ y0: y, y1: y, max: cnt[y] });
+            }
+        }
+        return groups.filter(function (g) { return g.y1 - g.y0 < 0.02 * H; });
+    }
+
+    function inbodyRuleSpan(img, g, th) {
+        const d = img.data, W = img.width;
+        const y = Math.round((g.y0 + g.y1) / 2);
+        let xa = -1, xb = -1;
+        for (let x = 0; x < W; x++) {
+            const i = (y * W + x) * 4;
+            if (inbodyIsRed(d[i], d[i + 1], d[i + 2], th)) { if (xa < 0) xa = x; xb = x; }
+        }
+        return xa < 0 ? null : { xa: xa, xb: xb, y: (g.y0 + g.y1) / 2 };
+    }
+
+    // Slope of the top red rule (radians, + = right side lower). Hough-style vote over thin red runs,
+    // so the red logo letters (which are not collinear) cannot skew it.
+    function inbodyTilt(img) {
+        const d = img.data, W = img.width, H = img.height, yEnd = Math.round(H * 0.30), maxRun = Math.max(3, Math.round(0.014 * H));
+        const cols = [], xs = [];
+        for (let k = 0; k < 28; k++) {
+            const x = Math.round((0.22 + 0.40 * k / 27) * W);
+            const runs = [];
+            let s = -1;
+            for (let y = 0; y <= yEnd; y++) {
+                const i = (y * W + x) * 4;
+                const red = y < yEnd && inbodyIsRed(d[i], d[i + 1], d[i + 2], 40);
+                if (red && s < 0) s = y;
+                if (!red && s >= 0) { if (y - s <= maxRun) runs.push((s + y - 1) / 2); s = -1; }
+            }
+            if (runs.length) { cols.push(runs); xs.push(x); }
+        }
+        if (cols.length < 8) return 0;
+        const xm = W / 2;
+        let best = { votes: 0, slope: 0 };
+        for (let s = -0.06; s <= 0.0601; s += 0.0015) {
+            const bins = {};
+            let top = 0;
+            for (let c = 0; c < cols.length; c++) {
+                const seen = {};
+                for (let r = 0; r < cols[c].length; r++) {
+                    const key = Math.round((cols[c][r] - s * (xs[c] - xm)) / 3);
+                    if (!seen[key]) { seen[key] = 1; bins[key] = (bins[key] || 0) + 1; if (bins[key] > top) top = bins[key]; }
+                }
+            }
+            if (top > best.votes + 0.5 || (Math.abs(top - best.votes) < 0.5 && Math.abs(s) < Math.abs(best.slope))) best = { votes: top, slope: s };
+        }
+        if (best.votes < 8) return 0;
+        // refine with least squares on the inliers of the best line
+        const bins = {};
+        for (let c = 0; c < cols.length; c++) for (let r = 0; r < cols[c].length; r++) {
+            const key = Math.round((cols[c][r] - best.slope * (xs[c] - xm)) / 3);
+            bins[key] = (bins[key] || 0) + 1;
+        }
+        let bk = null, bv = 0;
+        for (const k in bins) if (bins[k] > bv) { bv = bins[k]; bk = +k; }
+        const pts = [];
+        for (let c = 0; c < cols.length; c++) for (let r = 0; r < cols[c].length; r++) {
+            const key = Math.round((cols[c][r] - best.slope * (xs[c] - xm)) / 3);
+            if (Math.abs(key - bk) <= 1) pts.push([xs[c], cols[c][r]]);
+        }
+        if (pts.length < 8) return best.slope;
+        const n = pts.length;
+        let sx = 0, sy = 0, sxx = 0, sxy = 0;
+        pts.forEach(function (p) { sx += p[0]; sy += p[1]; sxx += p[0] * p[0]; sxy += p[0] * p[1]; });
+        const den = n * sxx - sx * sx;
+        return den === 0 ? best.slope : Math.atan((n * sxy - sx * sy) / den);
+    }
+
+    // Maps the template (0..1) onto the page using the red rules (top + footer; top only as fallback)
+    function inbodyFindFrame(img) {
+        const H = img.height, L = INBODY_LAYOUT, ths = [45, 32, 22];
+        for (let t = 0; t < ths.length; t++) {
+            const th = ths[t], rules = inbodyRules(img, th);
+            if (rules.length >= 2) {
+                const top = rules[0], bot = rules[rules.length - 1];
+                const sb = inbodyRuleSpan(img, bot, th);
+                if (!sb) continue;
+                const yT = (top.y0 + top.y1) / 2, yB = (bot.y0 + bot.y1) / 2;
+                if (yB - yT < 0.5 * H) continue;
+                const sy = (yB - yT) / (L.vBottom - L.vTop);
+                const sx = (sb.xb - sb.xa) / (L.uRight - L.uLeft);
+                const aspect = sx / sy;
+                if (aspect < 0.66 || aspect > 0.77) continue;
+                return { x0: sb.xa - L.uLeft * sx, y0: yT - L.vTop * sy, sx: sx, sy: sy, mode: 'two-rules' };
+            }
+        }
+        for (let t = 0; t < ths.length; t++) {
+            const th = ths[t], rules = inbodyRules(img, th).filter(function (g) { return g.y0 < 0.30 * H; });
+            if (!rules.length) continue;
+            const st = inbodyRuleSpan(img, rules[0], th);
+            if (!st || st.xb - st.xa < 0.25 * img.width) continue;
+            const sx = (st.xb - st.xa) / 0.619, sy = sx / 0.7133;
+            return { x0: st.xa - 0.0026 * sx, y0: st.y - L.vTop * sy, sx: sx, sy: sy, mode: 'top-rule' };
+        }
+        return null;
+    }
+
+    function inbodyRect(fr, z) {
+        return { x: fr.x0 + z[0] * fr.sx, y: fr.y0 + z[1] * fr.sy, w: (z[2] - z[0]) * fr.sx, h: (z[3] - z[1]) * fr.sy };
+    }
+
+    // The value of a bar row sits right after the end of its bar
+    function inbodyBarEnd(img, fr, band) {
+        const d = img.data, W = img.width, H = img.height;
+        const y = Math.max(0, Math.min(H - 1, Math.round(fr.y0 + ((band[0] + band[1]) / 2) * fr.sy)));
+        const gapMax = Math.max(2, Math.round(0.0045 * fr.sx));
+        const dark = function (x) {
+            const i = (y * W + x) * 4;
+            return (d[i] * 299 + d[i + 1] * 587 + d[i + 2] * 114) / 1000 < 200;
+        };
+        let x = Math.round(fr.x0 + 0.170 * fr.sx);
+        const first = Math.round(fr.x0 + 0.200 * fr.sx);
+        const stop = Math.min(W - 1, Math.round(fr.x0 + 0.660 * fr.sx));
+        while (x < first && !dark(x)) x++;
+        if (x >= first) return null;
+        let last = x;
+        for (; x <= stop; x++) {
+            if (dark(x)) last = x;
+            else if (x - last > gapMax) break;
+        }
+        return (last - fr.x0) / fr.sx;
+    }
+
+    function inbodyCrop(src, rect, binarize) {
+        const sx = Math.max(0, Math.round(rect.x)), sy = Math.max(0, Math.round(rect.y));
+        const sw = Math.max(4, Math.min(src.width - sx, Math.round(rect.w)));
+        const sh = Math.max(4, Math.min(src.height - sy, Math.round(rect.h)));
+        const k = Math.max(2, Math.round(90 / sh)), pad = 24;
+        const c = document.createElement('canvas');
+        c.width = sw * k + pad * 2;
+        c.height = sh * k + pad * 2;
+        const ctx = c.getContext('2d', { willReadFrequently: true });
+        ctx.fillStyle = '#fff';
+        ctx.fillRect(0, 0, c.width, c.height);
+        ctx.imageSmoothingQuality = 'high';
+        ctx.drawImage(src, sx, sy, sw, sh, pad, pad, sw * k, sh * k);
+        const id = ctx.getImageData(pad, pad, sw * k, sh * k), d = id.data;
+        let lo = 255, hi = 0;
+        for (let i = 0; i < d.length; i += 4) {
+            const g = (d[i] * 299 + d[i + 1] * 587 + d[i + 2] * 114) / 1000;
+            d[i] = g;
+            if (g < lo) lo = g;
+            if (g > hi) hi = g;
+        }
+        const span = Math.max(1, hi - lo);
+        for (let i = 0; i < d.length; i += 4) {
+            let g = (d[i] - lo) * 255 / span;
+            if (binarize) g = g > 150 ? 255 : 0;
+            d[i] = d[i + 1] = d[i + 2] = g;
+        }
+        ctx.putImageData(id, pad, pad);
+        return c;
+    }
+
+    let inbodyWorkerPromise = null;
+    function inbodyGetWorker() {
+        if (typeof Tesseract === 'undefined') return Promise.reject(new Error('engine-missing'));
+        if (!inbodyWorkerPromise) {
+            inbodyWorkerPromise = Tesseract.createWorker('eng', 1, {}).catch(function (e) {
+                inbodyWorkerPromise = null;
+                throw e;
+            });
+        }
+        return inbodyWorkerPromise;
+    }
+
+    async function inbodyOcr(worker, canvas, whitelist, psm) {
+        await worker.setParameters({ tessedit_char_whitelist: whitelist, tessedit_pageseg_mode: String(psm) });
+        const res = await worker.recognize(canvas);
+        return ((res && res.data && res.data.text) || '').trim();
+    }
+
+    function inbodyDecimal(text, min, max) {
+        let t = String(text || '').replace(/[^0-9.]/g, '');
+        if ((t.match(/\./g) || []).length > 1) t = t.replace(/\.(?=.*\.)/g, '');
+        if (t.indexOf('.') < 0 && /^\d{3,4}$/.test(t)) t = t.slice(0, -1) + '.' + t.slice(-1);
+        const v = parseFloat(t);
+        return isFinite(v) && v >= min && v <= max ? v : null;
+    }
+    function inbodyInt(text, digits, min, max) {
+        const m = String(text || '').match(new RegExp('\\d{' + digits + '}'));
+        const v = m ? parseInt(m[0], 10) : null;
+        return v !== null && v >= min && v <= max ? v : null;
+    }
+    function inbodyGender(text) {
+        const t = String(text || '');
+        if (/f|em/i.test(t)) return 'female';
+        return /[male]/i.test(t) ? 'male' : null;
+    }
+
+    async function inbodyField(env, rect, whitelist, parse) {
+        const tries = [[false, 7], [true, 7], [false, 8]];
+        for (let i = 0; i < tries.length; i++) {
+            const txt = await inbodyOcr(env.worker, inbodyCrop(env.canvas, rect, tries[i][0]), whitelist, tries[i][1]);
+            const v = parse(txt);
+            if (v !== null && v !== undefined) return v;
+        }
+        return null;
+    }
+
+    async function inbodyRowValue(env, key, parse) {
+        const band = INBODY_LAYOUT.rows[key];
+        const end = inbodyBarEnd(env.img, env.frame, band);
+        if (end === null) return null;
+        const z = [end + 0.004, band[0], end + 0.085, band[1] + 0.008];
+        return inbodyField(env, inbodyRect(env.frame, z), '0123456789.', parse);
+    }
+
+    async function readInBodyReport(source, worker, progress) {
+        let canvas = source, img = inbodyPixels(canvas);
+        const tilt = inbodyTilt(img);
+        if (Math.abs(tilt) > 0.0015 && Math.abs(tilt) < 0.07) {
+            canvas = inbodyRotate(canvas, -tilt);
+            img = inbodyPixels(canvas);
+        }
+        const found = inbodyFindFrame(img);
+        const frame = found || { x0: 0, y0: 0, sx: img.width, sy: img.height };
+        const env = { worker: worker, canvas: canvas, img: img, frame: frame };
+        const Z = INBODY_LAYOUT.zones;
+        let step = 0;
+        const tick = function (label) { step++; if (progress) progress(step, INBODY_STEPS, label); };
+
+        tick('الترويسة');
+        const labels = await inbodyOcr(worker, inbodyCrop(canvas, inbodyRect(frame, Z.labels), false), '', 7);
+        const labelHits = [/heig/i, /\bag/i, /gend/i].filter(function (r) { return r.test(labels); }).length;
+        tick('الطول');
+        const height = await inbodyField(env, inbodyRect(frame, Z.height), '0123456789cm', function (t) { return inbodyInt(t, 3, 100, 230); });
+        tick('العمر');
+        const age = await inbodyField(env, inbodyRect(frame, Z.age), '0123456789', function (t) { return inbodyInt(t, 2, 10, 90); });
+        tick('الجنس');
+        const gender = await inbodyField(env, inbodyRect(frame, Z.gender), 'MaleFmal', inbodyGender);
+        tick('الوزن');
+        const weightCell = await inbodyField(env, inbodyRect(frame, Z.weight), '0123456789.', function (t) { return inbodyDecimal(t, 30, 250); });
+        tick('كتلة الدهون');
+        const bfm = await inbodyField(env, inbodyRect(frame, Z.bfm), '0123456789.', function (t) { return inbodyDecimal(t, 3, 150); });
+        tick('الوزن (مطابقة)');
+        const weightRow = await inbodyRowValue(env, 'weight', function (t) { return inbodyDecimal(t, 30, 250); });
+        tick('كتلة العضلات SMM');
+        const smm = await inbodyRowValue(env, 'smm', function (t) { return inbodyDecimal(t, 10, 80); });
+        tick('نسبة الدهون PBF');
+        const pbfRow = await inbodyRowValue(env, 'pbf', function (t) { return inbodyDecimal(t, 3, 60); });
+
+        const check = [];
+        let weight = weightCell !== null ? weightCell : weightRow;
+        if (weightCell !== null && weightRow !== null && Math.abs(weightCell - weightRow) > 0.15) check.push('weight');
+
+        let pbf = pbfRow, pbfCalculated = false;
+        const calc = (bfm !== null && weight !== null) ? Math.round(bfm / weight * 1000) / 10 : null;
+        if (calc !== null && (pbfRow === null || Math.abs(pbfRow - calc) > 0.8)) { pbf = calc; pbfCalculated = true; check.push('pbf'); }
+        if (smm !== null && weight !== null && (smm / weight < 0.28 || smm / weight > 0.62)) check.push('smm');
+
+        const reliable = age !== null && height !== null;
+        const values = reliable
+            ? { age: age, height: height, gender: gender, weight: weight, smm: smm, pbf: pbf }
+            : { age: null, height: null, gender: null, weight: null, smm: null, pbf: null };
+        const notInBody = !reliable && (!found || labelHits < 2);
+        return {
+            values: values,
+            check: reliable ? check : [],
+            pbfCalculated: reliable && pbfCalculated,
+            calibrated: !!found,
+            notInBody: notInBody,
+            lowQuality: !reliable && !notInBody
+        };
+    }
+
+    function num(id, fallback) {
+        const v = parseFloat(document.getElementById(id).value);
+        return Number.isFinite(v) ? v : fallback;
+    }
+
+    function calculateAssessment(e) {
+        e.preventDefault();
+
+        const coach = document.getElementById('coachName').value.trim();
+        const client = document.getElementById('clientName').value.trim();
+        const gender = document.getElementById('genderSelect').value;
+        const realAge = Math.round(num('realAge', 30));
+        const weight = num('weightInput', 70);
+        const fat = num('fatInput', 20);
+        const smm = num('smmInput', 30);
+
+        const flags = [];
+        const flagLabels = {
+            hq1: 'عملية جراحية خلال 3-5 سنوات',
+            hq2: 'مشاكل عظام أو مفاصل تعوق الحركة',
+            hq3: 'خشونة مفاصل أو شرائح ومسامير',
+            hq4: 'سكري النوع الأول',
+            hq5: 'ضغط دم مرتفع أو أمراض قلب'
+        };
+        for (const k in flagLabels) {
+            if (document.querySelector('input[name="' + k + '"]:checked').value === 'yes') flags.push(flagLabels[k]);
+        }
+        const needsMedicalClearance = flags.includes(flagLabels.hq4) || flags.includes(flagLabels.hq5);
+
+        const coordScore = Math.min(((num('coordR', 0) + num('coordL', 0)) / 20) * 100, 100);
+        const balScore = Math.min(((num('balSet1', 0) + num('balSet2', 0)) / 120) * 100, 100);
+
+        const p1 = Math.max(num('pushSet1', 1), 1);
+        const pushScore = Math.min((num('pushSet2', 0) / (p1 * 0.70)) * 100, 100);
+
+        const squatScore = Math.min(((num('squatSet1', 0) + num('squatSet2', 0)) / 120) * 100, 100);
+
+        const s1 = Math.max(num('sitSet1', 1), 1);
+        const sitScore = Math.min((num('sitSet2', 0) / (s1 * 0.70)) * 100, 100);
+
+        const cardiacScore = Math.min(((num('cardiacSet1', 0) + num('cardiacSet2', 0)) / 30) * 100, 100);
+        const memScore = Math.min(((num('memSet1', 0) + num('memSet2', 0)) / 24) * 100, 100);
+
+        const testAverage = (coordScore + balScore + pushScore + squatScore + sitScore + cardiacScore + memScore) / 7;
+
+        const smmPercentage = (smm / weight) * 100;
+        const bodyFatScore = gender === 'male'
+            ? (fat <= 18 ? 100 : Math.max(0, 100 - (fat - 18) * 3))
+            : (fat <= 25 ? 100 : Math.max(0, 100 - (fat - 25) * 3));
+        const muscleScore = smmPercentage >= 40 ? 100 : (smmPercentage / 40) * 100;
+
+        const fitnessScore = Math.round((testAverage * 0.7) + (bodyFatScore * 0.15) + (muscleScore * 0.15));
+
+        const ageAdjustment = Math.round((fitnessScore - 70) / 7);
+        const biologicalAge = Math.max(12, realAge - ageAdjustment);
+
+        document.getElementById('reportHeaderInfo').innerText =
+            'المشترك: ' + client + ' (' + (gender === 'male' ? 'ذكر' : 'أنثى') + ') | العمر الحقيقي: ' + realAge +
+            ' | الكوتش: ' + coach + ' | الوزن: ' + weight + 'كجم | الدهون: ' + fat + '% | العضلات: ' + smm + 'كجم';
+        document.getElementById('overallScoreVal').innerHTML = fitnessScore + '<span>%</span>';
+        document.getElementById('bioAgeVal').innerHTML = biologicalAge + ' <span>سنة</span>';
+
+        const badge = document.getElementById('bioAgeStatusBadge');
+        let summaryHTML = '';
+
+        if (biologicalAge < realAge) {
+            badge.className = 'bio-age-highlight bio-younger';
+            badge.innerText = '🔥 ممتاز! عمرك البيولوجي أصغر من عمرك الحقيقي بمقدار (' + (realAge - biologicalAge) + ') سنوات.';
+            summaryHTML += 'أداء بدني وتكوين جسماني ممتاز. انخفاض نسبة الدهون وجودة الكتلة العضلية ساهمت في رفع كفاءة نتيجتك العامة.';
+        } else if (biologicalAge === realAge) {
+            badge.className = 'bio-age-highlight bio-equal';
+            badge.innerText = '👍 متطابق! عمرك البيولوجي يطابق عمرك الحقيقي (' + realAge + ' سنة).';
+            summaryHTML += 'مستوى متزن ومناسب للبدء في برنامج تدريبي متطور لرفع الكتلة العضلية وتقليل الدهون للوصول لنتائج أفضل في التقييمات القادمة.';
+        } else {
+            badge.className = 'bio-age-highlight bio-older';
+            badge.innerText = '⚠️ تنبيه: عمرك البيولوجي أعلى من عمرك الحقيقي بمقدار (' + (biologicalAge - realAge) + ') سنوات.';
+            summaryHTML += 'تشير المدخلات إلى وجود تراجع في بعض عناصر التحمل العضلي أو ارتفاع في الدهون. يُوصى ببرنامج تدريبي مخصص مع الكوتش.';
+        }
+
+        if (flags.length > 0) {
+            summaryHTML += '<br><br><strong>الملاحظات الصحية (' + flags.length + '):</strong><br>';
+            summaryHTML += flags.map(f => '• ' + f).join('<br>');
+            summaryHTML += '<br>يرجى تكييف التمارين بناءً عليها.';
+            if (needsMedicalClearance) {
+                summaryHTML += '<br><strong style="color:#f87171;">يُنصح بالحصول على موافقة طبية قبل بدء البرنامج التدريبي.</strong>';
+            }
+        }
+
+        document.getElementById('detailedReportText').innerHTML = summaryHTML;
+        const area = document.getElementById('resultArea');
+        area.style.display = 'block';
+        area.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    window.addEventListener('load', function () {
+        updateGenderTheme();
+        initUploadZone();
+        setTimeout(function () { inbodyGetWorker().catch(function () {}); }, 1500);
+    });
+</script>
+
+</body>
+</html>
