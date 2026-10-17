@@ -833,6 +833,27 @@
             .plan-row { grid-template-columns: 1fr; gap: 4px; }
             .plan-row .pr-val { text-align: right; }
         }
+
+        /* ===== Nutrition Facts label (white box, black text) ===== */
+        .nutri-label { background: #fff; color: #000; border: 2px solid #000; border-radius: 6px; padding: 10px 14px 8px; max-width: 420px; margin: 16px auto 4px; font-family: 'Montserrat', 'Tajawal', Arial, sans-serif; box-shadow: 0 10px 28px rgba(110, 90, 180, 0.18); }
+        .nutri-label em { font-style: normal; font-weight: 500; font-family: 'Tajawal', 'Montserrat', sans-serif; }
+        .nl-title { font-size: 30px; font-weight: 900; line-height: 1.05; letter-spacing: -0.5px; }
+        .nl-title em { font-size: 15px; margin-inline-start: 8px; letter-spacing: 0; }
+        .nl-serving { font-size: 13px; line-height: 1.5; padding: 4px 0 6px; border-bottom: 0; }
+        .nl-thick { height: 8px; background: #000; margin: 2px 0; }
+        .nl-medium { height: 4px; background: #000; margin: 2px 0; }
+        .nl-cal { display: flex; justify-content: space-between; align-items: flex-end; padding: 2px 0; }
+        .nl-cal span { display: flex; flex-direction: column; font-size: 20px; }
+        .nl-cal small { font-size: 11px; font-weight: 700; }
+        .nl-cal strong { font-size: 42px; font-weight: 900; line-height: 1; }
+        .nl-dvhead { text-align: right; font-size: 12px; font-weight: 900; padding: 2px 0; border-bottom: 1px solid #000; }
+        .nl-row { display: flex; justify-content: space-between; gap: 10px; font-size: 14px; padding: 3px 0; border-bottom: 1px solid #000; }
+        .nl-row.sub { padding-inline-start: 18px; }
+        .nl-row .nl-dv { font-weight: 900; min-width: 40px; text-align: right; }
+        .nl-foot { font-size: 11px; line-height: 1.55; margin-top: 4px; color: #000; }
+        .qty-chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 4px 0 6px; }
+        .qty-chips button { border: 1px solid rgba(155, 123, 255, 0.45); background: rgba(255, 255, 255, 0.7); color: var(--ink); border-radius: 999px; padding: 6px 14px; font-size: 13px; font-weight: 700; cursor: pointer; direction: ltr; }
+        .qty-chips button:hover { background: linear-gradient(135deg, rgba(255, 107, 157, 0.15), rgba(76, 184, 255, 0.15)); }
     </style>
 </head>
 <body>
@@ -1840,29 +1861,4 @@
         const key = document.getElementById('goalSelect').value;
         const goal = GOAL_FACTORS[key] || GOAL_FACTORS.maintain;
         const kcal = Math.round(base * goal.f);
-        let proteinG = 2.0 * weight, capped = false;
-        const capG = 0.40 * kcal / 4;
-        if (proteinG > capG) { proteinG = capG; capped = true; }
-        proteinG = Math.round(proteinG);
-        const fatG = Math.round(0.25 * kcal / 9);
-        const carbsG = Math.max(0, Math.round((kcal - proteinG * 4 - fatG * 9) / 4));
-        const pK = proteinG * 4, fK = fatG * 9, cK = carbsG * 4, tot = pK + fK + cK;
-        const pPct = Math.round(pK / tot * 100), fPct = Math.round(fK / tot * 100);
-        const cPct = Math.max(0, 100 - pPct - fPct);
-        const tw = parseFloat(document.getElementById('targetWeight').value);
-        let plan = null;
-        if (goal.dir !== 0 && tw >= 30 && tw <= 250) {
-            const delta = Math.round((tw - weight) * 10) / 10, diff = kcal - base;
-            if (Math.abs(delta) < 0.1) plan = { state: 'reached', target: tw, delta: 0 };
-            else if (Math.sign(delta) !== goal.dir) plan = { state: 'mismatch', target: tw, delta: delta };
-            else plan = { state: 'ok', target: tw, delta: delta, weeks: Math.max(1, Math.ceil(Math.abs(delta) * 7700 / (Math.abs(diff) * 7))), diff: Math.round(diff) };
-        } else if (goal.dir === 0 && tw >= 30 && tw <= 250) plan = { state: 'maintain', target: tw };
-        return { plan: plan, base: Math.round(base), kcal: kcal, goal: goal, proteinG: proteinG, carbsG: carbsG, fatG: fatG, pPct: pPct, cPct: cPct, fPct: fPct, capped: capped, perKg: proteinG / weight };
-    }
-
-    function nutritionHTML(n) {
-        if (!n) return '<p class="calc-note">أدخل السعرات الموصى بها (تُقرأ من الإنبودي) والوزن لعرض الخطة. | Enter the recommended calories and weight to see the plan.</p>';
-        let h = '<div class="calc-cards">' +
-            '<div class="calc-card main"><div class="label">السعرات اليومية | Daily Calories</div><div class="value">' + fmtInt(n.kcal) + '<span> kcal</span></div>' +
-            '<div class="sub">' + n.goal.ar + ' / ' + n.goal.en + '</div></div>' +
-            '<div class="calc-card"><div class="label">بروتين | Protein</div><div class="value mp">' + n.proteinG + '<span> g</span></div><div class="sub">' + n.pPct + '% • ' + n.perKg.toFixed(1) + ' g/kg</d
+        let proteinG = 2.0 * weight, capp
