@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>B_FIT ASSESSMENT | Professional Evaluation</title>
-    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23ff2a2a'/%3E%3Cstop offset='1' stop-color='%23b80000'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='14' fill='url(%23g)'/%3E%3Ctext x='32' y='40' font-family='Arial Black,Arial' font-weight='900' font-size='34' text-anchor='middle' fill='white'%3EB%3C/text%3E%3Ctext x='32' y='56' font-family='Arial' font-weight='700' font-size='14' text-anchor='middle' fill='white'%3E_FIT%3C/text%3E%3C/svg%3E">
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23f4788a'/%3E%3Cstop offset='1' stop-color='%23d9506a'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='14' fill='url(%23g)'/%3E%3Ctext x='32' y='40' font-family='Arial Black,Arial' font-weight='900' font-size='34' text-anchor='middle' fill='white'%3EB%3C/text%3E%3Ctext x='32' y='56' font-family='Arial' font-weight='700' font-size='14' text-anchor='middle' fill='white'%3E_FIT%3C/text%3E%3C/svg%3E">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;600;700;900&family=Montserrat:wght@400;600;700;900&display=swap" rel="stylesheet">
@@ -76,14 +76,14 @@
         .brand-logo-icon {
             width: 92px;
             height: 70px;
-            background: linear-gradient(135deg, #ff2a2a, #b80000);
+            background: linear-gradient(135deg, #f4788a, #d9506a);
             border-radius: 18px;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             color: #fff;
-            box-shadow: 0 8px 25px rgba(255, 30, 30, 0.45);
+            box-shadow: 0 6px 18px rgba(217, 80, 106, 0.28);
             font-family: 'Montserrat', sans-serif;
             font-weight: 900;
             letter-spacing: 1px;
@@ -708,7 +708,7 @@
     ];
 
     const AV_STYLE = {
-        male: { torso: 16, thigh: 9.5, arm: 7, head: 9.5, hipR: 0, shoulder: 22, waist: 14, hip: 14 },
+        male:   { torso: 16,   thigh: 9.5, arm: 7,   head: 9.5, hipR: 0,   shoulder: 22, waist: 14, hip: 14 },
         female: { torso: 12.5, thigh: 8.5, arm: 5.6, head: 8.8, hipR: 7.5, shoulder: 17, waist: 10, hip: 16 }
     };
     const AV_HAIR = '#e2e8f0';
@@ -718,50 +718,50 @@
         1: {
             kind: 'side', dir: 1, eyesClosed: true,
             head: [101, 19], neck: [100, 31], sh: [100, 36], hip: [100, 72],
-            legFar: [[100, 72], [100, 95], [100, 117], [109, 117]],
+            legFar:  [[100, 72], [100, 95], [100, 117], [109, 117]],
             legNear: [[100, 72], [124, 74], [124, 97], [133, 97]],
-            armFar: [[100, 38], [84, 47], [68, 42]],
+            armFar:  [[100, 38], [84, 47], [68, 42]],
             armNear: [[100, 38], [117, 47], [134, 42]]
         },
         2: {
             kind: 'side', dir: 1, mat: true,
             head: [137, 84], neck: [129, 92], sh: [120, 98], hip: [78, 106],
-            legFar: [[78, 108], [52, 100], [26, 91], [19, 88]],
+            legFar:  [[78, 108], [52, 100], [26, 91], [19, 88]],
             legNear: [[78, 106], [52, 97], [26, 88], [19, 85]],
-            armFar: [[118, 100], [144, 94], [170, 88]],
+            armFar:  [[118, 100], [144, 94], [170, 88]],
             armNear: [[120, 98], [146, 91], [172, 84]]
         },
         3: {
             kind: 'side', dir: 1,
             head: [131, 71], neck: [121, 75], sh: [116, 78], hip: [72, 95],
-            legFar: [[72, 95], [50, 103], [28, 112], [22, 113]],
+            legFar:  [[72, 95], [50, 103], [28, 112], [22, 113]],
             legNear: [[72, 95], [50, 103], [28, 112], [22, 113]],
-            armFar: [[111, 78], [111, 97], [111, 114]],
+            armFar:  [[111, 78], [111, 97], [111, 114]],
             armNear: [[116, 78], [116, 97], [116, 114]]
         },
         4: {
             kind: 'side', dir: 1,
             head: [81, 29], neck: [77, 40], sh: [74, 45], hip: [62, 80],
-            legFar: [[62, 80], [92, 80], [92, 112], [102, 113]],
+            legFar:  [[62, 80], [92, 80], [92, 112], [102, 113]],
             legNear: [[62, 80], [96, 80], [96, 112], [106, 113]],
-            armFar: [[74, 44], [96, 44], [118, 44]],
+            armFar:  [[74, 44], [96, 44], [118, 44]],
             armNear: [[74, 47], [96, 47], [118, 47]],
             marker: 'squat'
         },
         5: {
             kind: 'side', dir: -1, mat: true,
             head: [50, 62], neck: [57, 70], sh: [62, 76], hip: [86, 108],
-            legFar: [[86, 108], [107, 82], [125, 111], [135, 112]],
+            legFar:  [[86, 108], [107, 82], [125, 111], [135, 112]],
             legNear: [[86, 108], [110, 80], [128, 110], [138, 111]],
-            armFar: [[62, 80], [80, 80], [100, 78]],
+            armFar:  [[62, 80], [80, 80], [100, 78]],
             armNear: [[62, 78], [82, 78], [102, 76]]
         },
         6: {
             kind: 'side', dir: 1,
             head: [117, 87], neck: [110, 80], sh: [104, 74], hip: [72, 44],
-            legFar: [[72, 44], [48, 79], [27, 113], [38, 114]],
+            legFar:  [[72, 44], [48, 79], [27, 113], [38, 114]],
             legNear: [[72, 44], [51, 79], [30, 113], [41, 114]],
-            armFar: [[100, 78], [106, 96], [112, 113]],
+            armFar:  [[100, 78], [106, 96], [112, 113]],
             armNear: [[104, 76], [110, 95], [116, 113]],
             marker: 'walk'
         },
@@ -993,10 +993,10 @@
         zones: {
             labels: [0.20, 0.072, 0.52, 0.090],
             height: [0.2245, 0.0895, 0.290, 0.1045],
-            age: [0.3285, 0.0895, 0.362, 0.1045],
+            age:    [0.3285, 0.0895, 0.362, 0.1045],
             gender: [0.398, 0.0895, 0.455, 0.1045],
             weight: [0.548, 0.1930, 0.600, 0.2065],
-            bfm: [0.185, 0.2395, 0.240, 0.2545]
+            bfm:    [0.185, 0.2395, 0.240, 0.2545]
         },
         rows: { weight: [0.3298, 0.3363], smm: [0.3581, 0.3650], pbf: [0.4856, 0.4921] }
     };
