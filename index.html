@@ -429,4 +429,424 @@
             <div class="input-box">
                 <label>الجنس <span class="en">Gender</span></label>
                 <select id="genderSelect" required onchange="updateGenderTheme()">
-                    <option value="male">ذكر / Male</
+                    <option value="male">ذكر / Male</option>
+                    <option value="female">أنثى / Female</option>
+                </select>
+            </div>
+            <div class="input-box">
+                <label>العمر الحقيقي <span class="en">Chronological Age</span></label>
+                <input type="number" id="realAge" required min="12" max="90" placeholder="مثال: 23">
+            </div>
+            <div class="input-box">
+                <label>الوزن (كجم) <span class="en">Weight (kg)</span></label>
+                <input type="number" id="weightInput" step="0.1" min="30" max="250" required placeholder="مثال: 72.9">
+            </div>
+            <div class="input-box">
+                <label>الطول (سم) <span class="en">Height (cm)</span></label>
+                <input type="number" id="heightInput" step="0.1" min="100" max="230" required placeholder="مثال: 171">
+            </div>
+            <div class="input-box">
+                <label>نسبة الدهون PBF (%) <span class="en">Body Fat %</span></label>
+                <input type="number" id="fatInput" step="0.1" min="3" max="60" required placeholder="مثال: 14.4">
+            </div>
+            <div class="input-box">
+                <label>كتلة العضلات SMM (كجم) <span class="en">Muscle Mass</span></label>
+                <input type="number" id="smmInput" step="0.1" min="10" max="80" required placeholder="مثال: 34.9">
+            </div>
+        </div>
+
+        <div class="section-header">
+            <h2><i class="fa-solid fa-notes-medical"></i> 2. استبيان الحالة الصحية والجاهزية | Health History Questionnaire</h2>
+        </div>
+
+        <div class="health-question-row">
+            <div class="q-ar">هل أجريت عمليات جراحية خلال آخر 3-5 سنوات؟</div>
+            <div class="radio-btn-group">
+                <input type="radio" id="hq1_yes" name="hq1" value="yes"><label for="hq1_yes" class="yes-label">نعم / Yes</label>
+                <input type="radio" id="hq1_no" name="hq1" value="no" checked><label for="hq1_no" class="no-label">لا / No</label>
+            </div>
+            <div class="q-en">Surgeries in last 3-5 years?</div>
+        </div>
+
+        <div class="health-question-row">
+            <div class="q-ar">هل تعاني من مشاكل في العظام أو المفاصل تعوق الحركة؟</div>
+            <div class="radio-btn-group">
+                <input type="radio" id="hq2_yes" name="hq2" value="yes"><label for="hq2_yes" class="yes-label">نعم / Yes</label>
+                <input type="radio" id="hq2_no" name="hq2" value="no" checked><label for="hq2_no" class="no-label">لا / No</label>
+            </div>
+            <div class="q-en">Bone/joint issues limiting movement?</div>
+        </div>
+
+        <div class="health-question-row">
+            <div class="q-ar">هل تعاني من خشونة المفاصل أو شرائح ومسامير؟</div>
+            <div class="radio-btn-group">
+                <input type="radio" id="hq3_yes" name="hq3" value="yes"><label for="hq3_yes" class="yes-label">نعم / Yes</label>
+                <input type="radio" id="hq3_no" name="hq3" value="no" checked><label for="hq3_no" class="no-label">لا / No</label>
+            </div>
+            <div class="q-en">Joint arthritis or surgical plates?</div>
+        </div>
+
+        <div class="health-question-row">
+            <div class="q-ar">هل تعاني من سكري النوع الأول (علاج بالإنسولين)؟</div>
+            <div class="radio-btn-group">
+                <input type="radio" id="hq4_yes" name="hq4" value="yes"><label for="hq4_yes" class="yes-label">نعم / Yes</label>
+                <input type="radio" id="hq4_no" name="hq4" value="no" checked><label for="hq4_no" class="no-label">لا / No</label>
+            </div>
+            <div class="q-en">Type-1 Diabetes (Insulin dependent)?</div>
+        </div>
+
+        <div class="health-question-row">
+            <div class="q-ar">هل تعاني من ارتفاع ضغط الدم أو أمراض القلب؟</div>
+            <div class="radio-btn-group">
+                <input type="radio" id="hq5_yes" name="hq5" value="yes"><label for="hq5_yes" class="yes-label">نعم / Yes</label>
+                <input type="radio" id="hq5_no" name="hq5" value="no" checked><label for="hq5_no" class="no-label">لا / No</label>
+            </div>
+            <div class="q-en">High blood pressure or heart conditions?</div>
+        </div>
+
+        <div class="section-header">
+            <h2><i class="fa-solid fa-stopwatch"></i> 3. اختبارات التقييم البدني | Physical Assessment Tests</h2>
+        </div>
+
+        <div class="exercise-card">
+            <div class="exercise-avatar-box">
+                <i class="fa-solid fa-person-walking" id="avatar1"></i>
+                <span class="gender-badge" id="badge1">MALE</span>
+            </div>
+            <div class="exercise-details">
+                <h4>1. التوافق العصبي (إغلاق العينين والوقوف على قدم واحدة) <span class="target-tag">Target: 20s Total (10s/leg)</span></h4>
+                <p class="sub-en">Single-Leg Stance Balance Test (Closed Eyes)</p>
+                <div class="exercise-inputs">
+                    <div class="input-box"><label>القدم اليمنى (ثواني) <span class="en">Right Leg (s)</span></label><input type="number" id="coordR" max="10" min="0" placeholder="أقصى 10" required></div>
+                    <div class="input-box"><label>القدم اليسرى (ثواني) <span class="en">Left Leg (s)</span></label><input type="number" id="coordL" max="10" min="0" placeholder="أقصى 10" required></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="exercise-card">
+            <div class="exercise-avatar-box">
+                <i class="fa-solid fa-child-reaching" id="avatar2"></i>
+                <span class="gender-badge" id="badge2">MALE</span>
+            </div>
+            <div class="exercise-details">
+                <h4>2. التوازن الاستاتيكي (تمرين سوبرمان الثابت) <span class="target-tag">Target: 120s Total (60s/set)</span></h4>
+                <p class="sub-en">Static Superman Core & Back Balance Test</p>
+                <div class="exercise-inputs">
+                    <div class="input-box"><label>الجولة 1 (ثواني) <span class="en">Set 1 (s)</span></label><input type="number" id="balSet1" max="60" min="0" placeholder="أقصى 60" required></div>
+                    <div class="input-box"><label>الجولة 2 (ثواني) <span class="en">Set 2 (s)</span></label><input type="number" id="balSet2" max="60" min="0" placeholder="أقصى 60" required></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="exercise-card">
+            <div class="exercise-avatar-box">
+                <i class="fa-solid fa-dumbbell" id="avatar3"></i>
+                <span class="gender-badge" id="badge3">MALE</span>
+            </div>
+            <div class="exercise-details">
+                <h4>3. التحمل العضلي (تمرين الضغط) <span class="target-tag">Target: Set 2 >= 70% of Set 1</span></h4>
+                <p class="sub-en">Push-Up Upper Body Muscular Endurance Test</p>
+                <div class="exercise-inputs">
+                    <div class="input-box"><label>الجولة 1 (أقصى تكرار) <span class="en">Set 1 (Max Reps)</span></label><input type="number" id="pushSet1" min="1" required placeholder="أقصى عدد"></div>
+                    <div class="input-box"><label>الجولة 2 (تكرار فعلي) <span class="en">Set 2 (Reps)</span></label><input type="number" id="pushSet2" min="0" required placeholder="تكرارات الجولة 2"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="exercise-card">
+            <div class="exercise-avatar-box">
+                <i class="fa-solid fa-child" id="avatar4"></i>
+                <span class="gender-badge" id="badge4">MALE</span>
+            </div>
+            <div class="exercise-details">
+                <h4>4. الثبات الاستاتيكي (ثبات الاسكوات 90 درجة) <span class="target-tag">Target: 120s Total (60s/set)</span></h4>
+                <p class="sub-en">Static Isometric Squat Hold Test (90°)</p>
+                <div class="exercise-inputs">
+                    <div class="input-box"><label>الجولة 1 (ثواني) <span class="en">Set 1 (s)</span></label><input type="number" id="squatSet1" max="60" min="0" required placeholder="أقصى 60 ثانية"></div>
+                    <div class="input-box"><label>الجولة 2 (ثواني) <span class="en">Set 2 (s)</span></label><input type="number" id="squatSet2" max="60" min="0" required placeholder="أقصى 60 ثانية"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="exercise-card">
+            <div class="exercise-avatar-box">
+                <i class="fa-solid fa-fire" id="avatar5"></i>
+                <span class="gender-badge" id="badge5">MALE</span>
+            </div>
+            <div class="exercise-details">
+                <h4>5. قوة وتحمل عضلات البطن (تمرين Sit-Up) <span class="target-tag">Target: Set 1 >= 15 Reps</span></h4>
+                <p class="sub-en">Abdominal Sit-Up Endurance Test</p>
+                <div class="exercise-inputs">
+                    <div class="input-box"><label>الجولة 1 (أقصى تكرار >=15) <span class="en">Set 1 (Max Reps)</span></label><input type="number" id="sitSet1" min="1" required placeholder="أقصى عدد"></div>
+                    <div class="input-box"><label>الجولة 2 (تكرار فعلي) <span class="en">Set 2 (Reps)</span></label><input type="number" id="sitSet2" min="0" required placeholder="تكرارات الجولة 2"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="exercise-card">
+            <div class="exercise-avatar-box">
+                <i class="fa-solid fa-heart-pulse" id="avatar6"></i>
+                <span class="gender-badge" id="badge6">MALE</span>
+            </div>
+            <div class="exercise-details">
+                <h4>6. كفاءة وقدرة عضلة القلب (تمرين Walkout) <span class="target-tag">Target Set 1: 12-15 Reps</span></h4>
+                <p class="sub-en">Cardiac Hand Walkout Cardiovascular Test</p>
+                <div class="exercise-inputs">
+                    <div class="input-box"><label>الجولة 1 (تكرار 12-15) <span class="en">Set 1 (12-15 Reps)</span></label><input type="number" id="cardiacSet1" max="15" min="0" required placeholder="من 12 إلى 15"></div>
+                    <div class="input-box"><label>الجولة 2 (تكرارات) <span class="en">Set 2 (Reps)</span></label><input type="number" id="cardiacSet2" max="15" min="0" required placeholder="الجولة 2"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="exercise-card">
+            <div class="exercise-avatar-box">
+                <i class="fa-solid fa-brain" id="avatar7"></i>
+                <span class="gender-badge" id="badge7">MALE</span>
+            </div>
+            <div class="exercise-details">
+                <h4>7. الذاكرة العضلية والاتزان (Dumbbell Cuban Press) <span class="target-tag">Target: 24 Reps Total (12/set)</span></h4>
+                <p class="sub-en">Muscle Memory & Shoulder Rotator Coordination Test</p>
+                <div class="exercise-inputs">
+                    <div class="input-box"><label>الجولة 1 (تكرارات) <span class="en">Set 1 (12 Reps)</span></label><input type="number" id="memSet1" max="12" min="0" required placeholder="أقصى 12"></div>
+                    <div class="input-box"><label>الجولة 2 (تكرارات) <span class="en">Set 2 (12 Reps)</span></label><input type="number" id="memSet2" max="12" min="0" required placeholder="أقصى 12"></div>
+                </div>
+            </div>
+        </div>
+
+        <button type="submit" class="btn-submit">
+            <i class="fa-solid fa-calculator"></i> استخراج التقرير الشامل والعمر البيولوجي | Generate Assessment Report
+        </button>
+    </form>
+
+    <div class="result-container" id="resultArea">
+        <div class="result-card">
+            <h3>B FIT ASSESSMENT CLUB REPORT</h3>
+            <p id="reportHeaderInfo" style="color: #94a3b8; font-weight: 600; font-size: 14px; margin-top: 5px;"></p>
+
+            <div class="score-display-box">
+                <div class="score-metric-card">
+                    <div class="label">مستوى اللياقة الإجمالي | Fitness Score</div>
+                    <div class="value" id="overallScoreVal">0<span>%</span></div>
+                </div>
+                <div class="score-metric-card">
+                    <div class="label">العمر البيولوجي المقدر | Biological Age</div>
+                    <div class="value" id="bioAgeVal">-- <span>سنة</span></div>
+                </div>
+            </div>
+
+            <div id="bioAgeStatusBadge" class="bio-age-highlight bio-equal">--</div>
+
+            <div class="report-summary-text" id="detailedReportText"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const GENDER_ICONS = {
+        male:   ['fa-person-walking', 'fa-child-reaching', 'fa-dumbbell', 'fa-child', 'fa-fire', 'fa-heart-pulse', 'fa-brain'],
+        female: ['fa-person-dress', 'fa-person-rays', 'fa-dumbbell', 'fa-person-arrow-down-to-line', 'fa-fire', 'fa-heart-pulse', 'fa-brain']
+    };
+
+    function updateGenderTheme() {
+        const gender = document.getElementById('genderSelect').value === 'female' ? 'female' : 'male';
+        document.documentElement.style.setProperty('--accent-gender', gender === 'female' ? '#f472b6' : '#38bdf8');
+
+        for (let i = 1; i <= 7; i++) {
+            document.getElementById('badge' + i).innerText = gender === 'female' ? 'FEMALE' : 'MALE';
+            document.getElementById('avatar' + i).className = 'fa-solid ' + GENDER_ICONS[gender][i - 1];
+        }
+    }
+
+    function setOcrStatus(color, iconClass, message) {
+        const el = document.getElementById('ocrStatusMsg');
+        el.style.display = 'block';
+        el.style.color = color;
+        el.innerHTML = '<i class="' + iconClass + '"></i> ' + message;
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const fileInput = document.getElementById('inbodyFile');
+        if (fileInput) {
+            fileInput.addEventListener('change', async function(event) {
+                const file = event.target.files[0];
+                if (!file) return;
+
+                setOcrStatus('#ff6b00', 'fa-solid fa-spinner fa-spin', 'جاري معالجة وتمرير التقرير لـ Gemini Vision AI عبر بوابة جوجل...');
+
+                try {
+                    const base64Data = await new Promise((resolve, reject) => {
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            const img = new Image();
+                            img.onload = function() {
+                                const canvas = document.createElement('canvas');
+                                const MAX_DIM = 1000;
+                                let w = img.width;
+                                let h = img.height;
+                                if (w > MAX_DIM || h > MAX_DIM) {
+                                    if (w > h) { h = Math.round((h * MAX_DIM) / w); w = MAX_DIM; }
+                                    else { w = Math.round((w * MAX_DIM) / h); h = MAX_DIM; }
+                                }
+                                canvas.width = w;
+                                canvas.height = h;
+                                const ctx = canvas.getContext('2d');
+                                ctx.drawImage(img, 0, 0, w, h);
+                                resolve(canvas.toDataURL('image/jpeg', 0.85).split(',')[1]);
+                            };
+                            img.onerror = reject;
+                            img.src = e.target.result;
+                        };
+                        reader.onerror = reject;
+                        reader.readAsDataURL(file);
+                    });
+
+                    // رابط بوابة Google Apps Script الجديد
+                    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz-ra0qO0N5xT_LD9uaPxGYWf32bDrTVlTFPgIXd_bMnnD681SJb_VnFpErwbTqGxkC/exec";
+
+                    const response = await fetch(APPS_SCRIPT_URL, {
+                        method: 'POST',
+                        body: JSON.stringify({ image: base64Data })
+                    });
+
+                    const responseText = await response.text();
+                    let resJson;
+                    try {
+                        resJson = JSON.parse(responseText);
+                    } catch (errParse) {
+                        throw new Error("استجابة غير صالحة من السيرفر: " + responseText.substring(0, 100));
+                    }
+                    
+                    if (resJson.error) {
+                        throw new Error(typeof resJson.error === 'object' ? JSON.stringify(resJson.error) : resJson.error);
+                    }
+
+                    let rawText = "";
+                    if (resJson.candidates && resJson.candidates[0].content.parts[0].text) {
+                        rawText = resJson.candidates[0].content.parts[0].text;
+                    } else {
+                        rawText = JSON.stringify(resJson);
+                    }
+
+                    const cleaned = rawText.replace(/```json/gi, '').replace(/```/g, '').trim();
+                    const result = JSON.parse(cleaned);
+
+                    if (result.age) document.getElementById('realAge').value = result.age;
+                    if (result.weight) document.getElementById('weightInput').value = result.weight;
+                    if (result.height) document.getElementById('heightInput').value = result.height;
+                    if (result.smm) document.getElementById('smmInput').value = result.smm;
+                    if (result.pbf) document.getElementById('fatInput').value = result.pbf;
+                    if (result.gender) {
+                        const g = String(result.gender).toLowerCase();
+                        document.getElementById('genderSelect').value = (g.includes('fem') || g.includes('أنثى')) ? 'female' : 'male';
+                        updateGenderTheme();
+                    }
+
+                    setOcrStatus('#10b981', 'fa-solid fa-circle-check', 'تم قراءة واستخراج بيانات InBody بدقة بصرية واقعية تامة!');
+
+                } catch (err) {
+                    console.error("Detailed Gateway Error:", err);
+                    setOcrStatus('#ef4444', 'fa-solid fa-circle-xmark', 'خطأ: ' + err.message);
+                }
+            });
+        }
+    });
+
+    function num(id, fallback) {
+        const v = parseFloat(document.getElementById(id).value);
+        return Number.isFinite(v) ? v : fallback;
+    }
+
+    function calculateAssessment(e) {
+        e.preventDefault();
+
+        const coach = document.getElementById('coachName').value.trim();
+        const client = document.getElementById('clientName').value.trim();
+        const gender = document.getElementById('genderSelect').value;
+        const realAge = Math.round(num('realAge', 30));
+        const weight = num('weightInput', 70);
+        const fat = num('fatInput', 20);
+        const smm = num('smmInput', 30);
+
+        const flags = [];
+        const flagLabels = {
+            hq1: 'عملية جراحية خلال 3-5 سنوات',
+            hq2: 'مشاكل عظام أو مفاصل تعوق الحركة',
+            hq3: 'خشونة مفاصل أو شرائح ومسامير',
+            hq4: 'سكري النوع الأول',
+            hq5: 'ضغط دم مرتفع أو أمراض القلب'
+        };
+        for (const k in flagLabels) {
+            if (document.querySelector('input[name="' + k + '"]:checked').value === 'yes') flags.push(flagLabels[k]);
+        }
+        const needsMedicalClearance = flags.includes(flagLabels.hq4) || flags.includes(flagLabels.hq5);
+
+        const coordScore = Math.min(((num('coordR', 0) + num('coordL', 0)) / 20) * 100, 100);
+        const balScore = Math.min(((num('balSet1', 0) + num('balSet2', 0)) / 120) * 100, 100);
+
+        const p1 = Math.max(num('pushSet1', 1), 1);
+        const pushScore = Math.min((num('pushSet2', 0) / (p1 * 0.70)) * 100, 100);
+
+        const squatScore = Math.min(((num('squatSet1', 0) + num('squatSet2', 0)) / 120) * 100, 100);
+
+        const s1 = Math.max(num('sitSet1', 1), 1);
+        const sitScore = Math.min((num('sitSet2', 0) / (s1 * 0.70)) * 100, 100);
+
+        const cardiacScore = Math.min(((num('cardiacSet1', 0) + num('cardiacSet2', 0)) / 30) * 100, 100);
+        const memScore = Math.min(((num('memSet1', 0) + num('memSet2', 0)) / 24) * 100, 100);
+
+        const testAverage = (coordScore + balScore + pushScore + squatScore + sitScore + cardiacScore + memScore) / 7;
+
+        const smmPercentage = (smm / weight) * 100;
+        const bodyFatScore = gender === 'male'
+            ? (fat <= 18 ? 100 : Math.max(0, 100 - (fat - 18) * 3))
+            : (fat <= 25 ? 100 : Math.max(0, 100 - (fat - 25) * 3));
+        const muscleScore = smmPercentage >= 40 ? 100 : (smmPercentage / 40) * 100;
+
+        const fitnessScore = Math.round((testAverage * 0.7) + (bodyFatScore * 0.15) + (muscleScore * 0.15));
+
+        const ageAdjustment = Math.round((fitnessScore - 70) / 7);
+        const biologicalAge = Math.max(12, realAge - ageAdjustment);
+
+        document.getElementById('reportHeaderInfo').innerText =
+            'المشترك: ' + client + ' (' + (gender === 'male' ? 'ذكر' : 'أنثى') + ') | العمر الحقيقي: ' + realAge +
+            ' | الكوتش: ' + coach + ' | الوزن: ' + weight + 'كجم | الدهون: ' + fat + '% | العضلات: ' + smm + 'كجم';
+        document.getElementById('overallScoreVal').innerHTML = fitnessScore + '<span>%</span>';
+        document.getElementById('bioAgeVal').innerHTML = biologicalAge + ' <span>سنة</span>';
+
+        const badge = document.getElementById('bioAgeStatusBadge');
+        let summaryHTML = '';
+
+        if (biologicalAge < realAge) {
+            badge.className = 'bio-age-highlight bio-younger';
+            badge.innerText = '🔥 ممتاز! عمرك البيولوجي أصغر من عمرك الحقيقي بمقدار (' + (realAge - biologicalAge) + ') سنوات.';
+            summaryHTML += 'أداء بدني وتكوين جسماني ممتاز. انخفاض نسبة الدهون وجودة الكتلة العضلية ساهمت في رفع كفاءة نتيجتك العامة.';
+        } else if (biologicalAge === realAge) {
+            badge.className = 'bio-age-highlight bio-equal';
+            badge.innerText = '👍 متطابق! عمرك البيولوجي يطابق عمرك الحقيقي (' + realAge + ' سنة).';
+            summaryHTML += 'مستوى متزن ومناسب للبدء في برنامج تدريبي متطور لرفع الكتلة العضلية وتقليل الدهون للوصول لنتائج أفضل في التقييمات القادمة.';
+        } else {
+            badge.className = 'bio-age-highlight bio-older';
+            badge.innerText = '⚠️ تنبيه: عمرك البيولوجي أعلى من عمرك الحقيقي بمقدار (' + (biologicalAge - realAge) + ') سنوات.';
+            summaryHTML += 'تشير المدخلات إلى وجود تراجع في بعض عناصر التحمل العضلي أو ارتفاع في الدهون. يُوصى ببرنامج تدريبي مخصص مع الكوتش.';
+        }
+
+        if (flags.length > 0) {
+            summaryHTML += '<br><br><strong>الملاحظات الصحية (' + flags.length + '):</strong><br>';
+            summaryHTML += flags.map(f => '• ' + f).join('<br>');
+            summaryHTML += '<br>يرجى تكييف التمارين بناءً عليها.';
+            if (needsMedicalClearance) {
+                summaryHTML += '<br><strong style="color:#f87171;">يُنصح بالحصول على موافقة طبية قبل بدء البرنامج التدريبي.</strong>';
+            }
+        }
+
+        document.getElementById('detailedReportText').innerHTML = summaryHTML;
+        const area = document.getElementById('resultArea');
+        area.style.display = 'block';
+        area.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    window.addEventListener('load', updateGenderTheme);
+</script>
+
+</body>
+</html>
