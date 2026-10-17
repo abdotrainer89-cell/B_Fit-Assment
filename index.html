@@ -833,6 +833,27 @@
             .plan-row { grid-template-columns: 1fr; gap: 4px; }
             .plan-row .pr-val { text-align: right; }
         }
+
+        /* ===== Nutrition Facts label (white box, black text) ===== */
+        .nutri-label { background: #fff; color: #000; border: 2px solid #000; border-radius: 6px; padding: 10px 14px 8px; max-width: 420px; margin: 16px auto 4px; font-family: 'Montserrat', 'Tajawal', Arial, sans-serif; box-shadow: 0 10px 28px rgba(110, 90, 180, 0.18); }
+        .nutri-label em { font-style: normal; font-weight: 500; font-family: 'Tajawal', 'Montserrat', sans-serif; }
+        .nl-title { font-size: 30px; font-weight: 900; line-height: 1.05; letter-spacing: -0.5px; }
+        .nl-title em { font-size: 15px; margin-inline-start: 8px; letter-spacing: 0; }
+        .nl-serving { font-size: 13px; line-height: 1.5; padding: 4px 0 6px; border-bottom: 0; }
+        .nl-thick { height: 8px; background: #000; margin: 2px 0; }
+        .nl-medium { height: 4px; background: #000; margin: 2px 0; }
+        .nl-cal { display: flex; justify-content: space-between; align-items: flex-end; padding: 2px 0; }
+        .nl-cal span { display: flex; flex-direction: column; font-size: 20px; }
+        .nl-cal small { font-size: 11px; font-weight: 700; }
+        .nl-cal strong { font-size: 42px; font-weight: 900; line-height: 1; }
+        .nl-dvhead { text-align: right; font-size: 12px; font-weight: 900; padding: 2px 0; border-bottom: 1px solid #000; }
+        .nl-row { display: flex; justify-content: space-between; gap: 10px; font-size: 14px; padding: 3px 0; border-bottom: 1px solid #000; }
+        .nl-row.sub { padding-inline-start: 18px; }
+        .nl-row .nl-dv { font-weight: 900; min-width: 40px; text-align: right; }
+        .nl-foot { font-size: 11px; line-height: 1.55; margin-top: 4px; color: #000; }
+        .qty-chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 4px 0 6px; }
+        .qty-chips button { border: 1px solid rgba(155, 123, 255, 0.45); background: rgba(255, 255, 255, 0.7); color: var(--ink); border-radius: 999px; padding: 6px 14px; font-size: 13px; font-weight: 700; cursor: pointer; direction: ltr; }
+        .qty-chips button:hover { background: linear-gradient(135deg, rgba(255, 107, 157, 0.15), rgba(76, 184, 255, 0.15)); }
     </style>
 </head>
 <body>
@@ -1946,15 +1967,36 @@
     }
 
     // ===== Food calculator (built-in local dataset, no API / no keys) =====
-    const FOOD_KEYS = ['kcal', 'p', 'c', 'f', 'fiber', 'na', 'k', 'ca', 'fe', 'vc'];
+    const FOOD_KEYS = ['kcal', 'p', 'c', 'f', 'fiber', 'na', 'k', 'ca', 'fe', 'vc', 'sugar', 'sat', 'chol', 'va', 'vd', 'b12', 'mg', 'zn'];
     const FOOD_MICROS = [
-        ['fiber', 'ألياف', 'Fiber', 'g'], ['na', 'صوديوم', 'Sodium', 'mg'], ['k', 'بوتاسيوم', 'Potassium', 'mg'],
-        ['ca', 'كالسيوم', 'Calcium', 'mg'], ['fe', 'حديد', 'Iron', 'mg'], ['vc', 'فيتامين C', 'Vitamin C', 'mg']
+        ['fiber', 'ألياف', 'Fiber', 'g'], ['sugar', 'سكريات', 'Sugars', 'g'], ['sat', 'دهون مشبعة', 'Saturated fat', 'g'], ['chol', 'كوليسترول', 'Cholesterol', 'mg'],
+        ['na', 'صوديوم', 'Sodium', 'mg'], ['k', 'بوتاسيوم', 'Potassium', 'mg'], ['ca', 'كالسيوم', 'Calcium', 'mg'], ['fe', 'حديد', 'Iron', 'mg'],
+        ['mg', 'مغنيسيوم', 'Magnesium', 'mg'], ['zn', 'زنك', 'Zinc', 'mg'], ['va', 'فيتامين A', 'Vitamin A', 'mcg'], ['vc', 'فيتامين C', 'Vitamin C', 'mg'],
+        ['vd', 'فيتامين D', 'Vitamin D', 'mcg'], ['b12', 'فيتامين B12', 'Vitamin B12', 'mcg']
+    ];
+    // key, English, Arabic, unit, %DV reference (FDA 2,000 kcal), indent, bold, decimals
+    const LABEL_ROWS = [
+        ['f', 'Total Fat', 'الدهون الكلية', 'g', 78, 0, 1, 1],
+        ['sat', 'Saturated Fat', 'دهون مشبعة', 'g', 20, 1, 0, 1],
+        ['chol', 'Cholesterol', 'كوليسترول', 'mg', 300, 0, 1, 0],
+        ['na', 'Sodium', 'صوديوم', 'mg', 2300, 0, 1, 0],
+        ['c', 'Total Carbohydrate', 'الكربوهيدرات الكلية', 'g', 275, 0, 1, 1],
+        ['fiber', 'Dietary Fiber', 'ألياف غذائية', 'g', 28, 1, 0, 1],
+        ['sugar', 'Total Sugars', 'سكريات كلية', 'g', null, 1, 0, 1],
+        ['p', 'Protein', 'بروتين', 'g', 50, 0, 1, 1]
+    ];
+    const LABEL_MICROS = [
+        ['vd', 'Vitamin D', 'فيتامين D', 'mcg', 20, 0, 0, 1], ['ca', 'Calcium', 'كالسيوم', 'mg', 1300, 0, 0, 0],
+        ['fe', 'Iron', 'حديد', 'mg', 18, 0, 0, 1], ['k', 'Potassium', 'بوتاسيوم', 'mg', 4700, 0, 0, 0],
+        ['va', 'Vitamin A', 'فيتامين A', 'mcg', 900, 0, 0, 0], ['vc', 'Vitamin C', 'فيتامين C', 'mg', 90, 0, 0, 1],
+        ['b12', 'Vitamin B12', 'فيتامين B12', 'mcg', 2.4, 0, 0, 1], ['mg', 'Magnesium', 'مغنيسيوم', 'mg', 420, 0, 0, 0],
+        ['zn', 'Zinc', 'زنك', 'mg', 11, 0, 0, 1]
     ];
     const FOOD_CATS = {
         grain: ['نشويات وحبوب', 'Grains & Starch'], legume: ['بقوليات', 'Legumes'], meat: ['لحوم ودواجن', 'Meat & Poultry'],
         fish: ['أسماك', 'Seafood'], egg: ['بيض', 'Eggs'], dairy: ['ألبان وأجبان', 'Dairy'], fat: ['دهون ومكسرات', 'Fats & Nuts'],
-        veg: ['خضروات', 'Vegetables'], fruit: ['فواكه', 'Fruit'], other: ['أخرى', 'Other'], custom: ['مخصص', 'Custom']
+        veg: ['خضروات', 'Vegetables'], fruit: ['فواكه', 'Fruit'], drink: ['مشروبات وعصائر', 'Drinks & Juices'], sweet: ['حلويات ووجبات خفيفة', 'Sweets & Snacks'],
+        fast: ['وجبات سريعة', 'Fast Food'], other: ['أخرى', 'Other'], custom: ['مخصص', 'Custom']
     };
     // [ar, en, aliases, cat, yield (cooked g per 1 g raw, 0 = as is), kcal, protein, carb, fat, fiber, sodium, potassium, calcium, iron, vitC]  — per 100 g (raw / as listed)
     const FOOD_DB_RAW = [
@@ -2039,8 +2081,68 @@
         ['عصير برتقال', 'Orange juice', '', 'fruit', 0, 45, 0.7, 10.4, 0.2, 0.2, 1, 200, 11, 0.2, 50],
         ['بروتين مصل اللبن', 'Whey protein powder', 'واي بروتين مكمل', 'other', 0, 400, 80, 8, 6, 0, 200, 400, 400, 1, 0],
         ['عسل', 'Honey', '', 'other', 0, 304, 0.3, 82, 0, 0.2, 4, 52, 6, 0.4, 0.5],
-        ['سكر أبيض', 'White sugar', 'سكر', 'other', 0, 387, 0, 100, 0, 0, 1, 2, 1, 0, 0]
+        ['سكر أبيض', 'White sugar', 'سكر', 'other', 0, 387, 0, 100, 0, 0, 1, 2, 1, 0, 0],
+        ['فستق', 'Pistachios', '', 'fat', 0, 560, 20, 28, 45, 10, 1, 1025, 105, 3.9, 5.6, 7.7, 5.4, 0, 26, 0, 0, 121, 2.2],
+        ['بذور الشيا', 'Chia seeds', 'شيا', 'fat', 0, 486, 16.5, 42, 31, 34, 16, 407, 631, 7.7, 1.6, 0, 3.3, 0, 0, 0, 0, 335, 4.6],
+        ['كولا', 'Cola (regular)', 'بيبسي كوكاكولا مشروب غازي غازيات صودا pepsi coca-cola coke soda soft drink', 'drink', 0, 42, 0, 10.6, 0, 0, 4, 2, 2, 0, 0, 10.6, 0, 0, 0, 0, 0, 0, 0],
+        ['كولا دايت', 'Diet cola', 'دايت زيرو صفر سعرات pepsi max coke zero', 'drink', 0, 0, 0, 0, 0, 0, 10, 1, 3, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0],
+        ['سفن أب / سبرايت', 'Lemon-lime soda', 'سبرايت 7up sprite ليمون غازي', 'drink', 0, 40, 0, 10, 0, 0, 15, 2, 2, 0, 0, 10, 0, 0, 0, 0, 0, 0, 0],
+        ['فانتا برتقال', 'Orange soda', 'فانتا ميرندا fanta برتقال غازي', 'drink', 0, 46, 0, 11.5, 0, 0, 10, 2, 3, 0, 0, 11, 0, 0, 0, 0, 0, 0, 0],
+        ['مشروب طاقة', 'Energy drink', 'ريد بول ستار monster red bull', 'drink', 0, 45, 0, 11, 0, 0, 40, null, null, null, null, 11, 0, 0, null, null, null, null, null],
+        ['مشروب رياضي', 'Sports drink', 'جاتوريد باوريد gatorade powerade', 'drink', 0, 26, 0, 6.4, 0, 0, 41, 12, 0, 0, 0, 5.8, 0, 0, 0, 0, 0, 0, 0],
+        ['عصير تفاح', 'Apple juice', '', 'drink', 0, 46, 0.1, 11.3, 0.1, 0.2, 4, 101, 8, 0.1, 0.9, 9.6, 0, 0, 1, 0, 0, 5, 0],
+        ['عصير عنب', 'Grape juice', '', 'drink', 0, 60, 0.4, 14.8, 0.1, 0.2, 5, 104, 11, 0.3, 0.1, 14.3, 0.1, 0, 2, 0, 0, 10, 0.1],
+        ['عصير مانجو', 'Mango juice', 'عصير مانجا نكتار', 'drink', 0, 51, 0.2, 12.8, 0.1, 0.4, 5, 36, 6, 0.1, 6, 12, 0, 0, 21, 0, 0, 4, 0.1],
+        ['عصير رمان', 'Pomegranate juice', '', 'drink', 0, 54, 0.2, 13.1, 0.3, 0.1, 9, 214, 11, 0.3, 0.1, 12.7, 0.1, 0, 0, 0, 0, 10, 0.1],
+        ['ليموناضة', 'Lemonade', 'عصير ليمون', 'drink', 0, 40, 0.1, 10.5, 0.1, 0.1, 3, 15, 4, 0.1, 2.6, 9, 0, 0, 0, 0, 0, 2, 0],
+        ['شاي مثلج محلى', 'Sweetened iced tea', 'ايس تي ليبتون', 'drink', 0, 30, 0, 7.5, 0, 0, 5, 20, 3, 0, 0, 7, 0, 0, 0, 0, 0, 1, 0],
+        ['قهوة سوداء', 'Black coffee', 'قهوة اسبريسو امريكانو', 'drink', 0, 1, 0.1, 0, 0, 0, 2, 49, 2, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0],
+        ['لاتيه', 'Latte (whole milk)', 'كابتشينو قهوة بحليب', 'drink', 0, 56, 3, 5, 2.2, 0, 45, 150, 110, 0, 0, 4.8, 1.4, 8, 18, 0.1, 0.4, 11, 0.4],
+        ['ماء', 'Water', 'مياه', 'drink', 0, 0, 0, 0, 0, 0, 2, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0],
+        ['ماء جوز الهند', 'Coconut water', '', 'drink', 0, 19, 0.7, 3.7, 0.2, 1.1, 105, 250, 24, 0.3, 2.4, 2.6, 0.2, 0, 0, 0, 0, 25, 0.1],
+        ['حليب شوكولاتة', 'Chocolate milk', 'حليب بالشوكولاتة نيدو', 'drink', 0, 83, 3.2, 10.4, 3.4, 0.8, 56, 150, 105, 0.3, 0, 9.7, 2.1, 10, 29, 1, 0.4, 14, 0.4],
+        ['لبن عيران', 'Ayran / buttermilk', 'لبن رايب شنينة', 'drink', 0, 40, 3.3, 4.8, 0.9, 0, 105, 135, 116, 0.1, 0.5, 4.8, 0.5, 4, 20, 0, 0.4, 11, 0.4],
+        ['حليب لوز', 'Almond milk (unsweetened)', '', 'drink', 0, 15, 0.6, 0.3, 1.2, 0.2, 72, 67, 184, 0.3, 0, 0, 0.1, 0, 63, 1, 0, 15, 0.1],
+        ['حليب صويا', 'Soy milk', '', 'drink', 0, 33, 2.9, 1.7, 1.6, 0.4, 51, 118, 25, 0.4, 0, 0.4, 0.2, 0, 0, 0, 0, 15, 0.3],
+        ['شوكولاتة داكنة 70%', 'Dark chocolate 70%', '', 'sweet', 0, 598, 7.8, 46, 43, 11, 20, 715, 73, 11.9, 0, 24, 24.5, 3, 2, 0, 0, 228, 3.3],
+        ['شوكولاتة بالحليب', 'Milk chocolate', '', 'sweet', 0, 535, 7.7, 59, 30, 3.4, 79, 372, 189, 2.3, 0, 52, 18.5, 23, 33, 0, 0.3, 63, 2.3],
+        ['بسكويت', 'Biscuits (generic)', 'كوكيز بسكويت شاي', 'sweet', 0, 450, 6, 70, 17, 2.5, 380, 100, 40, 2, 0, 25, 8, 0, null, null, null, 20, 0.7],
+        ['شيبس بطاطس', 'Potato chips', 'رقائق بطاطس لايز برنجلز', 'sweet', 0, 536, 7, 53, 35, 4.4, 525, 1200, 24, 1.3, 21, 0.3, 5, 0, 0, 0, 0, 69, 1],
+        ['فشار', 'Popcorn (air-popped)', 'بوب كورن', 'sweet', 0, 387, 13, 78, 4.5, 15, 8, 329, 7, 3.2, 0, 0.9, 0.6, 0, 0, 0, 0, 144, 3.1],
+        ['آيس كريم فانيلا', 'Vanilla ice cream', 'ايسكريم بوظة', 'sweet', 0, 207, 3.5, 24, 11, 0.7, 80, 199, 128, 0.1, 0.6, 21, 6.8, 44, 118, 0.2, 0.4, 14, 0.7],
+        ['بيتزا بالجبن', 'Cheese pizza', '', 'fast', 0, 266, 11, 33, 10, 2.3, 598, 172, 201, 2.5, 0, 3.6, 4.5, 17, null, null, null, 23, 1.4],
+        ['بطاطس مقلية', 'French fries', 'فرنش فرايز', 'fast', 0, 312, 3.4, 41, 15, 3.8, 210, 579, 18, 0.8, 4.7, 0.3, 2.3, 0, 0, 0, 0, 28, 0.6]
     ];
+    // extras for the first rows: [sugar, sat fat, cholesterol, vitamin A mcg, vitamin D mcg, B12 mcg, magnesium, zinc] per 100 g, keyed by English name
+    const FOOD_EXTRA = {
+        'White rice': [0.1, 0.2, 0, 0, 0, 0, 25, 1.1], 'Brown rice': [0.9, 0.6, 0, 0, 0, 0, 143, 2], 'Pasta': [2.7, 0.3, 0, 0, 0, 0, 53, 1.4],
+        'Oats': [1, 1.2, 0, 0, 0, 0, 138, 4], 'Bulgur': [0.9, 0.2, 0, 0, 0, 0, 164, 1.9], 'Quinoa': [2.4, 0.7, 0, 1, 0, 0, 197, 3.1],
+        'Couscous': [0.8, 0.1, 0, 0, 0, 0, 44, 0.8], 'Potato': [0.8, 0, 0, 0, 0, 0, 23, 0.3], 'Sweet potato': [4.2, 0, 0, 709, 0, 0, 25, 0.3],
+        'White bread': [5, 0.7, 0, 0, 0, 0, 25, 0.7], 'Whole wheat bread': [5, 0.8, 0, 0, 0, 0, 75, 1.8], 'Pita bread': [1.3, 0.2, 0, 0, 0, 0, 26, 0.9],
+        'Sweet corn': [6.3, 0.2, 0, 9, 0, 0, 37, 0.5], 'Lentils': [2, 0.2, 0, 2, 0, 0, 47, 3.3], 'Chickpeas': [10, 0.6, 0, 3, 0, 0, 115, 2.9],
+        'Kidney beans': [2.2, 0.1, 0, 0, 0, 0, 140, 2.8], 'Fava beans': [5.7, 0.3, 0, 5, 0, 0, 192, 3], 'Falafel': [1.2, 2.4, 0, 3, 0, 0, 82, 1.5],
+        'Hummus': [0.3, 1.4, 0, 0, 0, 0, 71, 1.8], 'Tofu': [0.6, 1.3, 0, 0, 0, 0, 58, 1.6],
+        'Chicken breast': [0, 0.6, 73, 5, 0.1, 0.2, 28, 0.7], 'Chicken thigh': [0, 1.1, 93, 16, 0.1, 0.3, 22, 1.9], 'Turkey breast': [0, 0.4, 45, 0, 0.1, 0.4, 28, 1.5],
+        'Lean ground beef 90%': [0, 4, 65, 0, 0.1, 2.4, 20, 4.8], 'Beef sirloin steak': [0, 2, 60, 0, 0.1, 1.2, 24, 4], 'Lean lamb': [0, 3.5, 75, 0, 0.1, 2, 21, 3.5],
+        'Beef liver': [0, 1.2, 275, 4968, 1.2, 59.3, 18, 4], 'Salmon': [0, 3.1, 55, 12, 11, 3.2, 27, 0.6], 'Fresh tuna': [0, 0.2, 38, 18, 1.7, 2.1, 50, 0.6],
+        'White fish (cod)': [0, 0.1, 43, 12, 0.9, 0.9, 32, 0.5], 'Shrimp': [0, 0.1, 161, 54, 0, 1.1, 39, 1.1], 'Canned tuna in water': [0, 0.2, 30, 16, 1.1, 2.5, 27, 0.9],
+        'Whole egg': [0.4, 3.1, 372, 160, 2, 0.9, 12, 1.3], 'Egg white': [0.7, 0, 0, 0, 0, 0.1, 11, 0],
+        'Whole milk': [5.1, 1.9, 10, 46, 1.1, 0.5, 10, 0.4], 'Low-fat milk': [5.2, 0.6, 4, 58, 1.2, 0.5, 11, 0.4], 'Greek yogurt (non-fat)': [3.2, 0.1, 5, 2, 0, 0.7, 11, 0.5],
+        'Plain yogurt (whole)': [4.7, 2.1, 13, 27, 0, 0.4, 12, 0.6], 'Labneh': [4, 8.5, 35, null, null, null, 10, 0.6], 'Cheddar cheese': [0.5, 18.9, 105, 265, 0.6, 1.1, 28, 3.1],
+        'Mozzarella': [1.1, 10.1, 64, 174, 0.4, 2.3, 24, 2.9], 'Cottage cheese': [2.7, 0.6, 4, 13, 0, 0.4, 9, 0.4], 'Feta cheese': [4.1, 15, 89, 125, 0.4, 1.7, 19, 2.9],
+        'Butter': [0.1, 51, 215, 684, 0, 0.2, 2, 0.1], 'Ghee': [0, 62, 256, 840, 0, 0, 0, 0], 'Olive oil': [0, 13.8, 0, 0, 0, 0, 0, 0],
+        'Peanut butter': [9, 10, 0, 0, 0, 0, 154, 2.5], 'Almonds': [4.4, 3.8, 0, 0, 0, 0, 270, 3.1], 'Walnuts': [2.6, 6.1, 0, 1, 0, 0, 158, 3.1],
+        'Cashews': [5.9, 7.8, 0, 0, 0, 0, 292, 5.8], 'Tahini': [0.5, 7.5, 0, 1, 0, 0, 95, 4.6], 'Avocado': [0.7, 2.1, 0, 7, 0, 0, 29, 0.6],
+        'Tomato': [2.6, 0, 0, 42, 0, 0, 11, 0.2], 'Cucumber': [1.7, 0, 0, 5, 0, 0, 13, 0.2], 'Lettuce': [0.8, 0, 0, 370, 0, 0, 13, 0.2],
+        'Carrot': [4.7, 0, 0, 835, 0, 0, 12, 0.2], 'Broccoli': [1.7, 0, 0, 31, 0, 0, 21, 0.4], 'Spinach': [0.4, 0.1, 0, 469, 0, 0, 79, 0.5],
+        'Onion': [4.2, 0, 0, 0, 0, 0, 10, 0.2], 'Red bell pepper': [4.2, 0.1, 0, 157, 0, 0, 12, 0.3], 'Zucchini': [2.5, 0.1, 0, 10, 0, 0, 18, 0.3],
+        'Eggplant': [3.5, 0, 0, 1, 0, 0, 14, 0.2], 'Cauliflower': [1.9, 0.1, 0, 0, 0, 0, 15, 0.3], 'Green beans': [3.3, 0.1, 0, 35, 0, 0, 25, 0.2],
+        'Green peas': [5.7, 0.1, 0, 38, 0, 0, 33, 1.2], 'Mushrooms': [2, 0.1, 0, 0, 0.2, 0, 9, 0.5], 'Cabbage': [3.2, 0, 0, 5, 0, 0, 12, 0.2], 'Okra': [1.5, 0, 0, 36, 0, 0, 57, 0.6],
+        'Banana': [12, 0.1, 0, 3, 0, 0, 27, 0.2], 'Apple': [10, 0, 0, 3, 0, 0, 5, 0], 'Orange': [9, 0, 0, 11, 0, 0, 10, 0.1], 'Grapes': [15.5, 0.1, 0, 3, 0, 0, 7, 0.1],
+        'Watermelon': [6.2, 0, 0, 28, 0, 0, 10, 0.1], 'Strawberry': [4.9, 0, 0, 1, 0, 0, 13, 0.1], 'Mango': [13.7, 0.1, 0, 54, 0, 0, 10, 0.1],
+        'Pomegranate': [13.7, 0.1, 0, 0, 0, 0, 12, 0.4], 'Dates': [66, 0, 0, 0, 0, 0, 54, 0.4], 'Raisins': [59, 0.1, 0, 0, 0, 0, 32, 0.2],
+        'Orange juice': [8.4, 0, 0, 10, 0, 0, 11, 0.1], 'Whey protein powder': [4, 3, 80, null, null, null, 100, 2], 'Honey': [82, 0, 0, 0, 0, 0, 2, 0.2], 'White sugar': [100, 0, 0, 0, 0, 0, 0, 0.1]
+    };
 
     let foodCustom = [];
     let foodAll = [];
@@ -2058,9 +2160,14 @@
     }
     function foodMake(arr, i) {
         const v = {};
-        FOOD_KEYS.forEach(function (k, j) { v[k] = arr[5 + j]; });
+        const ex = FOOD_EXTRA[arr[1]] || [];
+        FOOD_KEYS.forEach(function (k, j) {
+            let x = j < 10 ? arr[5 + j] : (arr.length > 15 ? arr[5 + j] : ex[j - 10]);
+            v[k] = (x === undefined || x === null) ? null : x;
+        });
         return { id: i, ar: arr[0], en: arr[1], al: arr[2], cat: arr[3], y: arr[4] || 0, v: v, hay: foodNorm(arr[0] + ' ' + arr[1] + ' ' + arr[2]) };
     }
+    function foodUnit(f) { return f && f.cat === 'drink' ? 'ml' : 'g'; }
     function foodLoadCustom() {
         try { const r = JSON.parse(localStorage.getItem('bfit_custom_foods') || '[]'); foodCustom = Array.isArray(r) ? r.filter(function (x) { return x && x.v && x.name; }) : []; } catch (e) { foodCustom = []; }
     }
@@ -2095,17 +2202,36 @@
         const y = food.y ? (yieldVal > 0 ? yieldVal : food.y) : 0;
         const rawG = (state === 'cooked' && y) ? grams / y : grams;
         const n = {};
-        FOOD_KEYS.forEach(function (k) { n[k] = food.v[k] * rawG / 100; });
+        FOOD_KEYS.forEach(function (k) { const x = food.v[k]; n[k] = (x === null || x === undefined) ? null : x * rawG / 100; });
         return { rawG: rawG, cookedG: y ? rawG * y : null, y: y, n: n };
     }
 
     function foodFmt(x, d) { return (Math.round(x * Math.pow(10, d || 0)) / Math.pow(10, d || 0)).toLocaleString('en-US'); }
 
-    function microChips(n) {
-        return FOOD_MICROS.map(function (m) {
-            const d = (m[0] === 'fe' || m[0] === 'fiber') ? 1 : 0;
-            return '<span class="micro-chip"><b>' + m[1] + ' | ' + m[2] + '</b> ' + foodFmt(n[m[0]], d) + ' ' + m[3] + '</span>';
-        }).join('');
+    function nlVal(n, unk, key, dec, unit) {
+        const x = n[key];
+        if (x === null || x === undefined) return '—';
+        return foodFmt(x, dec) + ' ' + unit + (unk && unk[key] ? '*' : '');
+    }
+    function nlRow(n, unk, r, serving) {
+        const x = n[r[0]];
+        const pct = (r[4] && x !== null && x !== undefined) ? Math.round(x / r[4] * 100) + '%' : '';
+        return '<div class="nl-row' + (r[5] ? ' sub' : '') + '"><span>' + (r[6] ? '<b>' : '') + '<bdi>' + r[1] + '</bdi>' + (r[6] ? '</b>' : '') + ' <bdi dir="ltr">' + nlVal(n, unk, r[0], r[7], r[3]) +
+            '</bdi> <em><bdi dir="rtl">' + r[2] + '</bdi></em></span><b class="nl-dv">' + pct + '</b></div>';
+    }
+    function nutritionLabel(n, serving, unk) {
+        const kc = (n.kcal === null || n.kcal === undefined) ? '—' : foodFmt(n.kcal);
+        let h = '<div class="nutri-label" dir="ltr"><div class="nl-title">Nutrition Facts <em>القيم الغذائية</em></div>' +
+            '<div class="nl-serving">' + serving + '</div><div class="nl-thick"></div>' +
+            '<div class="nl-cal"><span><small><bdi>Amount per serving</bdi> · <bdi dir="rtl">لكل حصة</bdi></small><b><bdi>Calories</bdi> <em><bdi dir="rtl">السعرات الحرارية</bdi></em></b></span><strong>' + kc + '</strong></div>' +
+            '<div class="nl-medium"></div><div class="nl-dvhead"><bdi>% Daily Value*</bdi> <em><bdi dir="rtl">القيمة اليومية*</bdi></em></div>';
+        LABEL_ROWS.forEach(function (r) { h += nlRow(n, unk, r); });
+        h += '<div class="nl-thick"></div>';
+        LABEL_MICROS.forEach(function (r) { h += nlRow(n, unk, r); });
+        h += '<div class="nl-medium"></div><p class="nl-foot">* The % Daily Value tells how much a nutrient contributes to a daily diet (2,000 kcal). — = not available.<br><bdi dir="rtl">النسبة من القيمة اليومية بناءً على 2000 سعرة. — = غير متوفر.</bdi>' +
+            (unk && Object.keys(unk).length ? '<br><bdi>* Partial total: some items lack this nutrient.</bdi> <bdi dir="rtl">* قيمة جزئية: بعض العناصر غير متوفرة.</bdi>' : '') +
+            '<br><bdi>Values are approximate.</bdi> <bdi dir="rtl">القيم تقريبية.</bdi></p></div>';
+        return h;
     }
 
     function renderFoodList() {
@@ -2131,7 +2257,8 @@
         document.getElementById('foodList').hidden = true;
         document.getElementById('foodSearch').value = f.ar;
         const c = FOOD_CATS[f.cat] || FOOD_CATS.other;
-        const per = f.y ? 'لكل 100 جم خام | per 100 g raw' : 'لكل 100 جم | per 100 g';
+        const u = foodUnit(f), uAr = u === 'ml' ? 'مل' : 'جم';
+        const per = f.y ? 'لكل 100 جم خام | per 100 g raw' : 'لكل 100 ' + uAr + ' | per 100 ' + u;
         let h = '<div class="food-pick-card">' +
             '<div class="food-pick-head"><strong>' + foodEsc(f.ar) + (f.en !== f.ar ? ' | ' + foodEsc(f.en) : '') + '</strong><span class="food-tag">' + c[0] + ' | ' + c[1] + '</span></div>' +
             '<p class="calc-note" style="margin:0 0 10px">' + per + ': ' + foodFmt(f.v.kcal) + ' kcal • P ' + foodFmt(f.v.p, 1) + ' • C ' + foodFmt(f.v.c, 1) + ' • F ' + foodFmt(f.v.f, 1) + '</p>' +
@@ -2140,11 +2267,11 @@
             h += '<div class="input-box"><label>حالة الوزن المُدخل <span class="en">Weight state</span></label>' +
                 '<div class="seg" role="group"><button type="button" class="on" data-state="raw" aria-pressed="true">خام | Raw</button><button type="button" data-state="cooked" aria-pressed="false">مطبوخ | Cooked</button></div></div>';
         }
-        h += '<div class="input-box"><label>الكمية (جم) <span class="en">Amount (g)</span></label><input type="number" id="foodGrams" step="any" inputmode="decimal" placeholder="مثال: 150" value="100"></div>';
+        h += '<div class="input-box"><label>الكمية (' + uAr + ') <span class="en">Amount (' + u + ')</span></label><input type="number" id="foodGrams" step="any" inputmode="decimal" placeholder="مثال: 150" value="100"></div>';
         if (f.y) {
             h += '<div class="input-box"><label>معامل الطبخ (وزن مطبوخ ÷ خام) <span class="en">Yield (cooked ÷ raw)</span></label><input type="number" id="foodYield" step="any" inputmode="decimal" value="' + f.y + '"></div>';
         }
-        h += '</div><div id="foodPreview"></div>' +
+        h += '</div>' + (u === 'ml' ? '<div class="qty-chips">' + [150, 250, 330, 500, 1000].map(function (q) { return '<button type="button" data-q="' + q + '">' + q + ' ml</button>'; }).join('') + '</div>' : '') + '<div id="foodPreview"></div>' +
             '<button type="button" class="btn-soft" id="foodAddBtn"><i class="fa-solid fa-plus"></i> إضافة إلى الوجبة | Add to meal</button></div>';
         document.getElementById('foodPick').innerHTML = h;
         updateFoodPreview();
@@ -2171,8 +2298,10 @@
             '<div class="calc-card"><div class="label">بروتين | Protein</div><div class="value mp">' + foodFmt(c.n.p, 1) + '<span> g</span></div></div>' +
             '<div class="calc-card"><div class="label">كارب | Carbs</div><div class="value mc">' + foodFmt(c.n.c, 1) + '<span> g</span></div></div>' +
             '<div class="calc-card"><div class="label">دهون | Fat</div><div class="value mf">' + foodFmt(c.n.f, 1) + '<span> g</span></div></div></div>';
-        if (c.y) h += '<p class="calc-note conv">' + foodFmt(c.rawG, 1) + ' جم خام ≈ ' + foodFmt(c.cookedG, 1) + ' جم مطبوخ | ' + foodFmt(c.rawG, 1) + ' g raw ≈ ' + foodFmt(c.cookedG, 1) + ' g cooked</p>';
-        h += '<div class="micro-row">' + microChips(c.n) + '</div>';
+        if (c.y) h += '<p class="calc-note conv"><bdi dir="rtl">' + foodFmt(c.rawG, 1) + ' جم خام ≈ ' + foodFmt(c.cookedG, 1) + ' جم مطبوخ</bdi> | <bdi dir="ltr">' + foodFmt(c.rawG, 1) + ' g raw ≈ ' + foodFmt(c.cookedG, 1) + ' g cooked</bdi></p>';
+        const u = foodUnit(foodSel);
+        const serv = '<b><bdi>Serving size</bdi> · <bdi dir="rtl">حجم الحصة</bdi></b> <bdi dir="ltr">' + foodFmt(r.g, 1) + ' ' + u + (c.y ? ' (' + (foodState === 'cooked' ? foodFmt(c.rawG, 1) + ' g raw' : foodFmt(c.cookedG, 1) + ' g cooked') + ')' : '') + '</bdi> — <bdi>' + foodEsc(foodSel.en) + '</bdi>';
+        h += nutritionLabel(c.n, serv, null);
         box.innerHTML = h;
     }
 
@@ -2182,9 +2311,14 @@
     }
 
     function mealTotals() {
-        const t = {};
-        FOOD_KEYS.forEach(function (k) { t[k] = 0; });
-        mealItems.forEach(function (it) { FOOD_KEYS.forEach(function (k) { t[k] += it.n[k]; }); });
+        const t = {}, unk = {};
+        FOOD_KEYS.forEach(function (k) {
+            let sum = 0, known = 0;
+            mealItems.forEach(function (it) { const x = it.n[k]; if (x !== null && x !== undefined) { sum += x; known++; } });
+            t[k] = known ? sum : null;
+            if (known && known < mealItems.length) unk[k] = true;
+        });
+        Object.defineProperty(t, '_unk', { value: unk, enumerable: false });
         return t;
     }
 
@@ -2209,7 +2343,9 @@
                 (editable ? '<td><button type="button" class="meal-del" data-i="' + i + '" aria-label="حذف | remove">×</button></td>' : '') + '</tr>';
         });
         h += '</tbody><tfoot><tr><td colspan="2">المجموع | Total</td><td dir="ltr">' + foodFmt(t.kcal) + '</td><td dir="ltr">' + foodFmt(t.p, 1) + '</td><td dir="ltr">' + foodFmt(t.c, 1) + '</td><td dir="ltr">' + foodFmt(t.f, 1) + '</td>' + (editable ? '<td></td>' : '') + '</tr></tfoot></table></div>';
-        h += '<div class="micro-row">' + microChips(t) + '</div>';
+        let totalG = 0;
+        mealItems.forEach(function (it) { totalG += it.g || 0; });
+        h += nutritionLabel(t, '<b><bdi>Total meal</bdi> · <bdi dir="rtl">إجمالي الوجبة</bdi></b> <bdi dir="ltr">' + mealItems.length + ' items, ' + foodFmt(totalG, 0) + ' g/ml</bdi>', t._unk);
         if (editable) h += mealPlanHTML(t) + '<button type="button" class="btn-soft ghost" id="mealClear"><i class="fa-solid fa-trash"></i> تفريغ الوجبة | Clear meal</button>';
         return h;
     }
@@ -2222,9 +2358,9 @@
     function foodBuildCustomForm() {
         const fields = [['cfName', 'اسم الطعام', 'Food name', 'text', 'مثال: وجبة الشركة'], ['cfKcal', 'السعرات / 100 جم', 'Calories / 100 g', 'number', 'اتركه فارغاً للحساب التلقائي'],
             ['cfP', 'بروتين (جم)', 'Protein (g)', 'number', '0'], ['cfC', 'كارب (جم)', 'Carbs (g)', 'number', '0'], ['cfF', 'دهون (جم)', 'Fat (g)', 'number', '0']];
-        FOOD_MICROS.forEach(function (m) { fields.push(['cf_' + m[0], m[1] + ' (' + m[3] + ')', m[2] + ' (' + m[3] + ')', 'number', '0']); });
+        FOOD_MICROS.forEach(function (m) { fields.push(['cf_' + m[0], m[1] + ' (' + m[3] + ')', m[2] + ' (' + m[3] + ')', 'number', 'اختياري']); });
         fields.push(['cfYield', 'معامل الطبخ (اختياري)', 'Yield cooked ÷ raw (optional)', 'number', 'مثال: 2.8'], ['cfGrams', 'الكمية (جم)', 'Amount (g)', 'number', '100']);
-        let h = '<p class="calc-note" style="margin-top:0">أدخل القيم لكل 100 جم من الطعام (وهو نيء إن حددت معامل طبخ). | Enter values per 100 g (raw if you set a yield).</p><div class="form-grid-4">';
+        let h = '<p class="calc-note" style="margin-top:0">أدخل القيم لكل 100 جم/مل (نيء إن حددت معامل طبخ). الحقول الفارغة تظهر «—» في الملصق. | Enter values per 100 g/ml (raw if you set a yield). Blank fields show “—”.</p><div class="form-grid-4">';
         fields.forEach(function (f) {
             h += '<div class="input-box"><label>' + f[1] + ' <span class="en">' + f[2] + '</span></label><input type="' + f[3] + '" id="' + f[0] + '"' + (f[3] === 'number' ? ' step="any" inputmode="decimal"' : ' maxlength="60"') + ' placeholder="' + f[4] + '"' + (f[0] === 'cfGrams' ? ' value="100"' : '') + '></div>';
         });
@@ -2236,12 +2372,13 @@
     function foodAddCustom() {
         const msg = document.getElementById('cfMsg');
         const val = function (id) { const x = parseFloat(document.getElementById(id).value); return Number.isFinite(x) && x >= 0 ? x : 0; };
+        const valOpt = function (id) { const x = parseFloat(document.getElementById(id).value); return Number.isFinite(x) && x >= 0 ? x : null; };
         const name = document.getElementById('cfName').value.trim();
         const grams = parseFloat(document.getElementById('cfGrams').value);
         if (!name) { msg.textContent = 'أدخل اسم الطعام. | Enter a food name.'; return; }
         if (!(grams > 0 && grams <= 5000)) { msg.textContent = 'أدخل كمية صحيحة (1–5000 جم). | Enter a valid amount.'; return; }
         const v = { p: val('cfP'), c: val('cfC'), f: val('cfF') };
-        FOOD_MICROS.forEach(function (m) { v[m[0]] = val('cf_' + m[0]); });
+        FOOD_MICROS.forEach(function (m) { v[m[0]] = valOpt('cf_' + m[0]); });
         const kIn = parseFloat(document.getElementById('cfKcal').value);
         v.kcal = Number.isFinite(kIn) && kIn >= 0 ? kIn : v.p * 4 + v.c * 4 + v.f * 9;
         if (v.kcal > 900 || v.p + v.c + v.f > 100.5) { msg.textContent = 'القيم غير منطقية لكل 100 جم (الماكروز ≤ 100 جم، السعرات ≤ 900). | Values look wrong for 100 g.'; return; }
@@ -2249,7 +2386,7 @@
         const y = yRaw >= 0.2 && yRaw <= 6 ? yRaw : 0;
         const food = { id: -1, ar: name, en: name, al: '', cat: 'custom', y: y, v: v };
         const c = foodCalc(food, 'raw', grams, y);
-        foodAddItem({ name: name, amount: foodFmt(grams, 1) + ' g', n: c.n });
+        foodAddItem({ name: name, amount: foodFmt(grams, 1) + ' g', g: grams, n: c.n });
         if (document.getElementById('cfSave').checked) {
             foodCustom.push({ name: name, y: y, v: v });
             foodSaveCustom(); foodRebuild();
@@ -2278,6 +2415,8 @@
         pick.addEventListener('input', updateFoodPreview);
         pick.addEventListener('keydown', function (e) { if (e.key === 'Enter') e.preventDefault(); });
         pick.addEventListener('click', function (e) {
+            const qc = e.target.closest('.qty-chips button');
+            if (qc) { document.getElementById('foodGrams').value = qc.getAttribute('data-q'); updateFoodPreview(); return; }
             const seg = e.target.closest('.seg button');
             if (seg) {
                 foodState = seg.getAttribute('data-state');
@@ -2289,7 +2428,7 @@
                 if (!(r.g > 0 && r.g <= 5000) || !r.yOk) { updateFoodPreview(); return; }
                 const c = foodCalc(foodSel, foodState, r.g, r.y);
                 const st = foodSel.y ? (foodState === 'cooked' ? ' (مطبوخ | cooked)' : ' (خام | raw)') : '';
-                foodAddItem({ name: foodSel.ar + st, amount: foodFmt(r.g, 1) + ' g', n: c.n });
+                foodAddItem({ name: foodSel.ar + st, amount: foodFmt(r.g, 1) + ' ' + foodUnit(foodSel), g: r.g, n: c.n });
             }
         });
 
