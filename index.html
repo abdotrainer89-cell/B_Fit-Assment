@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#f6eef3">
     <title>B_FIT ASSESSMENT | Professional Evaluation</title>
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23f4788a'/%3E%3Cstop offset='1' stop-color='%23d9506a'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='14' fill='url(%23g)'/%3E%3Ctext x='32' y='40' font-family='Arial Black,Arial' font-weight='900' font-size='34' text-anchor='middle' fill='white'%3EB%3C/text%3E%3Ctext x='32' y='56' font-family='Arial' font-weight='700' font-size='14' text-anchor='middle' fill='white'%3E_FIT%3C/text%3E%3C/svg%3E">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -13,18 +14,21 @@
 
     <style>
         :root {
-            --bg-main: #0b0f19;
-            --card-bg: #131b2e;
-            --card-inner: #1e293b;
+            --bg-main: #f3f0f8;
+            --card-bg: rgba(255, 255, 255, 0.55);
+            --card-inner: rgba(255, 255, 255, 0.5);
             --primary-orange: #e8657b;
             --primary-orange-hover: #c9475f;
-            --text-white: #ffffff;
-            --text-muted: #94a3b8;
-            --border-color: #334155;
+            --text-white: #1d2433;
+            --text-muted: #5f6b85;
+            --border-color: rgba(140, 152, 185, 0.38);
+            --ink: #1d2433;
+            --rose-text: #c2415a;
             --success-green: #10b981;
             --warning-red: #ef4444;
             --accent-gender: #38bdf8;
         }
+        :root { color-scheme: light; }
 
         * {
             box-sizing: border-box;
@@ -420,6 +424,196 @@
         .input-box input.field-ok { border-color: var(--success-green); box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15); }
         .input-box input.field-check { border-color: #f59e0b; box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.2); }
 
+
+        /* ===== Light glass (frosted crystal) theme ===== */
+        body {
+            background-color: #f6f1f7;
+            background-image: linear-gradient(135deg, #fdf1f4 0%, #eef3fc 48%, #f4eefc 100%);
+            position: relative;
+            isolation: isolate;
+            overflow-x: hidden;
+        }
+        body::before {
+            content: "";
+            position: fixed;
+            inset: -10%;
+            z-index: -1;
+            pointer-events: none;
+            background:
+                radial-gradient(38% 34% at 12% 14%, rgba(255, 150, 172, 0.55), transparent 70%),
+                radial-gradient(34% 30% at 88% 10%, rgba(150, 205, 255, 0.55), transparent 70%),
+                radial-gradient(40% 36% at 82% 86%, rgba(200, 180, 255, 0.50), transparent 70%),
+                radial-gradient(36% 32% at 10% 88%, rgba(255, 205, 170, 0.50), transparent 70%);
+            filter: blur(30px);
+            animation: glassDrift 32s ease-in-out infinite alternate;
+        }
+        @keyframes glassDrift {
+            from { transform: translate3d(-1.5%, -1%, 0) scale(1); }
+            to   { transform: translate3d(1.5%, 1.2%, 0) scale(1.06); }
+        }
+        @media (prefers-reduced-motion: reduce) { body::before { animation: none; } }
+
+        .assessment-container {
+            position: relative;
+            isolation: isolate;
+            background: rgba(255, 255, 255, 0.52);
+            -webkit-backdrop-filter: blur(30px) saturate(180%);
+            backdrop-filter: blur(30px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.75);
+            border-radius: 30px;
+            box-shadow: 0 30px 80px rgba(112, 96, 150, 0.22), 0 2px 6px rgba(112, 96, 150, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.95), inset 0 -1px 0 rgba(255, 255, 255, 0.4);
+        }
+        .assessment-container::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            z-index: -1;
+            border-radius: inherit;
+            pointer-events: none;
+            background: linear-gradient(118deg, rgba(255, 255, 255, 0.60) 0%, rgba(255, 255, 255, 0) 32%, rgba(255, 255, 255, 0) 68%, rgba(255, 255, 255, 0.30) 100%);
+        }
+
+        .brand-header { border-bottom: 3px solid rgba(232, 101, 123, 0.55); }
+        .brand-logo-icon { box-shadow: 0 8px 20px rgba(217, 80, 106, 0.30), inset 0 1px 1px rgba(255, 255, 255, 0.55), inset 0 -2px 4px rgba(150, 30, 55, 0.18); }
+        .brand-titles h1 { color: var(--ink); }
+        .brand-titles p { color: var(--rose-text); }
+
+        .section-header, .health-question-row, .exercise-card, .score-metric-card {
+            background: rgba(255, 255, 255, 0.50);
+            -webkit-backdrop-filter: blur(18px) saturate(160%);
+            backdrop-filter: blur(18px) saturate(160%);
+            border: 1px solid rgba(255, 255, 255, 0.80);
+            box-shadow: 0 8px 24px rgba(112, 96, 150, 0.10), inset 0 1px 0 rgba(255, 255, 255, 0.95);
+        }
+        .section-header { border-right: 6px solid var(--primary-orange); }
+        .section-header h2, .q-ar, .exercise-details h4 { color: var(--ink); }
+        .q-en, .exercise-details p.sub-en { color: var(--text-muted); }
+
+        .input-box label, .upload-title { color: #2a3350; }
+        .input-box input, .input-box select {
+            background: rgba(255, 255, 255, 0.68);
+            border: 1.5px solid rgba(140, 152, 185, 0.45);
+            color: var(--ink);
+            box-shadow: inset 0 1px 2px rgba(112, 96, 150, 0.08);
+        }
+        .input-box input::placeholder { color: rgba(95, 107, 133, 0.65); }
+        .input-box input:focus, .input-box select:focus {
+            background: rgba(255, 255, 255, 0.92);
+            border-color: var(--primary-orange);
+            box-shadow: 0 0 0 4px rgba(232, 101, 123, 0.18);
+        }
+        .input-box input.field-ok { border-color: #10b981; box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.18); }
+        .input-box input.field-check { border-color: #f59e0b; box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.22); }
+
+        .radio-btn-group { background: rgba(255, 255, 255, 0.60); box-shadow: inset 0 1px 2px rgba(112, 96, 150, 0.12); }
+        .radio-btn-group label { color: var(--text-muted); }
+
+        .exercise-avatar-box {
+            background: linear-gradient(160deg, rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.45));
+            -webkit-backdrop-filter: blur(14px);
+            backdrop-filter: blur(14px);
+            border: 2px solid var(--accent-gender);
+            box-shadow: 0 10px 24px rgba(112, 96, 150, 0.16), inset 0 1px 0 #fff;
+        }
+        .avatar-cap { color: #475569; }
+        .exercise-avatar-box .gender-badge { color: #0f172a; }
+        .exercise-details h4 span.target-tag {
+            background: rgba(232, 101, 123, 0.13);
+            color: var(--rose-text);
+            border: 1px solid rgba(232, 101, 123, 0.35);
+        }
+
+        .btn-submit {
+            background: linear-gradient(135deg, #f4788a, #d9506a);
+            box-shadow: 0 12px 28px rgba(217, 80, 106, 0.30), inset 0 1px 0 rgba(255, 255, 255, 0.5), inset 0 -2px 6px rgba(150, 30, 55, 0.18);
+        }
+        .btn-submit:hover { box-shadow: 0 16px 34px rgba(217, 80, 106, 0.38), inset 0 1px 0 rgba(255, 255, 255, 0.55); }
+
+        .input-box label.upload-zone {
+            background: rgba(255, 255, 255, 0.50);
+            border: 2px dashed rgba(232, 101, 123, 0.65);
+            color: var(--ink);
+        }
+        .input-box label.upload-zone:hover, .input-box label.upload-zone.drag { background: rgba(232, 101, 123, 0.10); }
+        .upload-icon { box-shadow: 0 6px 14px rgba(217, 80, 106, 0.28), inset 0 1px 1px rgba(255, 255, 255, 0.5); }
+        .upload-thumb { border: 2px solid rgba(255, 255, 255, 0.9); box-shadow: 0 4px 10px rgba(112, 96, 150, 0.2); }
+        .ocr-progress { background: rgba(255, 255, 255, 0.6); box-shadow: inset 0 1px 2px rgba(112, 96, 150, 0.15); }
+
+        .result-container { border-top: 2px dashed rgba(140, 152, 185, 0.5); }
+        .result-card {
+            background: rgba(255, 255, 255, 0.58);
+            -webkit-backdrop-filter: blur(22px) saturate(170%);
+            backdrop-filter: blur(22px) saturate(170%);
+            color: var(--ink);
+            border: 1px solid rgba(232, 101, 123, 0.45);
+            box-shadow: 0 18px 44px rgba(112, 96, 150, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.95);
+        }
+        .score-metric-card .label { color: var(--text-muted); }
+        .score-metric-card .value { color: var(--ink); }
+        .score-metric-card .value span { color: var(--rose-text); }
+        .bio-younger { background: rgba(16, 185, 129, 0.14); color: #047857; border: 1px solid rgba(16, 185, 129, 0.6); }
+        .bio-older { background: rgba(239, 68, 68, 0.12); color: #b91c1c; border: 1px solid rgba(239, 68, 68, 0.55); }
+        .bio-equal { background: rgba(245, 158, 11, 0.16); color: #92400e; border: 1px solid rgba(245, 158, 11, 0.6); }
+        .report-summary-text {
+            background: rgba(255, 255, 255, 0.55);
+            color: #334155;
+            border-right: 4px solid var(--primary-orange);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9);
+        }
+
+        @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+            .assessment-container { background: rgba(255, 255, 255, 0.88); }
+            .section-header, .health-question-row, .exercise-card, .score-metric-card, .result-card { background: rgba(255, 255, 255, 0.82); }
+        }
+
+
+        /* ===== Nutrition + Karvonen panels ===== */
+        .calc-panel {
+            padding: 20px;
+            border-radius: 18px;
+            background: rgba(255, 255, 255, 0.50);
+            -webkit-backdrop-filter: blur(18px) saturate(160%);
+            backdrop-filter: blur(18px) saturate(160%);
+            border: 1px solid rgba(255, 255, 255, 0.80);
+            box-shadow: 0 8px 24px rgba(112, 96, 150, 0.10), inset 0 1px 0 rgba(255, 255, 255, 0.95);
+        }
+        .calc-panel .form-grid-4 { margin-bottom: 16px; }
+        .calc-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin: 6px 0 14px; }
+        .calc-card {
+            padding: 14px 16px; border-radius: 14px; text-align: center;
+            background: rgba(255, 255, 255, 0.62);
+            border: 1px solid rgba(255, 255, 255, 0.85);
+            box-shadow: 0 4px 14px rgba(112, 96, 150, 0.08), inset 0 1px 0 #fff;
+        }
+        .calc-card.main { border-color: rgba(232, 101, 123, 0.45); background: rgba(255, 240, 243, 0.7); }
+        .calc-card .label { font-size: 12px; color: var(--text-muted); margin-bottom: 4px; font-weight: 700; }
+        .calc-card .value { font-size: 28px; font-weight: 900; color: var(--ink); line-height: 1.15; direction: ltr; font-family: 'Montserrat', 'Tajawal', sans-serif; }
+        .calc-card .value span { font-size: 13px; font-weight: 700; color: var(--text-muted); }
+        .calc-card .value.mp { color: #c2415a; }
+        .calc-card .value.mc { color: #2b7fc4; }
+        .calc-card .value.mf { color: #b7791f; }
+        .calc-card .sub { font-size: 12px; color: var(--text-muted); margin-top: 3px; direction: ltr; }
+        .macro-bar { display: flex; height: 14px; border-radius: 10px; overflow: hidden; background: rgba(255, 255, 255, 0.6); box-shadow: inset 0 1px 3px rgba(112, 96, 150, 0.2); direction: ltr; }
+        .macro-bar i { display: block; height: 100%; }
+        .macro-bar i.mp { background: linear-gradient(135deg, #f4788a, #d9506a); }
+        .macro-bar i.mc { background: linear-gradient(135deg, #7cc0f5, #4a9be0); }
+        .macro-bar i.mf { background: linear-gradient(135deg, #f7c97e, #eba43f); }
+        .calc-note { font-size: 12.5px; line-height: 1.8; color: var(--text-muted); margin-top: 10px; }
+        .zone-table { display: flex; flex-direction: column; gap: 8px; }
+        .zone-row {
+            display: grid; grid-template-columns: 90px 1fr 130px; align-items: center; gap: 10px;
+            padding: 10px 14px; border-radius: 12px; font-size: 14px; color: var(--ink);
+            background: rgba(255, 255, 255, 0.55); border: 1px solid rgba(255, 255, 255, 0.85);
+        }
+        .zone-row.active { background: rgba(255, 233, 238, 0.85); border-color: rgba(232, 101, 123, 0.55); box-shadow: 0 0 0 3px rgba(232, 101, 123, 0.12); }
+        .zone-row .zr-pct { font-weight: 900; font-family: 'Montserrat', sans-serif; direction: ltr; text-align: left; color: var(--rose-text); }
+        .zone-row .zr-name { font-weight: 700; }
+        .zone-row .zr-bpm { font-weight: 900; direction: ltr; text-align: right; font-family: 'Montserrat', sans-serif; }
+        .zone-row .zr-bpm small { font-weight: 600; color: var(--text-muted); }
+        .report-extra { margin-top: 22px; padding: 18px; border-radius: 16px; text-align: right; background: rgba(255, 255, 255, 0.5); border: 1px solid rgba(255, 255, 255, 0.85); }
+        .report-extra h4 { font-size: 16px; font-weight: 900; color: var(--ink); margin-bottom: 10px; display: flex; align-items: center; gap: 10px; }
+        #reportExtras .calc-note { text-align: right; }
+
         @media (max-width: 768px) {
             .assessment-container { padding: 22px 16px; }
             .brand-titles h1 { font-size: 20px; }
@@ -430,6 +624,151 @@
             .exercise-avatar-box { width: 100%; max-width: 280px; min-height: 0; margin: 0 auto; }
             .health-question-row { grid-template-columns: 1fr; text-align: center; }
             .q-ar, .q-en { text-align: center; }
+            .zone-row { grid-template-columns: 70px 1fr; }
+            .zone-row .zr-bpm { grid-column: 1 / -1; text-align: left; }
+        }
+
+        /* ===== B_FIT RGB light theme ===== */
+        @property --bf-a { syntax: "<angle>"; inherits: false; initial-value: 0deg; }
+        :root {
+            --rgb-r: #ff6b9d;
+            --rgb-v: #9b7bff;
+            --rgb-b: #4cb8ff;
+            --rgb-g: #3ddcb0;
+            --rgb-strip: linear-gradient(90deg, #ff6b9d, #9b7bff, #4cb8ff, #3ddcb0, #ff6b9d);
+            --rgb-strip-v: linear-gradient(180deg, #ff6b9d, #9b7bff, #4cb8ff);
+            --rgb-glow: 0 0 0 4px rgba(155, 123, 255, 0.16), 0 0 22px rgba(255, 107, 157, 0.20), 0 0 26px rgba(76, 184, 255, 0.20);
+            --rose-text: #b8336a;
+        }
+        @keyframes bfFlow { from { background-position: 0% 50%; } to { background-position: 300% 50%; } }
+        @keyframes bfSpin { to { --bf-a: 360deg; } }
+
+        body { background-image: linear-gradient(135deg, #fff1f7 0%, #eef4ff 45%, #f1efff 100%); }
+        body::before {
+            background:
+                radial-gradient(38% 34% at 10% 12%, rgba(255, 107, 157, 0.50), transparent 70%),
+                radial-gradient(34% 30% at 90% 10%, rgba(76, 184, 255, 0.50), transparent 70%),
+                radial-gradient(40% 36% at 84% 88%, rgba(155, 123, 255, 0.46), transparent 70%),
+                radial-gradient(34% 30% at 8% 90%, rgba(61, 220, 176, 0.38), transparent 70%);
+        }
+        body::after {
+            content: "";
+            position: fixed; top: 0; left: 0; right: 0; height: 3px; z-index: 50; pointer-events: none;
+            background: var(--rgb-strip); background-size: 300% 100%;
+            box-shadow: 0 0 14px rgba(155, 123, 255, 0.55), 0 0 28px rgba(255, 107, 157, 0.35);
+            animation: bfFlow 14s linear infinite;
+        }
+
+        .assessment-container {
+            box-shadow: 0 30px 80px rgba(110, 90, 180, 0.22), 0 0 70px rgba(155, 123, 255, 0.16), 0 0 90px rgba(76, 184, 255, 0.10), inset 0 1px 0 rgba(255, 255, 255, 0.95), inset 0 -1px 0 rgba(255, 255, 255, 0.4);
+        }
+        .assessment-container::after {
+            content: "";
+            position: absolute; inset: 0; z-index: 0; border-radius: inherit; padding: 1.5px; pointer-events: none;
+            background: conic-gradient(from var(--bf-a), #ff6b9d, #9b7bff, #4cb8ff, #3ddcb0, #4cb8ff, #9b7bff, #ff6b9d);
+            -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+            -webkit-mask-composite: xor;
+            mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+            opacity: 0.75;
+            animation: bfSpin 18s linear infinite;
+        }
+
+        .brand-header { border-bottom: 0; position: relative; }
+        .brand-header::after {
+            content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 3px; border-radius: 3px;
+            background: var(--rgb-strip); background-size: 300% 100%;
+            box-shadow: 0 0 12px rgba(155, 123, 255, 0.45), 0 0 18px rgba(255, 107, 157, 0.30);
+            animation: bfFlow 16s linear infinite;
+        }
+        .brand-titles p {
+            background: linear-gradient(90deg, #e0457f, #8a63f0, #2f9be8);
+            -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent;
+        }
+
+        .section-header { position: relative; overflow: hidden; border-right: 1px solid rgba(255, 255, 255, 0.80); }
+        .section-header::after {
+            content: ""; position: absolute; top: 0; bottom: 0; right: 0; width: 6px;
+            background: var(--rgb-strip-v); box-shadow: 0 0 14px rgba(155, 123, 255, 0.6);
+        }
+
+        .section-header, .health-question-row, .exercise-card, .score-metric-card, .calc-panel, .calc-card, .zone-row, .report-extra {
+            box-shadow: 0 8px 24px rgba(110, 90, 180, 0.10), 0 0 0 1px rgba(155, 123, 255, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.95);
+        }
+        .exercise-card, .health-question-row, .calc-card { transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease; }
+        .exercise-card:hover, .health-question-row:hover {
+            transform: translateY(-2px);
+            border-color: rgba(155, 123, 255, 0.55);
+            box-shadow: 0 14px 32px rgba(110, 90, 180, 0.16), 0 0 26px rgba(155, 123, 255, 0.20), 0 0 30px rgba(76, 184, 255, 0.14), inset 0 1px 0 #fff;
+        }
+        .calc-card:hover { transform: translateY(-2px); box-shadow: 0 10px 24px rgba(110, 90, 180, 0.16), 0 0 20px rgba(76, 184, 255, 0.20), inset 0 1px 0 #fff; }
+
+        .input-box input:hover, .input-box select:hover { border-color: rgba(155, 123, 255, 0.55); }
+        .input-box input:focus, .input-box select:focus {
+            border-color: #9b7bff;
+            box-shadow: 0 0 0 4px rgba(155, 123, 255, 0.18), 0 0 20px rgba(255, 107, 157, 0.20), 0 0 22px rgba(76, 184, 255, 0.22);
+        }
+        .ocr-status { color: #7a56e0; }
+
+        .radio-btn-group input[type="radio"]:checked + label.yes-label { background: linear-gradient(135deg, #ff7aa6, #ef4f86); box-shadow: 0 4px 12px rgba(255, 107, 157, 0.45); }
+        .radio-btn-group input[type="radio"]:checked + label.no-label { background: linear-gradient(135deg, #4fe0b8, #20b98f); box-shadow: 0 4px 12px rgba(61, 220, 176, 0.45); }
+
+        .exercise-avatar-box { box-shadow: 0 10px 24px rgba(110, 90, 180, 0.16), 0 0 22px color-mix(in srgb, var(--accent-gender) 38%, transparent), inset 0 1px 0 #fff; }
+        .exercise-details h4 span.target-tag {
+            background: linear-gradient(135deg, rgba(255, 107, 157, 0.14), rgba(155, 123, 255, 0.14), rgba(76, 184, 255, 0.14));
+            color: #7a3fc4; border: 1px solid rgba(155, 123, 255, 0.40);
+        }
+
+        .btn-submit {
+            background: linear-gradient(110deg, #ff6b9d, #9b7bff, #4cb8ff, #9b7bff, #ff6b9d);
+            background-size: 300% 100%;
+            animation: bfFlow 10s linear infinite;
+            text-shadow: 0 1px 2px rgba(60, 30, 120, 0.30);
+            box-shadow: 0 12px 28px rgba(155, 123, 255, 0.34), 0 0 30px rgba(255, 107, 157, 0.26), 0 0 34px rgba(76, 184, 255, 0.24), inset 0 1px 0 rgba(255, 255, 255, 0.55), inset 0 -2px 6px rgba(70, 40, 140, 0.18);
+        }
+        .btn-submit:hover { box-shadow: 0 16px 36px rgba(155, 123, 255, 0.42), 0 0 40px rgba(255, 107, 157, 0.34), 0 0 44px rgba(76, 184, 255, 0.32), inset 0 1px 0 rgba(255, 255, 255, 0.6); }
+        .btn-submit:active { transform: translateY(0) scale(0.995); }
+
+        .input-box label.upload-zone { border: 2px dashed rgba(155, 123, 255, 0.65); background: linear-gradient(135deg, rgba(255, 107, 157, 0.06), rgba(155, 123, 255, 0.06), rgba(76, 184, 255, 0.08)); }
+        .input-box label.upload-zone:hover, .input-box label.upload-zone.drag { background: linear-gradient(135deg, rgba(255, 107, 157, 0.12), rgba(155, 123, 255, 0.12), rgba(76, 184, 255, 0.14)); box-shadow: 0 0 26px rgba(155, 123, 255, 0.25); }
+        .sr-file:focus-visible + label.upload-zone { box-shadow: 0 0 0 4px rgba(155, 123, 255, 0.30); }
+        .upload-icon { background: linear-gradient(135deg, #ff6b9d, #9b7bff 60%, #4cb8ff); box-shadow: 0 6px 16px rgba(155, 123, 255, 0.40), 0 0 18px rgba(255, 107, 157, 0.28), inset 0 1px 1px rgba(255, 255, 255, 0.5); }
+        .ocr-progress > div { background: linear-gradient(90deg, #ff6b9d, #9b7bff, #4cb8ff); box-shadow: 0 0 10px rgba(155, 123, 255, 0.6); }
+        .input-box input.field-ok { border-color: #3ddcb0; box-shadow: 0 0 0 3px rgba(61, 220, 176, 0.20), 0 0 14px rgba(61, 220, 176, 0.25); }
+
+        .result-container { border-top: 0; position: relative; }
+        .result-container::before {
+            content: ""; position: absolute; top: 0; left: 0; right: 0; height: 2px; border-radius: 2px; opacity: 0.8;
+            background: var(--rgb-strip); background-size: 300% 100%; animation: bfFlow 16s linear infinite;
+        }
+        .result-card { border: 1px solid rgba(155, 123, 255, 0.45); box-shadow: 0 18px 44px rgba(110, 90, 180, 0.18), 0 0 44px rgba(155, 123, 255, 0.16), 0 0 50px rgba(76, 184, 255, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.95); }
+        .score-metric-card .value span { color: #7a56e0; }
+        .report-summary-text { border-right: 4px solid transparent; border-image: var(--rgb-strip-v) 1; }
+
+        .calc-card.main { border-color: rgba(155, 123, 255, 0.50); background: linear-gradient(135deg, rgba(255, 238, 246, 0.80), rgba(238, 240, 255, 0.80), rgba(232, 246, 255, 0.80)); box-shadow: 0 6px 20px rgba(155, 123, 255, 0.18), 0 0 20px rgba(255, 107, 157, 0.14), inset 0 1px 0 #fff; }
+        .calc-card .value.mp { color: #d6336f; }
+        .calc-card .value.mc { color: #2587d9; }
+        .calc-card .value.mf { color: #12a07a; }
+        .macro-bar { box-shadow: inset 0 1px 3px rgba(110, 90, 180, 0.2), 0 0 16px rgba(155, 123, 255, 0.18); }
+        .macro-bar i.mp { background: linear-gradient(135deg, #ff7aa6, #ef4f86); }
+        .macro-bar i.mc { background: linear-gradient(135deg, #6ec6ff, #3c9cf0); }
+        .macro-bar i.mf { background: linear-gradient(135deg, #5fe6bf, #22bf93); }
+
+        .zone-row { position: relative; overflow: hidden; }
+        .zone-row::before { content: ""; position: absolute; top: 0; bottom: 0; right: 0; width: 4px; background: var(--zc, #9b7bff); box-shadow: 0 0 10px var(--zc, #9b7bff); }
+        .zone-row:nth-child(1) { --zc: #4cb8ff; }
+        .zone-row:nth-child(2) { --zc: #3ddcb0; }
+        .zone-row:nth-child(3) { --zc: #9b7bff; }
+        .zone-row:nth-child(4) { --zc: #ff8fc0; }
+        .zone-row:nth-child(5) { --zc: #ff5b8f; }
+        .zone-row.active { background: rgba(255, 255, 255, 0.85); border-color: var(--zc, #9b7bff); box-shadow: 0 0 0 3px rgba(155, 123, 255, 0.14), 0 0 22px color-mix(in srgb, var(--zc, #9b7bff) 40%, transparent); }
+        .zone-row .zr-pct { color: color-mix(in srgb, var(--zc, #9b7bff) 70%, #1d2433); }
+
+        @media (max-width: 768px) {
+            .assessment-container::after { opacity: 0.6; }
+            .zone-row::before { width: 3px; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            body::after, .assessment-container::after, .brand-header::after, .btn-submit, .result-container::before { animation: none; }
         }
     </style>
 </head>
@@ -504,6 +843,10 @@
             <div class="input-box">
                 <label>كتلة العضلات SMM (كجم) <span class="en">Muscle Mass</span></label>
                 <input type="number" id="smmInput" step="0.1" min="10" max="80" required placeholder="مثال: 34.9">
+            </div>
+            <div class="input-box">
+                <label>السعرات اليومية الموصى بها (kcal) <span class="en">Recommended Calorie Intake / Day</span></label>
+                <input type="number" id="calorieInput" step="1" min="800" max="6000" placeholder="مثال: 2776">
             </div>
         </div>
 
@@ -672,6 +1015,40 @@
             </div>
         </div>
 
+        <div class="section-header">
+            <h2><i class="fa-solid fa-utensils"></i> 4. التغذية والسعرات اليومية | Nutrition &amp; Daily Calories</h2>
+        </div>
+        <div class="calc-panel">
+            <div class="form-grid-4">
+                <div class="input-box">
+                    <label>الهدف <span class="en">Goal</span></label>
+                    <select id="goalSelect">
+                        <option value="maintain">ثبات الوزن / Maintain</option>
+                        <option value="cut">تنشيف / Fat Loss</option>
+                        <option value="bulk">زيادة عضل / Muscle Gain</option>
+                    </select>
+                </div>
+            </div>
+            <div id="nutritionOut"></div>
+        </div>
+
+        <div class="section-header">
+            <h2><i class="fa-solid fa-heart-pulse"></i> 5. معادلة كارفونين لمعدل القلب المستهدف | Karvonen Target Heart Rate</h2>
+        </div>
+        <div class="calc-panel">
+            <div class="form-grid-4">
+                <div class="input-box">
+                    <label>معدل القلب وقت الراحة (نبضة/دقيقة) <span class="en">Resting Heart Rate (bpm)</span></label>
+                    <input type="number" id="restHR" min="30" max="120" step="1" placeholder="مثال: 65">
+                </div>
+                <div class="input-box">
+                    <label>نسبة الشدة المطلوبة (%) <span class="en">Target Intensity (%)</span></label>
+                    <input type="number" id="intensityPct" min="30" max="100" step="1" value="70">
+                </div>
+            </div>
+            <div id="karvonenOut"></div>
+        </div>
+
         <button type="submit" class="btn-submit">
             <i class="fa-solid fa-calculator"></i> استخراج التقرير الشامل والعمر البيولوجي | Generate Assessment Report
         </button>
@@ -680,7 +1057,7 @@
     <div class="result-container" id="resultArea">
         <div class="result-card">
             <h3>B_FIT ASSESSMENT REPORT</h3>
-            <p id="reportHeaderInfo" style="color: #94a3b8; font-weight: 600; font-size: 14px; margin-top: 5px;"></p>
+            <p id="reportHeaderInfo" style="color: #5f6b85; font-weight: 600; font-size: 14px; margin-top: 5px;"></p>
 
             <div class="score-display-box">
                 <div class="score-metric-card">
@@ -696,6 +1073,7 @@
             <div id="bioAgeStatusBadge" class="bio-age-highlight bio-equal">--</div>
 
             <div class="report-summary-text" id="detailedReportText"></div>
+            <div id="reportExtras"></div>
         </div>
     </div>
 </div>
@@ -708,60 +1086,60 @@
     ];
 
     const AV_STYLE = {
-        male: { torso: 16, thigh: 9.5, arm: 7, head: 9.5, hipR: 0, shoulder: 22, waist: 14, hip: 14 },
+        male:   { torso: 16,   thigh: 9.5, arm: 7,   head: 9.5, hipR: 0,   shoulder: 22, waist: 14, hip: 14 },
         female: { torso: 12.5, thigh: 8.5, arm: 5.6, head: 8.8, hipR: 7.5, shoulder: 17, waist: 10, hip: 16 }
     };
-    const AV_HAIR = '#e2e8f0';
-    const AV_FLOOR = '#475569';
+    const AV_HAIR = '#334155';
+    const AV_FLOOR = '#b8c0d4';
 
     const AV_POSES = {
         1: {
             kind: 'side', dir: 1, eyesClosed: true,
             head: [101, 19], neck: [100, 31], sh: [100, 36], hip: [100, 72],
-            legFar: [[100, 72], [100, 95], [100, 117], [109, 117]],
+            legFar:  [[100, 72], [100, 95], [100, 117], [109, 117]],
             legNear: [[100, 72], [124, 74], [124, 97], [133, 97]],
-            armFar: [[100, 38], [84, 47], [68, 42]],
+            armFar:  [[100, 38], [84, 47], [68, 42]],
             armNear: [[100, 38], [117, 47], [134, 42]]
         },
         2: {
             kind: 'side', dir: 1, mat: true,
             head: [137, 84], neck: [129, 92], sh: [120, 98], hip: [78, 106],
-            legFar: [[78, 108], [52, 100], [26, 91], [19, 88]],
+            legFar:  [[78, 108], [52, 100], [26, 91], [19, 88]],
             legNear: [[78, 106], [52, 97], [26, 88], [19, 85]],
-            armFar: [[118, 100], [144, 94], [170, 88]],
+            armFar:  [[118, 100], [144, 94], [170, 88]],
             armNear: [[120, 98], [146, 91], [172, 84]]
         },
         3: {
             kind: 'side', dir: 1,
             head: [131, 71], neck: [121, 75], sh: [116, 78], hip: [72, 95],
-            legFar: [[72, 95], [50, 103], [28, 112], [22, 113]],
+            legFar:  [[72, 95], [50, 103], [28, 112], [22, 113]],
             legNear: [[72, 95], [50, 103], [28, 112], [22, 113]],
-            armFar: [[111, 78], [111, 97], [111, 114]],
+            armFar:  [[111, 78], [111, 97], [111, 114]],
             armNear: [[116, 78], [116, 97], [116, 114]]
         },
         4: {
             kind: 'side', dir: 1,
             head: [81, 29], neck: [77, 40], sh: [74, 45], hip: [62, 80],
-            legFar: [[62, 80], [92, 80], [92, 112], [102, 113]],
+            legFar:  [[62, 80], [92, 80], [92, 112], [102, 113]],
             legNear: [[62, 80], [96, 80], [96, 112], [106, 113]],
-            armFar: [[74, 44], [96, 44], [118, 44]],
+            armFar:  [[74, 44], [96, 44], [118, 44]],
             armNear: [[74, 47], [96, 47], [118, 47]],
             marker: 'squat'
         },
         5: {
             kind: 'side', dir: -1, mat: true,
             head: [50, 62], neck: [57, 70], sh: [62, 76], hip: [86, 108],
-            legFar: [[86, 108], [107, 82], [125, 111], [135, 112]],
+            legFar:  [[86, 108], [107, 82], [125, 111], [135, 112]],
             legNear: [[86, 108], [110, 80], [128, 110], [138, 111]],
-            armFar: [[62, 80], [80, 80], [100, 78]],
+            armFar:  [[62, 80], [80, 80], [100, 78]],
             armNear: [[62, 78], [82, 78], [102, 76]]
         },
         6: {
             kind: 'side', dir: 1,
             head: [117, 87], neck: [110, 80], sh: [104, 74], hip: [72, 44],
-            legFar: [[72, 44], [48, 79], [27, 113], [38, 114]],
+            legFar:  [[72, 44], [48, 79], [27, 113], [38, 114]],
             legNear: [[72, 44], [51, 79], [30, 113], [41, 114]],
-            armFar: [[100, 78], [106, 96], [112, 113]],
+            armFar:  [[100, 78], [106, 96], [112, 113]],
             armNear: [[104, 76], [110, 95], [116, 113]],
             marker: 'walk'
         },
@@ -791,12 +1169,12 @@
 
     function avMarkers(kind) {
         if (kind === 'squat') {
-            return '<path d="M80 80 A16 16 0 0 0 96 96" fill="none" stroke="#e2e8f0" stroke-width="1.8" stroke-dasharray="3 2"/>' +
-                '<text x="64" y="104" font-size="10" font-family="Montserrat,sans-serif" font-weight="700" fill="#e2e8f0">90°</text>';
+            return '<path d="M80 80 A16 16 0 0 0 96 96" fill="none" stroke="#475569" stroke-width="1.8" stroke-dasharray="3 2"/>' +
+                '<text x="64" y="104" font-size="10" font-family="Montserrat,sans-serif" font-weight="700" fill="#475569">90°</text>';
         }
         if (kind === 'walk') {
-            return '<path d="M126 104 h26" stroke="#94a3b8" stroke-width="2" stroke-linecap="round" stroke-dasharray="4 3"/>' +
-                '<polygon points="152,99 162,104 152,109" fill="#94a3b8"/>';
+            return '<path d="M126 104 h26" stroke="#64748b" stroke-width="2" stroke-linecap="round" stroke-dasharray="4 3"/>' +
+                '<polygon points="152,99 162,104 152,109" fill="#64748b"/>';
         }
         return '';
     }
@@ -804,7 +1182,7 @@
     function avSide(p, g) {
         const s = AV_STYLE[g];
         let o = '<line x1="8" y1="119" x2="192" y2="119" stroke="' + AV_FLOOR + '" stroke-width="2" stroke-linecap="round"/>';
-        if (p.mat) o += '<rect x="12" y="114" width="176" height="5" rx="2.5" fill="#334155"/>';
+        if (p.mat) o += '<rect x="12" y="114" width="176" height="5" rx="2.5" fill="#d3d9e6"/>';
         o += avPoly(p.legFar, s.thigh, 'opacity="0.55"') + avPoly(p.armFar, s.arm, 'opacity="0.55"');
         o += avPoly([p.hip, p.sh], s.torso);
         if (s.hipR) o += '<circle cx="' + p.hip[0] + '" cy="' + p.hip[1] + '" r="' + s.hipR + '" fill="currentColor"/>';
@@ -833,8 +1211,8 @@
         o += avPoly([[cx - s.shoulder + 2, 40], [lx, 40], [lx, 16]], s.arm);
         o += avPoly([[cx + s.shoulder - 2, 40], [rx, 40], [rx, 16]], s.arm);
         o += avDumbbell(lx, 14) + avDumbbell(rx, 14);
-        o += '<path d="M' + (lx + 12) + ' 52 A15 15 0 0 1 ' + (lx + 12) + ' 28" fill="none" stroke="#94a3b8" stroke-width="1.6" stroke-dasharray="3 2"/>';
-        o += '<path d="M' + (rx - 12) + ' 52 A15 15 0 0 0 ' + (rx - 12) + ' 28" fill="none" stroke="#94a3b8" stroke-width="1.6" stroke-dasharray="3 2"/>';
+        o += '<path d="M' + (lx + 12) + ' 52 A15 15 0 0 1 ' + (lx + 12) + ' 28" fill="none" stroke="#64748b" stroke-width="1.6" stroke-dasharray="3 2"/>';
+        o += '<path d="M' + (rx - 12) + ' 52 A15 15 0 0 0 ' + (rx - 12) + ' 28" fill="none" stroke="#64748b" stroke-width="1.6" stroke-dasharray="3 2"/>';
         o += avPoly([[cx, 30], [cx, 38]], 6);
         o += avHead(cx, 20, g, 1, false);
         if (g === 'female') {
@@ -877,9 +1255,9 @@
         document.getElementById('ocrProgressBar').style.width = Math.max(4, Math.min(100, pct)) + '%';
     }
 
-    const INBODY_FIELDS = { age: 'realAge', height: 'heightInput', weight: 'weightInput', smm: 'smmInput', pbf: 'fatInput' };
-    const INBODY_FIELD_LABELS = { age: 'العمر', height: 'الطول', weight: 'الوزن', smm: 'SMM', pbf: 'PBF' };
-    const INBODY_UNITS = { age: '', height: ' سم', weight: ' كجم', smm: ' كجم', pbf: '%' };
+    const INBODY_FIELDS = { age: 'realAge', height: 'heightInput', weight: 'weightInput', smm: 'smmInput', pbf: 'fatInput', calories: 'calorieInput' };
+    const INBODY_FIELD_LABELS = { age: 'العمر', height: 'الطول', weight: 'الوزن', smm: 'SMM', pbf: 'PBF', calories: 'السعرات' };
+    const INBODY_UNITS = { age: '', height: ' سم', weight: ' كجم', smm: ' كجم', pbf: '%', calories: ' kcal' };
 
     function markField(id, state) {
         const el = document.getElementById(id);
@@ -891,12 +1269,12 @@
         Object.keys(INBODY_FIELDS).forEach(function (k) { markField(INBODY_FIELDS[k], null); });
 
         if (res.notInBody) {
-            setOcrStatus('#ef4444', 'fa-solid fa-triangle-exclamation',
+            setOcrStatus('#dc2626', 'fa-solid fa-triangle-exclamation',
                 'هذه الصورة ليست تقرير InBody 770 بالتصميم المعتمد. ارفع صورة التقرير كاملة ومستقيمة، أو أدخل القياسات يدوياً. | Not a valid InBody 770 report.');
             return;
         }
         if (res.lowQuality) {
-            setOcrStatus('#f59e0b', 'fa-solid fa-triangle-exclamation',
+            setOcrStatus('#b45309', 'fa-solid fa-triangle-exclamation',
                 'الصورة غير واضحة بما يكفي لقراءة آمنة، فلم يتم ملء أي رقم. استخدم لقطة شاشة أو صورة مستقيمة وعالية الجودة، أو أدخل القياسات يدوياً. | Image too unclear, please enter manually.');
             return;
         }
@@ -910,16 +1288,17 @@
         });
         if (v.gender) document.getElementById('genderSelect').value = v.gender;
         updateGenderTheme();
+        refreshCalculators();
 
         const summary = shown.join(' • ');
         if (missing.length === 0 && res.check.length === 0) {
-            setOcrStatus('#10b981', 'fa-solid fa-check',
+            setOcrStatus('#0b8f63', 'fa-solid fa-check',
                 'تم استخراج: ' + summary + '<br>راجعها مع التقرير قبل المتابعة. | Please verify against the report.');
         } else {
             let msg = 'تم استخراج: ' + summary;
             if (res.check.length) msg += '<br>الحقول المظللة بالأصفر تحتاج مطابقة مع التقرير' + (res.pbfCalculated ? ' (نسبة الدهون محسوبة من كتلة الدهون ÷ الوزن)' : '') + '.';
             if (missing.length) msg += '<br>لم تُقرأ: ' + missing.join('، ') + ' — أدخلها يدوياً.';
-            setOcrStatus('#f59e0b', 'fa-solid fa-triangle-exclamation', msg);
+            setOcrStatus('#b45309', 'fa-solid fa-triangle-exclamation', msg);
         }
     }
 
@@ -928,11 +1307,11 @@
     async function handleInBodyFile(file) {
         if (!file) return;
         if (inbodyBusy) {
-            setOcrStatus('#f59e0b', 'fa-solid fa-hourglass-half', 'جاري معالجة تقرير سابق، انتظر لحظة ثم أعد الاختيار.');
+            setOcrStatus('#b45309', 'fa-solid fa-hourglass-half', 'جاري معالجة تقرير سابق، انتظر لحظة ثم أعد الاختيار.');
             return;
         }
         if (!/^image\//.test(file.type) && !/\.(jpe?g|png|webp|bmp|gif)$/i.test(file.name)) {
-            setOcrStatus('#ef4444', 'fa-solid fa-triangle-exclamation', 'الملف المختار ليس صورة. اختر صورة تقرير InBody بصيغة JPG أو PNG.');
+            setOcrStatus('#dc2626', 'fa-solid fa-triangle-exclamation', 'الملف المختار ليس صورة. اختر صورة تقرير InBody بصيغة JPG أو PNG.');
             return;
         }
         inbodyBusy = true;
@@ -943,24 +1322,24 @@
         thumb.src = inbodyPreviewUrl;
         thumb.style.display = 'block';
         setOcrProgress(4);
-        setOcrStatus('#f08a9b', 'fa-solid fa-spinner fa-spin', 'جاري قراءة تقرير InBody... | Reading InBody report...');
+        setOcrStatus('#c2415a', 'fa-solid fa-spinner fa-spin', 'جاري قراءة تقرير InBody... | Reading InBody report...');
 
         try {
             const canvas = await inbodyLoadCanvas(file);
             const worker = await inbodyGetWorker();
             const res = await readInBodyReport(canvas, worker, function (step, total, label) {
                 setOcrProgress(10 + (step / total) * 90);
-                setOcrStatus('#f08a9b', 'fa-solid fa-spinner fa-spin', 'جاري قراءة: ' + label + ' (' + step + '/' + total + ')');
+                setOcrStatus('#c2415a', 'fa-solid fa-spinner fa-spin', 'جاري قراءة: ' + label + ' (' + step + '/' + total + ')');
             });
             applyInBodyResult(res);
         } catch (err) {
             const m = String(err && err.message || err);
             if (m.indexOf('image-load-failed') >= 0) {
-                setOcrStatus('#ef4444', 'fa-solid fa-triangle-exclamation', 'تعذر فتح الصورة. جرّب لقطة شاشة أو صورة JPG / PNG.');
+                setOcrStatus('#dc2626', 'fa-solid fa-triangle-exclamation', 'تعذر فتح الصورة. جرّب لقطة شاشة أو صورة JPG / PNG.');
             } else if (m.indexOf('engine-missing') >= 0) {
-                setOcrStatus('#ef4444', 'fa-solid fa-wifi', 'تعذر تحميل محرك القراءة. يلزم اتصال بالإنترنت في أول استخدام. أدخل القياسات يدوياً الآن.');
+                setOcrStatus('#dc2626', 'fa-solid fa-wifi', 'تعذر تحميل محرك القراءة. يلزم اتصال بالإنترنت في أول استخدام. أدخل القياسات يدوياً الآن.');
             } else {
-                setOcrStatus('#ef4444', 'fa-solid fa-triangle-exclamation', 'حدث خطأ أثناء القراءة. أعد المحاولة بصورة أوضح أو أدخل القياسات يدوياً.');
+                setOcrStatus('#dc2626', 'fa-solid fa-triangle-exclamation', 'حدث خطأ أثناء القراءة. أعد المحاولة بصورة أوضح أو أدخل القياسات يدوياً.');
             }
         } finally {
             inbodyBusy = false;
@@ -993,14 +1372,15 @@
         zones: {
             labels: [0.20, 0.072, 0.52, 0.090],
             height: [0.2245, 0.0895, 0.290, 0.1045],
-            age: [0.3285, 0.0895, 0.362, 0.1045],
+            age:    [0.3285, 0.0895, 0.362, 0.1045],
             gender: [0.398, 0.0895, 0.455, 0.1045],
             weight: [0.548, 0.1930, 0.600, 0.2065],
-            bfm: [0.185, 0.2395, 0.240, 0.2545]
+            bfm:    [0.185, 0.2395, 0.240, 0.2545],
+            calories: [0.780, 0.7690, 0.826, 0.7860]
         },
         rows: { weight: [0.3298, 0.3363], smm: [0.3581, 0.3650], pbf: [0.4856, 0.4921] }
     };
-    const INBODY_STEPS = 9;
+    const INBODY_STEPS = 10;
 
     function inbodyIsRed(r, g, b, th) { return r > 80 && r - Math.max(g, b) > (th || 45); }
 
@@ -1266,6 +1646,20 @@
         return null;
     }
 
+    // Reads the same field several ways and only accepts a value that at least two reads agree on
+    async function inbodyConsensus(env, rect, whitelist, parse) {
+        const tries = [[false, 7], [true, 7], [false, 8], [true, 8]], votes = {};
+        let best = null, bestN = 0;
+        for (let i = 0; i < tries.length; i++) {
+            const txt = await inbodyOcr(env.worker, inbodyCrop(env.canvas, rect, tries[i][0]), whitelist, tries[i][1]);
+            const v = parse(txt);
+            if (v === null || v === undefined) continue;
+            votes[v] = (votes[v] || 0) + 1;
+            if (votes[v] > bestN) { bestN = votes[v]; best = v; }
+        }
+        return bestN >= 2 ? best : null;
+    }
+
     async function inbodyRowValue(env, key, parse) {
         const band = INBODY_LAYOUT.rows[key];
         const end = inbodyBarEnd(env.img, env.frame, band);
@@ -1307,6 +1701,12 @@
         const smm = await inbodyRowValue(env, 'smm', function (t) { return inbodyDecimal(t, 10, 80); });
         tick('نسبة الدهون PBF');
         const pbfRow = await inbodyRowValue(env, 'pbf', function (t) { return inbodyDecimal(t, 3, 60); });
+        tick('السعرات الموصى بها');
+        const calories = await inbodyConsensus(env, inbodyRect(frame, Z.calories), '0123456789', function (t) {
+            const m = String(t || '').match(/\d{3,4}/);
+            const v = m ? parseInt(m[0], 10) : null;
+            return v !== null && v >= 800 && v <= 6000 ? v : null;
+        });
 
         const check = [];
         let weight = weightCell !== null ? weightCell : weightRow;
@@ -1319,8 +1719,8 @@
 
         const reliable = age !== null && height !== null;
         const values = reliable
-            ? { age: age, height: height, gender: gender, weight: weight, smm: smm, pbf: pbf }
-            : { age: null, height: null, gender: null, weight: null, smm: null, pbf: null };
+            ? { age: age, height: height, gender: gender, weight: weight, smm: smm, pbf: pbf, calories: calories }
+            : { age: null, height: null, gender: null, weight: null, smm: null, pbf: null, calories: null };
         const notInBody = !reliable && (!found || labelHits < 2);
         return {
             values: values,
@@ -1330,6 +1730,116 @@
             notInBody: notInBody,
             lowQuality: !reliable && !notInBody
         };
+    }
+
+    // ===== Nutrition (calories + macros) and Karvonen target heart rate =====
+    const GOAL_FACTORS = {
+        maintain: { f: 1.00, ar: 'ثبات الوزن', en: 'Maintain' },
+        cut:      { f: 0.85, ar: 'تنشيف',      en: 'Fat Loss' },
+        bulk:     { f: 1.10, ar: 'زيادة عضل',  en: 'Muscle Gain' }
+    };
+    const HR_ZONES = [
+        [50, 60, 'إحماء', 'Warm-up'],
+        [60, 70, 'حرق الدهون', 'Fat Burn'],
+        [70, 80, 'كارديو هوائي', 'Aerobic'],
+        [80, 90, 'شدة عالية', 'Hard'],
+        [90, 100, 'أقصى جهد', 'Maximum']
+    ];
+
+    function fmtInt(n) { return Math.round(n).toLocaleString('en-US'); }
+
+    function computeNutrition() {
+        const base = parseFloat(document.getElementById('calorieInput').value);
+        const weight = parseFloat(document.getElementById('weightInput').value);
+        if (!(base >= 800 && base <= 6000) || !(weight >= 30 && weight <= 250)) return null;
+        const key = document.getElementById('goalSelect').value;
+        const goal = GOAL_FACTORS[key] || GOAL_FACTORS.maintain;
+        const kcal = Math.round(base * goal.f);
+        let proteinG = 2.0 * weight, capped = false;
+        const capG = 0.40 * kcal / 4;
+        if (proteinG > capG) { proteinG = capG; capped = true; }
+        proteinG = Math.round(proteinG);
+        const fatG = Math.round(0.25 * kcal / 9);
+        const carbsG = Math.max(0, Math.round((kcal - proteinG * 4 - fatG * 9) / 4));
+        const pK = proteinG * 4, fK = fatG * 9, cK = carbsG * 4, tot = pK + fK + cK;
+        const pPct = Math.round(pK / tot * 100), fPct = Math.round(fK / tot * 100);
+        const cPct = Math.max(0, 100 - pPct - fPct);
+        return { base: Math.round(base), kcal: kcal, goal: goal, proteinG: proteinG, carbsG: carbsG, fatG: fatG, pPct: pPct, cPct: cPct, fPct: fPct, capped: capped, perKg: proteinG / weight };
+    }
+
+    function nutritionHTML(n) {
+        if (!n) return '<p class="calc-note">أدخل السعرات الموصى بها (تُقرأ من الإنبودي) والوزن لعرض الخطة. | Enter the recommended calories and weight to see the plan.</p>';
+        let h = '<div class="calc-cards">' +
+            '<div class="calc-card main"><div class="label">السعرات اليومية | Daily Calories</div><div class="value">' + fmtInt(n.kcal) + '<span> kcal</span></div>' +
+            '<div class="sub">' + n.goal.ar + ' / ' + n.goal.en + '</div></div>' +
+            '<div class="calc-card"><div class="label">بروتين | Protein</div><div class="value mp">' + n.proteinG + '<span> g</span></div><div class="sub">' + n.pPct + '% • ' + n.perKg.toFixed(1) + ' g/kg</div></div>' +
+            '<div class="calc-card"><div class="label">كارب | Carbs</div><div class="value mc">' + n.carbsG + '<span> g</span></div><div class="sub">' + n.cPct + '%</div></div>' +
+            '<div class="calc-card"><div class="label">دهون | Fat</div><div class="value mf">' + n.fatG + '<span> g</span></div><div class="sub">' + n.fPct + '%</div></div>' +
+            '</div>' +
+            '<div class="macro-bar" role="img" aria-label="Protein ' + n.pPct + '%, Carbs ' + n.cPct + '%, Fat ' + n.fPct + '%">' +
+            '<i class="mp" style="width:' + n.pPct + '%"></i><i class="mc" style="width:' + n.cPct + '%"></i><i class="mf" style="width:' + n.fPct + '%"></i></div>';
+        let note = 'السعرات الأساسية من الإنبودي: ' + fmtInt(n.base) + ' kcal. البروتين 2 جم لكل كجم من الوزن، الدهون 25% من السعرات، والكارب الباقي. (4 سعرات لكل جم بروتين وكارب، 9 للدهون)';
+        if (n.capped) note += '<br>تم تحديد البروتين بـ 40% من السعرات لأن السعرات منخفضة بالنسبة للوزن.';
+        return h + '<p class="calc-note">' + note + '</p>';
+    }
+
+    function computeKarvonen() {
+        const age = parseFloat(document.getElementById('realAge').value);
+        const rhr = parseFloat(document.getElementById('restHR').value);
+        const pct = parseFloat(document.getElementById('intensityPct').value);
+        if (!(age >= 12 && age <= 90) || !(rhr >= 30 && rhr <= 120)) return null;
+        const hrMax = 220 - age, hrr = hrMax - rhr;
+        if (hrr <= 0) return { invalid: true };
+        const at = function (p) { return Math.round(rhr + hrr * p / 100); };
+        const pctOk = pct >= 30 && pct <= 100;
+        return {
+            age: age, rhr: rhr, hrMax: hrMax, hrr: hrr,
+            pct: pctOk ? pct : null, target: pctOk ? at(pct) : null,
+            zones: HR_ZONES.map(function (z) { return { lo: z[0], hi: z[1], ar: z[2], en: z[3], from: at(z[0]), to: at(z[1]) }; })
+        };
+    }
+
+    function karvonenHTML(k) {
+        if (!k) return '<p class="calc-note">أدخل العمر ومعدل القلب وقت الراحة لعرض النتائج. | Enter age and resting heart rate to see results.</p>';
+        if (k.invalid) return '<p class="calc-note">معدل القلب وقت الراحة أعلى من الحد الأقصى المتوقع. تحقق من القيمة. | Resting HR is above the estimated maximum, please check it.</p>';
+        let h = '<div class="calc-cards">' +
+            '<div class="calc-card"><div class="label">أقصى معدل للقلب | Max HR</div><div class="value">' + k.hrMax + '<span> bpm</span></div><div class="sub">220 − ' + k.age + '</div></div>' +
+            '<div class="calc-card"><div class="label">احتياطي القلب | HR Reserve</div><div class="value">' + k.hrr + '<span> bpm</span></div><div class="sub">' + k.hrMax + ' − ' + k.rhr + '</div></div>' +
+            '<div class="calc-card main"><div class="label">المعدل المستهدف | Target HR</div><div class="value">' + (k.target === null ? '—' : k.target) + '<span> bpm</span></div><div class="sub">' + (k.pct === null ? '—' : k.pct + '%') + '</div></div>' +
+            '</div><div class="zone-table">';
+        k.zones.forEach(function (z, i) {
+            const active = k.pct !== null && (k.pct >= z.lo && (k.pct < z.hi || (i === k.zones.length - 1 && k.pct <= z.hi)));
+            h += '<div class="zone-row' + (active ? ' active' : '') + '"><span class="zr-pct">' + z.lo + '–' + z.hi + '%</span>' +
+                '<span class="zr-name">' + z.ar + ' | ' + z.en + '</span><span class="zr-bpm">' + z.from + '–' + z.to + ' <small>bpm</small></span></div>';
+        });
+        return h + '</div><p class="calc-note">معادلة كارفونين: المعدل المستهدف = معدل الراحة + (220 − العمر − معدل الراحة) × نسبة الشدة. | Karvonen: Target = RHR + (HRmax − RHR) × intensity.</p>';
+    }
+
+    function refreshCalculators() {
+        document.getElementById('nutritionOut').innerHTML = nutritionHTML(computeNutrition());
+        document.getElementById('karvonenOut').innerHTML = karvonenHTML(computeKarvonen());
+    }
+
+    function renderReportExtras(hasFlags, needsClearance) {
+        const n = computeNutrition(), k = computeKarvonen();
+        let h = '';
+        if (n) h += '<div class="report-extra"><h4><i class="fa-solid fa-utensils"></i> الخطة الغذائية | Nutrition Plan</h4>' + nutritionHTML(n) + '</div>';
+        if (k && !k.invalid) h += '<div class="report-extra"><h4><i class="fa-solid fa-heart-pulse"></i> معدل القلب المستهدف (كارفونين) | Karvonen Target Heart Rate</h4>' + karvonenHTML(k) + '</div>';
+        if (h) {
+            h += '<p class="calc-note">الأرقام تقديرية وإرشادية وليست بديلاً عن استشارة طبية.' +
+                (hasFlags ? ' بما أنه سُجّلت ملاحظات صحية في الاستبيان، يُنصح بمراجعة طبيب أو أخصائي تغذية قبل تطبيق الخطة.' : '') +
+                (needsClearance ? ' <strong style="color:#dc2626;">ويُنصح بموافقة طبية قبل التدريب عند معدلات القلب العالية.</strong>' : '') + '</p>';
+        }
+        document.getElementById('reportExtras').innerHTML = h;
+    }
+
+    function initCalculators() {
+        ['calorieInput', 'weightInput', 'goalSelect', 'restHR', 'intensityPct', 'realAge'].forEach(function (id) {
+            const el = document.getElementById(id);
+            el.addEventListener('input', refreshCalculators);
+            el.addEventListener('change', refreshCalculators);
+        });
+        refreshCalculators();
     }
 
     function num(id, fallback) {
@@ -1407,31 +1917,4 @@
             summaryHTML += 'مستوى متزن ومناسب للبدء في برنامج تدريبي متطور لرفع الكتلة العضلية وتقليل الدهون للوصول لنتائج أفضل في التقييمات القادمة.';
         } else {
             badge.className = 'bio-age-highlight bio-older';
-            badge.innerText = '⚠️ تنبيه: عمرك البيولوجي أعلى من عمرك الحقيقي بمقدار (' + (biologicalAge - realAge) + ') سنوات.';
-            summaryHTML += 'تشير المدخلات إلى وجود تراجع في بعض عناصر التحمل العضلي أو ارتفاع في الدهون. يُوصى ببرنامج تدريبي مخصص مع الكوتش.';
-        }
-
-        if (flags.length > 0) {
-            summaryHTML += '<br><br><strong>الملاحظات الصحية (' + flags.length + '):</strong><br>';
-            summaryHTML += flags.map(f => '• ' + f).join('<br>');
-            summaryHTML += '<br>يرجى تكييف التمارين بناءً عليها.';
-            if (needsMedicalClearance) {
-                summaryHTML += '<br><strong style="color:#f87171;">يُنصح بالحصول على موافقة طبية قبل بدء البرنامج التدريبي.</strong>';
-            }
-        }
-
-        document.getElementById('detailedReportText').innerHTML = summaryHTML;
-        const area = document.getElementById('resultArea');
-        area.style.display = 'block';
-        area.scrollIntoView({ behavior: 'smooth' });
-    }
-
-    window.addEventListener('load', function () {
-        updateGenderTheme();
-        initUploadZone();
-        setTimeout(function () { inbodyGetWorker().catch(function () {}); }, 1500);
-    });
-</script>
-
-</body>
-</html>
+            badge.inne
