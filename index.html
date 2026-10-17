@@ -415,7 +415,6 @@
         <div class="form-grid-4">
             <div class="input-box" style="grid-column: span 2;">
                 <label>إرفاق تقرير InBody 770 (تحليل ذكي فوري) <span class="en">Gemini Vision AI</span></label>
-                <!-- تم ربط الحدث برمجياً بشكل مباشر لضمان استجابة زر اختيار الملف فوراً -->
                 <input type="file" id="inbodyFile" accept="image/*">
                 <div id="ocrStatusMsg" class="ocr-status"></div>
             </div>
@@ -665,7 +664,7 @@
         el.innerHTML = '<i class="' + iconClass + '"></i> ' + message;
     }
 
-    // ربط الحدث بشكل مضمون تماماً لضمان عمل زر اختيار الملفات فوراً
+    // ربط الحدث بـ GitHub وGoogle Apps Script بشكل سليم ومباشر
     document.addEventListener('DOMContentLoaded', () => {
         const fileInput = document.getElementById('inbodyFile');
         if (fileInput) {
@@ -702,6 +701,7 @@
                         reader.readAsDataURL(file);
                     });
 
+                    // رابط بوابتك في جوجل سكريبت مربوط بـ GitHub تماماً
                     const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyNehOutBfnmJUzEPUcVBc3uui4IUmfF97ZRIQvneVyG_fjo1GrxR8QHslCyzT7ze89/exec";
 
                     const response = await fetch(APPS_SCRIPT_URL, {
