@@ -298,8 +298,7 @@
             grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
             gap: 15px;
         }
-
-        .btn-submit {
+.btn-submit {
             width: 100%;
             background: linear-gradient(135deg, var(--primary-orange), var(--primary-orange-hover));
             color: #fff;
@@ -449,7 +448,7 @@
         }
         @keyframes glassDrift {
             from { transform: translate3d(-1.5%, -1%, 0) scale(1); }
-            to   { transform: translate3d(1.5%, 1.2%, 0) scale(1.06); }
+            to { transform: translate3d(1.5%, 1.2%, 0) scale(1.06); }
         }
         @media (prefers-reduced-motion: reduce) { body::before { animation: none; } }
 
@@ -523,8 +522,7 @@
             color: var(--rose-text);
             border: 1px solid rgba(232, 101, 123, 0.35);
         }
-
-        .btn-submit {
+   .btn-submit {
             background: linear-gradient(135deg, #f4788a, #d9506a);
             box-shadow: 0 12px 28px rgba(217, 80, 106, 0.30), inset 0 1px 0 rgba(255, 255, 255, 0.5), inset 0 -2px 6px rgba(150, 30, 55, 0.18);
         }
@@ -771,8 +769,7 @@
         @media (prefers-reduced-motion: reduce) {
             body::after, .assessment-container::after, .brand-header::after, .btn-submit, .result-container::before { animation: none; }
         }
-
-        /* ===== Food calculator ===== */
+/* ===== Food calculator ===== */
         .food-search-box { position: relative; }
         .food-list {
             position: absolute; top: 100%; left: 0; right: 0; z-index: 30; margin-top: 6px; list-style: none; max-height: 320px; overflow-y: auto;
@@ -863,7 +860,7 @@
             background: linear-gradient(135deg, rgba(76, 224, 184, 0.16), rgba(76, 184, 255, 0.14));
             border: 1px solid rgba(32, 185, 143, 0.40); border-radius: 999px; padding: 5px 12px; margin: 0 0 10px;
         }
-        .rest-tag b { font-family: 'Montserrat', 'Tajawal', sans-serif; direction: ltr; unicode-bidi: isolate; }
+  .rest-tag b { font-family: 'Montserrat', 'Tajawal', sans-serif; direction: ltr; unicode-bidi: isolate; }
         .rest-tag .en { font-family: 'Montserrat', sans-serif; font-weight: 600; color: #0d9488; direction: ltr; }
         .avatar-phase {
             font-size: 9.5px; font-weight: 800; letter-spacing: 0.4px; color: #0f172a; direction: ltr; text-align: center;
@@ -1066,8 +1063,7 @@
                 </div>
             </div>
         </div>
-
-        <div class="exercise-card">
+ <div class="exercise-card">
             <div class="exercise-avatar-box">
                 <div class="avatar-svg" id="avatar4"></div>
                 <span class="gender-badge" id="badge4">MALE</span>
@@ -1234,8 +1230,8 @@
     ];
 
     const AV_BODY = {
-        male:   { thigh: 10.5, shin: 8,   uarm: 7.6, farm: 6.4, torso: 17,   head: 9.2, shoulder: 21,   waist: 13,   hipw: 12,   chest: 0,   pelvis: 0,   glute: 0 },
-        female: { thigh: 9.6,  shin: 7,   uarm: 5.9, farm: 5,   torso: 12.5, head: 8.6, shoulder: 15.5, waist: 10,   hipw: 15.5, chest: 4.6, pelvis: 1.6, glute: 7.4 }
+        male: { thigh: 10.5, shin: 8, uarm: 7.6, farm: 6.4, torso: 17, head: 9.2, shoulder: 21, waist: 13, hipw: 12, chest: 0, pelvis: 0, glute: 0 },
+        female: { thigh: 9.6, shin: 7, uarm: 5.9, farm: 5, torso: 12.5, head: 8.6, shoulder: 15.5, waist: 10, hipw: 15.5, chest: 4.6, pelvis: 1.6, glute: 7.4 }
     };
     const AV_C = { skin: '#e2a77f', skinF: '#c98e66', hair: '#2b2118', shorts: '#334155', shortsF: '#27303f', shoe: '#0f172a', shoeF: '#1e293b', floor: '#b8c0d4', prop: '#94a3b8', propDark: '#64748b', mark: '#ef4444' };
     const AV_LEN = { torso: 36, neck: 6, uarm: 19, farm: 18, thigh: 26, shin: 25, foot: 10 };
@@ -1277,8 +1273,7 @@
             lN: lN, lF: lF, toN: avPt(lN.e, P.toN, L.foot), toF: avPt(lF.e, P.toF, L.foot)
         };
     }
-
-    function avArm(sh, a, B, far) {
+function avArm(sh, a, B, far) {
         const c = far ? AV_C.skinF : AV_C.skin;
         return avLine([sh, a.m], B.uarm, c) + avLine([a.m, a.e], B.farm, c) + avDot(a.e, B.farm * 0.6 + 0.8, c) +
             avLine([sh, avLerp2(sh, a.m, 0.5)], B.uarm + 1.4, 'currentColor');
@@ -1467,7 +1462,7 @@
         for (let i = 1; i <= 7; i++) {
             const el = document.getElementById('avatar' + i), ph = document.getElementById('ph' + i);
             if (el) el.innerHTML = avFigureSVG(i, avGender, 1, true);
-            if (ph) ph.textContent = 'START | بداية  →  FINISH | نهاية';
+            if (ph) ph.textContent = 'START | بداية → FINISH | نهاية';
         }
     }
 
@@ -1629,10 +1624,10 @@
         zones: {
             labels: [0.20, 0.072, 0.52, 0.090],
             height: [0.2245, 0.0895, 0.290, 0.1045],
-            age:    [0.3285, 0.0895, 0.362, 0.1045],
+            age: [0.3285, 0.0895, 0.362, 0.1045],
             gender: [0.398, 0.0895, 0.455, 0.1045],
             weight: [0.548, 0.1930, 0.600, 0.2065],
-            bfm:    [0.185, 0.2395, 0.240, 0.2545],
+            bfm: [0.185, 0.2395, 0.240, 0.2545],
             calories: [0.780, 0.7690, 0.826, 0.7860]
         },
         rows: { weight: [0.3298, 0.3363], smm: [0.3581, 0.3650], pbf: [0.4856, 0.4921] }
@@ -1665,8 +1660,7 @@
             img.src = url;
         });
     }
-
-    function inbodyPixels(canvas) {
+function inbodyPixels(canvas) {
         return canvas.getContext('2d', { willReadFrequently: true }).getImageData(0, 0, canvas.width, canvas.height);
     }
 
@@ -1991,10 +1985,10 @@
 
     // ===== Nutrition (calories + macros) and Karvonen target heart rate =====
     const GOAL_FACTORS = {
-        maintain: { f: 1.00, dir: 0,  ar: 'تثبيت الوزن',       en: 'Weight Maintenance' },
-        cut:      { f: 0.85, dir: -1, ar: 'خسارة دهون',        en: 'Fat Loss' },
-        lose:     { f: 0.80, dir: -1, ar: 'خسارة وزن',         en: 'Weight Loss' },
-        bulk:     { f: 1.10, dir: 1,  ar: 'زيادة كتلة عضلية',  en: 'Muscle Mass Gain' }
+        maintain: { f: 1.00, dir: 0, ar: 'تثبيت الوزن', en: 'Weight Maintenance' },
+        cut: { f: 0.85, dir: -1, ar: 'خسارة دهون', en: 'Fat Loss' },
+        lose: { f: 0.80, dir: -1, ar: 'خسارة وزن', en: 'Weight Loss' },
+        bulk: { f: 1.10, dir: 1, ar: 'زيادة كتلة عضلية', en: 'Muscle Mass Gain' }
     };
     const HR_ZONES = [
         [50, 60, 'إحماء', 'Warm-up'],
@@ -2055,8 +2049,7 @@
         }
         return h + '<p class="calc-note">' + note + '</p>';
     }
-
-    function computeKarvonen() {
+function computeKarvonen() {
         const age = parseFloat(document.getElementById('realAge').value);
         const rhr = parseFloat(document.getElementById('restHR').value);
         const pct = parseFloat(document.getElementById('intensityPct').value);
@@ -2150,7 +2143,7 @@
         veg: ['خضروات', 'Vegetables'], fruit: ['فواكه', 'Fruit'], drink: ['مشروبات وعصائر', 'Drinks & Juices'], sweet: ['حلويات ووجبات خفيفة', 'Sweets & Snacks'],
         fast: ['وجبات سريعة', 'Fast Food'], other: ['أخرى', 'Other'], custom: ['مخصص', 'Custom']
     };
-    // [ar, en, aliases, cat, yield (cooked g per 1 g raw, 0 = as is), kcal, protein, carb, fat, fiber, sodium, potassium, calcium, iron, vitC]  — per 100 g (raw / as listed)
+    // [ar, en, aliases, cat, yield (cooked g per 1 g raw, 0 = as is), kcal, protein, carb, fat, fiber, sodium, potassium, calcium, iron, vitC] — per 100 g (raw / as listed)
     const FOOD_DB_RAW = [
         ['أرز أبيض', 'White rice', 'رز basmati بسمتي', 'grain', 2.8, 365, 7.1, 80, 0.7, 1.3, 5, 115, 28, 0.8, 0],
         ['أرز بني', 'Brown rice', 'رز اسمر', 'grain', 2.6, 370, 7.9, 77, 2.9, 3.5, 7, 223, 23, 1.5, 0],
@@ -2295,8 +2288,7 @@
         'Pomegranate': [13.7, 0.1, 0, 0, 0, 0, 12, 0.4], 'Dates': [66, 0, 0, 0, 0, 0, 54, 0.4], 'Raisins': [59, 0.1, 0, 0, 0, 0, 32, 0.2],
         'Orange juice': [8.4, 0, 0, 10, 0, 0, 11, 0.1], 'Whey protein powder': [4, 3, 80, null, null, null, 100, 2], 'Honey': [82, 0, 0, 0, 0, 0, 2, 0.2], 'White sugar': [100, 0, 0, 0, 0, 0, 0, 0.1]
     };
-
-    let foodCustom = [];
+let foodCustom = [];
     let foodAll = [];
     let foodSel = null, foodState = 'raw', foodHi = -1, foodMatches = [];
     const mealItems = [];
@@ -2786,3 +2778,4 @@
 
 </body>
 </html>
+
