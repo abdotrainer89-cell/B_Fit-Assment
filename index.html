@@ -80,7 +80,7 @@
         .brand-logo-icon {
             width: 92px;
             height: 70px;
-            background: linear-gradient(135deg, #f4788a, #d9506a);
+            background: #000000;
             border-radius: 18px;
             display: flex;
             flex-direction: column;
@@ -474,7 +474,8 @@
         }
 
         .brand-header { border-bottom: 3px solid rgba(232, 101, 123, 0.55); }
-        .brand-logo-icon { box-shadow: 0 8px 20px rgba(217, 80, 106, 0.30), inset 0 1px 1px rgba(255, 255, 255, 0.55), inset 0 -2px 4px rgba(150, 30, 55, 0.18); }
+        .brand-logo-icon { background: #000000; color: #ffffff; box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.14), inset 0 -2px 4px rgba(0, 0, 0, 0.5); }
+        .brand-logo-icon span.logo-word { color: #ffffff; }
         .brand-titles h1 { color: var(--ink); }
         .brand-titles p { color: var(--rose-text); }
 
@@ -833,62 +834,52 @@
             .plan-row { grid-template-columns: 1fr; gap: 4px; }
             .plan-row .pr-val { text-align: right; }
         }
+
+        /* ===== Nutrition Facts label (white box, black text) ===== */
+        .nutri-label { background: #fff; color: #000; border: 2px solid #000; border-radius: 6px; padding: 10px 14px 8px; max-width: 420px; margin: 16px auto 4px; font-family: 'Montserrat', 'Tajawal', Arial, sans-serif; box-shadow: 0 10px 28px rgba(110, 90, 180, 0.18); }
+        .nutri-label em { font-style: normal; font-weight: 500; font-family: 'Tajawal', 'Montserrat', sans-serif; }
+        .nl-title { font-size: 30px; font-weight: 900; line-height: 1.05; letter-spacing: -0.5px; }
+        .nl-title em { font-size: 15px; margin-inline-start: 8px; letter-spacing: 0; }
+        .nl-serving { font-size: 13px; line-height: 1.5; padding: 4px 0 6px; border-bottom: 0; }
+        .nl-thick { height: 8px; background: #000; margin: 2px 0; }
+        .nl-medium { height: 4px; background: #000; margin: 2px 0; }
+        .nl-cal { display: flex; justify-content: space-between; align-items: flex-end; padding: 2px 0; }
+        .nl-cal span { display: flex; flex-direction: column; font-size: 20px; }
+        .nl-cal small { font-size: 11px; font-weight: 700; }
+        .nl-cal strong { font-size: 42px; font-weight: 900; line-height: 1; }
+        .nl-dvhead { text-align: right; font-size: 12px; font-weight: 900; padding: 2px 0; border-bottom: 1px solid #000; }
+        .nl-row { display: flex; justify-content: space-between; gap: 10px; font-size: 14px; padding: 3px 0; border-bottom: 1px solid #000; }
+        .nl-row.sub { padding-inline-start: 18px; }
+        .nl-row .nl-dv { font-weight: 900; min-width: 40px; text-align: right; }
+        .nl-foot { font-size: 11px; line-height: 1.55; margin-top: 4px; color: #000; }
+        .qty-chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 4px 0 6px; }
+        .qty-chips button { border: 1px solid rgba(155, 123, 255, 0.45); background: rgba(255, 255, 255, 0.7); color: var(--ink); border-radius: 999px; padding: 6px 14px; font-size: 13px; font-weight: 700; cursor: pointer; direction: ltr; }
+        .qty-chips button:hover { background: linear-gradient(135deg, rgba(255, 107, 157, 0.15), rgba(76, 184, 255, 0.15)); }
+        /* ===== Universal 7-step tests: rest chips, animated avatars, live HR readout ===== */
+        .test-howto { font-size: 12.5px; line-height: 1.75; color: var(--text-muted); margin: 0 0 12px; }
+        .rest-tag {
+            display: inline-flex; align-items: center; gap: 8px; flex-wrap: wrap;
+            font-size: 12.5px; font-weight: 700; color: #0f766e;
+            background: linear-gradient(135deg, rgba(76, 224, 184, 0.16), rgba(76, 184, 255, 0.14));
+            border: 1px solid rgba(32, 185, 143, 0.40); border-radius: 999px; padding: 5px 12px; margin: 0 0 10px;
+        }
+        .rest-tag b { font-family: 'Montserrat', 'Tajawal', sans-serif; direction: ltr; unicode-bidi: isolate; }
+        .rest-tag .en { font-family: 'Montserrat', sans-serif; font-weight: 600; color: #0d9488; direction: ltr; }
+        .avatar-phase {
+            font-size: 9.5px; font-weight: 800; letter-spacing: 0.4px; color: #0f172a; direction: ltr; text-align: center;
+            font-family: 'Montserrat', 'Tajawal', sans-serif; padding: 2px 8px; border-radius: 999px; background: rgba(255, 255, 255, 0.75);
+            border: 1px solid var(--accent-gender); min-height: 15px;
+        }
+        .avatar-phase:empty { display: none; }
+        .ymca-live {
+            margin-top: 12px; font-size: 13px; font-weight: 700; color: var(--ink); line-height: 1.8;
+            background: rgba(255, 255, 255, 0.6); border: 1px dashed rgba(155, 123, 255, 0.45); border-radius: 12px; padding: 8px 12px;
+        }
+        .ymca-live:empty { display: none; }
+        .ymca-live .en { font-family: 'Montserrat', sans-serif; color: var(--text-muted); font-weight: 600; direction: ltr; unicode-bidi: isolate; }
     </style>
-
-<style>
-/* ===== B_FIT employee OTP gate ===== */
-body.auth-locked { overflow:hidden; }
-body.auth-locked > :not(#bfitAuthOverlay) { visibility:hidden !important; }
-#bfitAuthOverlay { position:fixed; inset:0; z-index:2147483000; display:flex; align-items:center; justify-content:center; padding:22px; background:linear-gradient(135deg,rgba(255,241,247,.97),rgba(238,244,255,.98) 48%,rgba(241,239,255,.98)); backdrop-filter:blur(18px); }
-#bfitAuthOverlay[hidden] { display:none !important; }
-.bfit-auth-card { width:min(100%,460px); padding:30px; border:1px solid rgba(255,255,255,.9); border-radius:26px; background:rgba(255,255,255,.78); box-shadow:0 25px 70px rgba(110,90,180,.22); text-align:center; }
-.bfit-auth-logo { width:72px;height:62px;margin:0 auto 16px;border-radius:18px;display:grid;place-items:center;color:white;font:900 21px Montserrat,sans-serif;background:linear-gradient(135deg,#ff6b9d,#9b7bff 60%,#4cb8ff);box-shadow:0 8px 24px #9b7bff55;direction:ltr; }
-.bfit-auth-card h1 { color:#1d2433;font-size:24px;font-weight:900;margin-bottom:7px; }
-.bfit-auth-card p { color:#5f6b85;line-height:1.8;font-size:14px;margin-bottom:18px; }
-.bfit-auth-card label { display:block;text-align:right;font-weight:700;color:#2a3350;margin:14px 0 7px; }
-.bfit-auth-card input { width:100%;padding:14px 15px;border:1.5px solid #cbd1e2;border-radius:12px;background:#fff;color:#1d2433;font-size:16px;outline:none;direction:ltr;text-align:left; }
-.bfit-auth-card input:focus { border-color:#9b7bff;box-shadow:0 0 0 4px #9b7bff25; }
-.bfit-auth-actions { display:grid;gap:10px;margin-top:16px; }
-.bfit-auth-btn { border:0;border-radius:12px;padding:14px 16px;font-weight:900;font-size:15px;cursor:pointer;color:#fff;background:linear-gradient(110deg,#ff6b9d,#9b7bff,#4cb8ff); }
-.bfit-auth-btn.secondary { color:#7a3fc4;background:#fff;border:1px solid #c9b8ff; }
-.bfit-auth-btn:disabled { opacity:.55;cursor:not-allowed; }
-#bfitAuthMessage { min-height:25px;margin-top:13px;font-size:13px;font-weight:700;line-height:1.7; }
-#bfitAuthMessage.error { color:#b91c1c; } #bfitAuthMessage.success { color:#047857; }
-#bfitOtpArea[hidden], #bfitEmailArea[hidden] { display:none !important; }
-.bfit-auth-foot { margin-top:18px;font-size:11px;color:#64748b; }
-@media(max-width:480px){.bfit-auth-card{padding:24px 18px}.bfit-auth-card h1{font-size:21px}}
-</style>
-
-    <!-- Supabase Auth: configure the project URL and anon key in the auth script below. -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
-<body class="auth-locked">
-
-<div id="bfitAuthOverlay" role="dialog" aria-modal="true" aria-labelledby="bfitAuthTitle">
-  <div class="bfit-auth-card">
-    <div class="bfit-auth-logo">B_FIT</div>
-    <h1 id="bfitAuthTitle">تسجيل دخول الموظفين</h1>
-    <p>نظام B_FIT ASSESSMENT<br>الدخول مخصص لموظفي شركة أرماح باستخدام البريد الرسمي ورمز تحقق لمرة واحدة.</p>
-    <div id="bfitEmailArea">
-      <label for="bfitAuthEmail">البريد الإلكتروني للموظف</label>
-      <input id="bfitAuthEmail" type="email" autocomplete="username" inputmode="email" placeholder="name@armahsports.com" maxlength="254">
-      <div class="bfit-auth-actions"><button id="bfitSendOtp" class="bfit-auth-btn" type="button">إرسال رمز التحقق <i class="fa-solid fa-paper-plane"></i></button></div>
-    </div>
-    <div id="bfitOtpArea" hidden>
-      <label for="bfitOtpCode">رمز التحقق المكوّن من 6 أرقام</label>
-      <input id="bfitOtpCode" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="••••••" dir="ltr">
-      <p id="bfitOtpCountdown" style="margin:10px 0 0">صلاحية الرمز: 05:00</p>
-      <div class="bfit-auth-actions">
-        <button id="bfitVerifyOtp" class="bfit-auth-btn" type="button">تحقق وفتح التطبيق</button>
-        <button id="bfitResendOtp" class="bfit-auth-btn secondary" type="button" disabled>إعادة إرسال الرمز</button>
-        <button id="bfitChangeEmail" class="bfit-auth-btn secondary" type="button">تغيير البريد الإلكتروني</button>
-      </div>
-    </div>
-    <div id="bfitAuthMessage" role="status" aria-live="polite"></div>
-    <div class="bfit-auth-foot">حماية الدخول عبر Supabase Auth • لا تُشارك رمز التحقق مع أي شخص</div>
-  </div>
-</div>
-
+<body>
 
 <div class="assessment-container">
 
@@ -1024,13 +1015,16 @@ body.auth-locked > :not(#bfitAuthOverlay) { visibility:hidden !important; }
                 <div class="avatar-svg" id="avatar1"></div>
                 <span class="gender-badge" id="badge1">MALE</span>
                 <span class="avatar-cap" id="cap1"></span>
+                <span class="avatar-phase" id="ph1"></span>
             </div>
             <div class="exercise-details">
-                <h4>1. التوافق العصبي (إغلاق العينين والوقوف على قدم واحدة) <span class="target-tag">Target: 20s Total (10s/leg)</span></h4>
-                <p class="sub-en">Single-Leg Stance Balance Test (Closed Eyes)</p>
+                <h4>1. اختبار المرونة (الجلوس والوصول) <span class="target-tag">Best of 2 trials</span></h4>
+                <p class="sub-en">Sit-and-Reach Test</p>
+                <div class="rest-tag"><i class="fa-solid fa-hourglass-half"></i> فترة الراحة الموصى بها: <b>30–45 ثانية</b> <span class="en">Rest: 30–45 s</span></div>
+                <p class="test-howto">اجلس على الأرض بساقين ممدودتين وقدماك على الصندوق، ثم انحنِ للأمام ببطء وابعد يديك لأقصى مسافة. سجّل المسافة بالسنتيمتر (0 = خط أصابع القدم، وقيمة سالبة = قبل الأصابع).<br><span dir="ltr">Sit with legs straight and feet flat on the box, then reach forward slowly as far as possible. Record cm (0 = toe line, negative = short of toes).</span></p>
                 <div class="exercise-inputs">
-                    <div class="input-box"><label>القدم اليمنى (ثواني) <span class="en">Right Leg (s)</span></label><input type="number" id="coordR" max="10" min="0" placeholder="أقصى 10" required></div>
-                    <div class="input-box"><label>القدم اليسرى (ثواني) <span class="en">Left Leg (s)</span></label><input type="number" id="coordL" max="10" min="0" placeholder="أقصى 10" required></div>
+                    <div class="input-box"><label>المحاولة 1 (سم) <span class="en">Trial 1 (cm)</span></label><input type="number" id="srTry1" step="0.5" min="-40" max="60" placeholder="مثال: 8" required></div>
+                    <div class="input-box"><label>المحاولة 2 (سم) <span class="en">Trial 2 (cm)</span></label><input type="number" id="srTry2" step="0.5" min="-40" max="60" placeholder="مثال: 10" required></div>
                 </div>
             </div>
         </div>
@@ -1040,13 +1034,16 @@ body.auth-locked > :not(#bfitAuthOverlay) { visibility:hidden !important; }
                 <div class="avatar-svg" id="avatar2"></div>
                 <span class="gender-badge" id="badge2">MALE</span>
                 <span class="avatar-cap" id="cap2"></span>
+                <span class="avatar-phase" id="ph2"></span>
             </div>
             <div class="exercise-details">
-                <h4>2. التوازن الاستاتيكي (تمرين سوبرمان الثابت) <span class="target-tag">Target: 120s Total (60s/set)</span></h4>
-                <p class="sub-en">Static Superman Core & Back Balance Test</p>
+                <h4>2. موبيليتي الكتفين (اختبار أبلي للخدش) <span class="target-tag">Gap ≤ 0 cm = excellent</span></h4>
+                <p class="sub-en">Apley’s Scratch Test</p>
+                <div class="rest-tag"><i class="fa-solid fa-hourglass-half"></i> فترة الراحة الموصى بها: <b>30–45 ثانية</b> <span class="en">Rest: 30–45 s</span></div>
+                <p class="test-howto">ارفع يدًا فوق الكتف ومدّها لأسفل بين لوحي الكتف، والأخرى من الأسفل لأعلى خلف الظهر. قس المسافة بين أطراف الأصابع بالسنتيمتر (0 = تلامس، وقيمة سالبة = تداخل).<br><span dir="ltr">Reach one hand over the shoulder and down the spine, the other up from below. Measure the fingertip gap in cm (0 = touching, negative = overlap).</span></p>
                 <div class="exercise-inputs">
-                    <div class="input-box"><label>الجولة 1 (ثواني) <span class="en">Set 1 (s)</span></label><input type="number" id="balSet1" max="60" min="0" placeholder="أقصى 60" required></div>
-                    <div class="input-box"><label>الجولة 2 (ثواني) <span class="en">Set 2 (s)</span></label><input type="number" id="balSet2" max="60" min="0" placeholder="أقصى 60" required></div>
+                    <div class="input-box"><label>الجانب الأيمن (فجوة سم) <span class="en">Right over top (gap cm)</span></label><input type="number" id="apR" step="0.5" min="-20" max="40" placeholder="0 = تلامس" required></div>
+                    <div class="input-box"><label>الجانب الأيسر (فجوة سم) <span class="en">Left over top (gap cm)</span></label><input type="number" id="apL" step="0.5" min="-20" max="40" placeholder="0 = تلامس" required></div>
                 </div>
             </div>
         </div>
@@ -1056,13 +1053,16 @@ body.auth-locked > :not(#bfitAuthOverlay) { visibility:hidden !important; }
                 <div class="avatar-svg" id="avatar3"></div>
                 <span class="gender-badge" id="badge3">MALE</span>
                 <span class="avatar-cap" id="cap3"></span>
+                <span class="avatar-phase" id="ph3"></span>
             </div>
             <div class="exercise-details">
-                <h4>3. التحمل العضلي (تمرين الضغط) <span class="target-tag">Target: Set 2 >= 70% of Set 1</span></h4>
-                <p class="sub-en">Push-Up Upper Body Muscular Endurance Test</p>
+                <h4>3. الاتزان الثابت (الوقوف على قدم واحدة) <span class="target-tag">Target by age (≈43s under 40)</span></h4>
+                <p class="sub-en">Single-Leg Stance Test</p>
+                <div class="rest-tag"><i class="fa-solid fa-hourglass-half"></i> فترة الراحة الموصى بها: <b>45–60 ثانية</b> <span class="en">Rest: 45–60 s</span></div>
+                <p class="test-howto">قف على قدم واحدة وعيناك مفتوحتان ويداك على الوسط، وارفع القدم الأخرى. سجّل الزمن بالثواني حتى تلمس القدم المرفوعة الأرض أو تتحرك القدم الثابتة (حد أقصى 60 ثانية).<br><span dir="ltr">Stand on one leg, eyes open, hands on hips, other foot lifted. Record seconds until the lifted foot touches down or the stance foot moves (max 60 s).</span></p>
                 <div class="exercise-inputs">
-                    <div class="input-box"><label>الجولة 1 (أقصى تكرار) <span class="en">Set 1 (Max Reps)</span></label><input type="number" id="pushSet1" min="1" required placeholder="أقصى عدد"></div>
-                    <div class="input-box"><label>الجولة 2 (تكرار فعلي) <span class="en">Set 2 (Reps)</span></label><input type="number" id="pushSet2" min="0" required placeholder="تكرارات الجولة 2"></div>
+                    <div class="input-box"><label>القدم اليمنى (ثواني) <span class="en">Right leg (s)</span></label><input type="number" id="slsR" step="1" min="0" max="60" placeholder="أقصى 60" required></div>
+                    <div class="input-box"><label>القدم اليسرى (ثواني) <span class="en">Left leg (s)</span></label><input type="number" id="slsL" step="1" min="0" max="60" placeholder="أقصى 60" required></div>
                 </div>
             </div>
         </div>
@@ -1072,13 +1072,15 @@ body.auth-locked > :not(#bfitAuthOverlay) { visibility:hidden !important; }
                 <div class="avatar-svg" id="avatar4"></div>
                 <span class="gender-badge" id="badge4">MALE</span>
                 <span class="avatar-cap" id="cap4"></span>
+                <span class="avatar-phase" id="ph4"></span>
             </div>
             <div class="exercise-details">
-                <h4>4. الثبات الاستاتيكي (ثبات الاسكوات 90 درجة) <span class="target-tag">Target: 120s Total (60s/set)</span></h4>
-                <p class="sub-en">Static Isometric Squat Hold Test (90°)</p>
+                <h4>4. تحمل الجذع (بلانك الساعدين) <span class="target-tag">Target: 120 s</span></h4>
+                <p class="sub-en">Forearm Plank Test</p>
+                <div class="rest-tag"><i class="fa-solid fa-hourglass-half"></i> فترة الراحة الموصى بها: <b>90–120 ثانية</b> <span class="en">Rest: 90–120 s</span></div>
+                <p class="test-howto">ارتكز على الساعدين وأصابع القدمين بجسم مستقيم من الرأس للكعبين. سجّل الزمن بالثواني حتى ينهار الوضع (هبوط الحوض أو ارتفاعه).<br><span dir="ltr">Hold a straight body line on forearms and toes. Record seconds until form breaks (hips sag or pike).</span></p>
                 <div class="exercise-inputs">
-                    <div class="input-box"><label>الجولة 1 (ثواني) <span class="en">Set 1 (s)</span></label><input type="number" id="squatSet1" max="60" min="0" required placeholder="أقصى 60 ثانية"></div>
-                    <div class="input-box"><label>الجولة 2 (ثواني) <span class="en">Set 2 (s)</span></label><input type="number" id="squatSet2" max="60" min="0" required placeholder="أقصى 60 ثانية"></div>
+                    <div class="input-box"><label>زمن الثبات (ثواني) <span class="en">Hold time (s)</span></label><input type="number" id="plankSec" step="1" min="0" max="600" placeholder="بالثواني" required></div>
                 </div>
             </div>
         </div>
@@ -1088,13 +1090,15 @@ body.auth-locked > :not(#bfitAuthOverlay) { visibility:hidden !important; }
                 <div class="avatar-svg" id="avatar5"></div>
                 <span class="gender-badge" id="badge5">MALE</span>
                 <span class="avatar-cap" id="cap5"></span>
+                <span class="avatar-phase" id="ph5"></span>
             </div>
             <div class="exercise-details">
-                <h4>5. قوة وتحمل عضلات البطن (تمرين Sit-Up) <span class="target-tag">Target: Set 1 >= 15 Reps</span></h4>
-                <p class="sub-en">Abdominal Sit-Up Endurance Test</p>
+                <h4>5. قوة الجزء السفلي (الوقوف من الكرسي خلال 30 ثانية) <span class="target-tag">Max reps in 30 s</span></h4>
+                <p class="sub-en">30s Chair Stand Test</p>
+                <div class="rest-tag"><i class="fa-solid fa-hourglass-half"></i> فترة الراحة الموصى بها: <b>90–120 ثانية</b> <span class="en">Rest: 90–120 s</span></div>
+                <p class="test-howto">من وضع الجلوس على كرسي ثابت ويداك متقاطعتان على الصدر، قف بالكامل ثم اجلس بأكبر عدد ممكن من المرات خلال 30 ثانية.<br><span dir="ltr">From a seated position on a sturdy chair, arms crossed on chest, stand fully and sit back down as many times as possible in 30 s.</span></p>
                 <div class="exercise-inputs">
-                    <div class="input-box"><label>الجولة 1 (أقصى تكرار >=15) <span class="en">Set 1 (Max Reps)</span></label><input type="number" id="sitSet1" min="1" required placeholder="أقصى عدد"></div>
-                    <div class="input-box"><label>الجولة 2 (تكرار فعلي) <span class="en">Set 2 (Reps)</span></label><input type="number" id="sitSet2" min="0" required placeholder="تكرارات الجولة 2"></div>
+                    <div class="input-box"><label>عدد التكرارات في 30 ثانية <span class="en">Reps in 30 s</span></label><input type="number" id="chairReps" step="1" min="0" max="60" placeholder="عدد الوقفات" required></div>
                 </div>
             </div>
         </div>
@@ -1104,13 +1108,15 @@ body.auth-locked > :not(#bfitAuthOverlay) { visibility:hidden !important; }
                 <div class="avatar-svg" id="avatar6"></div>
                 <span class="gender-badge" id="badge6">MALE</span>
                 <span class="avatar-cap" id="cap6"></span>
+                <span class="avatar-phase" id="ph6"></span>
             </div>
             <div class="exercise-details">
-                <h4>6. كفاءة وقدرة عضلة القلب (تمرين Walkout) <span class="target-tag">Target Set 1: 12-15 Reps</span></h4>
-                <p class="sub-en">Cardiac Hand Walkout Cardiovascular Test</p>
+                <h4>6. تحمل الجزء العلوي (الضغط على الركبتين) <span class="target-tag">Max reps with good form</span></h4>
+                <p class="sub-en">Kneeling Push-Up Test</p>
+                <div class="rest-tag"><i class="fa-solid fa-hourglass-half"></i> فترة الراحة الموصى بها: <b>120 ثانية</b> <span class="en">Rest: 120 s</span></div>
+                <p class="test-howto">من وضع الركبتين على الأرض واليدان تحت الكتفين، انزل بالصدر حتى يقترب من الأرض ثم ادفع للأعلى. سجّل أقصى عدد تكرارات بأداء سليم.<br><span dir="ltr">Kneel with hands under shoulders, lower the chest close to the floor and press back up. Record the maximum reps with good form.</span></p>
                 <div class="exercise-inputs">
-                    <div class="input-box"><label>الجولة 1 (تكرار 12-15) <span class="en">Set 1 (12-15 Reps)</span></label><input type="number" id="cardiacSet1" max="15" min="0" required placeholder="من 12 إلى 15"></div>
-                    <div class="input-box"><label>الجولة 2 (تكرارات) <span class="en">Set 2 (Reps)</span></label><input type="number" id="cardiacSet2" max="15" min="0" required placeholder="الجولة 2"></div>
+                    <div class="input-box"><label>أقصى عدد تكرارات <span class="en">Max reps</span></label><input type="number" id="kpuReps" step="1" min="0" max="100" placeholder="عدد التكرارات" required></div>
                 </div>
             </div>
         </div>
@@ -1120,14 +1126,19 @@ body.auth-locked > :not(#bfitAuthOverlay) { visibility:hidden !important; }
                 <div class="avatar-svg" id="avatar7"></div>
                 <span class="gender-badge" id="badge7">MALE</span>
                 <span class="avatar-cap" id="cap7"></span>
+                <span class="avatar-phase" id="ph7"></span>
             </div>
             <div class="exercise-details">
-                <h4>7. الذاكرة العضلية والاتزان (Dumbbell Cuban Press) <span class="target-tag">Target: 24 Reps Total (12/set)</span></h4>
-                <p class="sub-en">Muscle Memory & Shoulder Rotator Coordination Test</p>
+                <h4>7. الكارديو واستشفاء النبض (اختبار YMCA للصعود 3 دقائق) <span class="target-tag">24 steps/min · 3 min</span></h4>
+                <p class="sub-en">3-Min YMCA Step Test</p>
+                <div class="rest-tag"><i class="fa-solid fa-hourglass-half"></i> فترة الراحة الموصى بها: <b>اختبار ختامي — استشفاء كامل بعده</b> <span class="en">Final test, full recovery after</span></div>
+                <p class="test-howto">اصعد وانزل عن صندوق ارتفاعه 30 سم لمدة 3 دقائق بإيقاع 24 خطوة/دقيقة. فور الانتهاء سجّل أقصى نبض، ثم اجلس وقس الزمن اللازم لعودة النبض إلى نبض الراحة.<br><span dir="ltr">Step up and down a 30 cm box for 3 minutes at 24 steps/min. Right after finishing record the peak HR, then sit and time how long the pulse takes to return to resting.</span></p>
                 <div class="exercise-inputs">
-                    <div class="input-box"><label>الجولة 1 (تكرارات) <span class="en">Set 1 (12 Reps)</span></label><input type="number" id="memSet1" max="12" min="0" required placeholder="أقصى 12"></div>
-                    <div class="input-box"><label>الجولة 2 (تكرارات) <span class="en">Set 2 (12 Reps)</span></label><input type="number" id="memSet2" max="12" min="0" required placeholder="أقصى 12"></div>
+                    <div class="input-box"><label>نبض الراحة الأساسي (نبضة/د) <span class="en">Resting HR (bpm)</span></label><input type="number" id="ymcaRest" step="1" min="30" max="130" placeholder="Resting HR" required></div>
+                    <div class="input-box"><label>أقصى نبض فور الانتهاء (نبضة/د) <span class="en">Peak HR right after (bpm)</span></label><input type="number" id="ymcaPeak" step="1" min="60" max="230" placeholder="Peak HR" required></div>
+                    <div class="input-box"><label>زمن استشفاء النبض للراحة (ثواني) <span class="en">Recovery time to resting (s)</span></label><input type="number" id="ymcaRec" step="1" min="5" max="900" placeholder="Recovery Time" required></div>
                 </div>
+                <div class="ymca-live" id="ymcaLive" aria-live="polite"></div>
             </div>
         </div>
 
@@ -1216,166 +1227,275 @@ body.auth-locked > :not(#bfitAuthOverlay) { visibility:hidden !important; }
 </div>
 
 <script>
-    // ===== Exercise avatars (inline SVG, male / female) =====
+    // ===== Exercise avatars: animated human figures (start -> finish), male / female =====
     const AVATAR_CAPTIONS = [
-        'SINGLE-LEG STANCE', 'SUPERMAN HOLD', 'PUSH-UP', 'SQUAT HOLD 90°',
-        'SIT-UP', 'HAND WALKOUT', 'CUBAN PRESS'
+        'SIT-AND-REACH', 'APLEY SCRATCH', 'SINGLE-LEG STANCE', 'FOREARM PLANK',
+        '30s CHAIR STAND', 'KNEELING PUSH-UP', '3-MIN STEP TEST'
     ];
 
-    const AV_STYLE = {
-        male:   { torso: 16,   thigh: 9.5, arm: 7,   head: 9.5, hipR: 0,   shoulder: 22, waist: 14, hip: 14 },
-        female: { torso: 12.5, thigh: 8.5, arm: 5.6, head: 8.8, hipR: 7.5, shoulder: 17, waist: 10, hip: 16 }
+    const AV_BODY = {
+        male:   { thigh: 10.5, shin: 8,   uarm: 7.6, farm: 6.4, torso: 17,   head: 9.2, shoulder: 21,   waist: 13,   hipw: 12,   chest: 0,   pelvis: 0,   glute: 0 },
+        female: { thigh: 9.6,  shin: 7,   uarm: 5.9, farm: 5,   torso: 12.5, head: 8.6, shoulder: 15.5, waist: 10,   hipw: 15.5, chest: 4.6, pelvis: 1.6, glute: 7.4 }
     };
-    const AV_HAIR = '#334155';
-    const AV_FLOOR = '#b8c0d4';
+    const AV_C = { skin: '#e2a77f', skinF: '#c98e66', hair: '#2b2118', shorts: '#334155', shortsF: '#27303f', shoe: '#0f172a', shoeF: '#1e293b', floor: '#b8c0d4', prop: '#94a3b8', propDark: '#64748b', mark: '#ef4444' };
+    const AV_LEN = { torso: 36, neck: 6, uarm: 19, farm: 18, thigh: 26, shin: 25, foot: 10 };
+    const AV_CYCLE = { hold0: 600, move: 1300, hold1: 900, back: 1300 };
+    let avGender = 'male';
+    const avVisible = {};
+    let avRaf = 0, avLastTs = 0;
 
-    const AV_POSES = {
-        1: {
-            kind: 'side', dir: 1, eyesClosed: true,
-            head: [101, 19], neck: [100, 31], sh: [100, 36], hip: [100, 72],
-            legFar:  [[100, 72], [100, 95], [100, 117], [109, 117]],
-            legNear: [[100, 72], [124, 74], [124, 97], [133, 97]],
-            armFar:  [[100, 38], [84, 47], [68, 42]],
-            armNear: [[100, 38], [117, 47], [134, 42]]
-        },
-        2: {
-            kind: 'side', dir: 1, mat: true,
-            head: [137, 84], neck: [129, 92], sh: [120, 98], hip: [78, 106],
-            legFar:  [[78, 108], [52, 100], [26, 91], [19, 88]],
-            legNear: [[78, 106], [52, 97], [26, 88], [19, 85]],
-            armFar:  [[118, 100], [144, 94], [170, 88]],
-            armNear: [[120, 98], [146, 91], [172, 84]]
-        },
-        3: {
-            kind: 'side', dir: 1,
-            head: [131, 71], neck: [121, 75], sh: [116, 78], hip: [72, 95],
-            legFar:  [[72, 95], [50, 103], [28, 112], [22, 113]],
-            legNear: [[72, 95], [50, 103], [28, 112], [22, 113]],
-            armFar:  [[111, 78], [111, 97], [111, 114]],
-            armNear: [[116, 78], [116, 97], [116, 114]]
-        },
-        4: {
-            kind: 'side', dir: 1,
-            head: [81, 29], neck: [77, 40], sh: [74, 45], hip: [62, 80],
-            legFar:  [[62, 80], [92, 80], [92, 112], [102, 113]],
-            legNear: [[62, 80], [96, 80], [96, 112], [106, 113]],
-            armFar:  [[74, 44], [96, 44], [118, 44]],
-            armNear: [[74, 47], [96, 47], [118, 47]],
-            marker: 'squat'
-        },
-        5: {
-            kind: 'side', dir: -1, mat: true,
-            head: [50, 62], neck: [57, 70], sh: [62, 76], hip: [86, 108],
-            legFar:  [[86, 108], [107, 82], [125, 111], [135, 112]],
-            legNear: [[86, 108], [110, 80], [128, 110], [138, 111]],
-            armFar:  [[62, 80], [80, 80], [100, 78]],
-            armNear: [[62, 78], [82, 78], [102, 76]]
-        },
-        6: {
-            kind: 'side', dir: 1,
-            head: [117, 87], neck: [110, 80], sh: [104, 74], hip: [72, 44],
-            legFar:  [[72, 44], [48, 79], [27, 113], [38, 114]],
-            legNear: [[72, 44], [51, 79], [30, 113], [41, 114]],
-            armFar:  [[100, 78], [106, 96], [112, 113]],
-            armNear: [[104, 76], [110, 95], [116, 113]],
-            marker: 'walk'
-        },
-        7: { kind: 'front' }
+    function avDir(a, l) { const r = a * Math.PI / 180; return [Math.cos(r) * l, Math.sin(r) * l]; }
+    function avPt(p, a, l) { const d = avDir(a, l); return [p[0] + d[0], p[1] + d[1]]; }
+    function avLerp(a, b, t) { return a + (b - a) * t; }
+    function avLerp2(a, b, t) { return [avLerp(a[0], b[0], t), avLerp(a[1], b[1], t)]; }
+    function avClamp(t) { return Math.max(0, Math.min(1, t)); }
+    function avEase(t) { t = avClamp(t); return t * t * (3 - 2 * t); }
+    function avR(n) { return Math.round(n * 10) / 10; }
+    function avPts(pts) { return pts.map(function (p) { return avR(p[0]) + ',' + avR(p[1]); }).join(' '); }
+    function avLine(pts, w, color) {
+        return '<polyline points="' + avPts(pts) + '" fill="none" stroke="' + color + '" stroke-width="' + w + '" stroke-linecap="round" stroke-linejoin="round"/>';
+    }
+    function avDot(p, r, color) { return '<circle cx="' + avR(p[0]) + '" cy="' + avR(p[1]) + '" r="' + avR(r) + '" fill="' + color + '"/>'; }
+
+    // Two-bone inverse kinematics: keeps every limb at its true length.
+    function avIK(root, target, l1, l2, bend) {
+        let dx = target[0] - root[0], dy = target[1] - root[1], d = Math.hypot(dx, dy) || 0.001;
+        const maxd = l1 + l2 - 0.02, mind = Math.abs(l1 - l2) + 0.5;
+        if (d > maxd) { dx *= maxd / d; dy *= maxd / d; d = maxd; }
+        if (d < mind) { dx *= mind / d; dy *= mind / d; d = mind; }
+        const ux = dx / d, uy = dy / d, a = (l1 * l1 - l2 * l2 + d * d) / (2 * d), h = Math.sqrt(Math.max(0, l1 * l1 - a * a));
+        return { m: [root[0] + ux * a - bend * uy * h, root[1] + uy * a + bend * ux * h], e: [root[0] + dx, root[1] + dy] };
+    }
+
+    // ---- side-view figure (faces right) ----
+    function avSideJoints(P, g) {
+        const B = AV_BODY[g], L = AV_LEN, sh = avPt(P.hip, P.tA, L.torso);
+        const lN = avIK(P.hip, P.fN, L.thigh, L.shin, P.kB), lF = avIK(P.hip, P.fF, L.thigh, L.shin, P.kB);
+        return {
+            hip: P.hip, sh: sh, nk: avPt(sh, P.nA, L.neck), hd: avPt(sh, P.nA, L.neck + B.head * 0.8),
+            aN: avIK(sh, P.hN, L.uarm, L.farm, P.eB), aF: avIK(sh, P.hF, L.uarm, L.farm, P.eB),
+            lN: lN, lF: lF, toN: avPt(lN.e, P.toN, L.foot), toF: avPt(lF.e, P.toF, L.foot)
+        };
+    }
+
+    function avArm(sh, a, B, far) {
+        const c = far ? AV_C.skinF : AV_C.skin;
+        return avLine([sh, a.m], B.uarm, c) + avLine([a.m, a.e], B.farm, c) + avDot(a.e, B.farm * 0.6 + 0.8, c) +
+            avLine([sh, avLerp2(sh, a.m, 0.5)], B.uarm + 1.4, 'currentColor');
+    }
+
+    function avLeg(hip, l, to, B, far) {
+        const c = far ? AV_C.skinF : AV_C.skin, s = far ? AV_C.shortsF : AV_C.shorts;
+        return avLine([hip, l.m], B.thigh, c) + avLine([l.m, l.e], B.shin, c) + avLine([l.e, to], 6, far ? AV_C.shoeF : AV_C.shoe) +
+            avLine([hip, avLerp2(hip, l.m, 0.64)], B.thigh + 1.6, s);
+    }
+
+    function avSideBody(P, g, J) {
+        const B = AV_BODY[g], f = avDir(P.nA + 90, 1), up = avDir(P.nA, 1), tn = avDir(P.tA + 90, 1);
+        let o = avArm(J.sh, J.aF, B, true) + avLeg(J.hip, J.lF, J.toF, B, true);
+        o += avLine([J.hip, J.sh], B.torso, 'currentColor');
+        if (B.chest) o += avDot([J.sh[0] - avDir(P.tA, 1)[0] * 9 + tn[0] * (B.torso / 2 - 0.5), J.sh[1] - avDir(P.tA, 1)[1] * 9 + tn[1] * (B.torso / 2 - 0.5)], B.chest, 'currentColor');
+        o += avLine([J.hip, avLerp2(J.hip, J.sh, 0.17)], B.torso + 0.6, AV_C.shorts);
+        if (B.glute) o += avDot([J.hip[0] - tn[0] * (B.torso / 2 - 1.5), J.hip[1] - tn[1] * (B.torso / 2 - 1.5)], B.glute, AV_C.shorts);
+        if (B.pelvis) o += avDot(J.hip, B.torso / 2 + B.pelvis, AV_C.shorts);
+        o += avLine([J.sh, J.nk], 5.6, AV_C.skin);
+        if (g === 'female') {
+            const bp = [J.hd[0] - f[0] * B.head * 0.85, J.hd[1] - f[1] * B.head * 0.85 + 1];
+            o += avLine([bp, [bp[0] - f[0] * 5, bp[1] + 4], [bp[0] - f[0] * 6, bp[1] + 12]], 4.2, AV_C.hair);
+        }
+        o += avDot([J.hd[0] - f[0] * 1.7 + up[0] * 1.3, J.hd[1] - f[1] * 1.7 + up[1] * 1.3], B.head + 0.5, AV_C.hair);
+        o += avDot([J.hd[0] + f[0] * 0.9, J.hd[1] + f[1] * 0.9], B.head - 0.5, AV_C.skin);
+        o += avDot([J.hd[0] + f[0] * B.head * 0.62 + up[0] * 0.8, J.hd[1] + f[1] * B.head * 0.62 + up[1] * 0.8], 1.1, '#1f2937');
+        o += avLeg(J.hip, J.lN, J.toN, B, false) + avArm(J.sh, J.aN, B, false);
+        return o;
+    }
+
+    // ---- back-view figure (Apley scratch) ----
+    function avBackBody(P, g) {
+        const B = AV_BODY[g], cx = 100, sy = 40, S = B.shoulder, W = B.waist, H = B.hipw, L = AV_LEN;
+        let o = '';
+        [-1, 1].forEach(function (s) {
+            const hip = [cx + s * H * 0.5, 82], knee = [cx + s * (H * 0.5 + 1), 100], ank = [cx + s * (H * 0.5 + 1.5), 115];
+            o += avLine([hip, knee], B.thigh, AV_C.skin) + avLine([knee, ank], B.shin, AV_C.skin) +
+                avLine([ank, [ank[0] + s * 4, 117.5]], 6, AV_C.shoe) + avLine([hip, [hip[0] + s * 0.5, 94]], B.thigh + 1.6, AV_C.shorts);
+        });
+        const torso = [[cx - S, sy], [cx + S, sy], [cx + W, 66], [cx + H, 83], [cx - H, 83], [cx - W, 66]];
+        o += '<polygon points="' + avPts(torso) + '" fill="currentColor" stroke="currentColor" stroke-width="6" stroke-linejoin="round"/>';
+        o += '<polygon points="' + avPts([[cx - H, 80], [cx + H, 80], [cx + H + 1, 86], [cx - H - 1, 86]]) + '" fill="' + AV_C.shorts + '" stroke="' + AV_C.shorts + '" stroke-width="5" stroke-linejoin="round"/>';
+        o += avLine([[cx, 31], [cx, sy]], 6, AV_C.skin);
+        o += avDot([cx - B.head, 21], 2, AV_C.skin) + avDot([cx + B.head, 21], 2, AV_C.skin);
+        o += avDot([cx, 21], B.head, AV_C.hair);
+        if (g === 'female') o += avDot([cx, 9.5], 4.6, AV_C.hair) + avLine([[cx, 12], [cx, 17]], 3, AV_C.hair);
+        const rs = [cx - S + 2, sy + 3], ls = [cx + S - 2, sy + 3];
+        const aT = avIK(rs, P.hT, L.uarm, L.farm, P.eT), aB = avIK(ls, P.hB, L.uarm, L.farm, P.eB);
+        o += avLine([rs, aT.m], B.uarm, AV_C.skin) + avLine([aT.m, aT.e], B.farm, AV_C.skin) + avDot(aT.e, B.farm * 0.6 + 0.8, AV_C.skin) + avLine([rs, avLerp2(rs, aT.m, 0.4)], B.uarm + 1.4, 'currentColor');
+        o += avLine([ls, aB.m], B.uarm, AV_C.skin) + avLine([aB.m, aB.e], B.farm, AV_C.skin) + avDot(aB.e, B.farm * 0.6 + 0.8, AV_C.skin) + avLine([ls, avLerp2(ls, aB.m, 0.4)], B.uarm + 1.4, 'currentColor');
+        return o;
+    }
+
+    // ---- the seven tests: pose(p) with p = 0 (start) .. 1 (finish) ----
+    function avSideP(o) {
+        return Object.assign({ tA: -90, nA: -90, eB: 1, kB: -1, toN: 0, toF: 0 }, o);
+    }
+
+    const AV_TESTS = {
+        1: { kind: 'side', scale: 1,
+            pose: function (p) {
+                const hip = [48, 113.5], tA = avLerp(-92, -14, p), sh = avPt(hip, tA, AV_LEN.torso);
+                const ty = avLerp(sh[1] + 3, 93, p);
+                return avSideP({ hip: hip, tA: tA, nA: tA + avLerp(0, 26, p), hN: [sh[0] + 37, ty], hF: [sh[0] + 35, ty + 1], eB: 1,
+                    fN: [99, 114], fF: [99, 114], kB: -1, toN: -78, toF: -78 });
+            },
+            back: function () {
+                let o = '<rect x="108" y="99" width="16" height="20" rx="2" fill="' + AV_C.prop + '"/><rect x="108" y="96.5" width="82" height="3" rx="1.5" fill="' + AV_C.propDark + '"/>';
+                for (let x = 110; x <= 188; x += 6) o += '<line x1="' + x + '" y1="96.5" x2="' + x + '" y2="' + (x % 12 === 2 ? 93.5 : 95) + '" stroke="' + AV_C.propDark + '" stroke-width="0.9"/>';
+                return o;
+            },
+            front: function (J) { return '<polygon points="' + avPts([[J.aN.e[0] + 3, 91.5], [J.aN.e[0] + 7, 91.5], [J.aN.e[0] + 5, 96]]) + '" fill="' + AV_C.mark + '"/>'; } },
+        2: { kind: 'back', scale: 1,
+            pose: function (p) {
+                const cx = 100, up = avEase(avClamp(p / 0.5)), dn = avEase(avClamp((p - 0.5) / 0.5));
+                let hT, hB;
+                if (p < 0.5) { hT = avLerp2([cx - 29, 77], [cx - 31, 6], up); hB = avLerp2([cx + 29, 77], [cx + 14, 74], up); }
+                else { hT = avLerp2([cx - 31, 6], [cx - 9, 46], dn); hB = avLerp2([cx + 14, 74], [cx - 8, 51], dn); }
+                return { hT: hT, hB: hB, eT: -1, eB: -1 };
+            } },
+        3: { kind: 'side', scale: 1,
+            pose: function (p) {
+                const hip = [100, 65], sh = avPt(hip, -90, AV_LEN.torso);
+                return avSideP({ hip: hip, hN: avLerp2([sh[0] + 2, sh[1] + 35], [hip[0] + 9, hip[1] - 7], p), hF: avLerp2([sh[0] - 1, sh[1] + 35], [hip[0] + 5, hip[1] - 8], p), eB: 1,
+                    fN: [106, 116], fF: avLerp2([94, 116], [114, 91], p), kB: -1, toN: 0, toF: avLerp(0, 72, p) });
+            } },
+        4: { kind: 'side', scale: 1,
+            pose: function (p) {
+                return avSideP({ hip: avLerp2([77.8, 107.6], [76.4, 101.7], p), tA: avLerp(-18, -8.3, p), nA: avLerp(-14, -2, p),
+                    hN: [131, 115.5], hF: [129, 115.5], eB: -1,
+                    fN: avLerp2([28, 114.5], [25.9, 109], p), fF: avLerp2([28, 114.5], [25.9, 109], p), kB: -1,
+                    toN: avLerp(180, 70, p), toF: avLerp(180, 70, p) });
+            } },
+        5: { kind: 'side', scale: 1,
+            pose: function (p) {
+                const e = avEase(p), hip = [avLerp(64, 90, e), avLerp(81, 65, avEase(avClamp((p - 0.12) / 0.88)))], tA = -90 + 32 * Math.sin(Math.PI * p), sh = avPt(hip, tA, AV_LEN.torso);
+                return avSideP({ hip: hip, tA: tA, nA: tA, hN: [sh[0] + 9, sh[1] + 10], hF: [sh[0] + 6, sh[1] + 7], eB: -1,
+                    fN: [93, 116], fF: [88, 116], kB: -1 });
+            },
+            back: function () {
+                return '<rect x="34" y="50" width="5" height="40" rx="2" fill="' + AV_C.propDark + '"/><rect x="36" y="88" width="50" height="4" rx="2" fill="' + AV_C.propDark + '"/>' +
+                    '<line x1="40" y1="92" x2="40" y2="119" stroke="' + AV_C.propDark + '" stroke-width="3" stroke-linecap="round"/><line x1="82" y1="92" x2="82" y2="119" stroke="' + AV_C.propDark + '" stroke-width="3" stroke-linecap="round"/>';
+            } },
+        6: { kind: 'side', scale: 1,
+            pose: function (p) {
+                const th = avLerp(36.6, 14, p), K = [32, 114.5], u = avDir(-th, 1), hip = [K[0] + u[0] * 26, K[1] + u[1] * 26];
+                return avSideP({ hip: hip, tA: -th, nA: -th + 8, hN: [82, 115.5], hF: [80, 115.5], eB: 1,
+                    fN: [K[0] - 25, 114.5], fF: [K[0] - 25, 114.5], kB: -1, toN: 180, toF: 180 });
+            } },
+        7: { kind: 'side', scale: 0.85,
+            pose: function (p) {
+                const a = avEase(avClamp(p / 0.4)), b = avEase(avClamp((p - 0.4) / 0.4)), c = avEase(avClamp((p - 0.8) / 0.2));
+                let hip = [82, 65], fN = [86, 116], fF = [76, 116];
+                fN = avLerp2(fN, [122, 96], a); if (a > 0 && a < 1) fN = [fN[0], fN[1] - 14 * Math.sin(Math.PI * a)];
+                hip = avLerp2(hip, [98, 62], a);
+                fF = avLerp2(fF, [134, 96], b); if (b > 0 && b < 1) fF = [fF[0], fF[1] - 14 * Math.sin(Math.PI * b)];
+                hip = avLerp2(hip, [128, 45], b);
+                const tA = -90 + 12 * Math.sin(Math.PI * avClamp(p / 0.8)), sh = avPt(hip, tA, AV_LEN.torso), sw = Math.sin(Math.PI * avClamp(p / 0.8));
+                return avSideP({ hip: hip, tA: tA, nA: tA, hN: [sh[0] + 10 * sw + 2, sh[1] + 33], hF: [sh[0] - 10 * sw, sh[1] + 33], eB: -1,
+                    fN: fN, fF: fF, kB: -1, toN: 0, toF: 0 });
+            },
+            back: function () {
+                return '<rect x="110" y="99" width="50" height="20" rx="2" fill="' + AV_C.prop + '"/><rect x="110" y="99" width="50" height="3.5" rx="1.5" fill="' + AV_C.propDark + '"/>';
+            } }
     };
 
-    function avPoly(pts, w, extra) {
-        return '<polyline points="' + pts.map(function (p) { return p.join(','); }).join(' ') +
-            '" fill="none" stroke="currentColor" stroke-width="' + w +
-            '" stroke-linecap="round" stroke-linejoin="round" ' + (extra || '') + '/>';
-    }
-
-    function avHead(cx, cy, g, dir, eyesClosed) {
-        const s = AV_STYLE[g], r = s.head;
-        let o = '<circle cx="' + cx + '" cy="' + cy + '" r="' + r + '" fill="currentColor"/>';
-        o += '<path d="M' + (cx - r) + ' ' + (cy + 1) + ' A' + r + ' ' + r + ' 0 0 1 ' + (cx + r) + ' ' + (cy + 1) +
-            ' Q' + (cx + dir * 2) + ' ' + (cy - r * 0.9) + ' ' + (cx - r) + ' ' + (cy + 1) + 'Z" fill="' + AV_HAIR + '"/>';
-        if (g === 'female') {
-            o += '<path d="M' + (cx - dir * r * 0.75) + ' ' + (cy - r * 0.45) + ' q' + (-dir * 12) + ' -1 ' + (-dir * 10) + ' ' + (r * 1.3) +
-                '" fill="none" stroke="' + AV_HAIR + '" stroke-width="4.5" stroke-linecap="round"/>';
-        }
-        if (eyesClosed) {
-            o += '<path d="M' + (cx + dir * 2) + ' ' + (cy + 1) + ' q' + (dir * 3) + ' 2.4 ' + (dir * 6) + ' 0" fill="none" stroke="#0f172a" stroke-width="1.7" stroke-linecap="round"/>';
-        }
+    function avBodyAt(i, g, p) {
+        const T = AV_TESTS[i], P = T.pose(p, g);
+        let o = '<line x1="8" y1="119" x2="192" y2="119" stroke="' + AV_C.floor + '" stroke-width="2" stroke-linecap="round"/>';
+        if (T.kind === 'back') return o + avBackBody(P, g);
+        const J = avSideJoints(P, g);
+        if (T.back) o += T.back(p, J);
+        o += avSideBody(P, g, J);
+        if (T.front) o += T.front(J, p);
         return o;
     }
 
-    function avMarkers(kind) {
-        if (kind === 'squat') {
-            return '<path d="M80 80 A16 16 0 0 0 96 96" fill="none" stroke="#475569" stroke-width="1.8" stroke-dasharray="3 2"/>' +
-                '<text x="64" y="104" font-size="10" font-family="Montserrat,sans-serif" font-weight="700" fill="#475569">90°</text>';
-        }
-        if (kind === 'walk') {
-            return '<path d="M126 104 h26" stroke="#64748b" stroke-width="2" stroke-linecap="round" stroke-dasharray="4 3"/>' +
-                '<polygon points="152,99 162,104 152,109" fill="#64748b"/>';
-        }
-        return '';
-    }
-
-    function avSide(p, g) {
-        const s = AV_STYLE[g];
-        let o = '<line x1="8" y1="119" x2="192" y2="119" stroke="' + AV_FLOOR + '" stroke-width="2" stroke-linecap="round"/>';
-        if (p.mat) o += '<rect x="12" y="114" width="176" height="5" rx="2.5" fill="#d3d9e6"/>';
-        o += avPoly(p.legFar, s.thigh, 'opacity="0.55"') + avPoly(p.armFar, s.arm, 'opacity="0.55"');
-        o += avPoly([p.hip, p.sh], s.torso);
-        if (s.hipR) o += '<circle cx="' + p.hip[0] + '" cy="' + p.hip[1] + '" r="' + s.hipR + '" fill="currentColor"/>';
-        o += avPoly([p.sh, p.neck], 6);
-        o += avHead(p.head[0], p.head[1], g, p.dir, p.eyesClosed);
-        o += avPoly(p.legNear, s.thigh) + avPoly(p.armNear, s.arm);
-        o += avMarkers(p.marker);
-        return o;
-    }
-
-    function avDumbbell(x, y) {
-        return '<line x1="' + (x - 9) + '" y1="' + y + '" x2="' + (x + 9) + '" y2="' + y + '" stroke="' + AV_HAIR + '" stroke-width="3" stroke-linecap="round"/>' +
-            '<rect x="' + (x - 13) + '" y="' + (y - 6) + '" width="5" height="12" rx="1.5" fill="' + AV_HAIR + '"/>' +
-            '<rect x="' + (x + 8) + '" y="' + (y - 6) + '" width="5" height="12" rx="1.5" fill="' + AV_HAIR + '"/>';
-    }
-
-    function avFront(g) {
-        const s = AV_STYLE[g], cx = 100;
-        const torso = [[cx - s.shoulder, 38], [cx + s.shoulder, 38], [cx + s.waist, 70], [cx + s.hip, 82], [cx - s.hip, 82], [cx - s.waist, 70]];
-        let o = '<line x1="8" y1="119" x2="192" y2="119" stroke="' + AV_FLOOR + '" stroke-width="2" stroke-linecap="round"/>';
-        o += avPoly([[cx - 6, 82], [cx - 8, 100], [cx - 9, 117], [cx - 16, 117]], s.thigh);
-        o += avPoly([[cx + 6, 82], [cx + 8, 100], [cx + 9, 117], [cx + 16, 117]], s.thigh);
-        o += '<polygon points="' + torso.map(function (p) { return p.join(','); }).join(' ') +
-            '" fill="currentColor" stroke="currentColor" stroke-width="6" stroke-linejoin="round"/>';
-        const lx = cx - s.shoulder - 24, rx = cx + s.shoulder + 24;
-        o += avPoly([[cx - s.shoulder + 2, 40], [lx, 40], [lx, 16]], s.arm);
-        o += avPoly([[cx + s.shoulder - 2, 40], [rx, 40], [rx, 16]], s.arm);
-        o += avDumbbell(lx, 14) + avDumbbell(rx, 14);
-        o += '<path d="M' + (lx + 12) + ' 52 A15 15 0 0 1 ' + (lx + 12) + ' 28" fill="none" stroke="#64748b" stroke-width="1.6" stroke-dasharray="3 2"/>';
-        o += '<path d="M' + (rx - 12) + ' 52 A15 15 0 0 0 ' + (rx - 12) + ' 28" fill="none" stroke="#64748b" stroke-width="1.6" stroke-dasharray="3 2"/>';
-        o += avPoly([[cx, 30], [cx, 38]], 6);
-        o += avHead(cx, 20, g, 1, false);
-        if (g === 'female') {
-            o += '<path d="M' + (cx - s.head + 1) + ' 22 q-3 14 0 20" fill="none" stroke="' + AV_HAIR + '" stroke-width="3.2" stroke-linecap="round"/>';
-            o += '<path d="M' + (cx + s.head - 1) + ' 22 q3 14 0 20" fill="none" stroke="' + AV_HAIR + '" stroke-width="3.2" stroke-linecap="round"/>';
-        }
-        return o;
+    function avFigureSVG(i, g, p, ghost) {
+        const T = AV_TESTS[i], s = T.scale || 1;
+        let o = '';
+        if (ghost) o += '<g opacity="0.24">' + avBodyAt(i, g, 0) + '</g>';
+        o += avBodyAt(i, g, p);
+        if (s !== 1) o = '<g transform="translate(100 119) scale(' + s + ') translate(-100 -119)">' + o + '</g>';
+        return '<svg viewBox="0 0 200 130" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="' + AVATAR_CAPTIONS[i - 1] + ' ' + g + '">' + o + '</svg>';
     }
 
     function exerciseAvatarSVG(index, gender) {
-        const g = gender === 'female' ? 'female' : 'male';
-        const p = AV_POSES[index];
-        const body = p.kind === 'front' ? avFront(g) : avSide(p, g);
-        return '<svg viewBox="0 0 200 130" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="' +
-            AVATAR_CAPTIONS[index - 1] + ' ' + g + '">' + body + '</svg>';
+        return avFigureSVG(index, gender === 'female' ? 'female' : 'male', 1, true);
+    }
+
+    function avProgress(ms) {
+        const C = AV_CYCLE, total = C.hold0 + C.move + C.hold1 + C.back;
+        let t = ((ms % total) + total) % total;
+        if (t < C.hold0) return 0;
+        t -= C.hold0; if (t < C.move) return avEase(t / C.move);
+        t -= C.move; if (t < C.hold1) return 1;
+        t -= C.hold1; return 1 - avEase(t / C.back);
+    }
+
+    function avRenderOne(i, p) {
+        const el = document.getElementById('avatar' + i);
+        if (!el) return;
+        el.innerHTML = avFigureSVG(i, avGender, p, false);
+        const ph = document.getElementById('ph' + i);
+        if (ph) {
+            const txt = p < 0.5 ? 'START | بداية' : 'FINISH | نهاية';
+            if (ph.textContent !== txt) ph.textContent = txt;
+        }
+    }
+
+    function avReduced() {
+        try { return window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) { return false; }
+    }
+
+    function avTick(ts) {
+        avRaf = requestAnimationFrame(avTick);
+        if (document.hidden || ts - avLastTs < 34) return;
+        avLastTs = ts;
+        for (let i = 1; i <= 7; i++) {
+            if (avVisible[i] !== false) avRenderOne(i, avProgress(ts + i * 330));
+        }
+    }
+
+    function avStatic() {
+        for (let i = 1; i <= 7; i++) {
+            const el = document.getElementById('avatar' + i), ph = document.getElementById('ph' + i);
+            if (el) el.innerHTML = avFigureSVG(i, avGender, 1, true);
+            if (ph) ph.textContent = 'START | بداية  →  FINISH | نهاية';
+        }
+    }
+
+    function avStart() {
+        if (avReduced()) { avStatic(); return; }
+        if (avRaf) return;
+        if ('IntersectionObserver' in window && !avStart.obs) {
+            avStart.obs = new IntersectionObserver(function (entries) {
+                entries.forEach(function (en) { avVisible[parseInt(en.target.id.replace('avatar', ''), 10)] = en.isIntersecting; });
+            }, { rootMargin: '120px' });
+            for (let i = 1; i <= 7; i++) { const el = document.getElementById('avatar' + i); if (el) avStart.obs.observe(el); }
+        }
+        avRaf = requestAnimationFrame(avTick);
     }
 
     function updateGenderTheme() {
         const gender = document.getElementById('genderSelect').value === 'female' ? 'female' : 'male';
+        avGender = gender;
         document.documentElement.style.setProperty('--accent-gender', gender === 'female' ? '#f472b6' : '#38bdf8');
 
         for (let i = 1; i <= 7; i++) {
             document.getElementById('badge' + i).innerText = gender === 'female' ? 'FEMALE' : 'MALE';
-            document.getElementById('avatar' + i).innerHTML = exerciseAvatarSVG(i, gender);
             document.getElementById('cap' + i).innerText = AVATAR_CAPTIONS[i - 1];
         }
+        if (avReduced()) { avStatic(); return; }
+        const now = (window.performance && performance.now) ? performance.now() : Date.now();
+        for (let i = 1; i <= 7; i++) avRenderOne(i, avProgress(now + i * 330));
+        avStart();
     }
 
     function setOcrStatus(color, iconClass, message) {
@@ -1999,15 +2119,36 @@ body.auth-locked > :not(#bfitAuthOverlay) { visibility:hidden !important; }
     }
 
     // ===== Food calculator (built-in local dataset, no API / no keys) =====
-    const FOOD_KEYS = ['kcal', 'p', 'c', 'f', 'fiber', 'na', 'k', 'ca', 'fe', 'vc'];
+    const FOOD_KEYS = ['kcal', 'p', 'c', 'f', 'fiber', 'na', 'k', 'ca', 'fe', 'vc', 'sugar', 'sat', 'chol', 'va', 'vd', 'b12', 'mg', 'zn'];
     const FOOD_MICROS = [
-        ['fiber', 'ألياف', 'Fiber', 'g'], ['na', 'صوديوم', 'Sodium', 'mg'], ['k', 'بوتاسيوم', 'Potassium', 'mg'],
-        ['ca', 'كالسيوم', 'Calcium', 'mg'], ['fe', 'حديد', 'Iron', 'mg'], ['vc', 'فيتامين C', 'Vitamin C', 'mg']
+        ['fiber', 'ألياف', 'Fiber', 'g'], ['sugar', 'سكريات', 'Sugars', 'g'], ['sat', 'دهون مشبعة', 'Saturated fat', 'g'], ['chol', 'كوليسترول', 'Cholesterol', 'mg'],
+        ['na', 'صوديوم', 'Sodium', 'mg'], ['k', 'بوتاسيوم', 'Potassium', 'mg'], ['ca', 'كالسيوم', 'Calcium', 'mg'], ['fe', 'حديد', 'Iron', 'mg'],
+        ['mg', 'مغنيسيوم', 'Magnesium', 'mg'], ['zn', 'زنك', 'Zinc', 'mg'], ['va', 'فيتامين A', 'Vitamin A', 'mcg'], ['vc', 'فيتامين C', 'Vitamin C', 'mg'],
+        ['vd', 'فيتامين D', 'Vitamin D', 'mcg'], ['b12', 'فيتامين B12', 'Vitamin B12', 'mcg']
+    ];
+    // key, English, Arabic, unit, %DV reference (FDA 2,000 kcal), indent, bold, decimals
+    const LABEL_ROWS = [
+        ['f', 'Total Fat', 'الدهون الكلية', 'g', 78, 0, 1, 1],
+        ['sat', 'Saturated Fat', 'دهون مشبعة', 'g', 20, 1, 0, 1],
+        ['chol', 'Cholesterol', 'كوليسترول', 'mg', 300, 0, 1, 0],
+        ['na', 'Sodium', 'صوديوم', 'mg', 2300, 0, 1, 0],
+        ['c', 'Total Carbohydrate', 'الكربوهيدرات الكلية', 'g', 275, 0, 1, 1],
+        ['fiber', 'Dietary Fiber', 'ألياف غذائية', 'g', 28, 1, 0, 1],
+        ['sugar', 'Total Sugars', 'سكريات كلية', 'g', null, 1, 0, 1],
+        ['p', 'Protein', 'بروتين', 'g', 50, 0, 1, 1]
+    ];
+    const LABEL_MICROS = [
+        ['vd', 'Vitamin D', 'فيتامين D', 'mcg', 20, 0, 0, 1], ['ca', 'Calcium', 'كالسيوم', 'mg', 1300, 0, 0, 0],
+        ['fe', 'Iron', 'حديد', 'mg', 18, 0, 0, 1], ['k', 'Potassium', 'بوتاسيوم', 'mg', 4700, 0, 0, 0],
+        ['va', 'Vitamin A', 'فيتامين A', 'mcg', 900, 0, 0, 0], ['vc', 'Vitamin C', 'فيتامين C', 'mg', 90, 0, 0, 1],
+        ['b12', 'Vitamin B12', 'فيتامين B12', 'mcg', 2.4, 0, 0, 1], ['mg', 'Magnesium', 'مغنيسيوم', 'mg', 420, 0, 0, 0],
+        ['zn', 'Zinc', 'زنك', 'mg', 11, 0, 0, 1]
     ];
     const FOOD_CATS = {
         grain: ['نشويات وحبوب', 'Grains & Starch'], legume: ['بقوليات', 'Legumes'], meat: ['لحوم ودواجن', 'Meat & Poultry'],
         fish: ['أسماك', 'Seafood'], egg: ['بيض', 'Eggs'], dairy: ['ألبان وأجبان', 'Dairy'], fat: ['دهون ومكسرات', 'Fats & Nuts'],
-        veg: ['خضروات', 'Vegetables'], fruit: ['فواكه', 'Fruit'], other: ['أخرى', 'Other'], custom: ['مخصص', 'Custom']
+        veg: ['خضروات', 'Vegetables'], fruit: ['فواكه', 'Fruit'], drink: ['مشروبات وعصائر', 'Drinks & Juices'], sweet: ['حلويات ووجبات خفيفة', 'Sweets & Snacks'],
+        fast: ['وجبات سريعة', 'Fast Food'], other: ['أخرى', 'Other'], custom: ['مخصص', 'Custom']
     };
     // [ar, en, aliases, cat, yield (cooked g per 1 g raw, 0 = as is), kcal, protein, carb, fat, fiber, sodium, potassium, calcium, iron, vitC]  — per 100 g (raw / as listed)
     const FOOD_DB_RAW = [
@@ -2092,8 +2233,68 @@ body.auth-locked > :not(#bfitAuthOverlay) { visibility:hidden !important; }
         ['عصير برتقال', 'Orange juice', '', 'fruit', 0, 45, 0.7, 10.4, 0.2, 0.2, 1, 200, 11, 0.2, 50],
         ['بروتين مصل اللبن', 'Whey protein powder', 'واي بروتين مكمل', 'other', 0, 400, 80, 8, 6, 0, 200, 400, 400, 1, 0],
         ['عسل', 'Honey', '', 'other', 0, 304, 0.3, 82, 0, 0.2, 4, 52, 6, 0.4, 0.5],
-        ['سكر أبيض', 'White sugar', 'سكر', 'other', 0, 387, 0, 100, 0, 0, 1, 2, 1, 0, 0]
+        ['سكر أبيض', 'White sugar', 'سكر', 'other', 0, 387, 0, 100, 0, 0, 1, 2, 1, 0, 0],
+        ['فستق', 'Pistachios', '', 'fat', 0, 560, 20, 28, 45, 10, 1, 1025, 105, 3.9, 5.6, 7.7, 5.4, 0, 26, 0, 0, 121, 2.2],
+        ['بذور الشيا', 'Chia seeds', 'شيا', 'fat', 0, 486, 16.5, 42, 31, 34, 16, 407, 631, 7.7, 1.6, 0, 3.3, 0, 0, 0, 0, 335, 4.6],
+        ['كولا', 'Cola (regular)', 'بيبسي كوكاكولا مشروب غازي غازيات صودا pepsi coca-cola coke soda soft drink', 'drink', 0, 42, 0, 10.6, 0, 0, 4, 2, 2, 0, 0, 10.6, 0, 0, 0, 0, 0, 0, 0],
+        ['كولا دايت', 'Diet cola', 'دايت زيرو صفر سعرات pepsi max coke zero', 'drink', 0, 0, 0, 0, 0, 0, 10, 1, 3, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0],
+        ['سفن أب / سبرايت', 'Lemon-lime soda', 'سبرايت 7up sprite ليمون غازي', 'drink', 0, 40, 0, 10, 0, 0, 15, 2, 2, 0, 0, 10, 0, 0, 0, 0, 0, 0, 0],
+        ['فانتا برتقال', 'Orange soda', 'فانتا ميرندا fanta برتقال غازي', 'drink', 0, 46, 0, 11.5, 0, 0, 10, 2, 3, 0, 0, 11, 0, 0, 0, 0, 0, 0, 0],
+        ['مشروب طاقة', 'Energy drink', 'ريد بول ستار monster red bull', 'drink', 0, 45, 0, 11, 0, 0, 40, null, null, null, null, 11, 0, 0, null, null, null, null, null],
+        ['مشروب رياضي', 'Sports drink', 'جاتوريد باوريد gatorade powerade', 'drink', 0, 26, 0, 6.4, 0, 0, 41, 12, 0, 0, 0, 5.8, 0, 0, 0, 0, 0, 0, 0],
+        ['عصير تفاح', 'Apple juice', '', 'drink', 0, 46, 0.1, 11.3, 0.1, 0.2, 4, 101, 8, 0.1, 0.9, 9.6, 0, 0, 1, 0, 0, 5, 0],
+        ['عصير عنب', 'Grape juice', '', 'drink', 0, 60, 0.4, 14.8, 0.1, 0.2, 5, 104, 11, 0.3, 0.1, 14.3, 0.1, 0, 2, 0, 0, 10, 0.1],
+        ['عصير مانجو', 'Mango juice', 'عصير مانجا نكتار', 'drink', 0, 51, 0.2, 12.8, 0.1, 0.4, 5, 36, 6, 0.1, 6, 12, 0, 0, 21, 0, 0, 4, 0.1],
+        ['عصير رمان', 'Pomegranate juice', '', 'drink', 0, 54, 0.2, 13.1, 0.3, 0.1, 9, 214, 11, 0.3, 0.1, 12.7, 0.1, 0, 0, 0, 0, 10, 0.1],
+        ['ليموناضة', 'Lemonade', 'عصير ليمون', 'drink', 0, 40, 0.1, 10.5, 0.1, 0.1, 3, 15, 4, 0.1, 2.6, 9, 0, 0, 0, 0, 0, 2, 0],
+        ['شاي مثلج محلى', 'Sweetened iced tea', 'ايس تي ليبتون', 'drink', 0, 30, 0, 7.5, 0, 0, 5, 20, 3, 0, 0, 7, 0, 0, 0, 0, 0, 1, 0],
+        ['قهوة سوداء', 'Black coffee', 'قهوة اسبريسو امريكانو', 'drink', 0, 1, 0.1, 0, 0, 0, 2, 49, 2, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0],
+        ['لاتيه', 'Latte (whole milk)', 'كابتشينو قهوة بحليب', 'drink', 0, 56, 3, 5, 2.2, 0, 45, 150, 110, 0, 0, 4.8, 1.4, 8, 18, 0.1, 0.4, 11, 0.4],
+        ['ماء', 'Water', 'مياه', 'drink', 0, 0, 0, 0, 0, 0, 2, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0],
+        ['ماء جوز الهند', 'Coconut water', '', 'drink', 0, 19, 0.7, 3.7, 0.2, 1.1, 105, 250, 24, 0.3, 2.4, 2.6, 0.2, 0, 0, 0, 0, 25, 0.1],
+        ['حليب شوكولاتة', 'Chocolate milk', 'حليب بالشوكولاتة نيدو', 'drink', 0, 83, 3.2, 10.4, 3.4, 0.8, 56, 150, 105, 0.3, 0, 9.7, 2.1, 10, 29, 1, 0.4, 14, 0.4],
+        ['لبن عيران', 'Ayran / buttermilk', 'لبن رايب شنينة', 'drink', 0, 40, 3.3, 4.8, 0.9, 0, 105, 135, 116, 0.1, 0.5, 4.8, 0.5, 4, 20, 0, 0.4, 11, 0.4],
+        ['حليب لوز', 'Almond milk (unsweetened)', '', 'drink', 0, 15, 0.6, 0.3, 1.2, 0.2, 72, 67, 184, 0.3, 0, 0, 0.1, 0, 63, 1, 0, 15, 0.1],
+        ['حليب صويا', 'Soy milk', '', 'drink', 0, 33, 2.9, 1.7, 1.6, 0.4, 51, 118, 25, 0.4, 0, 0.4, 0.2, 0, 0, 0, 0, 15, 0.3],
+        ['شوكولاتة داكنة 70%', 'Dark chocolate 70%', '', 'sweet', 0, 598, 7.8, 46, 43, 11, 20, 715, 73, 11.9, 0, 24, 24.5, 3, 2, 0, 0, 228, 3.3],
+        ['شوكولاتة بالحليب', 'Milk chocolate', '', 'sweet', 0, 535, 7.7, 59, 30, 3.4, 79, 372, 189, 2.3, 0, 52, 18.5, 23, 33, 0, 0.3, 63, 2.3],
+        ['بسكويت', 'Biscuits (generic)', 'كوكيز بسكويت شاي', 'sweet', 0, 450, 6, 70, 17, 2.5, 380, 100, 40, 2, 0, 25, 8, 0, null, null, null, 20, 0.7],
+        ['شيبس بطاطس', 'Potato chips', 'رقائق بطاطس لايز برنجلز', 'sweet', 0, 536, 7, 53, 35, 4.4, 525, 1200, 24, 1.3, 21, 0.3, 5, 0, 0, 0, 0, 69, 1],
+        ['فشار', 'Popcorn (air-popped)', 'بوب كورن', 'sweet', 0, 387, 13, 78, 4.5, 15, 8, 329, 7, 3.2, 0, 0.9, 0.6, 0, 0, 0, 0, 144, 3.1],
+        ['آيس كريم فانيلا', 'Vanilla ice cream', 'ايسكريم بوظة', 'sweet', 0, 207, 3.5, 24, 11, 0.7, 80, 199, 128, 0.1, 0.6, 21, 6.8, 44, 118, 0.2, 0.4, 14, 0.7],
+        ['بيتزا بالجبن', 'Cheese pizza', '', 'fast', 0, 266, 11, 33, 10, 2.3, 598, 172, 201, 2.5, 0, 3.6, 4.5, 17, null, null, null, 23, 1.4],
+        ['بطاطس مقلية', 'French fries', 'فرنش فرايز', 'fast', 0, 312, 3.4, 41, 15, 3.8, 210, 579, 18, 0.8, 4.7, 0.3, 2.3, 0, 0, 0, 0, 28, 0.6]
     ];
+    // extras for the first rows: [sugar, sat fat, cholesterol, vitamin A mcg, vitamin D mcg, B12 mcg, magnesium, zinc] per 100 g, keyed by English name
+    const FOOD_EXTRA = {
+        'White rice': [0.1, 0.2, 0, 0, 0, 0, 25, 1.1], 'Brown rice': [0.9, 0.6, 0, 0, 0, 0, 143, 2], 'Pasta': [2.7, 0.3, 0, 0, 0, 0, 53, 1.4],
+        'Oats': [1, 1.2, 0, 0, 0, 0, 138, 4], 'Bulgur': [0.9, 0.2, 0, 0, 0, 0, 164, 1.9], 'Quinoa': [2.4, 0.7, 0, 1, 0, 0, 197, 3.1],
+        'Couscous': [0.8, 0.1, 0, 0, 0, 0, 44, 0.8], 'Potato': [0.8, 0, 0, 0, 0, 0, 23, 0.3], 'Sweet potato': [4.2, 0, 0, 709, 0, 0, 25, 0.3],
+        'White bread': [5, 0.7, 0, 0, 0, 0, 25, 0.7], 'Whole wheat bread': [5, 0.8, 0, 0, 0, 0, 75, 1.8], 'Pita bread': [1.3, 0.2, 0, 0, 0, 0, 26, 0.9],
+        'Sweet corn': [6.3, 0.2, 0, 9, 0, 0, 37, 0.5], 'Lentils': [2, 0.2, 0, 2, 0, 0, 47, 3.3], 'Chickpeas': [10, 0.6, 0, 3, 0, 0, 115, 2.9],
+        'Kidney beans': [2.2, 0.1, 0, 0, 0, 0, 140, 2.8], 'Fava beans': [5.7, 0.3, 0, 5, 0, 0, 192, 3], 'Falafel': [1.2, 2.4, 0, 3, 0, 0, 82, 1.5],
+        'Hummus': [0.3, 1.4, 0, 0, 0, 0, 71, 1.8], 'Tofu': [0.6, 1.3, 0, 0, 0, 0, 58, 1.6],
+        'Chicken breast': [0, 0.6, 73, 5, 0.1, 0.2, 28, 0.7], 'Chicken thigh': [0, 1.1, 93, 16, 0.1, 0.3, 22, 1.9], 'Turkey breast': [0, 0.4, 45, 0, 0.1, 0.4, 28, 1.5],
+        'Lean ground beef 90%': [0, 4, 65, 0, 0.1, 2.4, 20, 4.8], 'Beef sirloin steak': [0, 2, 60, 0, 0.1, 1.2, 24, 4], 'Lean lamb': [0, 3.5, 75, 0, 0.1, 2, 21, 3.5],
+        'Beef liver': [0, 1.2, 275, 4968, 1.2, 59.3, 18, 4], 'Salmon': [0, 3.1, 55, 12, 11, 3.2, 27, 0.6], 'Fresh tuna': [0, 0.2, 38, 18, 1.7, 2.1, 50, 0.6],
+        'White fish (cod)': [0, 0.1, 43, 12, 0.9, 0.9, 32, 0.5], 'Shrimp': [0, 0.1, 161, 54, 0, 1.1, 39, 1.1], 'Canned tuna in water': [0, 0.2, 30, 16, 1.1, 2.5, 27, 0.9],
+        'Whole egg': [0.4, 3.1, 372, 160, 2, 0.9, 12, 1.3], 'Egg white': [0.7, 0, 0, 0, 0, 0.1, 11, 0],
+        'Whole milk': [5.1, 1.9, 10, 46, 1.1, 0.5, 10, 0.4], 'Low-fat milk': [5.2, 0.6, 4, 58, 1.2, 0.5, 11, 0.4], 'Greek yogurt (non-fat)': [3.2, 0.1, 5, 2, 0, 0.7, 11, 0.5],
+        'Plain yogurt (whole)': [4.7, 2.1, 13, 27, 0, 0.4, 12, 0.6], 'Labneh': [4, 8.5, 35, null, null, null, 10, 0.6], 'Cheddar cheese': [0.5, 18.9, 105, 265, 0.6, 1.1, 28, 3.1],
+        'Mozzarella': [1.1, 10.1, 64, 174, 0.4, 2.3, 24, 2.9], 'Cottage cheese': [2.7, 0.6, 4, 13, 0, 0.4, 9, 0.4], 'Feta cheese': [4.1, 15, 89, 125, 0.4, 1.7, 19, 2.9],
+        'Butter': [0.1, 51, 215, 684, 0, 0.2, 2, 0.1], 'Ghee': [0, 62, 256, 840, 0, 0, 0, 0], 'Olive oil': [0, 13.8, 0, 0, 0, 0, 0, 0],
+        'Peanut butter': [9, 10, 0, 0, 0, 0, 154, 2.5], 'Almonds': [4.4, 3.8, 0, 0, 0, 0, 270, 3.1], 'Walnuts': [2.6, 6.1, 0, 1, 0, 0, 158, 3.1],
+        'Cashews': [5.9, 7.8, 0, 0, 0, 0, 292, 5.8], 'Tahini': [0.5, 7.5, 0, 1, 0, 0, 95, 4.6], 'Avocado': [0.7, 2.1, 0, 7, 0, 0, 29, 0.6],
+        'Tomato': [2.6, 0, 0, 42, 0, 0, 11, 0.2], 'Cucumber': [1.7, 0, 0, 5, 0, 0, 13, 0.2], 'Lettuce': [0.8, 0, 0, 370, 0, 0, 13, 0.2],
+        'Carrot': [4.7, 0, 0, 835, 0, 0, 12, 0.2], 'Broccoli': [1.7, 0, 0, 31, 0, 0, 21, 0.4], 'Spinach': [0.4, 0.1, 0, 469, 0, 0, 79, 0.5],
+        'Onion': [4.2, 0, 0, 0, 0, 0, 10, 0.2], 'Red bell pepper': [4.2, 0.1, 0, 157, 0, 0, 12, 0.3], 'Zucchini': [2.5, 0.1, 0, 10, 0, 0, 18, 0.3],
+        'Eggplant': [3.5, 0, 0, 1, 0, 0, 14, 0.2], 'Cauliflower': [1.9, 0.1, 0, 0, 0, 0, 15, 0.3], 'Green beans': [3.3, 0.1, 0, 35, 0, 0, 25, 0.2],
+        'Green peas': [5.7, 0.1, 0, 38, 0, 0, 33, 1.2], 'Mushrooms': [2, 0.1, 0, 0, 0.2, 0, 9, 0.5], 'Cabbage': [3.2, 0, 0, 5, 0, 0, 12, 0.2], 'Okra': [1.5, 0, 0, 36, 0, 0, 57, 0.6],
+        'Banana': [12, 0.1, 0, 3, 0, 0, 27, 0.2], 'Apple': [10, 0, 0, 3, 0, 0, 5, 0], 'Orange': [9, 0, 0, 11, 0, 0, 10, 0.1], 'Grapes': [15.5, 0.1, 0, 3, 0, 0, 7, 0.1],
+        'Watermelon': [6.2, 0, 0, 28, 0, 0, 10, 0.1], 'Strawberry': [4.9, 0, 0, 1, 0, 0, 13, 0.1], 'Mango': [13.7, 0.1, 0, 54, 0, 0, 10, 0.1],
+        'Pomegranate': [13.7, 0.1, 0, 0, 0, 0, 12, 0.4], 'Dates': [66, 0, 0, 0, 0, 0, 54, 0.4], 'Raisins': [59, 0.1, 0, 0, 0, 0, 32, 0.2],
+        'Orange juice': [8.4, 0, 0, 10, 0, 0, 11, 0.1], 'Whey protein powder': [4, 3, 80, null, null, null, 100, 2], 'Honey': [82, 0, 0, 0, 0, 0, 2, 0.2], 'White sugar': [100, 0, 0, 0, 0, 0, 0, 0.1]
+    };
 
     let foodCustom = [];
     let foodAll = [];
@@ -2111,9 +2312,14 @@ body.auth-locked > :not(#bfitAuthOverlay) { visibility:hidden !important; }
     }
     function foodMake(arr, i) {
         const v = {};
-        FOOD_KEYS.forEach(function (k, j) { v[k] = arr[5 + j]; });
+        const ex = FOOD_EXTRA[arr[1]] || [];
+        FOOD_KEYS.forEach(function (k, j) {
+            let x = j < 10 ? arr[5 + j] : (arr.length > 15 ? arr[5 + j] : ex[j - 10]);
+            v[k] = (x === undefined || x === null) ? null : x;
+        });
         return { id: i, ar: arr[0], en: arr[1], al: arr[2], cat: arr[3], y: arr[4] || 0, v: v, hay: foodNorm(arr[0] + ' ' + arr[1] + ' ' + arr[2]) };
     }
+    function foodUnit(f) { return f && f.cat === 'drink' ? 'ml' : 'g'; }
     function foodLoadCustom() {
         try { const r = JSON.parse(localStorage.getItem('bfit_custom_foods') || '[]'); foodCustom = Array.isArray(r) ? r.filter(function (x) { return x && x.v && x.name; }) : []; } catch (e) { foodCustom = []; }
     }
@@ -2148,17 +2354,36 @@ body.auth-locked > :not(#bfitAuthOverlay) { visibility:hidden !important; }
         const y = food.y ? (yieldVal > 0 ? yieldVal : food.y) : 0;
         const rawG = (state === 'cooked' && y) ? grams / y : grams;
         const n = {};
-        FOOD_KEYS.forEach(function (k) { n[k] = food.v[k] * rawG / 100; });
+        FOOD_KEYS.forEach(function (k) { const x = food.v[k]; n[k] = (x === null || x === undefined) ? null : x * rawG / 100; });
         return { rawG: rawG, cookedG: y ? rawG * y : null, y: y, n: n };
     }
 
     function foodFmt(x, d) { return (Math.round(x * Math.pow(10, d || 0)) / Math.pow(10, d || 0)).toLocaleString('en-US'); }
 
-    function microChips(n) {
-        return FOOD_MICROS.map(function (m) {
-            const d = (m[0] === 'fe' || m[0] === 'fiber') ? 1 : 0;
-            return '<span class="micro-chip"><b>' + m[1] + ' | ' + m[2] + '</b> ' + foodFmt(n[m[0]], d) + ' ' + m[3] + '</span>';
-        }).join('');
+    function nlVal(n, unk, key, dec, unit) {
+        const x = n[key];
+        if (x === null || x === undefined) return '—';
+        return foodFmt(x, dec) + ' ' + unit + (unk && unk[key] ? '*' : '');
+    }
+    function nlRow(n, unk, r, serving) {
+        const x = n[r[0]];
+        const pct = (r[4] && x !== null && x !== undefined) ? Math.round(x / r[4] * 100) + '%' : '';
+        return '<div class="nl-row' + (r[5] ? ' sub' : '') + '"><span>' + (r[6] ? '<b>' : '') + '<bdi>' + r[1] + '</bdi>' + (r[6] ? '</b>' : '') + ' <bdi dir="ltr">' + nlVal(n, unk, r[0], r[7], r[3]) +
+            '</bdi> <em><bdi dir="rtl">' + r[2] + '</bdi></em></span><b class="nl-dv">' + pct + '</b></div>';
+    }
+    function nutritionLabel(n, serving, unk) {
+        const kc = (n.kcal === null || n.kcal === undefined) ? '—' : foodFmt(n.kcal);
+        let h = '<div class="nutri-label" dir="ltr"><div class="nl-title">Nutrition Facts <em>القيم الغذائية</em></div>' +
+            '<div class="nl-serving">' + serving + '</div><div class="nl-thick"></div>' +
+            '<div class="nl-cal"><span><small><bdi>Amount per serving</bdi> · <bdi dir="rtl">لكل حصة</bdi></small><b><bdi>Calories</bdi> <em><bdi dir="rtl">السعرات الحرارية</bdi></em></b></span><strong>' + kc + '</strong></div>' +
+            '<div class="nl-medium"></div><div class="nl-dvhead"><bdi>% Daily Value*</bdi> <em><bdi dir="rtl">القيمة اليومية*</bdi></em></div>';
+        LABEL_ROWS.forEach(function (r) { h += nlRow(n, unk, r); });
+        h += '<div class="nl-thick"></div>';
+        LABEL_MICROS.forEach(function (r) { h += nlRow(n, unk, r); });
+        h += '<div class="nl-medium"></div><p class="nl-foot">* The % Daily Value tells how much a nutrient contributes to a daily diet (2,000 kcal). — = not available.<br><bdi dir="rtl">النسبة من القيمة اليومية بناءً على 2000 سعرة. — = غير متوفر.</bdi>' +
+            (unk && Object.keys(unk).length ? '<br><bdi>* Partial total: some items lack this nutrient.</bdi> <bdi dir="rtl">* قيمة جزئية: بعض العناصر غير متوفرة.</bdi>' : '') +
+            '<br><bdi>Values are approximate.</bdi> <bdi dir="rtl">القيم تقريبية.</bdi></p></div>';
+        return h;
     }
 
     function renderFoodList() {
@@ -2184,7 +2409,8 @@ body.auth-locked > :not(#bfitAuthOverlay) { visibility:hidden !important; }
         document.getElementById('foodList').hidden = true;
         document.getElementById('foodSearch').value = f.ar;
         const c = FOOD_CATS[f.cat] || FOOD_CATS.other;
-        const per = f.y ? 'لكل 100 جم خام | per 100 g raw' : 'لكل 100 جم | per 100 g';
+        const u = foodUnit(f), uAr = u === 'ml' ? 'مل' : 'جم';
+        const per = f.y ? 'لكل 100 جم خام | per 100 g raw' : 'لكل 100 ' + uAr + ' | per 100 ' + u;
         let h = '<div class="food-pick-card">' +
             '<div class="food-pick-head"><strong>' + foodEsc(f.ar) + (f.en !== f.ar ? ' | ' + foodEsc(f.en) : '') + '</strong><span class="food-tag">' + c[0] + ' | ' + c[1] + '</span></div>' +
             '<p class="calc-note" style="margin:0 0 10px">' + per + ': ' + foodFmt(f.v.kcal) + ' kcal • P ' + foodFmt(f.v.p, 1) + ' • C ' + foodFmt(f.v.c, 1) + ' • F ' + foodFmt(f.v.f, 1) + '</p>' +
@@ -2193,11 +2419,11 @@ body.auth-locked > :not(#bfitAuthOverlay) { visibility:hidden !important; }
             h += '<div class="input-box"><label>حالة الوزن المُدخل <span class="en">Weight state</span></label>' +
                 '<div class="seg" role="group"><button type="button" class="on" data-state="raw" aria-pressed="true">خام | Raw</button><button type="button" data-state="cooked" aria-pressed="false">مطبوخ | Cooked</button></div></div>';
         }
-        h += '<div class="input-box"><label>الكمية (جم) <span class="en">Amount (g)</span></label><input type="number" id="foodGrams" step="any" inputmode="decimal" placeholder="مثال: 150" value="100"></div>';
+        h += '<div class="input-box"><label>الكمية (' + uAr + ') <span class="en">Amount (' + u + ')</span></label><input type="number" id="foodGrams" step="any" inputmode="decimal" placeholder="مثال: 150" value="100"></div>';
         if (f.y) {
             h += '<div class="input-box"><label>معامل الطبخ (وزن مطبوخ ÷ خام) <span class="en">Yield (cooked ÷ raw)</span></label><input type="number" id="foodYield" step="any" inputmode="decimal" value="' + f.y + '"></div>';
         }
-        h += '</div><div id="foodPreview"></div>' +
+        h += '</div>' + (u === 'ml' ? '<div class="qty-chips">' + [150, 250, 330, 500, 1000].map(function (q) { return '<button type="button" data-q="' + q + '">' + q + ' ml</button>'; }).join('') + '</div>' : '') + '<div id="foodPreview"></div>' +
             '<button type="button" class="btn-soft" id="foodAddBtn"><i class="fa-solid fa-plus"></i> إضافة إلى الوجبة | Add to meal</button></div>';
         document.getElementById('foodPick').innerHTML = h;
         updateFoodPreview();
@@ -2224,8 +2450,10 @@ body.auth-locked > :not(#bfitAuthOverlay) { visibility:hidden !important; }
             '<div class="calc-card"><div class="label">بروتين | Protein</div><div class="value mp">' + foodFmt(c.n.p, 1) + '<span> g</span></div></div>' +
             '<div class="calc-card"><div class="label">كارب | Carbs</div><div class="value mc">' + foodFmt(c.n.c, 1) + '<span> g</span></div></div>' +
             '<div class="calc-card"><div class="label">دهون | Fat</div><div class="value mf">' + foodFmt(c.n.f, 1) + '<span> g</span></div></div></div>';
-        if (c.y) h += '<p class="calc-note conv">' + foodFmt(c.rawG, 1) + ' جم خام ≈ ' + foodFmt(c.cookedG, 1) + ' جم مطبوخ | ' + foodFmt(c.rawG, 1) + ' g raw ≈ ' + foodFmt(c.cookedG, 1) + ' g cooked</p>';
-        h += '<div class="micro-row">' + microChips(c.n) + '</div>';
+        if (c.y) h += '<p class="calc-note conv"><bdi dir="rtl">' + foodFmt(c.rawG, 1) + ' جم خام ≈ ' + foodFmt(c.cookedG, 1) + ' جم مطبوخ</bdi> | <bdi dir="ltr">' + foodFmt(c.rawG, 1) + ' g raw ≈ ' + foodFmt(c.cookedG, 1) + ' g cooked</bdi></p>';
+        const u = foodUnit(foodSel);
+        const serv = '<b><bdi>Serving size</bdi> · <bdi dir="rtl">حجم الحصة</bdi></b> <bdi dir="ltr">' + foodFmt(r.g, 1) + ' ' + u + (c.y ? ' (' + (foodState === 'cooked' ? foodFmt(c.rawG, 1) + ' g raw' : foodFmt(c.cookedG, 1) + ' g cooked') + ')' : '') + '</bdi> — <bdi>' + foodEsc(foodSel.en) + '</bdi>';
+        h += nutritionLabel(c.n, serv, null);
         box.innerHTML = h;
     }
 
@@ -2235,9 +2463,14 @@ body.auth-locked > :not(#bfitAuthOverlay) { visibility:hidden !important; }
     }
 
     function mealTotals() {
-        const t = {};
-        FOOD_KEYS.forEach(function (k) { t[k] = 0; });
-        mealItems.forEach(function (it) { FOOD_KEYS.forEach(function (k) { t[k] += it.n[k]; }); });
+        const t = {}, unk = {};
+        FOOD_KEYS.forEach(function (k) {
+            let sum = 0, known = 0;
+            mealItems.forEach(function (it) { const x = it.n[k]; if (x !== null && x !== undefined) { sum += x; known++; } });
+            t[k] = known ? sum : null;
+            if (known && known < mealItems.length) unk[k] = true;
+        });
+        Object.defineProperty(t, '_unk', { value: unk, enumerable: false });
         return t;
     }
 
@@ -2262,7 +2495,9 @@ body.auth-locked > :not(#bfitAuthOverlay) { visibility:hidden !important; }
                 (editable ? '<td><button type="button" class="meal-del" data-i="' + i + '" aria-label="حذف | remove">×</button></td>' : '') + '</tr>';
         });
         h += '</tbody><tfoot><tr><td colspan="2">المجموع | Total</td><td dir="ltr">' + foodFmt(t.kcal) + '</td><td dir="ltr">' + foodFmt(t.p, 1) + '</td><td dir="ltr">' + foodFmt(t.c, 1) + '</td><td dir="ltr">' + foodFmt(t.f, 1) + '</td>' + (editable ? '<td></td>' : '') + '</tr></tfoot></table></div>';
-        h += '<div class="micro-row">' + microChips(t) + '</div>';
+        let totalG = 0;
+        mealItems.forEach(function (it) { totalG += it.g || 0; });
+        h += nutritionLabel(t, '<b><bdi>Total meal</bdi> · <bdi dir="rtl">إجمالي الوجبة</bdi></b> <bdi dir="ltr">' + mealItems.length + ' items, ' + foodFmt(totalG, 0) + ' g/ml</bdi>', t._unk);
         if (editable) h += mealPlanHTML(t) + '<button type="button" class="btn-soft ghost" id="mealClear"><i class="fa-solid fa-trash"></i> تفريغ الوجبة | Clear meal</button>';
         return h;
     }
@@ -2275,9 +2510,9 @@ body.auth-locked > :not(#bfitAuthOverlay) { visibility:hidden !important; }
     function foodBuildCustomForm() {
         const fields = [['cfName', 'اسم الطعام', 'Food name', 'text', 'مثال: وجبة الشركة'], ['cfKcal', 'السعرات / 100 جم', 'Calories / 100 g', 'number', 'اتركه فارغاً للحساب التلقائي'],
             ['cfP', 'بروتين (جم)', 'Protein (g)', 'number', '0'], ['cfC', 'كارب (جم)', 'Carbs (g)', 'number', '0'], ['cfF', 'دهون (جم)', 'Fat (g)', 'number', '0']];
-        FOOD_MICROS.forEach(function (m) { fields.push(['cf_' + m[0], m[1] + ' (' + m[3] + ')', m[2] + ' (' + m[3] + ')', 'number', '0']); });
+        FOOD_MICROS.forEach(function (m) { fields.push(['cf_' + m[0], m[1] + ' (' + m[3] + ')', m[2] + ' (' + m[3] + ')', 'number', 'اختياري']); });
         fields.push(['cfYield', 'معامل الطبخ (اختياري)', 'Yield cooked ÷ raw (optional)', 'number', 'مثال: 2.8'], ['cfGrams', 'الكمية (جم)', 'Amount (g)', 'number', '100']);
-        let h = '<p class="calc-note" style="margin-top:0">أدخل القيم لكل 100 جم من الطعام (وهو نيء إن حددت معامل طبخ). | Enter values per 100 g (raw if you set a yield).</p><div class="form-grid-4">';
+        let h = '<p class="calc-note" style="margin-top:0">أدخل القيم لكل 100 جم/مل (نيء إن حددت معامل طبخ). الحقول الفارغة تظهر «—» في الملصق. | Enter values per 100 g/ml (raw if you set a yield). Blank fields show “—”.</p><div class="form-grid-4">';
         fields.forEach(function (f) {
             h += '<div class="input-box"><label>' + f[1] + ' <span class="en">' + f[2] + '</span></label><input type="' + f[3] + '" id="' + f[0] + '"' + (f[3] === 'number' ? ' step="any" inputmode="decimal"' : ' maxlength="60"') + ' placeholder="' + f[4] + '"' + (f[0] === 'cfGrams' ? ' value="100"' : '') + '></div>';
         });
@@ -2289,12 +2524,13 @@ body.auth-locked > :not(#bfitAuthOverlay) { visibility:hidden !important; }
     function foodAddCustom() {
         const msg = document.getElementById('cfMsg');
         const val = function (id) { const x = parseFloat(document.getElementById(id).value); return Number.isFinite(x) && x >= 0 ? x : 0; };
+        const valOpt = function (id) { const x = parseFloat(document.getElementById(id).value); return Number.isFinite(x) && x >= 0 ? x : null; };
         const name = document.getElementById('cfName').value.trim();
         const grams = parseFloat(document.getElementById('cfGrams').value);
         if (!name) { msg.textContent = 'أدخل اسم الطعام. | Enter a food name.'; return; }
         if (!(grams > 0 && grams <= 5000)) { msg.textContent = 'أدخل كمية صحيحة (1–5000 جم). | Enter a valid amount.'; return; }
         const v = { p: val('cfP'), c: val('cfC'), f: val('cfF') };
-        FOOD_MICROS.forEach(function (m) { v[m[0]] = val('cf_' + m[0]); });
+        FOOD_MICROS.forEach(function (m) { v[m[0]] = valOpt('cf_' + m[0]); });
         const kIn = parseFloat(document.getElementById('cfKcal').value);
         v.kcal = Number.isFinite(kIn) && kIn >= 0 ? kIn : v.p * 4 + v.c * 4 + v.f * 9;
         if (v.kcal > 900 || v.p + v.c + v.f > 100.5) { msg.textContent = 'القيم غير منطقية لكل 100 جم (الماكروز ≤ 100 جم، السعرات ≤ 900). | Values look wrong for 100 g.'; return; }
@@ -2302,7 +2538,7 @@ body.auth-locked > :not(#bfitAuthOverlay) { visibility:hidden !important; }
         const y = yRaw >= 0.2 && yRaw <= 6 ? yRaw : 0;
         const food = { id: -1, ar: name, en: name, al: '', cat: 'custom', y: y, v: v };
         const c = foodCalc(food, 'raw', grams, y);
-        foodAddItem({ name: name, amount: foodFmt(grams, 1) + ' g', n: c.n });
+        foodAddItem({ name: name, amount: foodFmt(grams, 1) + ' g', g: grams, n: c.n });
         if (document.getElementById('cfSave').checked) {
             foodCustom.push({ name: name, y: y, v: v });
             foodSaveCustom(); foodRebuild();
@@ -2331,6 +2567,8 @@ body.auth-locked > :not(#bfitAuthOverlay) { visibility:hidden !important; }
         pick.addEventListener('input', updateFoodPreview);
         pick.addEventListener('keydown', function (e) { if (e.key === 'Enter') e.preventDefault(); });
         pick.addEventListener('click', function (e) {
+            const qc = e.target.closest('.qty-chips button');
+            if (qc) { document.getElementById('foodGrams').value = qc.getAttribute('data-q'); updateFoodPreview(); return; }
             const seg = e.target.closest('.seg button');
             if (seg) {
                 foodState = seg.getAttribute('data-state');
@@ -2342,7 +2580,7 @@ body.auth-locked > :not(#bfitAuthOverlay) { visibility:hidden !important; }
                 if (!(r.g > 0 && r.g <= 5000) || !r.yOk) { updateFoodPreview(); return; }
                 const c = foodCalc(foodSel, foodState, r.g, r.y);
                 const st = foodSel.y ? (foodState === 'cooked' ? ' (مطبوخ | cooked)' : ' (خام | raw)') : '';
-                foodAddItem({ name: foodSel.ar + st, amount: foodFmt(r.g, 1) + ' g', n: c.n });
+                foodAddItem({ name: foodSel.ar + st, amount: foodFmt(r.g, 1) + ' ' + foodUnit(foodSel), g: r.g, n: c.n });
             }
         });
 
@@ -2389,32 +2627,82 @@ body.auth-locked > :not(#bfitAuthOverlay) { visibility:hidden !important; }
         }
         const needsMedicalClearance = flags.includes(flagLabels.hq4) || flags.includes(flagLabels.hq5);
 
-        const coordScore = Math.min(((num('coordR', 0) + num('coordL', 0)) / 20) * 100, 100);
-        const balScore = Math.min(((num('balSet1', 0) + num('balSet2', 0)) / 120) * 100, 100);
+        // ----- Universal 7-step tests -> normalized 0-100 scores -----
+        const isFemale = gender === 'female';
+        const lin = function (x, lo, hi) { return Math.max(0, Math.min(1, (x - lo) / (hi - lo))) * 100; };
+        const decades = Math.max(0, Math.floor(realAge / 10) - 2);
 
-        const p1 = Math.max(num('pushSet1', 1), 1);
-        const pushScore = Math.min((num('pushSet2', 0) / (p1 * 0.70)) * 100, 100);
+        // 1) Sit-and-Reach: best of two trials, cm relative to the toe line (age-shifted range)
+        const reachBest = Math.max(num('srTry1', -40), num('srTry2', -40));
+        const reachShift = Math.max(0, realAge - 30) * 0.12;
+        const flexScore = isFemale ? lin(reachBest, -6 - reachShift, 14 - reachShift) : lin(reachBest, -12 - reachShift, 8 - reachShift);
 
-        const squatScore = Math.min(((num('squatSet1', 0) + num('squatSet2', 0)) / 120) * 100, 100);
+        // 2) Apley's Scratch: fingertip gap (cm) per side, 0 or less = full score
+        const apScore = (lin(num('apR', 15), 15, 0) + lin(num('apL', 15), 15, 0)) / 2;
 
-        const s1 = Math.max(num('sitSet1', 1), 1);
-        const sitScore = Math.min((num('sitSet2', 0) / (s1 * 0.70)) * 100, 100);
+        // 3) Single-Leg Stance (eyes open): age-based reference time
+        const slsTarget = realAge < 40 ? 43 : realAge < 50 ? 40 : realAge < 60 ? 37 : realAge < 70 ? 27 : realAge < 80 ? 15 : 9;
+        const balScore = Math.min(((num('slsR', 0) + num('slsL', 0)) / 2 / slsTarget) * 100, 100);
 
-        const cardiacScore = Math.min(((num('cardiacSet1', 0) + num('cardiacSet2', 0)) / 30) * 100, 100);
-        const memScore = Math.min(((num('memSet1', 0) + num('memSet2', 0)) / 24) * 100, 100);
+        // 4) Forearm Plank: 120 s = full score
+        const plankScore = Math.min((num('plankSec', 0) / 120) * 100, 100);
 
-        const testAverage = (coordScore + balScore + pushScore + squatScore + sitScore + cardiacScore + memScore) / 7;
+        // 5) 30s Chair Stand: age and gender reference reps
+        const chairRef = isFemale
+            ? (realAge < 60 ? 20 : realAge < 65 ? 17 : realAge < 70 ? 16 : realAge < 80 ? 15 : realAge < 85 ? 14 : realAge < 90 ? 13 : 11)
+            : (realAge < 60 ? 22 : realAge < 65 ? 19 : realAge < 70 ? 18 : realAge < 80 ? 17 : realAge < 85 ? 15 : realAge < 90 ? 14 : 12);
+        const chairScore = Math.min((num('chairReps', 0) / chairRef) * 100, 100);
 
+        // 6) Kneeling Push-Up: reference reps drop 3 per decade after 30
+        const kpuRef = Math.max(8, (isFemale ? 30 : 35) - 3 * decades);
+        const pushScore = Math.min((num('kpuReps', 0) / kpuRef) * 100, 100);
+
+        // 7) 3-Min YMCA Step Test: peak HR (% of age-predicted max), recovery time and recovery rate
+        const hrRest = num('ymcaRest', 70), hrPeak = num('ymcaPeak', 140), hrRecSec = Math.max(num('ymcaRec', 120), 1);
+        const hrPeakEl = document.getElementById('ymcaPeak');
+        if (!(hrPeak > hrRest)) {
+            hrPeakEl.setCustomValidity('أقصى نبض يجب أن يكون أكبر من نبض الراحة | Peak HR must be higher than resting HR');
+            hrPeakEl.reportValidity();
+            return;
+        }
+        hrPeakEl.setCustomValidity('');
+        const hrMaxPred = Math.max(220 - realAge, 100);
+        const hrPeakPct = (hrPeak / hrMaxPred) * 100;
+        const hrRate = (hrPeak - hrRest) / hrRecSec;
+        const cardioPeakScore = lin(hrPeakPct, 90, 60);
+        const cardioTimeScore = lin(hrRecSec, 300, 90);
+        const cardioRateScore = lin(hrRate, 0.2, 0.8);
+        const cardioScore = cardioPeakScore * 0.4 + cardioTimeScore * 0.3 + cardioRateScore * 0.3;
+
+        const testAverage = (flexScore + apScore + balScore + plankScore + chairScore + pushScore + cardioScore) / 7;
+        const muscleTestsAvg = (flexScore + apScore + balScore + plankScore + chairScore + pushScore) / 6;
+
+        // ----- Body composition from InBody 770 (PBF + SMM) -----
         const smmPercentage = (smm / weight) * 100;
         const bodyFatScore = gender === 'male'
             ? (fat <= 18 ? 100 : Math.max(0, 100 - (fat - 18) * 3))
             : (fat <= 25 ? 100 : Math.max(0, 100 - (fat - 25) * 3));
-        const muscleScore = smmPercentage >= 40 ? 100 : (smmPercentage / 40) * 100;
+        const smmTarget = isFemale ? 34 : 42;
+        const muscleScore = Math.min((smmPercentage / smmTarget) * 100, 100);
+        const bodyCompScore = (bodyFatScore + muscleScore) / 2;
 
         const fitnessScore = Math.round((testAverage * 0.7) + (bodyFatScore * 0.15) + (muscleScore * 0.15));
 
-        const ageAdjustment = Math.round((fitnessScore - 70) / 7);
-        const biologicalAge = Math.max(12, realAge - ageAdjustment);
+        // ----- Biological age: body composition 35% + muscular tests 35% + cardio recovery 30% -----
+        // Each domain is compared with the reference score of 70 (= chronological age); +/- 6 points of score = 1 year.
+        const BIO_W = { body: 0.35, tests: 0.35, cardio: 0.30 };
+        const bioYears = BIO_W.body * (bodyCompScore - 70) / 6 + BIO_W.tests * (muscleTestsAvg - 70) / 6 + BIO_W.cardio * (cardioScore - 70) / 6;
+        const biologicalAge = Math.max(12, Math.round(realAge - bioYears));
+        const bioParts = [
+            ['تركيب الجسم (PBF + SMM) | Body composition', bodyCompScore],
+            ['متوسط الاختبارات العضلية والحركية | Muscular tests avg', muscleTestsAvg],
+            ['الكارديو واستشفاء النبض | Cardio & HR recovery', cardioScore]
+        ];
+        const testParts = [
+            ['المرونة | Sit-and-Reach', flexScore], ['موبيليتي الكتفين | Apley', apScore], ['الاتزان | Single-Leg Stance', balScore],
+            ['تحمل الجذع | Plank', plankScore], ['القوة السفلية | Chair Stand', chairScore], ['تحمل علوي | Kneeling Push-Up', pushScore],
+            ['الكارديو | YMCA Step', cardioScore]
+        ];
 
         document.getElementById('reportHeaderInfo').innerText =
             'المشترك: ' + client + ' (' + (gender === 'male' ? 'ذكر' : 'أنثى') + ') | العمر الحقيقي: ' + realAge +
@@ -2448,6 +2736,11 @@ body.auth-locked > :not(#bfitAuthOverlay) { visibility:hidden !important; }
             }
         }
 
+        summaryHTML += '<br><br><strong>تفاصيل حساب العمر البيولوجي | Biological-age inputs:</strong><br>' +
+            bioParts.map(function (x) { return '• ' + x[0] + ': <b>' + Math.round(x[1]) + '%</b>'; }).join('<br>') +
+            '<br><br><strong>درجات الاختبارات السبعة | The 7 tests:</strong><br>' +
+            testParts.map(function (x) { return '• ' + x[0] + ': <b>' + Math.round(x[1]) + '%</b>'; }).join('<br>') +
+            '<br>• نبض الاستشفاء | HR recovery: <b>' + (Math.round(hrRate * 100) / 100) + '</b> bpm/s · ' + Math.round(hrPeakPct) + '% HRmax';
         document.getElementById('detailedReportText').innerHTML = summaryHTML;
         renderReportExtras(flags.length > 0, needsMedicalClearance);
         const area = document.getElementById('resultArea');
@@ -2455,159 +2748,41 @@ body.auth-locked > :not(#bfitAuthOverlay) { visibility:hidden !important; }
         area.scrollIntoView({ behavior: 'smooth' });
     }
 
-    window.addEventListener('load', function () {
+    function initYmcaLive() {
+        const ids = ['ymcaRest', 'ymcaPeak', 'ymcaRec', 'realAge'];
+        const out = document.getElementById('ymcaLive');
+        function refresh() {
+            const rest = parseFloat(document.getElementById('ymcaRest').value), peak = parseFloat(document.getElementById('ymcaPeak').value), rec = parseFloat(document.getElementById('ymcaRec').value);
+            const age = parseFloat(document.getElementById('realAge').value);
+            document.getElementById('ymcaPeak').setCustomValidity('');
+            if (!(rest > 0) || !(peak > rest) || !(rec > 0)) { out.innerHTML = ''; return; }
+            const rate = (peak - rest) / rec;
+            let h = 'معدل استشفاء النبض: <b>' + (Math.round(rate * 100) / 100) + '</b> نبضة/ث <span class="en">HR recovery rate (bpm/s)</span>';
+            if (age > 0) h += '<br>أقصى نبض = <b>' + Math.round(peak / Math.max(220 - age, 100) * 100) + '%</b> من النبض الأقصى المتوقع <span class="en">of predicted HRmax</span>';
+            out.innerHTML = h;
+        }
+        ids.forEach(function (id) {
+            const el = document.getElementById(id);
+            el.addEventListener('input', refresh);
+            el.addEventListener('change', refresh);
+        });
+        refresh();
+    }
+
+    let bfitBooted = false;
+    function bfitInit() {
+        if (bfitBooted) return;
+        bfitBooted = true;
         updateGenderTheme();
         initUploadZone();
         initCalculators();
+        initYmcaLive();
         setTimeout(function () { inbodyGetWorker().catch(function () {}); }, 1500);
-    });
-</script>
-
-
-<script>
-/* ===== B_FIT Authentication Layer =====
-   REQUIRED SETUP:
-   1) Create a Supabase project.
-   2) Replace SUPABASE_URL and SUPABASE_ANON_KEY below with the project's public URL and anon/publishable key.
-   3) In Supabase Auth, enable Email provider and configure the email template to display the 6-digit {{ .Token }}.
-   4) Set appropriate SMTP/email delivery and rate limits in Supabase. Never put a service_role key in this file.
-   Note: frontend domain validation is UX only; enforce company access policy server-side for sensitive data.
-*/
-(function () {
-  'use strict';
-  const SUPABASE_URL = 'https://YOUR_PROJECT_REF.supabase.co';
-  const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_PUBLISHABLE_OR_ANON_KEY';
-  const ALLOWED_DOMAIN = 'armahsports.com';
-  const OTP_LIFETIME_SECONDS = 300;
-  const RESEND_WAIT_SECONDS = 30;
-  const overlay = document.getElementById('bfitAuthOverlay');
-  const emailArea = document.getElementById('bfitEmailArea');
-  const otpArea = document.getElementById('bfitOtpArea');
-  const emailInput = document.getElementById('bfitAuthEmail');
-  const otpInput = document.getElementById('bfitOtpCode');
-  const sendBtn = document.getElementById('bfitSendOtp');
-  const verifyBtn = document.getElementById('bfitVerifyOtp');
-  const resendBtn = document.getElementById('bfitResendOtp');
-  const changeBtn = document.getElementById('bfitChangeEmail');
-  const message = document.getElementById('bfitAuthMessage');
-  const countdown = document.getElementById('bfitOtpCountdown');
-  let supabaseClient = null, pendingEmail = '', expiryAt = 0, resendAt = 0, timerId = null, verified = false;
-
-  function say(text, kind) { message.textContent = text || ''; message.className = kind || ''; }
-  function normalizeEmail(value) { return String(value || '').trim().toLowerCase(); }
-  function validCompanyEmail(value) {
-    const email = normalizeEmail(value);
-    return /^[a-z0-9.!#$%&'*+/=?^_`{|}~-]+@armahsports\.com$/.test(email) &&
-      email.length <= 254 && !email.includes('..');
-  }
-  function configReady() {
-    return window.supabase && SUPABASE_URL.indexOf('YOUR_PROJECT_REF') === -1 &&
-      SUPABASE_ANON_KEY.indexOf('YOUR_SUPABASE_') === -1;
-  }
-  function setBusy(busy) { sendBtn.disabled = busy; verifyBtn.disabled = busy; }
-  function showOtp() {
-    emailArea.hidden = true; otpArea.hidden = false;
-    otpInput.value = ''; otpInput.focus(); updateCountdown();
-  }
-  function showEmail() {
-    emailArea.hidden = false; otpArea.hidden = true; pendingEmail = '';
-    if (timerId) { clearInterval(timerId); timerId = null; }
-  }
-  function updateCountdown() {
-    const now = Math.floor(Date.now()/1000);
-    const remain = Math.max(0, expiryAt - now);
-    const mins = String(Math.floor(remain/60)).padStart(2,'0');
-    const secs = String(remain%60).padStart(2,'0');
-    countdown.textContent = remain ? ('صلاحية الرمز المتبقية: ' + mins + ':' + secs) : 'انتهت صلاحية الرمز. أعد إرسال رمز جديد.';
-    if (!remain) verifyBtn.disabled = true;
-    else verifyBtn.disabled = false;
-    resendBtn.disabled = Date.now() < resendAt;
-    if (resendBtn.disabled) {
-      const wait = Math.ceil((resendAt-Date.now())/1000);
-      resendBtn.textContent = 'إعادة إرسال الرمز (' + wait + ' ث)';
-    } else resendBtn.textContent = 'إعادة إرسال الرمز';
-  }
-  function startTimer() {
-    expiryAt = Math.floor(Date.now()/1000) + OTP_LIFETIME_SECONDS;
-    resendAt = Date.now() + RESEND_WAIT_SECONDS*1000;
-    if (timerId) clearInterval(timerId);
-    updateCountdown(); timerId = setInterval(updateCountdown, 1000);
-  }
-  async function sendOtp() {
-    const email = normalizeEmail(emailInput.value);
-    if (!validCompanyEmail(email)) {
-      say('الدخول مقتصر حصرياً على موظفي شركة أرماح (armahsports.com). يرجى إدخال البريد الرسمي الصحيح.', 'error');
-      emailInput.focus(); return;
     }
-    if (!configReady()) {
-      say('يلزم إعداد Supabase أولاً: أدخل SUPABASE_URL وSUPABASE_ANON_KEY الصحيحين داخل قسم Authentication في هذا الملف.', 'error');
-      return;
-    }
-    setBusy(true); say('جارٍ إرسال رمز التحقق إلى بريدك الرسمي…');
-    try {
-      if (!supabaseClient) {
-        supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-          auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false }
-        });
-      }
-      const { error } = await supabaseClient.auth.signInWithOtp({
-        email, options: { shouldCreateUser: false }
-      });
-      if (error) throw error;
-      pendingEmail = email; showOtp(); startTimer();
-      say('إذا كان البريد مسجلاً ومسموحاً به، فسيصلك رمز التحقق. تحقق من الوارد والرسائل غير المرغوب فيها.', 'success');
-    } catch (err) {
-      say('تعذر إرسال الرمز. تأكد من إعداد مزود البريد وأن الحساب مخوّل، ثم حاول مجدداً. ' + (err && err.message ? err.message : ''), 'error');
-    } finally { setBusy(false); }
-  }
-  async function verifyOtp() {
-    const token = String(otpInput.value || '').replace(/\D/g,'');
-    if (!pendingEmail || !validCompanyEmail(pendingEmail)) { showEmail(); say('أدخل البريد الرسمي أولاً.', 'error'); return; }
-    if (Math.floor(Date.now()/1000) >= expiryAt) { say('انتهت صلاحية الرمز. أعد إرسال رمز جديد.', 'error'); verifyBtn.disabled = true; return; }
-    if (!/^\d{6}$/.test(token)) { say('أدخل رمز التحقق المكوّن من 6 أرقام.', 'error'); otpInput.focus(); return; }
-    verifyBtn.disabled = true; say('جارٍ التحقق من الرمز…');
-    try {
-      const { data, error } = await supabaseClient.auth.verifyOtp({ email: pendingEmail, token, type: 'email' });
-      if (error || !data || !data.user) throw error || new Error('تعذر تأكيد هوية المستخدم.');
-      if (!validCompanyEmail(data.user.email)) {
-        await supabaseClient.auth.signOut();
-        throw new Error('الدخول مقتصر حصرياً على موظفي شركة أرماح (armahsports.com).');
-      }
-      verified = true;
-      if (timerId) { clearInterval(timerId); timerId = null; }
-      overlay.hidden = true;
-      document.body.classList.remove('auth-locked');
-      say('', '');
-    } catch (err) {
-      say((err && err.message && err.message.includes('armahsports.com')) ? err.message : 'رمز غير صحيح أو منتهي الصلاحية. تحقق من الرمز وحاول مجدداً.', 'error');
-      verifyBtn.disabled = false;
-    }
-  }
-  sendBtn.addEventListener('click', sendOtp);
-  verifyBtn.addEventListener('click', verifyOtp);
-  resendBtn.addEventListener('click', function () { if (Date.now() >= resendAt) sendOtp(); });
-  changeBtn.addEventListener('click', function () { showEmail(); say('أدخل البريد الرسمي لإرسال رمز جديد.', ''); emailInput.focus(); });
-  emailInput.addEventListener('keydown', function (e) { if (e.key === 'Enter') sendOtp(); });
-  otpInput.addEventListener('input', function () { this.value = this.value.replace(/\D/g,'').slice(0,6); });
-  otpInput.addEventListener('keydown', function (e) { if (e.key === 'Enter') verifyOtp(); });
-
-  // Memory-only auth plus sign-out on page exit: reopening the tab requires a fresh OTP.
-  window.addEventListener('pagehide', function () {
-    if (supabaseClient && verified) { try { supabaseClient.auth.signOut(); } catch (_) {} }
-  });
-  window.addEventListener('pageshow', function (event) {
-    if (event.persisted) {
-      verified = false;
-      overlay.hidden = false;
-      document.body.classList.add('auth-locked');
-      if (supabaseClient) { try { supabaseClient.auth.signOut(); } catch (_) {} }
-      showEmail();
-    }
-  });
-})();
+    // start as soon as the markup exists (do not wait for slow external scripts), and again on load as a safety net
+    try { bfitInit(); } catch (err) { bfitBooted = false; }
+    window.addEventListener('load', bfitInit);
 </script>
 
 </body>
 </html>
-index_cartoon_bfit_auth.html
-عرض index_cartoon_bfit_auth.html. 
