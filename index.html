@@ -271,7 +271,8 @@
             flex-wrap: wrap;
             gap: 8px;
         }
-.exercise-details p.sub-en {
+
+        .exercise-details p.sub-en {
             font-family: 'Montserrat', sans-serif;
             font-size: 13px;
             color: var(--text-muted);
@@ -291,8 +292,7 @@
             font-family: 'Montserrat', sans-serif;
             direction: ltr;
         }
-
-        .exercise-inputs {
+         .exercise-inputs {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
             gap: 15px;
@@ -770,7 +770,7 @@
             body::after, .assessment-container::after, .brand-header::after, .btn-submit, .result-container::before { animation: none; }
         }
 
-    /* ===== Food calculator ===== */
+/* ===== Food calculator ===== */
         .food-search-box { position: relative; }
         .food-list {
             position: absolute; top: 100%; left: 0; right: 0; z-index: 30; margin-top: 6px; list-style: none; max-height: 320px; overflow-y: auto;
@@ -876,7 +876,9 @@
         .ymca-live:empty { display: none; }
         .ymca-live .en { font-family: 'Montserrat', sans-serif; color: var(--text-muted); font-weight: 600; direction: ltr; unicode-bidi: isolate; }
     .avatar-svg svg{filter:drop-shadow(4px 7px 5px rgba(0,0,0,.38)) drop-shadow(-1px -1px 1px rgba(255,255,255,.35));transform:perspective(600px) rotateX(6deg)}
+    .avatar-svg canvas{max-width:100%}
     </style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 </head>
 <body>
 
@@ -955,8 +957,7 @@
                 <input type="number" id="calorieInput" step="1" min="800" max="6000" placeholder="مثال: 2776">
             </div>
         </div>
-
-        <div class="calc-panel">
+         <div class="calc-panel">
             <div class="form-grid-4">
                 <div class="input-box">
                     <label>الهدف <span class="en">Goal</span></label>
@@ -972,7 +973,8 @@
                     <input type="number" id="targetWeight" step="any" inputmode="decimal" placeholder="مثال: 65">
                 </div>
             </div>
-            <div id="nutritionOut"></div>
+            <div class="input-box" style="margin:12px 0;"><label>السعرات النهائية اليومية (تعديل يدوي حر) <span class="en">Final daily calories — manual override (kcal)</span></label><input type="number" id="calorieOverride" step="1" placeholder="تلقائي | Auto"><small style="color:#5f6b85;font-weight:600;">اتركها فارغة لاستخدام الهدف تلقائياً، أو اكتب رقماً لعمل عجز/زيادة وسيُعاد توزيع الماكروز فوراً.</small></div>
+<div id="nutritionOut"></div>
         </div>
 
         <div class="calc-panel">
@@ -1054,8 +1056,8 @@
                 <div class="rest-tag"><i class="fa-solid fa-hourglass-half"></i> فترة الراحة الموصى بها: <b>30–45 ثانية</b> <span class="en">Rest: 30–45 s</span></div>
                 <p class="test-howto">اجلس على الأرض بساقين ممدودتين وقدماك على الصندوق، ثم انحنِ للأمام ببطء وابعد يديك لأقصى مسافة. سجّل المسافة بالسنتيمتر (0 = خط أصابع القدم، وقيمة سالبة = قبل الأصابع).<br><span dir="ltr">Sit with legs straight and feet flat on the box, then reach forward slowly as far as possible. Record cm (0 = toe line, negative = short of toes).</span></p>
                 <div class="exercise-inputs">
-                    <div class="input-box"><label>المحاولة 1 (سم) <span class="en">Trial 1 (cm)</span></label><input type="number" id="srTry1" step="0.5" min="-40" max="60" placeholder="مثال: 8" required></div>
-                    <div class="input-box"><label>المحاولة 2 (سم) <span class="en">Trial 2 (cm)</span></label><input type="number" id="srTry2" step="0.5" min="-40" max="60" placeholder="مثال: 10" required></div>
+                    <div class="input-box"><label>المحاولة 1 (سم) <span class="en">Trial 1 (cm)</span></label><input type="number" id="srTry1" step="0.5" placeholder="مثال: 8" required></div>
+                    <div class="input-box"><label>المحاولة 2 (سم) <span class="en">Trial 2 (cm)</span></label><input type="number" id="srTry2" step="0.5" placeholder="مثال: 10" required></div>
                 </div>
             </div>
         </div>
@@ -1073,13 +1075,13 @@
                 <div class="rest-tag"><i class="fa-solid fa-hourglass-half"></i> فترة الراحة الموصى بها: <b>30–45 ثانية</b> <span class="en">Rest: 30–45 s</span></div>
                 <p class="test-howto">ارفع يدًا فوق الكتف ومدّها لأسفل بين لوحي الكتف، والأخرى من الأسفل لأعلى خلف الظهر. قس المسافة بين أطراف الأصابع بالسنتيمتر (0 = تلامس، وقيمة سالبة = تداخل).<br><span dir="ltr">Reach one hand over the shoulder and down the spine, the other up from below. Measure the fingertip gap in cm (0 = touching, negative = overlap).</span></p>
                 <div class="exercise-inputs">
-                    <div class="input-box"><label>الجانب الأيمن (فجوة سم) <span class="en">Right over top (gap cm)</span></label><input type="number" id="apR" step="0.5" min="-20" max="40" placeholder="0 = تلامس" required></div>
-                    <div class="input-box"><label>الجانب الأيسر (فجوة سم) <span class="en">Left over top (gap cm)</span></label><input type="number" id="apL" step="0.5" min="-20" max="40" placeholder="0 = تلامس" required></div>
+                    <div class="input-box"><label>الجانب الأيمن (فجوة سم) <span class="en">Right over top (gap cm)</span></label><input type="number" id="apR" step="0.5" placeholder="0 = تلامس" required></div>
+                    <div class="input-box"><label>الجانب الأيسر (فجوة سم) <span class="en">Left over top (gap cm)</span></label><input type="number" id="apL" step="0.5" placeholder="0 = تلامس" required></div>
                 </div>
             </div>
         </div>
 
-   <div class="exercise-card">
+        <div class="exercise-card">
             <div class="exercise-avatar-box">
                 <div class="avatar-svg" id="avatar3"></div>
                 <span class="gender-badge" id="badge3">MALE</span>
@@ -1092,8 +1094,8 @@
                 <div class="rest-tag"><i class="fa-solid fa-hourglass-half"></i> فترة الراحة الموصى بها: <b>45–60 ثانية</b> <span class="en">Rest: 45–60 s</span></div>
                 <p class="test-howto">افرد الذراعين جانبياً كالأجنحة، أغمض عينيك وقف على قدم واحدة. سجّل الزمن بالثواني حتى تلمس القدم المرفوعة الأرض أو تتحرك القدم الثابتة (يمين / يسار).<br><span dir="ltr">Arms spread out like wings, eyes closed, stand on one leg. Record seconds per leg until the lifted foot touches down or the standing foot shifts.</span></p>
                 <div class="exercise-inputs">
-                    <div class="input-box"><label>القدم اليمنى (ثواني) <span class="en">Right leg (s)</span></label><input type="number" id="slsR" step="1" min="0" max="60" placeholder="أقصى 60" required></div>
-                    <div class="input-box"><label>القدم اليسرى (ثواني) <span class="en">Left leg (s)</span></label><input type="number" id="slsL" step="1" min="0" max="60" placeholder="أقصى 60" required></div>
+                    <div class="input-box"><label>القدم اليمنى (ثواني) <span class="en">Right leg (s)</span></label><input type="number" id="slsR" step="1" placeholder="أقصى 60" required></div>
+                    <div class="input-box"><label>القدم اليسرى (ثواني) <span class="en">Left leg (s)</span></label><input type="number" id="slsL" step="1" placeholder="أقصى 60" required></div>
                 </div>
             </div>
         </div>
@@ -1111,7 +1113,7 @@
                 <div class="rest-tag"><i class="fa-solid fa-hourglass-half"></i> فترة الراحة الموصى بها: <b>60–90 ثانية</b> <span class="en">Rest: 60–90 s</span></div>
                 <p class="test-howto">من وضع الأربع، مدّ الذراع اليمنى مع الساق اليسرى في خط واحد مع الجذع وثبّت دون ميلان الحوض. سجّل زمن الثبات بالثواني.<br><span dir="ltr">From all fours, extend the opposite arm and leg in line with the torso without rotating the pelvis. Record the hold time in seconds.</span></p>
                 <div class="exercise-inputs">
-                    <div class="input-box"><label>زمن الثبات (ثواني) <span class="en">Hold time (s)</span></label><input type="number" id="plankSec" step="1" min="0" max="600" placeholder="بالثواني" required></div>
+                    <div class="input-box"><label>زمن الثبات (ثواني) <span class="en">Hold time (s)</span></label><input type="number" id="plankSec" step="1" placeholder="بالثواني" required></div>
                 </div>
             </div>
         </div>
@@ -1129,7 +1131,7 @@
                 <div class="rest-tag"><i class="fa-solid fa-hourglass-half"></i> فترة الراحة الموصى بها: <b>90–120 ثانية</b> <span class="en">Rest: 90–120 s</span></div>
                 <p class="test-howto">قف أمام بوكس رياضي بارتفاع ثابت، انزل حتى يلامس الحوض البوكس ثم قف بالكامل. سجّل عدد التكرارات الصحيحة خلال 30 ثانية.<br><span dir="ltr">Stand in front of a gym box, lower until you touch it, then stand fully. Count correct reps in 30 seconds.</span></p>
                 <div class="exercise-inputs">
-                    <div class="input-box"><label>عدد التكرارات في 30 ثانية <span class="en">Reps in 30 s</span></label><input type="number" id="chairReps" step="1" min="0" max="60" placeholder="عدد الوقفات" required></div>
+                    <div class="input-box"><label>عدد التكرارات في 30 ثانية <span class="en">Reps in 30 s</span></label><input type="number" id="chairReps" step="1" placeholder="عدد الوقفات" required></div>
                 </div>
             </div>
         </div>
@@ -1147,7 +1149,7 @@
                 <div class="rest-tag"><i class="fa-solid fa-hourglass-half"></i> فترة الراحة الموصى بها: <b>120 ثانية</b> <span class="en">Rest: 120 s</span></div>
                 <p class="test-howto">من وضع الركبتين على الأرض واليدان تحت الكتفين، انزل بالصدر حتى يقترب من الأرض ثم ادفع للأعلى. سجّل أقصى عدد تكرارات بأداء سليم.<br><span dir="ltr">Kneel with hands under shoulders, lower the chest close to the floor and press back up. Record the maximum reps with good form.</span></p>
                 <div class="exercise-inputs">
-                    <div class="input-box"><label>أقصى عدد تكرارات <span class="en">Max reps</span></label><input type="number" id="kpuReps" step="1" min="0" max="100" placeholder="عدد التكرارات" required></div>
+                    <div class="input-box"><label>أقصى عدد تكرارات <span class="en">Max reps</span></label><input type="number" id="kpuReps" step="1" placeholder="عدد التكرارات" required></div>
                 </div>
             </div>
         </div>
@@ -1165,16 +1167,15 @@
                 <div class="rest-tag"><i class="fa-solid fa-hourglass-half"></i> فترة الراحة الموصى بها: <b>اختبار ختامي — استشفاء كامل بعده</b> <span class="en">Final test, full recovery after</span></div>
                 <p class="test-howto">اصعد وانزل عن صندوق ارتفاعه 30 سم لمدة 3 دقائق بإيقاع 24 خطوة/دقيقة. فور الانتهاء سجّل أقصى نبض، ثم اجلس وقس الزمن اللازم لعودة النبض إلى نبض الراحة.<br><span dir="ltr">Step up and down a 30 cm box for 3 minutes at 24 steps/min. Right after finishing record the peak HR, then sit and time how long the pulse takes to return to resting.</span></p>
                 <div class="exercise-inputs">
-                    <div class="input-box"><label>نبض الراحة الأساسي (نبضة/د) <span class="en">Resting HR (bpm)</span></label><input type="number" id="ymcaRest" step="1" min="30" max="130" placeholder="Resting HR" required></div>
-                    <div class="input-box"><label>أقصى نبض فور الانتهاء (نبضة/د) <span class="en">Peak HR right after (bpm)</span></label><input type="number" id="ymcaPeak" step="1" min="60" max="230" placeholder="Peak HR" required></div>
-                    <div class="input-box"><label>زمن استشفاء النبض للراحة (ثواني) <span class="en">Recovery time to resting (s)</span></label><input type="number" id="ymcaRec" step="1" min="5" max="900" placeholder="Recovery Time" required></div>
+                    <div class="input-box"><label>نبض الراحة الأساسي (نبضة/د) <span class="en">Resting HR (bpm)</span></label><input type="number" id="ymcaRest" step="1" placeholder="Resting HR" required></div>
+                    <div class="input-box"><label>أقصى نبض فور الانتهاء (نبضة/د) <span class="en">Peak HR right after (bpm)</span></label><input type="number" id="ymcaPeak" step="1" placeholder="Peak HR" required></div>
+                    <div class="input-box"><label>زمن استشفاء النبض للراحة (ثواني) <span class="en">Recovery time to resting (s)</span></label><input type="number" id="ymcaRec" step="1" placeholder="Recovery Time" required></div>
                 </div>
                 <div class="ymca-live" id="ymcaLive" aria-live="polite"></div>
             </div>
         </div>
 
-
-        <div class="section-header">
+ <div class="section-header">
             <h2><i class="fa-solid fa-heart-pulse"></i> 4. معادلة كارفونين لمعدل القلب المستهدف | Karvonen Target Heart Rate</h2>
         </div>
         <div class="calc-panel">
@@ -1218,6 +1219,7 @@
 
             <div class="report-summary-text" id="detailedReportText"></div>
             <div id="reportExtras"></div>
+            <button type="button" class="btn-submit" id="pdfBtn" onclick="downloadPdfReport()" style="margin-top:18px;"><i class="fa-solid fa-file-pdf"></i> تحميل التقرير الكامل PDF | Download Full PDF Report</button>
         </div>
     </div>
 </div>
@@ -1400,7 +1402,8 @@
                 return '<rect x="110" y="99" width="50" height="20" rx="2" fill="' + AV_C.prop + '"/><rect x="110" y="99" width="50" height="3.5" rx="1.5" fill="' + AV_C.propDark + '"/>';
             } }
     };
-function avBodyAt(i, g, p) {
+
+    function avBodyAt(i, g, p) {
         const T = AV_TESTS[i], P = T.pose(p, g);
         let o = '<line x1="8" y1="119" x2="192" y2="119" stroke="' + AV_C.floor + '" stroke-width="2" stroke-linecap="round"/>';
         if (T.kind === 'back') return o + avBackBody(P, g);
@@ -1433,10 +1436,111 @@ function avBodyAt(i, g, p) {
         t -= C.hold1; return 1 - avEase(t / C.back);
     }
 
+
+    // ===== Real 3D human models (three.js) — procedural rig, same start/finish poses, male / female =====
+    const AV3 = { ok: typeof THREE !== 'undefined', r: null, sc: {}, cx: {}, mats: {} };
+    function av3Mat(c) { return AV3.mats[c] || (AV3.mats[c] = new THREE.MeshPhongMaterial({ color: c, shininess: 38, specular: 0x333333 })); }
+    function av3Seg(S, key, a, b, r, color, zf) {
+        let o = S.p[key];
+        if (!o) { o = S.p[key] = { c: new THREE.Mesh(AV3.cyl, av3Mat(color)), a: new THREE.Mesh(AV3.sph, av3Mat(color)), b: new THREE.Mesh(AV3.sph, av3Mat(color)) }; S.g.add(o.c); S.g.add(o.a); S.g.add(o.b); }
+        const A = new THREE.Vector3(a[0], a[1], a[2]), B = new THREE.Vector3(b[0], b[1], b[2]), d = B.clone().sub(A);
+        let len = d.length(); if (len < 1e-3) { d.set(0, 1, 0); len = 1e-3; } else d.normalize();
+        const z = zf || 1;
+        o.c.position.copy(A).add(B).multiplyScalar(0.5); o.c.scale.set(r, len, r * z); o.c.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), d);
+        o.a.position.copy(A); o.a.scale.set(r, r, r * z); o.b.position.copy(B); o.b.scale.set(r, r, r * z);
+    }
+    function av3Q(pt, z) { return [(pt[0] - 100) * 0.1, (119 - pt[1]) * 0.1, z || 0]; }
+    function av3Box(S, x1, y1, x2, y2, d, color) {
+        const m = new THREE.Mesh(new THREE.BoxGeometry((x2 - x1) * 0.1, (y2 - y1) * 0.1, d), av3Mat(color));
+        const c = av3Q([(x1 + x2) / 2, (y1 + y2) / 2], 0); m.position.set(c[0], c[1], 0); S.scene.add(m);
+    }
+    function av3Side(S, P, g, col) {
+        const B = AV_BODY[g], J = avSideJoints(P, g), F = g === 'female', zs = B.shoulder * 0.022, zl = B.hipw * 0.02 + 0.12, q = av3Q;
+        [[-1, J.aF, J.lF, J.toF, AV_C.skinF, AV_C.shortsF, AV_C.shoeF], [1, J.aN, J.lN, J.toN, AV_C.skin, AV_C.shorts, AV_C.shoe]].forEach(function (s, k) {
+            const z = s[0], a = s[1], l = s[2], to = s[3], c = s[4], t = '_' + k;
+            av3Seg(S, 'ua' + t, q(J.sh, z * zs), q(a.m, z * zs), B.uarm * 0.05, c);
+            av3Seg(S, 'fa' + t, q(a.m, z * zs), q(a.e, z * zs), B.farm * 0.05, c);
+            av3Seg(S, 'hd' + t, q(a.e, z * zs), q(a.e, z * zs), B.farm * 0.03 + 0.2, c);
+            av3Seg(S, 'sl' + t, q(J.sh, z * zs), q(avLerp2(J.sh, a.m, 0.5), z * zs), B.uarm * 0.05 + 0.07, col);
+            av3Seg(S, 'th' + t, q(J.hip, z * zl), q(l.m, z * zl), B.thigh * 0.05, c);
+            av3Seg(S, 'sn' + t, q(l.m, z * zl), q(l.e, z * zl), B.shin * 0.05, c);
+            av3Seg(S, 'st' + t, q(J.hip, z * zl), q(avLerp2(J.hip, l.m, 0.64), z * zl), B.thigh * 0.05 + 0.08, s[5]);
+            av3Seg(S, 'ft' + t, q(l.e, z * zl), q(to, z * zl), 0.3, s[6]);
+        });
+        const mid = avLerp2(J.hip, J.sh, 0.2);
+        av3Seg(S, 'pel', q(J.hip), q(mid), F ? 0.78 : 0.7, AV_C.shorts);
+        av3Seg(S, 'chest', q(mid), q(J.sh), F ? 0.62 : 0.9, col);
+        av3Seg(S, 'sbar', q(J.sh, -zs), q(J.sh, zs), B.uarm * 0.05 + 0.1, col);
+        if (F) {
+            const d = avDir(P.tA, 1), tn = avDir(P.tA + 90, 1), cp = [J.sh[0] - d[0] * 9 + tn[0] * (B.torso / 2 - 0.5), J.sh[1] - d[1] * 9 + tn[1] * (B.torso / 2 - 0.5)];
+            av3Seg(S, 'b1', q(cp, 0.24), q(cp, 0.24), B.chest * 0.1, col); av3Seg(S, 'b2', q(cp, -0.24), q(cp, -0.24), B.chest * 0.1, col);
+        }
+        av3Seg(S, 'neck', q(J.sh), q(J.nk), 0.28, AV_C.skin);
+        const h3 = q(J.hd), r = B.head * 0.075;
+        av3Seg(S, 'head', h3, h3, r, AV_C.skin);
+        av3Seg(S, 'hair', [h3[0] - r * 0.25, h3[1] + r * 0.22, 0], [h3[0] - r * 0.25, h3[1] + r * 0.22, 0], r * 1.04, AV_C.hair);
+        if (F) av3Seg(S, 'tail', [h3[0] - r * 1.05, h3[1] - r * 0.1, 0], [h3[0] - r * 1.05, h3[1] - r * 0.1, 0], r * 0.45, AV_C.hair);
+    }
+    function av3Back(S, P, g, col) {
+        const B = AV_BODY[g], F = g === 'female', cx = 100, sy = 40, Sx = B.shoulder, W = B.waist, H = B.hipw, q = function (x, y, z) { return av3Q([x, y], z); };
+        [-1, 1].forEach(function (s, k) {
+            const hip = [cx + s * H * 0.5, 82], kn = [cx + s * (H * 0.5 + 1), 100], an = [cx + s * (H * 0.5 + 1.5), 115], t = '_' + k;
+            av3Seg(S, 'th' + t, q(hip[0], hip[1]), q(kn[0], kn[1]), B.thigh * 0.05, AV_C.skin);
+            av3Seg(S, 'sn' + t, q(kn[0], kn[1]), q(an[0], an[1]), B.shin * 0.05, AV_C.skin);
+            av3Seg(S, 'ft' + t, q(an[0], an[1]), q(an[0] + s * 2, 117.5, 0.9), 0.3, AV_C.shoe);
+            av3Seg(S, 'st' + t, q(hip[0], hip[1]), q(hip[0], 94), B.thigh * 0.05 + 0.08, AV_C.shorts);
+        });
+        av3Seg(S, 'pel', q(cx, 86), q(cx, 76), H * 0.1, AV_C.shorts, 0.55);
+        av3Seg(S, 'low', q(cx, 83), q(cx, 66), (H + W) * 0.05, col, 0.5);
+        av3Seg(S, 'up', q(cx, 66), q(cx, sy), (W + Sx) * 0.05, col, 0.5);
+        av3Seg(S, 'neck', q(cx, 31), q(cx, sy), 0.3, AV_C.skin);
+        av3Seg(S, 'head', q(cx, 21), q(cx, 21), B.head * 0.075, AV_C.skin);
+        av3Seg(S, 'hair', q(cx, 21.5, -0.05), q(cx, 21.5, -0.05), B.head * 0.078, AV_C.hair);
+        if (F) av3Seg(S, 'bun', q(cx, 11, -0.3), q(cx, 11, -0.3), 0.46, AV_C.hair);
+        const rs = [cx - Sx + 2, sy + 3], ls = [cx + Sx - 2, sy + 3], L = AV_LEN;
+        const aT = avIK(rs, P.hT, L.uarm, L.farm, P.eT), aB = avIK(ls, P.hB, L.uarm, L.farm, P.eB);
+        av3Seg(S, 'sbar', q(rs[0], rs[1], -0.1), q(ls[0], ls[1], -0.1), B.uarm * 0.05 + 0.1, col);
+        [[rs, aT, -0.25, 'T'], [ls, aB, -0.95, 'B']].forEach(function (a) {
+            av3Seg(S, 'ua' + a[3], q(a[0][0], a[0][1], a[2]), q(a[1].m[0], a[1].m[1], a[2]), B.uarm * 0.05, AV_C.skin);
+            av3Seg(S, 'fa' + a[3], q(a[1].m[0], a[1].m[1], a[2]), q(a[1].e[0], a[1].e[1], a[2]), B.farm * 0.05, AV_C.skin);
+            av3Seg(S, 'hn' + a[3], q(a[1].e[0], a[1].e[1], a[2]), q(a[1].e[0], a[1].e[1], a[2]), B.farm * 0.03 + 0.2, AV_C.skin);
+            av3Seg(S, 'sl' + a[3], q(a[0][0], a[0][1], a[2]), q(avLerp2(a[0], a[1].m, 0.4)[0], avLerp2(a[0], a[1].m, 0.4)[1], a[2]), B.uarm * 0.05 + 0.07, col);
+        });
+    }
+    function av3Scene(i, g) {
+        const sc = AV3.sc[i];
+        if (sc && sc.g0 === g) return sc;
+        if (!AV3.cyl) { AV3.cyl = new THREE.CylinderGeometry(1, 1, 1, 16); AV3.sph = new THREE.SphereGeometry(1, 16, 12); }
+        const scene = new THREE.Scene(), grp = new THREE.Group(); scene.add(grp);
+        scene.add(new THREE.AmbientLight(0xffffff, 0.62)); const dl = new THREE.DirectionalLight(0xffffff, 0.85); dl.position.set(6, 14, 10); scene.add(dl);
+        const fl = new THREE.Mesh(new THREE.CircleGeometry(12, 48), av3Mat(0xcfd6e6)); fl.rotation.x = -Math.PI / 2; fl.position.y = -0.02; scene.add(fl);
+        const S = { scene: scene, g: grp, p: {}, g0: g, cam: new THREE.PerspectiveCamera(34, 440 / 286, 0.1, 100), back: AV_TESTS[i].kind === 'back' };
+        if (i === 1) { av3Box(S, 108, 99, 124, 119, 3, AV_C.prop); av3Box(S, 108, 96, 190, 99.5, 1.4, AV_C.propDark); }
+        if (i === 5) av3Box(S, 34, 90, 82, 119, 3.4, AV_C.prop);
+        if (i === 7) av3Box(S, 110, 99, 160, 119, 3.4, AV_C.prop);
+        return (AV3.sc[i] = S);
+    }
+    function av3Render(i, p) {
+        if (!AV3.ok) return false;
+        try {
+            const el = document.getElementById('avatar' + i), g = avGender;
+            if (!AV3.r) { AV3.r = new THREE.WebGLRenderer({ antialias: true, alpha: true }); AV3.r.setSize(440, 286, false); AV3.r.setPixelRatio(1); }
+            const S = av3Scene(i, g), col = g === 'female' ? '#f472b6' : '#38bdf8', P = AV_TESTS[i].pose(p, g);
+            if (S.back) av3Back(S, P, g, col); else av3Side(S, P, g, col);
+            const t = (performance.now ? performance.now() : Date.now()) / 1000, az = (S.back ? Math.PI : 0) + 0.6 * Math.sin(t * 0.7 + i), D = 24;
+            S.cam.position.set(Math.sin(az) * D, 7.6, Math.cos(az) * D); S.cam.lookAt(0, 5.6, 0);
+            AV3.r.render(S.scene, S.cam);
+            let cv = el.firstChild;
+            if (!cv || cv.tagName !== 'CANVAS') { el.innerHTML = ''; cv = document.createElement('canvas'); cv.width = 440; cv.height = 286; cv.style.cssText = 'width:100%;height:auto;display:block'; el.appendChild(cv); }
+            const c2 = cv.getContext('2d'); c2.clearRect(0, 0, 440, 286); c2.drawImage(AV3.r.domElement, 0, 0, 440, 286);
+            return true;
+        } catch (e) { AV3.ok = false; return false; }
+    }
+
     function avRenderOne(i, p) {
         const el = document.getElementById('avatar' + i);
         if (!el) return;
-        el.innerHTML = avFigureSVG(i, avGender, p, false);
+        if (!av3Render(i, p)) el.innerHTML = avFigureSVG(i, avGender, p, false);
         const ph = document.getElementById('ph' + i);
         if (ph) {
             const txt = p < 0.5 ? 'START | بداية' : 'FINISH | نهاية';
@@ -1764,7 +1868,8 @@ function avBodyAt(i, g, p) {
         const den = n * sxx - sx * sx;
         return den === 0 ? best.slope : Math.atan((n * sxy - sx * sy) / den);
     }
-// Maps the template (0..1) onto the page using the red rules (top + footer; top only as fallback)
+
+    // Maps the template (0..1) onto the page using the red rules (top + footer; top only as fallback)
     function inbodyFindFrame(img) {
         const H = img.height, L = INBODY_LAYOUT, ths = [45, 32, 22];
         for (let t = 0; t < ths.length; t++) {
@@ -1866,14 +1971,6 @@ function avBodyAt(i, g, p) {
         await worker.setParameters({ tessedit_char_whitelist: whitelist, tessedit_pageseg_mode: String(psm) });
         const res = await worker.recognize(canvas);
         return ((res && res.data && res.data.text) || '').trim();
-    }
-
-    function inbodyDecimal(text, min, max) {
-        let t = String(text || '').replace(/[^0-9.]/g, '');
-        if ((t.match(/\./g) || []).length > 1) t = t.replace(/\.(?=.*\.)/g, '');
-        if (t.indexOf('.') < 0 && /^\d{3,4}$/.test(t)) t = t.slice(0, -1) + '.' + t.slice(-1);
-        const v = parseFloat(t);
-        return isFinite(v) && v >= min && v <= max ? v : null;
     }
     function inbodyInt(text, digits, min, max) {
         const m = String(text || '').match(new RegExp('\\d{' + digits + '}'));
@@ -2000,12 +2097,14 @@ function avBodyAt(i, g, p) {
     function fmtInt(n) { return Math.round(n).toLocaleString('en-US'); }
 
     function computeNutrition() {
-        const base = parseFloat(document.getElementById('calorieInput').value);
+        const ovR = parseFloat(document.getElementById('calorieOverride').value), ov = (ovR >= 800 && ovR <= 6000) ? ovR : null;
+        let base = parseFloat(document.getElementById('calorieInput').value);
+        if (!(base >= 800 && base <= 6000) && ov !== null) base = ov;
         const weight = parseFloat(document.getElementById('weightInput').value);
         if (!(base >= 800 && base <= 6000) || !(weight >= 30 && weight <= 250)) return null;
         const key = document.getElementById('goalSelect').value;
         const goal = GOAL_FACTORS[key] || GOAL_FACTORS.maintain;
-        const kcal = Math.round(base * goal.f);
+        const kcal = ov !== null ? Math.round(ov) : Math.round(base * goal.f);
         let proteinG = 2.0 * weight, capped = false;
         const capG = 0.40 * kcal / 4;
         if (proteinG > capG) { proteinG = capG; capped = true; }
@@ -2021,9 +2120,9 @@ function avBodyAt(i, g, p) {
             const delta = Math.round((tw - weight) * 10) / 10, diff = kcal - base;
             if (Math.abs(delta) < 0.1) plan = { state: 'reached', target: tw, delta: 0 };
             else if (Math.sign(delta) !== goal.dir) plan = { state: 'mismatch', target: tw, delta: delta };
-            else plan = { state: 'ok', target: tw, delta: delta, weeks: Math.max(1, Math.ceil(Math.abs(delta) * 7700 / (Math.abs(diff) * 7))), diff: Math.round(diff) };
+            else plan = { state: 'ok', target: tw, delta: delta, weeks: Math.max(1, Math.ceil(Math.abs(delta) * 7700 / (Math.max(Math.abs(diff), 1) * 7))), diff: Math.round(diff) };
         } else if (goal.dir === 0 && tw >= 30 && tw <= 250) plan = { state: 'maintain', target: tw };
-        return { plan: plan, base: Math.round(base), kcal: kcal, goal: goal, proteinG: proteinG, carbsG: carbsG, fatG: fatG, pPct: pPct, cPct: cPct, fPct: fPct, capped: capped, perKg: proteinG / weight };
+        return { manual: ov !== null, plan: plan, base: Math.round(base), kcal: kcal, goal: goal, proteinG: proteinG, carbsG: carbsG, fatG: fatG, pPct: pPct, cPct: cPct, fPct: fPct, capped: capped, perKg: proteinG / weight };
     }
 
     function nutritionHTML(n) {
@@ -2082,6 +2181,7 @@ function avBodyAt(i, g, p) {
     }
 
     function refreshCalculators() {
+        (function () { const n0 = computeNutrition(), o = document.getElementById('calorieOverride'); o.placeholder = (n0 && !n0.manual) ? ('تلقائي: ' + n0.kcal) : 'تلقائي | Auto'; })();
         document.getElementById('nutritionOut').innerHTML = nutritionHTML(computeNutrition());
         if (typeof renderMeal === 'function') renderMeal();
         document.getElementById('karvonenOut').innerHTML = karvonenHTML(computeKarvonen());
@@ -2090,6 +2190,7 @@ function avBodyAt(i, g, p) {
     function renderReportExtras(hasFlags, needsClearance) {
         const n = computeNutrition(), k = computeKarvonen();
         let h = '';
+        if (n && n.manual) h += '<p class="calc-note"><b>✎ السعرات معدّلة يدوياً من المدرب: ' + n.kcal + ' kcal (الأساس من الإنبودي: ' + n.base + ' kcal) | Manual calories override</b></p>';
         if (n) h += '<div class="report-extra"><h4><i class="fa-solid fa-utensils"></i> الخطة الغذائية | Nutrition Plan</h4>' + nutritionHTML(n) + '</div>';
         if (k && !k.invalid) h += '<div class="report-extra"><h4><i class="fa-solid fa-heart-pulse"></i> معدل القلب المستهدف (كارفونين) | Karvonen Target Heart Rate</h4>' + karvonenHTML(k) + '</div>';
         if (mealItems.length) h += '<div class="report-extra"><h4><i class="fa-solid fa-bowl-food"></i> الوجبة | Meal</h4>' + mealHTML(false) + '</div>';
@@ -2102,7 +2203,7 @@ function avBodyAt(i, g, p) {
     }
 
     function initCalculators() {
-        ['calorieInput', 'weightInput', 'goalSelect', 'targetWeight', 'restHR', 'intensityPct', 'realAge'].forEach(function (id) {
+        ['calorieInput', 'calorieOverride', 'weightInput', 'goalSelect', 'targetWeight', 'restHR', 'intensityPct', 'realAge'].forEach(function (id) {
             const el = document.getElementById(id);
             el.addEventListener('input', refreshCalculators);
             el.addEventListener('change', refreshCalculators);
@@ -2110,7 +2211,8 @@ function avBodyAt(i, g, p) {
         initFood();
         refreshCalculators();
     }
-// ===== Food calculator (built-in local dataset, no API / no keys) =====
+
+    // ===== Food calculator (built-in local dataset, no API / no keys) =====
     const FOOD_KEYS = ['kcal', 'p', 'c', 'f', 'fiber', 'na', 'k', 'ca', 'fe', 'vc', 'sugar', 'sat', 'chol', 'va', 'vd', 'b12', 'mg', 'zn'];
     const FOOD_MICROS = [
         ['fiber', 'ألياف', 'Fiber', 'g'], ['sugar', 'سكريات', 'Sugars', 'g'], ['sat', 'دهون مشبعة', 'Saturated fat', 'g'], ['chol', 'كوليسترول', 'Cholesterol', 'mg'],
@@ -2287,8 +2389,7 @@ function avBodyAt(i, g, p) {
         'Pomegranate': [13.7, 0.1, 0, 0, 0, 0, 12, 0.4], 'Dates': [66, 0, 0, 0, 0, 0, 54, 0.4], 'Raisins': [59, 0.1, 0, 0, 0, 0, 32, 0.2],
         'Orange juice': [8.4, 0, 0, 10, 0, 0, 11, 0.1], 'Whey protein powder': [4, 3, 80, null, null, null, 100, 2], 'Honey': [82, 0, 0, 0, 0, 0, 2, 0.2], 'White sugar': [100, 0, 0, 0, 0, 0, 0, 0.1]
     };
-
-    let foodCustom = [];
+let foodCustom = [];
     let foodAll = [];
     let foodSel = null, foodState = 'raw', foodHi = -1, foodMatches = [];
     const mealItems = [];
@@ -2377,7 +2478,8 @@ function avBodyAt(i, g, p) {
             '<br><bdi>Values are approximate.</bdi> <bdi dir="rtl">القيم تقريبية.</bdi></p></div>';
         return h;
     }
-function renderFoodList() {
+
+    function renderFoodList() {
         const ul = document.getElementById('foodList'), inp = document.getElementById('foodSearch');
         if (!foodMatches.length) {
             const q = inp.value.trim();
@@ -2733,11 +2835,119 @@ function renderFoodList() {
             testParts.map(function (x) { return '• ' + x[0] + ': <b>' + Math.round(x[1]) + '%</b>'; }).join('<br>') +
             '<br>• نبض الاستشفاء | HR recovery: <b>' + (Math.round(hrRate * 100) / 100) + '</b> bpm/s · ' + Math.round(hrPeakPct) + '% HRmax';
         document.getElementById('detailedReportText').innerHTML = summaryHTML;
-        renderReportExtras(flags.length > 0, needsMedicalClearance);
+        window.BFIT_LAST = { client: client, coach: coach, gender: gender, realAge: realAge, weight: weight, fat: fat, smm: smm, height: num('heightInput', 0),
+bioAge: biologicalAge, fitness: fitnessScore, flags: flags, clearance: needsMedicalClearance, bioParts: bioParts, testParts: testParts, hrRate: hrRate, hrPeakPct: hrPeakPct, bodyComp: bodyCompScore, reachBest: reachBest };
+renderReportExtras(flags.length > 0, needsMedicalClearance);
         const area = document.getElementById('resultArea');
         area.style.display = 'block';
         area.scrollIntoView({ behavior: 'smooth' });
-                                }
+    }
+
+
+    // ===== Full PDF report: self-contained (no external library) — draws A4 pages on canvas and writes a real PDF file =====
+    function pdfDataBlocks() {
+        const D = window.BFIT_LAST; if (!D) return null;
+        const n = computeNutrition(), k = computeKarvonen(), v = function (id) { const x = document.getElementById(id).value; return x === '' ? '—' : x; };
+        const tag = function (nn) { const h = Array.prototype.find.call(document.querySelectorAll('.exercise-details h4'), function (x) { return x.textContent.trim().indexOf(nn + '.') === 0; }); const t = h && h.querySelector('.target-tag'); return t ? t.textContent.trim() : '—'; };
+        const entered = [v('srTry1') + ' / ' + v('srTry2') + ' cm', v('apR') + ' / ' + v('apL') + ' cm (R/L)', v('slsR') + ' / ' + v('slsL') + ' s (R/L)', v('plankSec') + ' s', v('chairReps') + ' reps', v('kpuReps') + ' reps', 'Rest ' + v('ymcaRest') + ' | Peak ' + v('ymcaPeak') + ' | Rec ' + v('ymcaRec') + 's'];
+        const B = [];
+        B.push({ t: 'sec', x: 'بيانات المشترك والإنبودي | Client & InBody' });
+        B.push({ t: 'tbl', w: [.2, .3, .2, .3], r: [['المشترك | Client', D.client, 'المدرب | Coach', D.coach], ['الجنس | Gender', D.gender === 'male' ? 'ذكر | Male' : 'أنثى | Female', 'العمر | Age', String(D.realAge)],
+            ['الوزن | Weight', D.weight + ' kg', 'الطول | Height', (D.height || '—') + ' cm'], ['الدهون PBF', D.fat + ' %', 'العضلات SMM', D.smm + ' kg']] });
+        B.push({ t: 'sec', x: 'العمر البيولوجي | Biological Age' });
+        B.push({ t: 'big', r: [['الدرجة الكلية | Fitness', D.fitness + '%'], ['العمر الحقيقي | Real Age', String(D.realAge)], ['العمر البيولوجي | Bio Age', String(D.bioAge)]] });
+        B.push({ t: 'tbl', w: [.75, .25], r: D.bioParts.map(function (x) { return [x[0], Math.round(x[1]) + '%']; }) });
+        B.push({ t: 'sec', x: 'الملاحظات الصحية | Health Notes' });
+        if (D.flags.length) { D.flags.forEach(function (f) { B.push({ t: 'p', x: '• ' + f }); }); if (D.clearance) B.push({ t: 'p', x: 'يلزم الحصول على موافقة طبية قبل بدء البرنامج.', c: '#dc2626', b: 1 }); }
+        else B.push({ t: 'p', x: 'لا توجد ملاحظات صحية مسجلة | No health flags.' });
+        B.push({ t: 'sec', x: 'الاختبارات السبعة (بالقيم المُدخلة) | Fitness Tests' });
+        B.push({ t: 'tbl', head: 1, w: [.3, .3, .26, .14], r: [['الاختبار | Test', 'النتيجة الفعلية | Result', 'الهدف | Target', 'الدرجة']].concat(D.testParts.map(function (x, i) { return [x[0], entered[i], tag(i + 1), Math.round(x[1]) + '%']; })) });
+        B.push({ t: 'p', x: 'استشفاء النبض | HR recovery: ' + (Math.round(D.hrRate * 100) / 100) + ' bpm/s — ' + Math.round(D.hrPeakPct) + '% HRmax' });
+        if (n) {
+            B.push({ t: 'sec', x: 'السعرات والماكروز | Calories & Macros' });
+            B.push({ t: 'tbl', w: [.22, .28, .22, .28], r: [['الهدف | Goal', n.goal.ar + ' | ' + n.goal.en, 'سعرات الإنبودي', n.base + ' kcal'], ['السعرات النهائية' + (n.manual ? ' (يدوي)' : ''), n.kcal + ' kcal', 'بروتين | Protein', n.proteinG + ' g (' + n.pPct + '%)'], ['كارب | Carbs', n.carbsG + ' g (' + n.cPct + '%)', 'دهون | Fat', n.fatG + ' g (' + n.fPct + '%)']] });
+        }
+        if (k && !k.invalid) {
+            B.push({ t: 'sec', x: 'نطاقات نبض القلب Karvonen | HR Zones' });
+            B.push({ t: 'p', x: 'Max HR: ' + k.hrMax + ' | Resting: ' + k.rhr + ' | Reserve: ' + k.hrr + (k.target ? ' | Target: ' + k.target + ' bpm' : '') });
+            B.push({ t: 'tbl', w: [.2, .5, .3], r: k.zones.map(function (z) { return [z.lo + '–' + z.hi + '%', z.ar + ' | ' + z.en, z.from + '–' + z.to + ' bpm']; }) });
+        }
+        B.push({ t: 'p', x: 'هذا التقرير إرشادي ولا يغني عن الاستشارة الطبية. | For guidance only; not a medical diagnosis.', c: '#64748b', s: 22 });
+        return B;
+    }
+    function pdfDrawPages(B) {
+        const W = 1240, H = 1754, M = 64, FONT = 'Tajawal, "Segoe UI", Tahoma, Arial, sans-serif', pages = [], D = window.BFIT_LAST;
+        let cv, c, y, pg = 0;
+        function np() {
+            cv = document.createElement('canvas'); cv.width = W; cv.height = H; c = cv.getContext('2d'); c.fillStyle = '#fff'; c.fillRect(0, 0, W, H); c.direction = 'rtl'; c.textBaseline = 'middle'; pages.push(cv); pg++;
+            c.fillStyle = '#000'; c.fillRect(0, 0, W, 130); c.fillStyle = '#fff'; c.font = '900 56px Montserrat, ' + FONT; c.textAlign = 'left'; c.direction = 'ltr'; c.fillText('B_FIT', M, 65);
+            c.direction = 'rtl'; c.textAlign = 'right'; c.font = '700 34px ' + FONT; c.fillText('تقرير التقييم البدني الشامل | Assessment Report', W - M, 48);
+            c.font = '500 24px ' + FONT; c.fillStyle = '#cbd5e1'; c.fillText((D.client || '') + '  ·  ' + new Date().toLocaleDateString('en-GB'), W - M, 94);
+            c.fillStyle = '#64748b'; c.font = '500 20px ' + FONT; c.textAlign = 'center'; c.fillText('B_FIT · ' + pg, W / 2, H - 30); y = 166;
+        }
+        function fit(t, w, size, weight) { let s = size; c.font = weight + ' ' + s + 'px ' + FONT; while (s > 15 && c.measureText(t).width > w) { s -= 1; c.font = weight + ' ' + s + 'px ' + FONT; } }
+        function need(h) { if (y + h > H - 70) np(); }
+        np();
+        B.forEach(function (b) {
+            c.textAlign = 'right';
+            if (b.t === 'sec') { need(120); y += 14; c.fillStyle = '#0f172a'; const hp = b.x.split(' | '); fit(hp[0], (W - 2 * M) * 0.55, 34, 800); c.textAlign = 'right'; c.fillText(hp[0], W - M, y + 20); if (hp[1]) { c.direction = 'ltr'; fit(hp[1], (W - 2 * M) * 0.42, 30, 700); c.fillStyle = '#475569'; c.textAlign = 'left'; c.fillText(hp[1], M, y + 20); c.direction = 'rtl'; c.fillStyle = '#0f172a'; } y += 46; c.fillStyle = '#0f172a'; c.fillRect(M, y, W - 2 * M, 3); y += 16; }
+            else if (b.t === 'p') {
+                const sz = b.s || 26, words = b.x.split(' '), lines = []; let ln = ''; c.font = (b.b ? 800 : 500) + ' ' + sz + 'px ' + FONT;
+                words.forEach(function (w) { const tt = ln ? ln + ' ' + w : w; if (c.measureText(tt).width > W - 2 * M && ln) { lines.push(ln); ln = w; } else ln = tt; }); lines.push(ln);
+                lines.forEach(function (l) { need(sz + 16); c.fillStyle = b.c || '#1e293b'; c.font = (b.b ? 800 : 500) + ' ' + sz + 'px ' + FONT; c.textAlign = 'right'; c.fillText(l, W - M, y + sz / 2); y += sz + 14; }); y += 4;
+            } else if (b.t === 'big') {
+                need(130); const bw = (W - 2 * M - 40) / 3;
+                b.r.forEach(function (it, i) { const x = W - M - (i + 1) * bw - i * 20; c.fillStyle = '#f1f5f9'; c.fillRect(x, y, bw, 108); c.fillStyle = '#475569'; c.font = '600 22px ' + FONT; c.textAlign = 'center'; c.fillText(it[0], x + bw / 2, y + 28); c.fillStyle = '#000'; c.font = '900 50px Montserrat, ' + FONT; c.fillText(it[1], x + bw / 2, y + 72); });
+                y += 126;
+            } else if (b.t === 'tbl') {
+                const tw = W - 2 * M, rh = 56;
+                b.r.forEach(function (row, ri) {
+                    need(rh + 4); const hd = b.head && ri === 0; let x = W - M;
+                    row.forEach(function (cell, ci) {
+                        const cw = tw * b.w[ci]; c.fillStyle = hd ? '#000' : (ci % 2 === 0 && !b.head && b.w.length === 4 ? '#f1f5f9' : '#fff'); c.fillRect(x - cw, y, cw, rh);
+                        c.strokeStyle = '#cbd5e1'; c.lineWidth = 1.5; c.strokeRect(x - cw, y, cw, rh);
+                        c.fillStyle = hd ? '#fff' : '#0f172a'; const ct = /^[\x20-\x7E\u2013]+$/.test(String(cell)) ? '\u2066' + cell + '\u2069' : String(cell); fit(ct, cw - 24, 25, hd ? 800 : 600); c.textAlign = 'right'; c.fillText(ct, x - 12, y + rh / 2 + 1); x -= cw;
+                    });
+                    y += rh;
+                }); y += 14;
+            }
+        });
+        return pages;
+    }
+    function pdfAssemble(jpegs, w, h) {
+        const enc = new TextEncoder(), chunks = [], offs = []; let len = 0;
+        const push = function (u) { chunks.push(u); len += u.length; }, ps = function (s) { push(enc.encode(s)); };
+        const obj = function (n, fn) { offs[n] = len; ps(n + ' 0 obj\n'); fn(); ps('\nendobj\n'); };
+        const N = jpegs.length; ps('%PDF-1.4\n');
+        obj(1, function () { ps('<< /Type /Catalog /Pages 2 0 R >>'); });
+        obj(2, function () { ps('<< /Type /Pages /Kids [' + jpegs.map(function (_, i) { return (3 + 3 * i) + ' 0 R'; }).join(' ') + '] /Count ' + N + ' >>'); });
+        jpegs.forEach(function (jpg, i) {
+            const c = 'q 595 0 0 842 0 0 cm /Im0 Do Q';
+            obj(3 + 3 * i, function () { ps('<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /XObject << /Im0 ' + (5 + 3 * i) + ' 0 R >> >> /Contents ' + (4 + 3 * i) + ' 0 R >>'); });
+            obj(4 + 3 * i, function () { ps('<< /Length ' + c.length + ' >>\nstream\n' + c + '\nendstream'); });
+            obj(5 + 3 * i, function () { ps('<< /Type /XObject /Subtype /Image /Width ' + w + ' /Height ' + h + ' /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ' + jpg.length + ' >>\nstream\n'); push(jpg); ps('\nendstream'); });
+        });
+        const size = 3 * N + 3, x = len; ps('xref\n0 ' + size + '\n0000000000 65535 f \n');
+        for (let n = 1; n < size; n++) ps(String(offs[n]).padStart(10, '0') + ' 00000 n \n');
+        ps('trailer\n<< /Size ' + size + ' /Root 1 0 R >>\nstartxref\n' + x + '\n%%EOF');
+        const out = new Uint8Array(len); let p = 0; chunks.forEach(function (u) { out.set(u, p); p += u.length; });
+        return new Blob([out], { type: 'application/pdf' });
+    }
+    async function downloadPdfReport() {
+        const btn = document.getElementById('pdfBtn'), old = btn.innerHTML;
+        try {
+            const B = pdfDataBlocks();
+            if (!B) { alert('أنشئ التقرير أولاً | Generate the report first'); return; }
+            btn.disabled = true; btn.innerHTML = '... جاري إنشاء الملف | Creating PDF';
+            try { await Promise.all([document.fonts.load('700 28px Tajawal'), document.fonts.load('900 28px Montserrat')]); await document.fonts.ready; } catch (e) { }
+            const pages = pdfDrawPages(B), jpegs = pages.map(function (cv) { const bin = atob(cv.toDataURL('image/jpeg', 0.93).split(',')[1]), u = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) u[i] = bin.charCodeAt(i); return u; });
+            const blob = pdfAssemble(jpegs, 1240, 1754), name = 'BFIT_Report_' + ((window.BFIT_LAST.client || 'Client').replace(/[^\w\u0600-\u06FF]+/g, '_')) + '.pdf', url = URL.createObjectURL(blob), a = document.createElement('a');
+            a.href = url; a.download = name; document.body.appendChild(a); a.click();
+            setTimeout(function () { a.remove(); URL.revokeObjectURL(url); }, 8000);
+        } catch (err) { alert('تعذّر إنشاء الـ PDF | PDF failed: ' + err.message); }
+        finally { btn.disabled = false; btn.innerHTML = old; }
+    }
+
     function initYmcaLive() {
         const ids = ['ymcaRest', 'ymcaPeak', 'ymcaRec', 'realAge'];
         const out = document.getElementById('ymcaLive');
@@ -2758,8 +2968,7 @@ function renderFoodList() {
         });
         refresh();
     }
-
-    let bfitBooted = false;
+let bfitBooted = false;
     function bfitInit() {
         if (bfitBooted) return;
         bfitBooted = true;
@@ -2776,3 +2985,5 @@ function renderFoodList() {
 
 </body>
 </html>
+
+ 
