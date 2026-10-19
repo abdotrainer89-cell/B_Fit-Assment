@@ -271,8 +271,7 @@
             flex-wrap: wrap;
             gap: 8px;
         }
-
-        .exercise-details p.sub-en {
+.exercise-details p.sub-en {
             font-family: 'Montserrat', sans-serif;
             font-size: 13px;
             color: var(--text-muted);
@@ -298,7 +297,8 @@
             grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
             gap: 15px;
         }
-.btn-submit {
+
+        .btn-submit {
             width: 100%;
             background: linear-gradient(135deg, var(--primary-orange), var(--primary-orange-hover));
             color: #fff;
@@ -448,7 +448,7 @@
         }
         @keyframes glassDrift {
             from { transform: translate3d(-1.5%, -1%, 0) scale(1); }
-            to { transform: translate3d(1.5%, 1.2%, 0) scale(1.06); }
+            to   { transform: translate3d(1.5%, 1.2%, 0) scale(1.06); }
         }
         @media (prefers-reduced-motion: reduce) { body::before { animation: none; } }
 
@@ -522,7 +522,7 @@
             color: var(--rose-text);
             border: 1px solid rgba(232, 101, 123, 0.35);
         }
-   .btn-submit {
+.btn-submit {
             background: linear-gradient(135deg, #f4788a, #d9506a);
             box-shadow: 0 12px 28px rgba(217, 80, 106, 0.30), inset 0 1px 0 rgba(255, 255, 255, 0.5), inset 0 -2px 6px rgba(150, 30, 55, 0.18);
         }
@@ -769,7 +769,8 @@
         @media (prefers-reduced-motion: reduce) {
             body::after, .assessment-container::after, .brand-header::after, .btn-submit, .result-container::before { animation: none; }
         }
-/* ===== Food calculator ===== */
+
+    /* ===== Food calculator ===== */
         .food-search-box { position: relative; }
         .food-list {
             position: absolute; top: 100%; left: 0; right: 0; z-index: 30; margin-top: 6px; list-style: none; max-height: 320px; overflow-y: auto;
@@ -860,7 +861,7 @@
             background: linear-gradient(135deg, rgba(76, 224, 184, 0.16), rgba(76, 184, 255, 0.14));
             border: 1px solid rgba(32, 185, 143, 0.40); border-radius: 999px; padding: 5px 12px; margin: 0 0 10px;
         }
-  .rest-tag b { font-family: 'Montserrat', 'Tajawal', sans-serif; direction: ltr; unicode-bidi: isolate; }
+        .rest-tag b { font-family: 'Montserrat', 'Tajawal', sans-serif; direction: ltr; unicode-bidi: isolate; }
         .rest-tag .en { font-family: 'Montserrat', sans-serif; font-weight: 600; color: #0d9488; direction: ltr; }
         .avatar-phase {
             font-size: 9.5px; font-weight: 800; letter-spacing: 0.4px; color: #0f172a; direction: ltr; text-align: center;
@@ -874,6 +875,7 @@
         }
         .ymca-live:empty { display: none; }
         .ymca-live .en { font-family: 'Montserrat', sans-serif; color: var(--text-muted); font-weight: 600; direction: ltr; unicode-bidi: isolate; }
+    .avatar-svg svg{filter:drop-shadow(4px 7px 5px rgba(0,0,0,.38)) drop-shadow(-1px -1px 1px rgba(255,255,255,.35));transform:perspective(600px) rotateX(6deg)}
     </style>
 </head>
 <body>
@@ -895,7 +897,7 @@
     <form id="bfitAssessmentForm" onsubmit="calculateAssessment(event)">
 
         <div class="section-header">
-            <h2><i class="fa-solid fa-id-card"></i> 1. البيانات العامة والإنبودي (InBody 770) | Member & InBody Profile</h2>
+            <h2><i class="fa-solid fa-id-card"></i> 1. البروفايل وتركيب الجسم والتغذية | Integrated Profile, InBody &amp; Nutrition &amp; Food</h2>
         </div>
 
         <div class="form-grid-4">
@@ -954,6 +956,38 @@
             </div>
         </div>
 
+        <div class="calc-panel">
+            <div class="form-grid-4">
+                <div class="input-box">
+                    <label>الهدف <span class="en">Goal</span></label>
+                    <select id="goalSelect">
+                        <option value="maintain">تثبيت الوزن / Weight Maintenance</option>
+                        <option value="cut">خسارة دهون / Fat Loss</option>
+                        <option value="lose">خسارة وزن / Weight Loss</option>
+                        <option value="bulk">زيادة كتلة عضلية / Muscle Mass Gain</option>
+                    </select>
+                </div>
+                <div class="input-box">
+                    <label>الوزن المراد الوصول إليه (كجم) <span class="en">Target Weight (kg)</span></label>
+                    <input type="number" id="targetWeight" step="any" inputmode="decimal" placeholder="مثال: 65">
+                </div>
+            </div>
+            <div id="nutritionOut"></div>
+        </div>
+
+        <div class="calc-panel">
+            <div class="input-box food-search-box">
+                <label>ابحث عن طعام (عربي أو إنجليزي) <span class="en">Search food (Arabic or English)</span></label>
+                <input type="text" id="foodSearch" autocomplete="off" role="combobox" aria-expanded="false" aria-controls="foodList" placeholder="مثال: أرز، دجاج، rice، chicken">
+                <ul id="foodList" class="food-list" role="listbox" hidden></ul>
+            </div>
+            <div id="foodPick"></div>
+            <button type="button" class="btn-soft ghost btn-ghost-toggle" id="customToggle" aria-expanded="false"><i class="fa-solid fa-pen-to-square"></i> طعام مخصص | Custom food</button>
+            <div id="customForm" hidden></div>
+            <div id="mealOut"></div>
+            <p class="calc-note">القيم تقريبية لكل 100 جم (متوسطات مرجعية). معامل الطبخ = وزن المطبوخ ÷ وزن الخام ويمكن تعديله حسب طريقة الطبخ. | Values are approximate per 100 g. Yield = cooked weight ÷ raw weight and can be adjusted.</p>
+        </div>
+
         <div class="section-header">
             <h2><i class="fa-solid fa-notes-medical"></i> 2. استبيان الحالة الصحية والجاهزية | Health History Questionnaire</h2>
         </div>
@@ -1004,7 +1038,7 @@
         </div>
 
         <div class="section-header">
-            <h2><i class="fa-solid fa-stopwatch"></i> 3. اختبارات التقييم البدني | Physical Assessment Tests</h2>
+            <h2><i class="fa-solid fa-stopwatch"></i> 3. اختبارات التقييم البدني الـ 7 الشاملة | Universal 7-Step Fitness Tests</h2>
         </div>
 
         <div class="exercise-card">
@@ -1045,7 +1079,7 @@
             </div>
         </div>
 
-        <div class="exercise-card">
+   <div class="exercise-card">
             <div class="exercise-avatar-box">
                 <div class="avatar-svg" id="avatar3"></div>
                 <span class="gender-badge" id="badge3">MALE</span>
@@ -1053,17 +1087,18 @@
                 <span class="avatar-phase" id="ph3"></span>
             </div>
             <div class="exercise-details">
-                <h4>3. الاتزان الثابت (الوقوف على قدم واحدة) <span class="target-tag">Target by age (≈43s under 40)</span></h4>
-                <p class="sub-en">Single-Leg Stance Test</p>
+                <h4>3. التوافق العصبي العضلي (الوقوف على قدم واحدة بعينين مغمضتين) <span class="target-tag">Target: 20–30 s per leg</span></h4>
+                <p class="sub-en">Neuromuscular Coordination — Closed-Eye Single-Leg Stance with Arms Abducted</p>
                 <div class="rest-tag"><i class="fa-solid fa-hourglass-half"></i> فترة الراحة الموصى بها: <b>45–60 ثانية</b> <span class="en">Rest: 45–60 s</span></div>
-                <p class="test-howto">قف على قدم واحدة وعيناك مفتوحتان ويداك على الوسط، وارفع القدم الأخرى. سجّل الزمن بالثواني حتى تلمس القدم المرفوعة الأرض أو تتحرك القدم الثابتة (حد أقصى 60 ثانية).<br><span dir="ltr">Stand on one leg, eyes open, hands on hips, other foot lifted. Record seconds until the lifted foot touches down or the stance foot moves (max 60 s).</span></p>
+                <p class="test-howto">افرد الذراعين جانبياً كالأجنحة، أغمض عينيك وقف على قدم واحدة. سجّل الزمن بالثواني حتى تلمس القدم المرفوعة الأرض أو تتحرك القدم الثابتة (يمين / يسار).<br><span dir="ltr">Arms spread out like wings, eyes closed, stand on one leg. Record seconds per leg until the lifted foot touches down or the standing foot shifts.</span></p>
                 <div class="exercise-inputs">
                     <div class="input-box"><label>القدم اليمنى (ثواني) <span class="en">Right leg (s)</span></label><input type="number" id="slsR" step="1" min="0" max="60" placeholder="أقصى 60" required></div>
                     <div class="input-box"><label>القدم اليسرى (ثواني) <span class="en">Left leg (s)</span></label><input type="number" id="slsL" step="1" min="0" max="60" placeholder="أقصى 60" required></div>
                 </div>
             </div>
         </div>
- <div class="exercise-card">
+
+        <div class="exercise-card">
             <div class="exercise-avatar-box">
                 <div class="avatar-svg" id="avatar4"></div>
                 <span class="gender-badge" id="badge4">MALE</span>
@@ -1071,10 +1106,10 @@
                 <span class="avatar-phase" id="ph4"></span>
             </div>
             <div class="exercise-details">
-                <h4>4. تحمل الجذع (بلانك الساعدين) <span class="target-tag">Target: 120 s</span></h4>
-                <p class="sub-en">Forearm Plank Test</p>
-                <div class="rest-tag"><i class="fa-solid fa-hourglass-half"></i> فترة الراحة الموصى بها: <b>90–120 ثانية</b> <span class="en">Rest: 90–120 s</span></div>
-                <p class="test-howto">ارتكز على الساعدين وأصابع القدمين بجسم مستقيم من الرأس للكعبين. سجّل الزمن بالثواني حتى ينهار الوضع (هبوط الحوض أو ارتفاعه).<br><span dir="ltr">Hold a straight body line on forearms and toes. Record seconds until form breaks (hips sag or pike).</span></p>
+                <h4>4. اتزان وثبات الجذع الخلفي (سوبرمان متقاطع على أربع) <span class="target-tag">Target: ≥ 45 s</span></h4>
+                <p class="sub-en">Posterior Core Stability — Quadruped Bird-Dog / Superman Hold</p>
+                <div class="rest-tag"><i class="fa-solid fa-hourglass-half"></i> فترة الراحة الموصى بها: <b>60–90 ثانية</b> <span class="en">Rest: 60–90 s</span></div>
+                <p class="test-howto">من وضع الأربع، مدّ الذراع اليمنى مع الساق اليسرى في خط واحد مع الجذع وثبّت دون ميلان الحوض. سجّل زمن الثبات بالثواني.<br><span dir="ltr">From all fours, extend the opposite arm and leg in line with the torso without rotating the pelvis. Record the hold time in seconds.</span></p>
                 <div class="exercise-inputs">
                     <div class="input-box"><label>زمن الثبات (ثواني) <span class="en">Hold time (s)</span></label><input type="number" id="plankSec" step="1" min="0" max="600" placeholder="بالثواني" required></div>
                 </div>
@@ -1089,10 +1124,10 @@
                 <span class="avatar-phase" id="ph5"></span>
             </div>
             <div class="exercise-details">
-                <h4>5. قوة الجزء السفلي (الوقوف من الكرسي خلال 30 ثانية) <span class="target-tag">Max reps in 30 s</span></h4>
-                <p class="sub-en">30s Chair Stand Test</p>
+                <h4>5. قوة وتحمل الجزء السفلي (سكوات البوكس خلال 30 ثانية) <span class="target-tag">Target: ≥ 15 reps</span></h4>
+                <p class="sub-en">30s Box Squat Test</p>
                 <div class="rest-tag"><i class="fa-solid fa-hourglass-half"></i> فترة الراحة الموصى بها: <b>90–120 ثانية</b> <span class="en">Rest: 90–120 s</span></div>
-                <p class="test-howto">من وضع الجلوس على كرسي ثابت ويداك متقاطعتان على الصدر، قف بالكامل ثم اجلس بأكبر عدد ممكن من المرات خلال 30 ثانية.<br><span dir="ltr">From a seated position on a sturdy chair, arms crossed on chest, stand fully and sit back down as many times as possible in 30 s.</span></p>
+                <p class="test-howto">قف أمام بوكس رياضي بارتفاع ثابت، انزل حتى يلامس الحوض البوكس ثم قف بالكامل. سجّل عدد التكرارات الصحيحة خلال 30 ثانية.<br><span dir="ltr">Stand in front of a gym box, lower until you touch it, then stand fully. Count correct reps in 30 seconds.</span></p>
                 <div class="exercise-inputs">
                     <div class="input-box"><label>عدد التكرارات في 30 ثانية <span class="en">Reps in 30 s</span></label><input type="number" id="chairReps" step="1" min="0" max="60" placeholder="عدد الوقفات" required></div>
                 </div>
@@ -1107,7 +1142,7 @@
                 <span class="avatar-phase" id="ph6"></span>
             </div>
             <div class="exercise-details">
-                <h4>6. تحمل الجزء العلوي (الضغط على الركبتين) <span class="target-tag">Max reps with good form</span></h4>
+                <h4>6. تحمل الجزء العلوي (الضغط على الركبتين) <span class="target-tag">Target: ≥ 15 reps</span></h4>
                 <p class="sub-en">Kneeling Push-Up Test</p>
                 <div class="rest-tag"><i class="fa-solid fa-hourglass-half"></i> فترة الراحة الموصى بها: <b>120 ثانية</b> <span class="en">Rest: 120 s</span></div>
                 <p class="test-howto">من وضع الركبتين على الأرض واليدان تحت الكتفين، انزل بالصدر حتى يقترب من الأرض ثم ادفع للأعلى. سجّل أقصى عدد تكرارات بأداء سليم.<br><span dir="ltr">Kneel with hands under shoulders, lower the chest close to the floor and press back up. Record the maximum reps with good form.</span></p>
@@ -1138,30 +1173,9 @@
             </div>
         </div>
 
-        <div class="section-header">
-            <h2><i class="fa-solid fa-utensils"></i> 4. التغذية والسعرات اليومية | Nutrition &amp; Daily Calories</h2>
-        </div>
-        <div class="calc-panel">
-            <div class="form-grid-4">
-                <div class="input-box">
-                    <label>الهدف <span class="en">Goal</span></label>
-                    <select id="goalSelect">
-                        <option value="maintain">تثبيت الوزن / Weight Maintenance</option>
-                        <option value="cut">خسارة دهون / Fat Loss</option>
-                        <option value="lose">خسارة وزن / Weight Loss</option>
-                        <option value="bulk">زيادة كتلة عضلية / Muscle Mass Gain</option>
-                    </select>
-                </div>
-                <div class="input-box">
-                    <label>الوزن المراد الوصول إليه (كجم) <span class="en">Target Weight (kg)</span></label>
-                    <input type="number" id="targetWeight" step="any" inputmode="decimal" placeholder="مثال: 65">
-                </div>
-            </div>
-            <div id="nutritionOut"></div>
-        </div>
 
         <div class="section-header">
-            <h2><i class="fa-solid fa-heart-pulse"></i> 5. معادلة كارفونين لمعدل القلب المستهدف | Karvonen Target Heart Rate</h2>
+            <h2><i class="fa-solid fa-heart-pulse"></i> 4. معادلة كارفونين لمعدل القلب المستهدف | Karvonen Target Heart Rate</h2>
         </div>
         <div class="calc-panel">
             <div class="form-grid-4">
@@ -1177,21 +1191,6 @@
             <div id="karvonenOut"></div>
         </div>
 
-        <div class="section-header">
-            <h2><i class="fa-solid fa-bowl-food"></i> 6. حاسبة الغذاء | Food Calculator</h2>
-        </div>
-        <div class="calc-panel">
-            <div class="input-box food-search-box">
-                <label>ابحث عن طعام (عربي أو إنجليزي) <span class="en">Search food (Arabic or English)</span></label>
-                <input type="text" id="foodSearch" autocomplete="off" role="combobox" aria-expanded="false" aria-controls="foodList" placeholder="مثال: أرز، دجاج، rice، chicken">
-                <ul id="foodList" class="food-list" role="listbox" hidden></ul>
-            </div>
-            <div id="foodPick"></div>
-            <button type="button" class="btn-soft ghost btn-ghost-toggle" id="customToggle" aria-expanded="false"><i class="fa-solid fa-pen-to-square"></i> طعام مخصص | Custom food</button>
-            <div id="customForm" hidden></div>
-            <div id="mealOut"></div>
-            <p class="calc-note">القيم تقريبية لكل 100 جم (متوسطات مرجعية). معامل الطبخ = وزن المطبوخ ÷ وزن الخام ويمكن تعديله حسب طريقة الطبخ. | Values are approximate per 100 g. Yield = cooked weight ÷ raw weight and can be adjusted.</p>
-        </div>
 
         <button type="submit" class="btn-submit">
             <i class="fa-solid fa-calculator"></i> استخراج التقرير الشامل والعمر البيولوجي | Generate Assessment Report
@@ -1199,6 +1198,7 @@
     </form>
 
     <div class="result-container" id="resultArea">
+        <div class="section-header"><h2><i class="fa-solid fa-chart-line"></i> 5. التقرير الشامل والعمر البيولوجي | Assessment Report &amp; Biological Age</h2></div>
         <div class="result-card">
             <h3>B_FIT ASSESSMENT REPORT</h3>
             <p id="reportHeaderInfo" style="color: #5f6b85; font-weight: 600; font-size: 14px; margin-top: 5px;"></p>
@@ -1225,13 +1225,13 @@
 <script>
     // ===== Exercise avatars: animated human figures (start -> finish), male / female =====
     const AVATAR_CAPTIONS = [
-        'SIT-AND-REACH', 'APLEY SCRATCH', 'SINGLE-LEG STANCE', 'FOREARM PLANK',
-        '30s CHAIR STAND', 'KNEELING PUSH-UP', '3-MIN STEP TEST'
+        'SIT-AND-REACH', 'APLEY SCRATCH', 'CLOSED-EYE ONE-LEG', 'BIRD-DOG HOLD',
+        '30s BOX SQUAT', 'KNEELING PUSH-UP', '3-MIN STEP TEST'
     ];
 
     const AV_BODY = {
-        male: { thigh: 10.5, shin: 8, uarm: 7.6, farm: 6.4, torso: 17, head: 9.2, shoulder: 21, waist: 13, hipw: 12, chest: 0, pelvis: 0, glute: 0 },
-        female: { thigh: 9.6, shin: 7, uarm: 5.9, farm: 5, torso: 12.5, head: 8.6, shoulder: 15.5, waist: 10, hipw: 15.5, chest: 4.6, pelvis: 1.6, glute: 7.4 }
+        male:   { thigh: 10.5, shin: 8,   uarm: 7.6, farm: 6.4, torso: 17,   head: 9.2, shoulder: 21,   waist: 13,   hipw: 12,   chest: 0,   pelvis: 0,   glute: 0 },
+        female: { thigh: 9.6,  shin: 7,   uarm: 5.9, farm: 5,   torso: 12.5, head: 8.6, shoulder: 15.5, waist: 10,   hipw: 15.5, chest: 4.6, pelvis: 1.6, glute: 7.4 }
     };
     const AV_C = { skin: '#e2a77f', skinF: '#c98e66', hair: '#2b2118', shorts: '#334155', shortsF: '#27303f', shoe: '#0f172a', shoeF: '#1e293b', floor: '#b8c0d4', prop: '#94a3b8', propDark: '#64748b', mark: '#ef4444' };
     const AV_LEN = { torso: 36, neck: 6, uarm: 19, farm: 18, thigh: 26, shin: 25, foot: 10 };
@@ -1273,7 +1273,8 @@
             lN: lN, lF: lF, toN: avPt(lN.e, P.toN, L.foot), toF: avPt(lF.e, P.toF, L.foot)
         };
     }
-function avArm(sh, a, B, far) {
+
+    function avArm(sh, a, B, far) {
         const c = far ? AV_C.skinF : AV_C.skin;
         return avLine([sh, a.m], B.uarm, c) + avLine([a.m, a.e], B.farm, c) + avDot(a.e, B.farm * 0.6 + 0.8, c) +
             avLine([sh, avLerp2(sh, a.m, 0.5)], B.uarm + 1.4, 'currentColor');
@@ -1358,15 +1359,15 @@ function avArm(sh, a, B, far) {
         3: { kind: 'side', scale: 1,
             pose: function (p) {
                 const hip = [100, 65], sh = avPt(hip, -90, AV_LEN.torso);
-                return avSideP({ hip: hip, hN: avLerp2([sh[0] + 2, sh[1] + 35], [hip[0] + 9, hip[1] - 7], p), hF: avLerp2([sh[0] - 1, sh[1] + 35], [hip[0] + 5, hip[1] - 8], p), eB: 1,
+                return avSideP({ hip: hip, hN: avLerp2([sh[0] + 2, sh[1] + 35], [sh[0] + 36, sh[1] + 3], p), hF: avLerp2([sh[0] - 1, sh[1] + 35], [sh[0] - 36, sh[1] + 3], p), eB: 1,
                     fN: [106, 116], fF: avLerp2([94, 116], [114, 91], p), kB: -1, toN: 0, toF: avLerp(0, 72, p) });
             } },
         4: { kind: 'side', scale: 1,
             pose: function (p) {
-                return avSideP({ hip: avLerp2([77.8, 107.6], [76.4, 101.7], p), tA: avLerp(-18, -8.3, p), nA: avLerp(-14, -2, p),
-                    hN: [131, 115.5], hF: [129, 115.5], eB: -1,
-                    fN: avLerp2([28, 114.5], [25.9, 109], p), fF: avLerp2([28, 114.5], [25.9, 109], p), kB: -1,
-                    toN: avLerp(180, 70, p), toF: avLerp(180, 70, p) });
+                const hip = [58, 80], sh = avPt(hip, -3, AV_LEN.torso);
+                return avSideP({ hip: hip, tA: -3, nA: -10,
+                    hN: [sh[0] + 3, 115.5], hF: avLerp2([sh[0] + 1, 115.5], [sh[0] + 37, sh[1] - 1], p), eB: -1,
+                    fN: avLerp2([30, 115], [hip[0] - 50, hip[1] + 2], p), fF: [30, 115], kB: -1, toN: 180, toF: 180 });
             } },
         5: { kind: 'side', scale: 1,
             pose: function (p) {
@@ -1375,8 +1376,7 @@ function avArm(sh, a, B, far) {
                     fN: [93, 116], fF: [88, 116], kB: -1 });
             },
             back: function () {
-                return '<rect x="34" y="50" width="5" height="40" rx="2" fill="' + AV_C.propDark + '"/><rect x="36" y="88" width="50" height="4" rx="2" fill="' + AV_C.propDark + '"/>' +
-                    '<line x1="40" y1="92" x2="40" y2="119" stroke="' + AV_C.propDark + '" stroke-width="3" stroke-linecap="round"/><line x1="82" y1="92" x2="82" y2="119" stroke="' + AV_C.propDark + '" stroke-width="3" stroke-linecap="round"/>';
+                return '<rect x="34" y="90" width="48" height="29" rx="2" fill="' + AV_C.prop + '"/><rect x="34" y="90" width="48" height="4" rx="2" fill="' + AV_C.propDark + '"/>';
             } },
         6: { kind: 'side', scale: 1,
             pose: function (p) {
@@ -1400,8 +1400,7 @@ function avArm(sh, a, B, far) {
                 return '<rect x="110" y="99" width="50" height="20" rx="2" fill="' + AV_C.prop + '"/><rect x="110" y="99" width="50" height="3.5" rx="1.5" fill="' + AV_C.propDark + '"/>';
             } }
     };
-
-    function avBodyAt(i, g, p) {
+function avBodyAt(i, g, p) {
         const T = AV_TESTS[i], P = T.pose(p, g);
         let o = '<line x1="8" y1="119" x2="192" y2="119" stroke="' + AV_C.floor + '" stroke-width="2" stroke-linecap="round"/>';
         if (T.kind === 'back') return o + avBackBody(P, g);
@@ -1462,7 +1461,7 @@ function avArm(sh, a, B, far) {
         for (let i = 1; i <= 7; i++) {
             const el = document.getElementById('avatar' + i), ph = document.getElementById('ph' + i);
             if (el) el.innerHTML = avFigureSVG(i, avGender, 1, true);
-            if (ph) ph.textContent = 'START | بداية → FINISH | نهاية';
+            if (ph) ph.textContent = 'START | بداية  →  FINISH | نهاية';
         }
     }
 
@@ -1624,10 +1623,10 @@ function avArm(sh, a, B, far) {
         zones: {
             labels: [0.20, 0.072, 0.52, 0.090],
             height: [0.2245, 0.0895, 0.290, 0.1045],
-            age: [0.3285, 0.0895, 0.362, 0.1045],
+            age:    [0.3285, 0.0895, 0.362, 0.1045],
             gender: [0.398, 0.0895, 0.455, 0.1045],
             weight: [0.548, 0.1930, 0.600, 0.2065],
-            bfm: [0.185, 0.2395, 0.240, 0.2545],
+            bfm:    [0.185, 0.2395, 0.240, 0.2545],
             calories: [0.780, 0.7690, 0.826, 0.7860]
         },
         rows: { weight: [0.3298, 0.3363], smm: [0.3581, 0.3650], pbf: [0.4856, 0.4921] }
@@ -1660,7 +1659,8 @@ function avArm(sh, a, B, far) {
             img.src = url;
         });
     }
-function inbodyPixels(canvas) {
+
+    function inbodyPixels(canvas) {
         return canvas.getContext('2d', { willReadFrequently: true }).getImageData(0, 0, canvas.width, canvas.height);
     }
 
@@ -1764,8 +1764,7 @@ function inbodyPixels(canvas) {
         const den = n * sxx - sx * sx;
         return den === 0 ? best.slope : Math.atan((n * sxy - sx * sy) / den);
     }
-
-    // Maps the template (0..1) onto the page using the red rules (top + footer; top only as fallback)
+// Maps the template (0..1) onto the page using the red rules (top + footer; top only as fallback)
     function inbodyFindFrame(img) {
         const H = img.height, L = INBODY_LAYOUT, ths = [45, 32, 22];
         for (let t = 0; t < ths.length; t++) {
@@ -1985,10 +1984,10 @@ function inbodyPixels(canvas) {
 
     // ===== Nutrition (calories + macros) and Karvonen target heart rate =====
     const GOAL_FACTORS = {
-        maintain: { f: 1.00, dir: 0, ar: 'تثبيت الوزن', en: 'Weight Maintenance' },
-        cut: { f: 0.85, dir: -1, ar: 'خسارة دهون', en: 'Fat Loss' },
-        lose: { f: 0.80, dir: -1, ar: 'خسارة وزن', en: 'Weight Loss' },
-        bulk: { f: 1.10, dir: 1, ar: 'زيادة كتلة عضلية', en: 'Muscle Mass Gain' }
+        maintain: { f: 1.00, dir: 0,  ar: 'تثبيت الوزن',       en: 'Weight Maintenance' },
+        cut:      { f: 0.85, dir: -1, ar: 'خسارة دهون',        en: 'Fat Loss' },
+        lose:     { f: 0.80, dir: -1, ar: 'خسارة وزن',         en: 'Weight Loss' },
+        bulk:     { f: 1.10, dir: 1,  ar: 'زيادة كتلة عضلية',  en: 'Muscle Mass Gain' }
     };
     const HR_ZONES = [
         [50, 60, 'إحماء', 'Warm-up'],
@@ -2049,7 +2048,8 @@ function inbodyPixels(canvas) {
         }
         return h + '<p class="calc-note">' + note + '</p>';
     }
-function computeKarvonen() {
+
+    function computeKarvonen() {
         const age = parseFloat(document.getElementById('realAge').value);
         const rhr = parseFloat(document.getElementById('restHR').value);
         const pct = parseFloat(document.getElementById('intensityPct').value);
@@ -2110,8 +2110,7 @@ function computeKarvonen() {
         initFood();
         refreshCalculators();
     }
-
-    // ===== Food calculator (built-in local dataset, no API / no keys) =====
+// ===== Food calculator (built-in local dataset, no API / no keys) =====
     const FOOD_KEYS = ['kcal', 'p', 'c', 'f', 'fiber', 'na', 'k', 'ca', 'fe', 'vc', 'sugar', 'sat', 'chol', 'va', 'vd', 'b12', 'mg', 'zn'];
     const FOOD_MICROS = [
         ['fiber', 'ألياف', 'Fiber', 'g'], ['sugar', 'سكريات', 'Sugars', 'g'], ['sat', 'دهون مشبعة', 'Saturated fat', 'g'], ['chol', 'كوليسترول', 'Cholesterol', 'mg'],
@@ -2143,7 +2142,7 @@ function computeKarvonen() {
         veg: ['خضروات', 'Vegetables'], fruit: ['فواكه', 'Fruit'], drink: ['مشروبات وعصائر', 'Drinks & Juices'], sweet: ['حلويات ووجبات خفيفة', 'Sweets & Snacks'],
         fast: ['وجبات سريعة', 'Fast Food'], other: ['أخرى', 'Other'], custom: ['مخصص', 'Custom']
     };
-    // [ar, en, aliases, cat, yield (cooked g per 1 g raw, 0 = as is), kcal, protein, carb, fat, fiber, sodium, potassium, calcium, iron, vitC] — per 100 g (raw / as listed)
+    // [ar, en, aliases, cat, yield (cooked g per 1 g raw, 0 = as is), kcal, protein, carb, fat, fiber, sodium, potassium, calcium, iron, vitC]  — per 100 g (raw / as listed)
     const FOOD_DB_RAW = [
         ['أرز أبيض', 'White rice', 'رز basmati بسمتي', 'grain', 2.8, 365, 7.1, 80, 0.7, 1.3, 5, 115, 28, 0.8, 0],
         ['أرز بني', 'Brown rice', 'رز اسمر', 'grain', 2.6, 370, 7.9, 77, 2.9, 3.5, 7, 223, 23, 1.5, 0],
@@ -2288,7 +2287,8 @@ function computeKarvonen() {
         'Pomegranate': [13.7, 0.1, 0, 0, 0, 0, 12, 0.4], 'Dates': [66, 0, 0, 0, 0, 0, 54, 0.4], 'Raisins': [59, 0.1, 0, 0, 0, 0, 32, 0.2],
         'Orange juice': [8.4, 0, 0, 10, 0, 0, 11, 0.1], 'Whey protein powder': [4, 3, 80, null, null, null, 100, 2], 'Honey': [82, 0, 0, 0, 0, 0, 2, 0.2], 'White sugar': [100, 0, 0, 0, 0, 0, 0, 0.1]
     };
-let foodCustom = [];
+
+    let foodCustom = [];
     let foodAll = [];
     let foodSel = null, foodState = 'raw', foodHi = -1, foodMatches = [];
     const mealItems = [];
@@ -2377,8 +2377,7 @@ let foodCustom = [];
             '<br><bdi>Values are approximate.</bdi> <bdi dir="rtl">القيم تقريبية.</bdi></p></div>';
         return h;
     }
-
-    function renderFoodList() {
+function renderFoodList() {
         const ul = document.getElementById('foodList'), inp = document.getElementById('foodSearch');
         if (!foodMatches.length) {
             const q = inp.value.trim();
@@ -2633,20 +2632,20 @@ let foodCustom = [];
         const apScore = (lin(num('apR', 15), 15, 0) + lin(num('apL', 15), 15, 0)) / 2;
 
         // 3) Single-Leg Stance (eyes open): age-based reference time
-        const slsTarget = realAge < 40 ? 43 : realAge < 50 ? 40 : realAge < 60 ? 37 : realAge < 70 ? 27 : realAge < 80 ? 15 : 9;
+        const slsTarget = realAge < 40 ? 30 : realAge < 60 ? 25 : 20; // closed-eye target 20-30 s per leg
         const balScore = Math.min(((num('slsR', 0) + num('slsL', 0)) / 2 / slsTarget) * 100, 100);
 
         // 4) Forearm Plank: 120 s = full score
-        const plankScore = Math.min((num('plankSec', 0) / 120) * 100, 100);
+        const plankScore = Math.min((num('plankSec', 0) / 45) * 100, 100);
 
         // 5) 30s Chair Stand: age and gender reference reps
         const chairRef = isFemale
             ? (realAge < 60 ? 20 : realAge < 65 ? 17 : realAge < 70 ? 16 : realAge < 80 ? 15 : realAge < 85 ? 14 : realAge < 90 ? 13 : 11)
             : (realAge < 60 ? 22 : realAge < 65 ? 19 : realAge < 70 ? 18 : realAge < 80 ? 17 : realAge < 85 ? 15 : realAge < 90 ? 14 : 12);
-        const chairScore = Math.min((num('chairReps', 0) / chairRef) * 100, 100);
+        const chairScore = Math.min((num('chairReps', 0) / 15) * 100, 100); // Box Squat target >= 15
 
         // 6) Kneeling Push-Up: reference reps drop 3 per decade after 30
-        const kpuRef = Math.max(8, (isFemale ? 30 : 35) - 3 * decades);
+        const kpuRef = 15; // target >= 15 reps
         const pushScore = Math.min((num('kpuReps', 0) / kpuRef) * 100, 100);
 
         // 7) 3-Min YMCA Step Test: peak HR (% of age-predicted max), recovery time and recovery rate
@@ -2691,8 +2690,8 @@ let foodCustom = [];
             ['الكارديو واستشفاء النبض | Cardio & HR recovery', cardioScore]
         ];
         const testParts = [
-            ['المرونة | Sit-and-Reach', flexScore], ['موبيليتي الكتفين | Apley', apScore], ['الاتزان | Single-Leg Stance', balScore],
-            ['تحمل الجذع | Plank', plankScore], ['القوة السفلية | Chair Stand', chairScore], ['تحمل علوي | Kneeling Push-Up', pushScore],
+            ['المرونة | Sit-and-Reach', flexScore], ['موبيليتي الكتفين | Apley', apScore], ['التوافق العصبي | Closed-Eye Stance', balScore],
+            ['ثبات الجذع الخلفي | Bird-Dog', plankScore], ['القوة السفلية | Box Squat', chairScore], ['تحمل علوي | Kneeling Push-Up', pushScore],
             ['الكارديو | YMCA Step', cardioScore]
         ];
 
@@ -2738,8 +2737,7 @@ let foodCustom = [];
         const area = document.getElementById('resultArea');
         area.style.display = 'block';
         area.scrollIntoView({ behavior: 'smooth' });
-    }
-
+                                }
     function initYmcaLive() {
         const ids = ['ymcaRest', 'ymcaPeak', 'ymcaRec', 'realAge'];
         const out = document.getElementById('ymcaLive');
@@ -2778,4 +2776,3 @@ let foodCustom = [];
 
 </body>
 </html>
-
