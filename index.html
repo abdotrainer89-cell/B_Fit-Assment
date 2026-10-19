@@ -1,378 +1,3 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#f6eef3">
-    <title>B_FIT ASSESSMENT | Professional Evaluation</title>
-    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23f4788a'/%3E%3Cstop offset='1' stop-color='%23d9506a'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='14' fill='url(%23g)'/%3E%3Ctext x='32' y='40' font-family='Arial Black,Arial' font-weight='900' font-size='34' text-anchor='middle' fill='white'%3EB%3C/text%3E%3Ctext x='32' y='56' font-family='Arial' font-weight='700' font-size='14' text-anchor='middle' fill='white'%3E_FIT%3C/text%3E%3C/svg%3E">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;600;700;900&family=Montserrat:wght@400;600;700;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
-
-    <style>
-        :root {
-            --bg-main: #f3f0f8;
-            --card-bg: rgba(255, 255, 255, 0.55);
-            --card-inner: rgba(255, 255, 255, 0.5);
-            --primary-orange: #e8657b;
-            --primary-orange-hover: #c9475f;
-            --text-white: #1d2433;
-            --text-muted: #5f6b85;
-            --border-color: rgba(140, 152, 185, 0.38);
-            --ink: #1d2433;
-            --rose-text: #c2415a;
-            --success-green: #10b981;
-            --warning-red: #ef4444;
-            --accent-gender: #38bdf8;
-        }
-        :root { color-scheme: light; }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Tajawal', 'Montserrat', sans-serif;
-        }
-
-        input, select, button, label, .exercise-avatar-box {
-            transition: background-color 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease, color 0.25s ease, transform 0.25s ease;
-        }
-
-        body {
-            background-color: var(--bg-main);
-            color: var(--text-white);
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-            padding: 30px 15px;
-            min-height: 100vh;
-            background-image: radial-gradient(circle at top right, rgba(232, 101, 123, 0.15), transparent 60%);
-        }
-
-        .assessment-container {
-            width: 100%;
-            max-width: 1050px;
-            background: var(--card-bg);
-            border-radius: 24px;
-            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6);
-            padding: 40px;
-            border: 1px solid var(--border-color);
-        }
-
-        .brand-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 4px solid var(--primary-orange);
-            padding-bottom: 20px;
-            margin-bottom: 30px;
-        }
-
-        .brand-logo {
-            display: flex;
-            align-items: center;
-            gap: 18px;
-        }
-
-        .brand-logo-icon {
-            width: 92px;
-            height: 70px;
-            background: #000000;
-            border-radius: 18px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            color: #fff;
-            box-shadow: 0 6px 18px rgba(217, 80, 106, 0.28);
-            font-family: 'Montserrat', sans-serif;
-            font-weight: 900;
-            letter-spacing: 1px;
-            flex-shrink: 0;
-        }
-
-        .brand-logo-icon span { font-family: 'Montserrat', sans-serif; }
-        .brand-logo-icon span.logo-word { font-size: 21px; line-height: 1; letter-spacing: 0.5px; direction: ltr; }
-
-        .brand-titles h1 {
-            font-size: 28px;
-            font-weight: 900;
-            color: #fff;
-            letter-spacing: 1px;
-            font-family: 'Montserrat', 'Tajawal', sans-serif;
-        }
-
-        .brand-titles p {
-            font-size: 13px;
-            color: var(--primary-orange);
-            font-weight: 700;
-            font-family: 'Montserrat', sans-serif;
-            letter-spacing: 0.5px;
-        }
-
-        .section-header {
-            background: var(--card-inner);
-            padding: 14px 22px;
-            border-radius: 14px;
-            margin: 35px 0 20px 0;
-            display: flex;
-            align-items: center;
-            border-right: 6px solid var(--primary-orange);
-        }
-
-        .section-header h2 {
-            font-size: 18px;
-            color: #fff;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-weight: 900;
-        }
-
-        .form-grid-4 {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
-            gap: 18px;
-            margin-bottom: 15px;
-        }
-
-        .input-box {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .input-box label {
-            font-size: 13px;
-            font-weight: 700;
-            color: #e2e8f0;
-            display: flex;
-            justify-content: space-between;
-            gap: 6px;
-        }
-
-        .input-box label span.en {
-            font-family: 'Montserrat', sans-serif;
-            color: var(--text-muted);
-            font-weight: 500;
-        }
-
-        .input-box input, .input-box select {
-            padding: 12px 16px;
-            border: 2px solid var(--border-color);
-            border-radius: 12px;
-            font-size: 14px;
-            background: var(--bg-main);
-            color: #fff;
-            outline: none;
-            width: 100%;
-        }
-
-        .input-box input:focus, .input-box select:focus {
-            border-color: var(--primary-orange);
-            box-shadow: 0 0 0 4px rgba(232, 101, 123, 0.15);
-        }
-
-        .ocr-status {
-            font-size: 13px;
-            color: var(--primary-orange);
-            margin-top: 5px;
-            font-weight: 700;
-            display: none;
-            line-height: 1.7;
-        }
-
-        .health-question-row {
-            display: grid;
-            grid-template-columns: 1fr 140px 1fr;
-            align-items: center;
-            background: var(--card-inner);
-            border: 1px solid var(--border-color);
-            padding: 14px 20px;
-            border-radius: 12px;
-            margin-bottom: 10px;
-            gap: 15px;
-        }
-
-        .q-ar { text-align: right; font-size: 14px; font-weight: 700; color: #fff; }
-        .q-en { text-align: left; font-size: 13px; font-family: 'Montserrat', sans-serif; font-weight: 600; color: var(--text-muted); direction: ltr; }
-
-        .radio-btn-group {
-            display: flex;
-            background: var(--bg-main);
-            border-radius: 8px;
-            padding: 3px;
-        }
-
-        .radio-btn-group input[type="radio"] { display: none; }
-        .radio-btn-group label {
-            flex: 1; text-align: center; padding: 6px 8px; font-size: 12px; font-weight: 700; cursor: pointer; border-radius: 6px; color: var(--text-muted);
-        }
-
-        .radio-btn-group input[type="radio"]:checked + label.yes-label { background: var(--warning-red); color: #fff; }
-        .radio-btn-group input[type="radio"]:checked + label.no-label { background: var(--success-green); color: #fff; }
-
-        .exercise-card {
-            background: var(--card-inner);
-            border: 1px solid var(--border-color);
-            border-radius: 16px;
-            padding: 22px;
-            margin-bottom: 20px;
-            display: grid;
-            grid-template-columns: 190px 1fr;
-            gap: 22px;
-            align-items: center;
-        }
-
-        .exercise-avatar-box {
-            width: 190px;
-            min-height: 160px;
-            padding: 8px 6px 10px;
-            gap: 4px;
-            background: linear-gradient(135deg, rgba(15, 23, 42, 0.98), rgba(30, 41, 59, 0.98));
-            border-radius: 12px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            border: 2px solid var(--accent-gender);
-            color: var(--accent-gender);
-            position: relative;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
-        }
-
-        .exercise-avatar-box i {
-            font-size: 38px;
-            margin-bottom: 6px;
-            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
-        }
-
-        .exercise-avatar-box .gender-badge {
-            font-size: 10px;
-            background: var(--accent-gender);
-            color: #0f172a;
-            padding: 2px 8px;
-            border-radius: 4px;
-            font-weight: 900;
-            font-family: 'Montserrat', sans-serif;
-            text-transform: uppercase;
-        }
-
-        .exercise-details h4 {
-            color: #fff;
-            font-size: 16px;
-            margin-bottom: 4px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 8px;
-        }
-
-        .exercise-details p.sub-en {
-            font-family: 'Montserrat', sans-serif;
-            font-size: 13px;
-            color: var(--text-muted);
-            margin-bottom: 12px;
-            direction: ltr;
-            text-align: right;
-        }
-
-        .exercise-details h4 span.target-tag {
-            font-size: 12px;
-            background: rgba(232, 101, 123, 0.2);
-            color: #ffa3b3;
-            padding: 4px 10px;
-            border-radius: 6px;
-            font-weight: 700;
-            border: 1px solid rgba(232, 101, 123, 0.4);
-            font-family: 'Montserrat', sans-serif;
-            direction: ltr;
-        }
-         .exercise-inputs {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 15px;
-        }
-
-        .btn-submit {
-            width: 100%;
-            background: linear-gradient(135deg, var(--primary-orange), var(--primary-orange-hover));
-            color: #fff;
-            padding: 18px;
-            border: none;
-            border-radius: 14px;
-            font-size: 19px;
-            font-weight: 900;
-            cursor: pointer;
-            margin-top: 35px;
-            box-shadow: 0 10px 25px rgba(232, 101, 123, 0.35);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .btn-submit:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 14px 30px rgba(232, 101, 123, 0.45);
-        }
-
-        .result-container {
-            display: none;
-            margin-top: 45px;
-            border-top: 2px dashed var(--border-color);
-            padding-top: 35px;
-        }
-
-        .result-card {
-            background: linear-gradient(135deg, #1e293b, #0b0f19);
-            color: #fff;
-            border-radius: 20px;
-            padding: 35px;
-            text-align: center;
-            border: 1px solid var(--primary-orange);
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
-        }
-
-        .score-display-box {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            margin: 25px 0;
-        }
-
-        .score-metric-card {
-            background: rgba(255, 255, 255, 0.04);
-            padding: 20px;
-            border-radius: 14px;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-        }
-
-        .score-metric-card .label { font-size: 13px; color: #94a3b8; margin-bottom: 5px; }
-        .score-metric-card .value { font-size: 34px; font-weight: 900; color: #fff; }
-        .score-metric-card .value span { color: var(--primary-orange); }
-
-        .bio-age-highlight {
-            font-size: 18px;
-            font-weight: 700;
-            padding: 12px 22px;
-            border-radius: 12px;
-            display: inline-block;
-            margin-top: 10px;
-        }
-
-        .bio-younger { background: rgba(16, 185, 129, 0.2); color: #34d399; border: 1px solid #10b981; }
-        .bio-older { background: rgba(239, 68, 68, 0.2); color: #f87171; border: 1px solid #ef4444; }
-        .bio-equal { background: rgba(245, 158, 11, 0.2); color: #fbbf24; border: 1px solid #f59e0b; }
-
-        .report-summary-text {
-            font-size: 15px;
-            line-height: 1.8;
-            color: #cbd5e1;
             margin-top: 25px;
             text-align: right;
             background: rgba(0, 0, 0, 0.3);
@@ -522,7 +147,8 @@
             color: var(--rose-text);
             border: 1px solid rgba(232, 101, 123, 0.35);
         }
-.btn-submit {
+
+        .btn-submit {
             background: linear-gradient(135deg, #f4788a, #d9506a);
             box-shadow: 0 12px 28px rgba(217, 80, 106, 0.30), inset 0 1px 0 rgba(255, 255, 255, 0.5), inset 0 -2px 6px rgba(150, 30, 55, 0.18);
         }
@@ -770,7 +396,7 @@
             body::after, .assessment-container::after, .brand-header::after, .btn-submit, .result-container::before { animation: none; }
         }
 
-/* ===== Food calculator ===== */
+        /* ===== Food calculator ===== */
         .food-search-box { position: relative; }
         .food-list {
             position: absolute; top: 100%; left: 0; right: 0; z-index: 30; margin-top: 6px; list-style: none; max-height: 320px; overflow-y: auto;
@@ -879,6 +505,7 @@
     .avatar-svg canvas{max-width:100%}
     </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
 </head>
 <body>
 
@@ -957,7 +584,8 @@
                 <input type="number" id="calorieInput" step="1" min="800" max="6000" placeholder="مثال: 2776">
             </div>
         </div>
-         <div class="calc-panel">
+
+        <div class="calc-panel">
             <div class="form-grid-4">
                 <div class="input-box">
                     <label>الهدف <span class="en">Goal</span></label>
@@ -1175,7 +803,8 @@
             </div>
         </div>
 
- <div class="section-header">
+
+        <div class="section-header">
             <h2><i class="fa-solid fa-heart-pulse"></i> 4. معادلة كارفونين لمعدل القلب المستهدف | Karvonen Target Heart Rate</h2>
         </div>
         <div class="calc-panel">
@@ -1439,7 +1068,7 @@
 
     // ===== Real 3D human models (three.js) — procedural rig, same start/finish poses, male / female =====
     const AV3 = { ok: typeof THREE !== 'undefined', r: null, sc: {}, cx: {}, mats: {} };
-    function av3Mat(c) { return AV3.mats[c] || (AV3.mats[c] = new THREE.MeshPhongMaterial({ color: c, shininess: 38, specular: 0x333333 })); }
+    function av3Mat(c) { if (!AV3.mats[c]) { const mt = new THREE.MeshPhongMaterial({ shininess: 38, specular: 0x333333 }); mt.color = new THREE.Color(c).convertSRGBToLinear(); AV3.mats[c] = mt; } return AV3.mats[c]; }
     function av3Seg(S, key, a, b, r, color, zf) {
         let o = S.p[key];
         if (!o) { o = S.p[key] = { c: new THREE.Mesh(AV3.cyl, av3Mat(color)), a: new THREE.Mesh(AV3.sph, av3Mat(color)), b: new THREE.Mesh(AV3.sph, av3Mat(color)) }; S.g.add(o.c); S.g.add(o.a); S.g.add(o.b); }
@@ -1507,6 +1136,78 @@
             av3Seg(S, 'sl' + a[3], q(a[0][0], a[0][1], a[2]), q(avLerp2(a[0], a[1].m, 0.4)[0], avLerp2(a[0], a[1].m, 0.4)[1], a[2]), B.uarm * 0.05 + 0.07, col);
         });
     }
+
+    // ---- realistic rigged human models (Mixamo characters hosted by three.js): male = Soldier, female = Michelle ----
+    AV3.glb = { male: null, female: null }; AV3.useGlb = true;
+    const AV3_FILE = { male: 'Soldier.glb', female: 'Michelle.glb' };
+    const AV3_BASES = ['https://threejs.org/examples/models/gltf/', 'https://cdn.jsdelivr.net/gh/mrdoob/three.js@dev/examples/models/gltf/', 'https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/models/gltf/'];
+    const AV3_NEED = ['hips', 'spine', 'neck', 'head', 'rightarm', 'rightforearm', 'righthand', 'leftarm', 'leftforearm', 'lefthand', 'rightupleg', 'rightleg', 'rightfoot', 'leftupleg', 'leftleg', 'leftfoot'], AV3_OPT = ['spine1', 'spine2', 'righttoebase', 'lefttoebase'];
+    function av3LoadGlb(g) {
+        let m = AV3.glb[g]; if (m) return m;
+        m = AV3.glb[g] = { st: 'loading', err: '' };
+        if (!/^https?:$/.test(location.protocol)) { m.st = 'bad'; m.err = 'افتح الصفحة من رابط https (GitHub Pages) ولا من ملف محلي | open from an https link, not a local file'; return m; }
+        if (!THREE.GLTFLoader) { m.st = 'bad'; m.err = 'GLTFLoader script missing'; return m; }
+        function ready(gl) {
+            try {
+                const root = gl.scene, names = {}, rest = [];
+                root.traverse(function (o) { if (o.isMesh) o.frustumCulled = false; if (o.isBone) { names[o.name.toLowerCase().replace(/[^a-z0-9]/g, '')] = o; rest.push({ b: o, q: o.quaternion.clone() }); } });
+                const B = {}, miss = [];
+                AV3_NEED.concat(AV3_OPT).forEach(function (k) { const f = Object.keys(names).find(function (n) { return n.endsWith(k); }); if (f) B[k] = names[f]; else if (AV3_NEED.indexOf(k) >= 0) miss.push(k); });
+                if (miss.length) { m.st = 'bad'; m.err = 'bones missing: ' + miss.join(','); return; }
+                B.spine1 = B.spine1 || B.spine; B.spine2 = B.spine2 || B.spine1;
+                root.updateMatrixWorld(true);
+                const p1 = new THREE.Vector3(), p2 = new THREE.Vector3(); B.hips.getWorldPosition(p1); B.rightfoot.getWorldPosition(p2);
+                const leg = p1.distanceTo(p2); if (!(leg > 1e-5)) { m.st = 'bad'; m.err = 'bad leg length'; return; }
+                m.root = root; m.B = B; m.rest = rest; m.scale = root.scale.x * 5.1 / leg; m.st = 'ready';
+            } catch (e) { m.st = 'bad'; m.err = 'setup: ' + e.message; }
+        }
+        let k = 0;
+        (function next() {
+            if (k >= AV3_BASES.length) { m.st = 'bad'; m.err = m.err || 'download failed'; return; }
+            const url = AV3_BASES[k++] + AV3_FILE[g];
+            try { new THREE.GLTFLoader().load(url, ready, undefined, function (e) { m.err = 'load: ' + ((e && e.message) || 'network/CORS'); next(); }); } catch (e) { m.err = 'load: ' + e.message; next(); }
+        })();
+        return m;
+    }
+    function av3Dir(a, b) { return new THREE.Vector3(b[0] - a[0], b[1] - a[1], b[2] - a[2]).normalize(); }
+    function av3Aim(b, c, d) {
+        if (!b || !c || b === c) return;
+        const pb = new THREE.Vector3(), pc = new THREE.Vector3(); b.getWorldPosition(pb); c.getWorldPosition(pc);
+        const cur = pc.sub(pb); if (cur.length() < 1e-6 || d.length() < 1e-6) return; cur.normalize();
+        const wq = new THREE.Quaternion(), pq = new THREE.Quaternion(); b.getWorldQuaternion(wq); wq.premultiply(new THREE.Quaternion().setFromUnitVectors(cur, d.clone().normalize()));
+        b.parent.getWorldQuaternion(pq); pq.invert(); b.quaternion.copy(pq.multiply(wq)); b.updateMatrixWorld(true);
+    }
+    function av3Joints(i, P, g) {
+        const q = av3Q;
+        if (AV_TESTS[i].kind !== 'back') {
+            const J = avSideJoints(P, g), mk = function (a, l, to) { return { arm: { o: q(J.sh), m: q(a.m), e: q(a.e) }, leg: { h: q(J.hip), m: q(l.m), e: q(l.e), t: q(to) } }; };
+            return { back: false, hip: q(J.hip), sh: q(J.sh), nk: q(J.nk), R: mk(J.aN, J.lN, J.toN), L: mk(J.aF, J.lF, J.toF) };
+        }
+        const B = AV_BODY[g], cx = 100, sy = 40, H = B.hipw, Sx = B.shoulder, L = AV_LEN, rs = [cx - Sx + 2, sy + 3], ls = [cx + Sx - 2, sy + 3];
+        const aT = avIK(rs, P.hT, L.uarm, L.farm, P.eT), aB = avIK(ls, P.hB, L.uarm, L.farm, P.eB);
+        const leg = function (s) { const hip = [cx + s * H * 0.5, 82], kn = [cx + s * (H * 0.5 + 1), 100], an = [cx + s * (H * 0.5 + 1.5), 115]; return { h: q(hip), m: q(kn), e: q(an), t: q([an[0] + s * 2, 117.5], 0.9) }; };
+        return { back: true, hip: q([cx, 82]), sh: q([cx, sy + 3]), nk: q([cx, 31]),
+            R: { arm: { o: q(rs), m: q(aT.m, -0.2), e: q(aT.e, -0.2) }, leg: leg(-1) }, L: { arm: { o: q(ls), m: q(aB.m, -0.8), e: q(aB.e, -0.8) }, leg: leg(1) } };
+    }
+    function av3GlbPose(m, J, i, p) {
+        const root = m.root, B = m.B;
+        root.rotation.set(0, J.back ? 0 : Math.PI / 2, 0); root.position.set(0, 0, 0); root.scale.setScalar(m.scale);
+        m.rest.forEach(function (e) { e.b.quaternion.copy(e.q); });
+        root.updateMatrixWorld(true);
+        B.hips.position.copy(B.hips.parent.worldToLocal(new THREE.Vector3(J.hip[0], J.hip[1], J.hip[2]))); root.updateMatrixWorld(true);
+        const t = av3Dir(J.hip, J.sh);
+        av3Aim(B.hips, B.spine, t); av3Aim(B.spine, B.spine1, t); av3Aim(B.spine1, B.spine2, t); av3Aim(B.spine2, B.neck, t); av3Aim(B.neck, B.head, av3Dir(J.sh, J.nk));
+        [['right', J.R, 1], ['left', J.L, -1]].forEach(function (s) {
+            const A = s[1].arm; let d1 = av3Dir(A.o, A.m), d2 = av3Dir(A.m, A.e);
+            if (i === 3) { const lat = new THREE.Vector3(0, 0.04, s[2]).normalize(), dn = new THREE.Vector3(0, -1, 0); d1 = dn.clone().lerp(lat, p).normalize(); d2 = d1.clone(); }
+            av3Aim(B[s[0] + 'arm'], B[s[0] + 'forearm'], d1); av3Aim(B[s[0] + 'forearm'], B[s[0] + 'hand'], d2);
+        });
+        [['right', J.R], ['left', J.L]].forEach(function (s) {
+            const Lg = s[1].leg;
+            av3Aim(B[s[0] + 'upleg'], B[s[0] + 'leg'], av3Dir(Lg.h, Lg.m)); av3Aim(B[s[0] + 'leg'], B[s[0] + 'foot'], av3Dir(Lg.m, Lg.e)); av3Aim(B[s[0] + 'foot'], B[s[0] + 'toebase'], av3Dir(Lg.e, Lg.t));
+        });
+    }
+
     function av3Scene(i, g) {
         const sc = AV3.sc[i];
         if (sc && sc.g0 === g) return sc;
@@ -1524,9 +1225,14 @@
         if (!AV3.ok) return false;
         try {
             const el = document.getElementById('avatar' + i), g = avGender;
-            if (!AV3.r) { AV3.r = new THREE.WebGLRenderer({ antialias: true, alpha: true }); AV3.r.setSize(440, 286, false); AV3.r.setPixelRatio(1); }
+            if (!AV3.r) { AV3.r = new THREE.WebGLRenderer({ antialias: true, alpha: true }); AV3.r.outputEncoding = THREE.sRGBEncoding; AV3.r.setSize(440, 286, false); AV3.r.setPixelRatio(1); }
             const S = av3Scene(i, g), col = g === 'female' ? '#f472b6' : '#38bdf8', P = AV_TESTS[i].pose(p, g);
-            if (S.back) av3Back(S, P, g, col); else av3Side(S, P, g, col);
+            const gm = AV3.useGlb ? av3LoadGlb(g) : null; let usedGlb = false;
+            if (gm && gm.st === 'ready') {
+                try { av3GlbPose(gm, av3Joints(i, P, g), i, p); if (gm.root.parent !== S.scene) S.scene.add(gm.root); gm.root.visible = true; usedGlb = true; } catch (e2) { gm.st = 'bad'; }
+            }
+            S.g.visible = !usedGlb;
+            if (!usedGlb) { if (S.back) av3Back(S, P, g, col); else av3Side(S, P, g, col); }
             const t = (performance.now ? performance.now() : Date.now()) / 1000, az = (S.back ? Math.PI : 0) + 0.6 * Math.sin(t * 0.7 + i), D = 24;
             S.cam.position.set(Math.sin(az) * D, 7.6, Math.cos(az) * D); S.cam.lookAt(0, 5.6, 0);
             AV3.r.render(S.scene, S.cam);
@@ -1537,6 +1243,17 @@
         } catch (e) { AV3.ok = false; return false; }
     }
 
+    (function () {
+        function mk() {
+            if (!AV3.ok || document.getElementById('av3Toggle')) return;
+            const b = document.createElement('button'); b.id = 'av3Toggle'; b.type = 'button'; b.textContent = 'مجسم واقعي ✓ | Realistic';
+            b.style.cssText = 'position:fixed;bottom:12px;left:12px;z-index:60;padding:8px 12px;border-radius:999px;border:0;background:#000;color:#fff;font:700 12px Tajawal,sans-serif;opacity:.88';
+            const lab = function () { if (!AV3.useGlb) return 'مجسم مبسّط | Simple'; const s = function (g) { const m = AV3.glb[g]; return !m ? '…' : m.st === 'ready' ? 'OK' : m.st === 'loading' ? '…' : 'ERR ' + m.err; }; return 'Realistic · M:' + s('male') + ' · F:' + s('female'); };
+            b.onclick = function () { AV3.useGlb = !AV3.useGlb; b.textContent = lab(); }; setInterval(function () { b.textContent = lab(); }, 800); b.style.maxWidth = '90vw'; b.style.textAlign = 'left';
+            document.body.appendChild(b);
+        }
+        if (document.body) mk(); else window.addEventListener('DOMContentLoaded', mk);
+    })();
     function avRenderOne(i, p) {
         const el = document.getElementById('avatar' + i);
         if (!el) return;
@@ -1972,6 +1689,14 @@
         const res = await worker.recognize(canvas);
         return ((res && res.data && res.data.text) || '').trim();
     }
+
+    function inbodyDecimal(text, min, max) {
+        let t = String(text || '').replace(/[^0-9.]/g, '');
+        if ((t.match(/\./g) || []).length > 1) t = t.replace(/\.(?=.*\.)/g, '');
+        if (t.indexOf('.') < 0 && /^\d{3,4}$/.test(t)) t = t.slice(0, -1) + '.' + t.slice(-1);
+        const v = parseFloat(t);
+        return isFinite(v) && v >= min && v <= max ? v : null;
+    }
     function inbodyInt(text, digits, min, max) {
         const m = String(text || '').match(new RegExp('\\d{' + digits + '}'));
         const v = m ? parseInt(m[0], 10) : null;
@@ -2389,7 +2114,8 @@
         'Pomegranate': [13.7, 0.1, 0, 0, 0, 0, 12, 0.4], 'Dates': [66, 0, 0, 0, 0, 0, 54, 0.4], 'Raisins': [59, 0.1, 0, 0, 0, 0, 32, 0.2],
         'Orange juice': [8.4, 0, 0, 10, 0, 0, 11, 0.1], 'Whey protein powder': [4, 3, 80, null, null, null, 100, 2], 'Honey': [82, 0, 0, 0, 0, 0, 2, 0.2], 'White sugar': [100, 0, 0, 0, 0, 0, 0, 0.1]
     };
-let foodCustom = [];
+
+    let foodCustom = [];
     let foodAll = [];
     let foodSel = null, foodState = 'raw', foodHi = -1, foodMatches = [];
     const mealItems = [];
@@ -2968,7 +2694,8 @@ renderReportExtras(flags.length > 0, needsMedicalClearance);
         });
         refresh();
     }
-let bfitBooted = false;
+
+    let bfitBooted = false;
     function bfitInit() {
         if (bfitBooted) return;
         bfitBooted = true;
@@ -2985,5 +2712,3 @@ let bfitBooted = false;
 
 </body>
 </html>
-
- 
