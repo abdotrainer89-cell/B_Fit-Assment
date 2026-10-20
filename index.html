@@ -1113,7 +1113,7 @@
             </div>
             <div class="exercise-details">
                 <h4>4. اتزان وثبات الجذع الخلفي (سوبرمان متقاطع على أربع) <span class="target-tag">Target: ≥ 45 s</span></h4>
-                <p class="sub-en">Posterior Core Stability — Quadruped Bird-Dog / Superman Hold</p>
+                <p class="sub-en">Posterior Core Stability — Quadruped Superman (Bird-Dog) Hold</p>
                 <div class="rest-tag"><i class="fa-solid fa-hourglass-half"></i> فترة الراحة الموصى بها: <b>60–90 ثانية</b> <span class="en">Rest: 60–90 s</span></div>
                 <p class="test-howto">من وضع الأربع، مدّ الذراع اليمنى مع الساق اليسرى في خط واحد مع الجذع وثبّت دون ميلان الحوض. سجّل زمن الثبات بالثواني.<br><span dir="ltr">From all fours, extend the opposite arm and leg in line with the torso without rotating the pelvis. Record the hold time in seconds.</span></p>
                 <div class="exercise-inputs">
@@ -1232,7 +1232,7 @@
 <script>
     // ===== Exercise avatars: animated human figures (start -> finish), male / female =====
     const AVATAR_CAPTIONS = [
-        'SIT-AND-REACH', 'APLEY SCRATCH', 'CLOSED-EYE ONE-LEG', 'BIRD-DOG HOLD',
+        'SIT-AND-REACH', 'APLEY SCRATCH', 'CLOSED-EYE ONE-LEG', 'SUPERMAN (BIRD-DOG)',
         '30s BOX SQUAT', 'KNEELING PUSH-UP', '3-MIN STEP TEST'
     ];
 
@@ -1515,34 +1515,38 @@
 
     // ---- realistic rigged human models (Mixamo characters hosted by three.js): male = Soldier, female = Michelle ----
     AV3.glb = { male: null, female: null }; AV3.useGlb = true;
-    const AV3_FILE = { male: 'Soldier.glb', female: 'Michelle.glb' };
+    const AV3_FILE = { male: 'Soldier.glb', female: 'Michelle.glb' }, AV3_RPM = 'https://readyplayerme.github.io/visage/male.glb';
     const AV3_BASES = ['https://threejs.org/examples/models/gltf/', 'https://cdn.jsdelivr.net/gh/mrdoob/three.js@dev/examples/models/gltf/', 'https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/models/gltf/'];
     const AV3_NEED = ['hips', 'spine', 'neck', 'head', 'rightarm', 'rightforearm', 'righthand', 'leftarm', 'leftforearm', 'lefthand', 'rightupleg', 'rightleg', 'rightfoot', 'leftupleg', 'leftleg', 'leftfoot'], AV3_OPT = ['spine1', 'spine2', 'righttoebase', 'lefttoebase'];
     function av3LoadGlb(g) {
         let m = AV3.glb[g]; if (m) return m;
         m = AV3.glb[g] = { st: 'loading', err: '' };
-        if (!/^https?:$/.test(location.protocol)) { m.st = 'bad'; m.err = 'افتح الصفحة من رابط https (GitHub Pages) ولا من ملف محلي | open from an https link, not a local file'; return m; }
+        if (!/^https?:$/.test(location.protocol)) { m.st = 'bad'; m.err = 'افتح الصفحة من رابط https (GitHub Pages) | open from an https link'; return m; }
         if (!THREE.GLTFLoader) { m.st = 'bad'; m.err = 'GLTFLoader script missing'; return m; }
+        const urls = [g + '.glb'].concat(g === 'male' ? [AV3_RPM] : []).concat(AV3_BASES.map(function (b) { return b + AV3_FILE[g]; }));
+        let k = 0;
+        function next(msg) {
+            if (msg) m.err = msg;
+            if (k >= urls.length) { m.st = 'bad'; m.err = m.err || 'download failed'; return; }
+            const url = urls[k++];
+            try { new THREE.GLTFLoader().load(url, ready, undefined, function (e) { next('load: ' + ((e && e.message) || 'network/CORS')); }); } catch (e) { next('load: ' + e.message); }
+        }
         function ready(gl) {
             try {
                 const root = gl.scene, names = {}, rest = [];
                 root.traverse(function (o) { if (o.isMesh) o.frustumCulled = false; if (o.isBone) { names[o.name.toLowerCase().replace(/[^a-z0-9]/g, '')] = o; rest.push({ b: o, q: o.quaternion.clone() }); } });
                 const B = {}, miss = [];
-                AV3_NEED.concat(AV3_OPT).forEach(function (k) { const f = Object.keys(names).find(function (n) { return n.endsWith(k); }); if (f) B[k] = names[f]; else if (AV3_NEED.indexOf(k) >= 0) miss.push(k); });
-                if (miss.length) { m.st = 'bad'; m.err = 'bones missing: ' + miss.join(','); return; }
+                AV3_NEED.concat(AV3_OPT).forEach(function (k2) { const f = Object.keys(names).find(function (n) { return n.endsWith(k2); }); if (f) B[k2] = names[f]; else if (AV3_NEED.indexOf(k2) >= 0) miss.push(k2); });
+                if (miss.length) { next('bones missing: ' + miss.join(',')); return; }
                 B.spine1 = B.spine1 || B.spine; B.spine2 = B.spine2 || B.spine1;
                 root.updateMatrixWorld(true);
                 const p1 = new THREE.Vector3(), p2 = new THREE.Vector3(); B.hips.getWorldPosition(p1); B.rightfoot.getWorldPosition(p2);
-                const leg = p1.distanceTo(p2); if (!(leg > 1e-5)) { m.st = 'bad'; m.err = 'bad leg length'; return; }
-                m.root = root; m.B = B; m.rest = rest; m.scale = root.scale.x * 5.1 / leg; m.st = 'ready';
-            } catch (e) { m.st = 'bad'; m.err = 'setup: ' + e.message; }
+                const leg = p1.distanceTo(p2); if (!(leg > 1e-5)) { next('bad leg length'); return; }
+                let sole = 0; try { const bx = new THREE.Box3().setFromObject(root); sole = Math.max(0, p2.y - bx.min.y); } catch (e) { }
+                m.k = k; m.root = root; m.B = B; m.rest = rest; m.scale = root.scale.x * 5.1 / leg; m.sole = sole * (m.scale / root.scale.x); m.st = 'ready';
+            } catch (e) { next('setup: ' + e.message); }
         }
-        let k = 0;
-        (function next() {
-            if (k >= AV3_BASES.length) { m.st = 'bad'; m.err = m.err || 'download failed'; return; }
-            const url = AV3_BASES[k++] + AV3_FILE[g];
-            try { new THREE.GLTFLoader().load(url, ready, undefined, function (e) { m.err = 'load: ' + ((e && e.message) || 'network/CORS'); next(); }); } catch (e) { m.err = 'load: ' + e.message; next(); }
-        })();
+        next('');
         return m;
     }
     function av3Dir(a, b) { return new THREE.Vector3(b[0] - a[0], b[1] - a[1], b[2] - a[2]).normalize(); }
@@ -1582,6 +1586,10 @@
             const Lg = s[1].leg;
             av3Aim(B[s[0] + 'upleg'], B[s[0] + 'leg'], av3Dir(Lg.h, Lg.m)); av3Aim(B[s[0] + 'leg'], B[s[0] + 'foot'], av3Dir(Lg.m, Lg.e)); av3Aim(B[s[0] + 'foot'], B[s[0] + 'toebase'], av3Dir(Lg.e, Lg.t));
         });
+        root.updateMatrixWorld(true);
+        const wy = function (bn, off) { if (!bn) return 1e9; const v = new THREE.Vector3(); bn.getWorldPosition(v); return v.y - off; };
+        const low = Math.min(wy(B.rightfoot, m.sole), wy(B.leftfoot, m.sole), wy(B.righttoebase, m.sole * 0.45), wy(B.lefttoebase, m.sole * 0.45), wy(B.righthand, m.sole * 0.5), wy(B.lefthand, m.sole * 0.5));
+        if (low < 1e8) { root.position.y -= low; root.updateMatrixWorld(true); }
     }
 
     function av3Scene(i, g) {
@@ -2895,7 +2903,7 @@
         ];
         const testParts = [
             ['المرونة | Sit-and-Reach', flexScore], ['موبيليتي الكتفين | Apley', apScore], ['التوافق العصبي | Closed-Eye Stance', balScore],
-            ['ثبات الجذع الخلفي | Bird-Dog', plankScore], ['القوة السفلية | Box Squat', chairScore], ['تحمل علوي | Kneeling Push-Up', pushScore],
+            ['ثبات الجذع (سوبرمان) | Superman Bird-Dog', plankScore], ['القوة السفلية | Box Squat', chairScore], ['تحمل علوي | Kneeling Push-Up', pushScore],
             ['الكارديو | YMCA Step', cardioScore]
         ];
 
