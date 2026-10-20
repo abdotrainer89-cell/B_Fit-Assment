@@ -879,6 +879,29 @@
         .ymca-live .en { font-family: 'Montserrat', sans-serif; color: var(--text-muted); font-weight: 600; direction: ltr; unicode-bidi: isolate; }
     .avatar-svg svg{filter:drop-shadow(4px 7px 5px rgba(0,0,0,.38)) drop-shadow(-1px -1px 1px rgba(255,255,255,.35));transform:perspective(600px) rotateX(6deg)}
     .avatar-svg canvas{max-width:100%}
+    .stepper-row { display: flex; gap: 8px; align-items: center; direction: ltr; }
+    .stepper-row input { flex: 1; min-width: 0; }
+    .num-step { display: none; min-width: 48px; height: 48px; border: 0; border-radius: 14px; font: 900 24px Montserrat, sans-serif; background: #000; color: #fff; cursor: pointer; touch-action: manipulation; -webkit-user-select: none; user-select: none; align-items: center; justify-content: center; }
+    .num-step.sg { font-size: 18px; background: #475569; }
+    .num-step:active { transform: scale(.94); opacity: .85; }
+    @media (pointer: coarse), (hover: none) { .num-step { display: inline-flex; } }
+    .hq-extra { display: none; margin: -4px 0 14px; padding: 14px 16px; border-radius: 16px; background: rgba(255,255,255,.55); border: 1px solid rgba(255,255,255,.85); box-shadow: 0 6px 18px rgba(112,96,150,.10); }
+    .hq-extra.show { display: block; }
+    .hq-extra .input-box { margin: 0; }
+    .bp-row { display: flex; align-items: center; gap: 8px; direction: ltr; }
+    .bp-row input { flex: 1; min-width: 0; } .bp-row span { font-weight: 800; color: #5f6b85; }
+    #hqNotes { width: 100%; box-sizing: border-box; padding: 14px 16px; border-radius: 16px; border: 1px solid rgba(255,255,255,.9); background: rgba(255,255,255,.7); font: 600 15px Tajawal, sans-serif; resize: vertical; }
+    .sub-h { margin: 0 0 12px; font-size: 17px; font-weight: 900; color: var(--ink, #0f172a); }
+    .calc-panel + .calc-panel { margin-top: 18px; }
+    .ep-row { grid-template-columns: 1.5fr .8fr 1.1fr .8fr .8fr !important; font-size: 13.5px; }
+    .ep-row.hd { background: #000 !important; color: #fff !important; font-weight: 800; }
+    .ep-row span { text-align: center; direction: ltr; } .ep-row span:first-child { text-align: right; direction: rtl; }
+    @media (max-width: 768px) { .ep-row span[data-l]::before { content: attr(data-l) ': '; color: #64748b; font-weight: 700; } .ep-row { grid-template-columns: 1fr 1fr !important; } .ep-row.hd { display: none; } .ep-row span:first-child { grid-column: 1 / -1; font-weight: 900; } }
+    label .en { display: block; direction: ltr; text-align: right; }
+    .bil-wrap { display: block; min-width: 0; }
+    .en-line { display: block; direction: ltr; text-align: right; font-size: .78em; font-weight: 700; color: #64748b; line-height: 1.35; margin-top: 2px; }
+    .btn-submit .en-line { color: rgba(255,255,255,.85); text-align: center; }
+    .ep-row span:first-child .en-line { font-size: .85em; }
     </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
@@ -903,8 +926,75 @@
 
     <form id="bfitAssessmentForm" onsubmit="calculateAssessment(event)">
 
+<div class="section-header">
+<h2><i class="fa-solid fa-notes-medical"></i> 1. استبيان الحالة الصحية والجاهزية | Health History &amp; Readiness Questionnaire</h2>
+</div>
+
+<div class="health-question-row">
+<div class="q-ar">1) هل شعرتَ سابقًا بفقدان الاتزان أو بالإغماء أثناء ممارسة النشاط البدني؟</div>
+<div class="radio-btn-group">
+<input type="radio" id="hq1_yes" name="hq1" value="yes"><label for="hq1_yes" class="yes-label">نعم / Yes</label>
+<input type="radio" id="hq1_no" name="hq1" value="no" checked><label for="hq1_no" class="no-label">لا / No</label>
+</div>
+<div class="q-en">Have you previously experienced loss of balance or fainting during physical activity?</div>
+</div>
+<div class="health-question-row">
+<div class="q-ar">2) هل شعرتَ بفقدان مفاجئ للاتزان في أوقات الراحة، دون بذل أي مجهود بدني؟</div>
+<div class="radio-btn-group">
+<input type="radio" id="hq2_yes" name="hq2" value="yes"><label for="hq2_yes" class="yes-label">نعم / Yes</label>
+<input type="radio" id="hq2_no" name="hq2" value="no" checked><label for="hq2_no" class="no-label">لا / No</label>
+</div>
+<div class="q-en">Have you experienced a sudden loss of balance at rest, without any physical exertion?</div>
+</div>
+<div class="health-question-row">
+<div class="q-ar">3) هل تعاني من مرض السكري (النوع الأول الذي يستلزم العلاج بالإنسولين، أو النوع الثاني الذي يُدار بالأقراص)؟</div>
+<div class="radio-btn-group">
+<input type="radio" id="hq3_yes" name="hq3" value="yes"><label for="hq3_yes" class="yes-label">نعم / Yes</label>
+<input type="radio" id="hq3_no" name="hq3" value="no" checked><label for="hq3_no" class="no-label">لا / No</label>
+</div>
+<div class="q-en">Do you have diabetes (Type 1 requiring insulin, or Type 2 managed with tablets)?</div>
+</div>
+<div class="hq-extra" id="hq3_extra"><div class="input-box"><label>يُرجى إدخال تفاصيل نوع السكري والعلاج المتّبع <span class="en">Diabetes type &amp; treatment details</span></label><input type="text" id="hq3_details" placeholder="مثال: النوع الثاني — أقراص الميتفورمين"></div></div>
+<div class="health-question-row">
+<div class="q-ar">4) هل تعاني من ارتفاع ضغط الدم، أو تتناول أدوية خاصة به؟</div>
+<div class="radio-btn-group">
+<input type="radio" id="hq4_yes" name="hq4" value="yes"><label for="hq4_yes" class="yes-label">نعم / Yes</label>
+<input type="radio" id="hq4_no" name="hq4" value="no" checked><label for="hq4_no" class="no-label">لا / No</label>
+</div>
+<div class="q-en">Do you have high blood pressure, or take medication for it?</div>
+</div>
+<div class="hq-extra" id="hq4_extra"><div class="input-box"><label>قراءة ضغط الدم (ملم زئبقي) <span class="en">Blood pressure — Systolic / Diastolic (mmHg)</span></label>
+<div class="bp-row"><input type="number" id="hq4_sys" step="any" inputmode="decimal" placeholder="Systolic 120"><span>/</span><input type="number" id="hq4_dia" step="any" inputmode="decimal" placeholder="Diastolic 80"><span>mmHg</span></div></div></div>
+<div class="health-question-row">
+<div class="q-ar">5) هل تعاني حاليًا من إصابات هيكلية، أو آلام مزمنة في المفاصل أو العمود الفقري، أو قيود حركية تؤثر في الأداء الرياضي؟</div>
+<div class="radio-btn-group">
+<input type="radio" id="hq5_yes" name="hq5" value="yes"><label for="hq5_yes" class="yes-label">نعم / Yes</label>
+<input type="radio" id="hq5_no" name="hq5" value="no" checked><label for="hq5_no" class="no-label">لا / No</label>
+</div>
+<div class="q-en">Do you currently have skeletal injuries, chronic joint or spinal pain, or movement restrictions that affect athletic performance?</div>
+</div>
+<div class="health-question-row">
+<div class="q-ar">6) هل خضعتَ لعمليات جراحية سابقة، أو تتناول بانتظام أدوية تؤثر مباشرةً في معدل ضربات القلب أو في الاستجابة للأحمال التدريبية؟</div>
+<div class="radio-btn-group">
+<input type="radio" id="hq6_yes" name="hq6" value="yes"><label for="hq6_yes" class="yes-label">نعم / Yes</label>
+<input type="radio" id="hq6_no" name="hq6" value="no" checked><label for="hq6_no" class="no-label">لا / No</label>
+</div>
+<div class="q-en">Have you had previous surgeries, or do you regularly take medication that directly affects heart rate or response to training loads?</div>
+</div>
+<div class="health-question-row">
+<div class="q-ar">7) هل توجد حالات صحية أو إصابات سابقة أو محاذير طبية موثّقة تمنعك من ممارسة النشاط البدني المكثف؟</div>
+<div class="radio-btn-group">
+<input type="radio" id="hq7_yes" name="hq7" value="yes"><label for="hq7_yes" class="yes-label">نعم / Yes</label>
+<input type="radio" id="hq7_no" name="hq7" value="no" checked><label for="hq7_no" class="no-label">لا / No</label>
+</div>
+<div class="q-en">Are there any health conditions, previous injuries, or documented medical restrictions that prevent you from intense physical activity?</div>
+</div>
+<div class="input-box" style="margin:16px 0 26px;"><label>ملاحظات إضافية (اختياري) <span class="en">Additional notes (optional)</span></label>
+<textarea id="hqNotes" rows="3" placeholder="في حال الإجابة بـ (نعم) على أي من الأسئلة السابقة، يُرجى كتابة تفاصيل الإصابة أو الحالة أو اسم الدواء، لضمان تصميم البرنامج التدريبي وفق أعلى معايير الأمان العلمي"></textarea></div>
+
+
         <div class="section-header">
-            <h2><i class="fa-solid fa-id-card"></i> 1. البروفايل وتركيب الجسم والتغذية | Integrated Profile, InBody &amp; Nutrition &amp; Food</h2>
+<h2><i class="fa-solid fa-id-card"></i> 2. البروفايل وتركيب الجسم والتغذية وحاسبة الغذاء | Integrated Profile, InBody &amp; Nutrition &amp; Food</h2>
         </div>
 
         <div class="form-grid-4">
@@ -997,55 +1087,6 @@
         </div>
 
         <div class="section-header">
-            <h2><i class="fa-solid fa-notes-medical"></i> 2. استبيان الحالة الصحية والجاهزية | Health History Questionnaire</h2>
-        </div>
-
-        <div class="health-question-row">
-            <div class="q-ar">هل أجريت عمليات جراحية خلال آخر 3-5 سنوات؟</div>
-            <div class="radio-btn-group">
-                <input type="radio" id="hq1_yes" name="hq1" value="yes"><label for="hq1_yes" class="yes-label">نعم / Yes</label>
-                <input type="radio" id="hq1_no" name="hq1" value="no" checked><label for="hq1_no" class="no-label">لا / No</label>
-            </div>
-            <div class="q-en">Surgeries in last 3-5 years?</div>
-        </div>
-
-        <div class="health-question-row">
-            <div class="q-ar">هل تعاني من مشاكل في العظام أو المفاصل تعوق الحركة؟</div>
-            <div class="radio-btn-group">
-                <input type="radio" id="hq2_yes" name="hq2" value="yes"><label for="hq2_yes" class="yes-label">نعم / Yes</label>
-                <input type="radio" id="hq2_no" name="hq2" value="no" checked><label for="hq2_no" class="no-label">لا / No</label>
-            </div>
-            <div class="q-en">Bone/joint issues limiting movement?</div>
-        </div>
-
-        <div class="health-question-row">
-            <div class="q-ar">هل تعاني من خشونة المفاصل أو شرائح ومسامير؟</div>
-            <div class="radio-btn-group">
-                <input type="radio" id="hq3_yes" name="hq3" value="yes"><label for="hq3_yes" class="yes-label">نعم / Yes</label>
-                <input type="radio" id="hq3_no" name="hq3" value="no" checked><label for="hq3_no" class="no-label">لا / No</label>
-            </div>
-            <div class="q-en">Joint arthritis or surgical plates?</div>
-        </div>
-
-        <div class="health-question-row">
-            <div class="q-ar">هل تعاني من سكري النوع الأول (علاج بالإنسولين)؟</div>
-            <div class="radio-btn-group">
-                <input type="radio" id="hq4_yes" name="hq4" value="yes"><label for="hq4_yes" class="yes-label">نعم / Yes</label>
-                <input type="radio" id="hq4_no" name="hq4" value="no" checked><label for="hq4_no" class="no-label">لا / No</label>
-            </div>
-            <div class="q-en">Type-1 Diabetes (Insulin dependent)?</div>
-        </div>
-
-        <div class="health-question-row">
-            <div class="q-ar">هل تعاني من ارتفاع ضغط الدم أو أمراض القلب؟</div>
-            <div class="radio-btn-group">
-                <input type="radio" id="hq5_yes" name="hq5" value="yes"><label for="hq5_yes" class="yes-label">نعم / Yes</label>
-                <input type="radio" id="hq5_no" name="hq5" value="no" checked><label for="hq5_no" class="no-label">لا / No</label>
-            </div>
-            <div class="q-en">High blood pressure or heart conditions?</div>
-        </div>
-
-        <div class="section-header">
             <h2><i class="fa-solid fa-stopwatch"></i> 3. اختبارات التقييم البدني الـ 7 الشاملة | Universal 7-Step Fitness Tests</h2>
         </div>
 
@@ -1062,8 +1103,8 @@
                 <div class="rest-tag"><i class="fa-solid fa-hourglass-half"></i> فترة الراحة الموصى بها: <b>30–45 ثانية</b> <span class="en">Rest: 30–45 s</span></div>
                 <p class="test-howto">اجلس على الأرض بساقين ممدودتين وقدماك على الصندوق، ثم انحنِ للأمام ببطء وابعد يديك لأقصى مسافة. سجّل المسافة بالسنتيمتر (0 = خط أصابع القدم، وقيمة سالبة = قبل الأصابع).<br><span dir="ltr">Sit with legs straight and feet flat on the box, then reach forward slowly as far as possible. Record cm (0 = toe line, negative = short of toes).</span></p>
                 <div class="exercise-inputs">
-                    <div class="input-box"><label>المحاولة 1 (سم) <span class="en">Trial 1 (cm)</span></label><input type="number" id="srTry1" step="0.5" placeholder="مثال: 8" required></div>
-                    <div class="input-box"><label>المحاولة 2 (سم) <span class="en">Trial 2 (cm)</span></label><input type="number" id="srTry2" step="0.5" placeholder="مثال: 10" required></div>
+                    <div class="input-box"><label>المحاولة 1 (سم) <span class="en">Trial 1 (cm)</span></label><input type="number" id="srTry1" step="any" placeholder="مثال: 8" required></div>
+                    <div class="input-box"><label>المحاولة 2 (سم) <span class="en">Trial 2 (cm)</span></label><input type="number" id="srTry2" step="any" placeholder="مثال: 10" required></div>
                 </div>
             </div>
         </div>
@@ -1081,8 +1122,8 @@
                 <div class="rest-tag"><i class="fa-solid fa-hourglass-half"></i> فترة الراحة الموصى بها: <b>30–45 ثانية</b> <span class="en">Rest: 30–45 s</span></div>
                 <p class="test-howto">ارفع يدًا فوق الكتف ومدّها لأسفل بين لوحي الكتف، والأخرى من الأسفل لأعلى خلف الظهر. قس المسافة بين أطراف الأصابع بالسنتيمتر (0 = تلامس، وقيمة سالبة = تداخل).<br><span dir="ltr">Reach one hand over the shoulder and down the spine, the other up from below. Measure the fingertip gap in cm (0 = touching, negative = overlap).</span></p>
                 <div class="exercise-inputs">
-                    <div class="input-box"><label>الجانب الأيمن (فجوة سم) <span class="en">Right over top (gap cm)</span></label><input type="number" id="apR" step="0.5" placeholder="0 = تلامس" required></div>
-                    <div class="input-box"><label>الجانب الأيسر (فجوة سم) <span class="en">Left over top (gap cm)</span></label><input type="number" id="apL" step="0.5" placeholder="0 = تلامس" required></div>
+                    <div class="input-box"><label>الجانب الأيمن (فجوة سم) <span class="en">Right over top (gap cm)</span></label><input type="number" id="apR" step="any" placeholder="0 = تلامس" required></div>
+                    <div class="input-box"><label>الجانب الأيسر (فجوة سم) <span class="en">Left over top (gap cm)</span></label><input type="number" id="apL" step="any" placeholder="0 = تلامس" required></div>
                 </div>
             </div>
         </div>
@@ -1183,9 +1224,10 @@
 
 
         <div class="section-header">
-            <h2><i class="fa-solid fa-heart-pulse"></i> 4. معادلة كارفونين لمعدل القلب المستهدف | Karvonen Target Heart Rate</h2>
+<h2><i class="fa-solid fa-heart-pulse"></i> 4. المعادلات التدريبية والحيوية | Training &amp; Physiological Formulas</h2>
         </div>
         <div class="calc-panel">
+<h3 class="sub-h"><i class="fa-solid fa-heart-pulse"></i> أ) معادلة كارفونين لمعدل القلب المستهدف | Karvonen Target Heart Rate</h3>
             <div class="form-grid-4">
                 <div class="input-box">
                     <label>معدل القلب وقت الراحة (نبضة/دقيقة) <span class="en">Resting Heart Rate (bpm)</span></label>
@@ -1198,6 +1240,16 @@
             </div>
             <div id="karvonenOut"></div>
         </div>
+
+<div class="calc-panel">
+<h3 class="sub-h"><i class="fa-solid fa-dumbbell"></i> ب) معادلة إيبلي لأقصى تكرار واحد | Epley 1RM Formula (NASM)</h3>
+<div class="form-grid-4">
+<div class="input-box"><label>اسم التمرين <span class="en">Exercise name</span></label><input type="text" id="epName" placeholder="مثال: Bench Press"></div>
+<div class="input-box"><label>الوزن المرفوع (كجم) <span class="en">Weight lifted (kg)</span></label><input type="number" id="epW" step="any" inputmode="decimal" placeholder="مثال: 60"></div>
+<div class="input-box"><label>التكرارات المنجزة <span class="en">Reps completed</span></label><input type="number" id="epReps" step="any" inputmode="decimal" placeholder="مثال: 8"></div>
+</div>
+<div id="epleyOut"></div>
+</div>
 
 
         <button type="submit" class="btn-submit">
@@ -1447,36 +1499,65 @@
     // ===== Real 3D human models (three.js) — procedural rig, same start/finish poses, male / female =====
     const AV3 = { ok: typeof THREE !== 'undefined', r: null, sc: {}, cx: {}, mats: {} };
     function av3Mat(c) { if (!AV3.mats[c]) { const mt = new THREE.MeshPhongMaterial({ shininess: 38, specular: 0x333333 }); mt.color = new THREE.Color(c).convertSRGBToLinear(); AV3.mats[c] = mt; } return AV3.mats[c]; }
+    const AV3_TAPER = { ua: 0.84, fa: 0.74, th: 0.78, sn: 0.68 };
     function av3Seg(S, key, a, b, r, color, zf) {
         let o = S.p[key];
-        if (!o) { o = S.p[key] = { c: new THREE.Mesh(AV3.cyl, av3Mat(color)), a: new THREE.Mesh(AV3.sph, av3Mat(color)), b: new THREE.Mesh(AV3.sph, av3Mat(color)) }; S.g.add(o.c); S.g.add(o.a); S.g.add(o.b); }
+        const tp = AV3_TAPER[key.slice(0, 2)] || 1;
+        if (!o) { AV3.tg = AV3.tg || {}; const cg = tp < 1 ? (AV3.tg[tp] = AV3.tg[tp] || new THREE.CylinderGeometry(tp, 1, 1, 16)) : AV3.cyl; o = S.p[key] = { c: new THREE.Mesh(cg, av3Mat(color)), a: new THREE.Mesh(AV3.sph, av3Mat(color)), b: new THREE.Mesh(AV3.sph, av3Mat(color)) }; S.g.add(o.c); S.g.add(o.a); S.g.add(o.b); }
         const A = new THREE.Vector3(a[0], a[1], a[2]), B = new THREE.Vector3(b[0], b[1], b[2]), d = B.clone().sub(A);
         let len = d.length(); if (len < 1e-3) { d.set(0, 1, 0); len = 1e-3; } else d.normalize();
         const z = zf || 1;
         o.c.position.copy(A).add(B).multiplyScalar(0.5); o.c.scale.set(r, len, r * z); o.c.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), d);
-        o.a.position.copy(A); o.a.scale.set(r, r, r * z); o.b.position.copy(B); o.b.scale.set(r, r, r * z);
+        o.a.position.copy(A); o.a.scale.set(r, r, r * z); o.b.position.copy(B); o.b.scale.set(r * tp, r * tp, r * tp * z);
     }
     function av3Q(pt, z) { return [(pt[0] - 100) * 0.1, (119 - pt[1]) * 0.1, z || 0]; }
     function av3Box(S, x1, y1, x2, y2, d, color) {
         const m = new THREE.Mesh(new THREE.BoxGeometry((x2 - x1) * 0.1, (y2 - y1) * 0.1, d), av3Mat(color));
         const c = av3Q([(x1 + x2) / 2, (y1 + y2) / 2], 0); m.position.set(c[0], c[1], 0); S.scene.add(m);
     }
+    const AV3_PAL = { shorts: '#334155', shortsF: '#27303f', shoe: '#0f172a', shoeF: '#1e293b' };
+    function av3Face(S, h3, r, f, l) {
+        const P = function (a, b, c, k) { const n = Math.sqrt(a * a + b * b + c * c) || 1; return [h3[0] + (f[0] * a + l[0] * b) / n * r * k, h3[1] + c / n * r * k, h3[2] + (f[2] * a + l[2] * b) / n * r * k]; };
+        [-1, 1].forEach(function (sd, k) {
+            const e = P(0.86, sd * 0.38, 0.14, 0.97), p = P(0.9, sd * 0.38, 0.14, 1.03), b1 = P(0.88, sd * 0.56, 0.4, 1.0), b2 = P(0.92, sd * 0.2, 0.36, 1.0), ea = P(0, sd * 1, 0, 1.0);
+            av3Seg(S, 'ew' + k, e, e, r * 0.17, 0xf4f4f4); av3Seg(S, 'ep' + k, p, p, r * 0.085, 0x161616); av3Seg(S, 'br' + k, b1, b2, r * 0.06, 0x1a1410); av3Seg(S, 'ear' + k, ea, ea, r * 0.17, AV_C.skin);
+        });
+        const n1 = P(1, 0, -0.14, 1.03), n2 = P(1, 0, -0.14, 1.0), m1 = P(0.92, -0.24, -0.42, 1.0), m2 = P(0.92, 0.24, -0.42, 1.0);
+        av3Seg(S, 'nose', n2, n1, r * 0.12, 0xc98862); av3Seg(S, 'mouth', m1, m2, r * 0.045, 0x6e2a2a);
+    }
+    function av3MaleSide(S, P, g, J) {
+        const B = AV_BODY[g], q = av3Q, sk = AV_C.skin, sd = AV_C.skinF, L2 = avLerp2, zs = B.shoulder * 0.022, zl = B.hipw * 0.02 + 0.12;
+        [[-1, J.aF, J.lF, sd, '_0'], [1, J.aN, J.lN, sk, '_1']].forEach(function (s) {
+            const z = s[0], a = s[1], l = s[2], c = s[3], t = s[4];
+            av3Seg(S, 'qd' + t, q(L2(J.hip, l.m, 0.6), z * zl), q(L2(J.hip, l.m, 0.93), z * zl), B.thigh * 0.05 * 1.07, c);
+            av3Seg(S, 'cf' + t, q(L2(l.m, l.e, 0.1), z * zl), q(L2(l.m, l.e, 0.55), z * zl), B.shin * 0.05 * 1.12, c);
+        });
+    }
+    function av3MaleBack(S, g) { }
     function av3Side(S, P, g, col) {
+        const PAL = g === 'male' ? AV3_PAL : AV_C;
         const B = AV_BODY[g], J = avSideJoints(P, g), F = g === 'female', zs = B.shoulder * 0.022, zl = B.hipw * 0.02 + 0.12, q = av3Q;
-        [[-1, J.aF, J.lF, J.toF, AV_C.skinF, AV_C.shortsF, AV_C.shoeF], [1, J.aN, J.lN, J.toN, AV_C.skin, AV_C.shorts, AV_C.shoe]].forEach(function (s, k) {
-            const z = s[0], a = s[1], l = s[2], to = s[3], c = s[4], t = '_' + k;
-            av3Seg(S, 'ua' + t, q(J.sh, z * zs), q(a.m, z * zs), B.uarm * 0.05, c);
-            av3Seg(S, 'fa' + t, q(a.m, z * zs), q(a.e, z * zs), B.farm * 0.05, c);
-            av3Seg(S, 'hd' + t, q(a.e, z * zs), q(a.e, z * zs), B.farm * 0.03 + 0.2, c);
-            av3Seg(S, 'sl' + t, q(J.sh, z * zs), q(avLerp2(J.sh, a.m, 0.5), z * zs), B.uarm * 0.05 + 0.07, col);
+        const arm3 = function (z) {
+            if (S.i !== 3 && S.i !== 5) return null;
+            const p = S.p == null ? 1 : S.p, sp = q(J.sh, z * zs); let d = S.i === 3 ? [0, -(1 - p) + 0.06 * p, z * p] : [1, 0.05, 0];
+            const n = Math.hypot(d[0], d[1], d[2]) || 1; d = [d[0] / n, d[1] / n, d[2] / n];
+            const pt = function (k) { return [sp[0] + d[0] * k, sp[1] + d[1] * k, sp[2] + d[2] * k]; };
+            return { m: pt(1.9), e: pt(3.7), mid: pt(0.95) };
+        };
+        [[-1, J.aF, J.lF, J.toF, AV_C.skinF, PAL.shortsF, PAL.shoeF], [1, J.aN, J.lN, J.toN, AV_C.skin, PAL.shorts, PAL.shoe]].forEach(function (s, k) {
+            const z = s[0], a = s[1], l = s[2], to = s[3], c = s[4], t = '_' + k, A3 = arm3(z);
+            av3Seg(S, 'ua' + t, q(J.sh, z * zs), A3 ? A3.m : q(a.m, z * zs), B.uarm * 0.05, c);
+            av3Seg(S, 'fa' + t, A3 ? A3.m : q(a.m, z * zs), A3 ? A3.e : q(a.e, z * zs), B.farm * 0.05, c);
+            av3Seg(S, 'hd' + t, A3 ? A3.e : q(a.e, z * zs), A3 ? A3.e : q(a.e, z * zs), B.farm * 0.03 + 0.2, c, 0.75);
+            av3Seg(S, 'sl' + t, q(J.sh, z * zs), A3 ? A3.mid : q(avLerp2(J.sh, a.m, 0.5), z * zs), B.uarm * 0.05 + 0.07, col);
             av3Seg(S, 'th' + t, q(J.hip, z * zl), q(l.m, z * zl), B.thigh * 0.05, c);
             av3Seg(S, 'sn' + t, q(l.m, z * zl), q(l.e, z * zl), B.shin * 0.05, c);
             av3Seg(S, 'st' + t, q(J.hip, z * zl), q(avLerp2(J.hip, l.m, 0.64), z * zl), B.thigh * 0.05 + 0.08, s[5]);
             av3Seg(S, 'ft' + t, q(l.e, z * zl), q(to, z * zl), 0.3, s[6]);
         });
         const mid = avLerp2(J.hip, J.sh, 0.2);
-        av3Seg(S, 'pel', q(J.hip), q(mid), F ? 0.78 : 0.7, AV_C.shorts);
-        av3Seg(S, 'chest', q(mid), q(J.sh), F ? 0.62 : 0.9, col);
+        av3Seg(S, 'pel', q(J.hip), q(mid), F ? 0.78 : 0.6, PAL.shorts, F ? 1 : 1.25);
+        av3Seg(S, 'chest', q(mid), q(J.sh), F ? 0.62 : 0.72, col, F ? 1 : 1.4);
         av3Seg(S, 'sbar', q(J.sh, -zs), q(J.sh, zs), B.uarm * 0.05 + 0.1, col);
         if (F) {
             const d = avDir(P.tA, 1), tn = avDir(P.tA + 90, 1), cp = [J.sh[0] - d[0] * 9 + tn[0] * (B.torso / 2 - 0.5), J.sh[1] - d[1] * 9 + tn[1] * (B.torso / 2 - 0.5)];
@@ -1485,32 +1566,52 @@
         av3Seg(S, 'neck', q(J.sh), q(J.nk), 0.28, AV_C.skin);
         const h3 = q(J.hd), r = B.head * 0.075;
         av3Seg(S, 'head', h3, h3, r, AV_C.skin);
+        av3Seg(S, 'jaw', [h3[0] + r * 0.3, h3[1] - r * 0.42, 0], [h3[0] + r * 0.3, h3[1] - r * 0.42, 0], r * 0.66, AV_C.skin);
         av3Seg(S, 'hair', [h3[0] - r * 0.25, h3[1] + r * 0.22, 0], [h3[0] - r * 0.25, h3[1] + r * 0.22, 0], r * 1.04, AV_C.hair);
+        av3Face(S, h3, r, [1, 0, 0], [0, 0, 1]);
+        if (g === 'male') av3MaleSide(S, P, g, J);
         if (F) av3Seg(S, 'tail', [h3[0] - r * 1.05, h3[1] - r * 0.1, 0], [h3[0] - r * 1.05, h3[1] - r * 0.1, 0], r * 0.45, AV_C.hair);
     }
     function av3Back(S, P, g, col) {
+        const PAL = g === 'male' ? AV3_PAL : AV_C;
         const B = AV_BODY[g], F = g === 'female', cx = 100, sy = 40, Sx = B.shoulder, W = B.waist, H = B.hipw, q = function (x, y, z) { return av3Q([x, y], z); };
         [-1, 1].forEach(function (s, k) {
             const hip = [cx + s * H * 0.5, 82], kn = [cx + s * (H * 0.5 + 1), 100], an = [cx + s * (H * 0.5 + 1.5), 115], t = '_' + k;
             av3Seg(S, 'th' + t, q(hip[0], hip[1]), q(kn[0], kn[1]), B.thigh * 0.05, AV_C.skin);
             av3Seg(S, 'sn' + t, q(kn[0], kn[1]), q(an[0], an[1]), B.shin * 0.05, AV_C.skin);
-            av3Seg(S, 'ft' + t, q(an[0], an[1]), q(an[0] + s * 2, 117.5, 0.9), 0.3, AV_C.shoe);
-            av3Seg(S, 'st' + t, q(hip[0], hip[1]), q(hip[0], 94), B.thigh * 0.05 + 0.08, AV_C.shorts);
+            av3Seg(S, 'ft' + t, q(an[0], an[1]), q(an[0] + s * 2, 117.5, 0.9), 0.3, PAL.shoe);
+            if (g === 'male') { av3Seg(S, 'qd' + t, q(hip[0] + s * 0.4, 95), q(kn[0], 99), B.thigh * 0.05 * 1.07, AV_C.skin); av3Seg(S, 'cf' + t, q(kn[0] + s * 0.2, 102), q(an[0], 110), B.shin * 0.05 * 1.12, AV_C.skin); }
+            av3Seg(S, 'st' + t, q(hip[0], hip[1]), q(hip[0], 94), B.thigh * 0.05 + 0.08, PAL.shorts);
         });
-        av3Seg(S, 'pel', q(cx, 86), q(cx, 76), H * 0.1, AV_C.shorts, 0.55);
+        av3Seg(S, 'pel', q(cx, 86), q(cx, 76), H * 0.1, PAL.shorts, 0.55);
         av3Seg(S, 'low', q(cx, 83), q(cx, 66), (H + W) * 0.05, col, 0.5);
         av3Seg(S, 'up', q(cx, 66), q(cx, sy), (W + Sx) * 0.05, col, 0.5);
         av3Seg(S, 'neck', q(cx, 31), q(cx, sy), 0.3, AV_C.skin);
         av3Seg(S, 'head', q(cx, 21), q(cx, 21), B.head * 0.075, AV_C.skin);
         av3Seg(S, 'hair', q(cx, 21.5, -0.05), q(cx, 21.5, -0.05), B.head * 0.078, AV_C.hair);
         if (F) av3Seg(S, 'bun', q(cx, 11, -0.3), q(cx, 11, -0.3), 0.46, AV_C.hair);
+        if (g === 'male') av3MaleBack(S, g);
         const rs = [cx - Sx + 2, sy + 3], ls = [cx + Sx - 2, sy + 3], L = AV_LEN;
         const aT = avIK(rs, P.hT, L.uarm, L.farm, P.eT), aB = avIK(ls, P.hB, L.uarm, L.farm, P.eB);
         av3Seg(S, 'sbar', q(rs[0], rs[1], -0.1), q(ls[0], ls[1], -0.1), B.uarm * 0.05 + 0.1, col);
-        [[rs, aT, -0.25, 'T'], [ls, aB, -0.95, 'B']].forEach(function (a) {
+        {
+            const V = THREE.Vector3, l1 = AV_LEN.uarm * 0.1, l2 = AV_LEN.farm * 0.1, p = S.p == null ? 1 : S.p, M = new V(0, 6.9, -1.0);
+            [[rs, new V(-0.25, 1, -0.15), 'T'], [ls, new V(0.3, -1, -0.55), 'B']].forEach(function (a) {
+                const sh = av3Q(a[0], 0), Sp = new V(sh[0], sh[1], sh[2]);
+                const H = Sp.clone().add(new V(0, -(l1 + l2) * 0.999, 0)).lerp(M, p), dv = H.clone().sub(Sp);
+                let d = dv.length(); d = Math.min(Math.max(d, Math.abs(l1 - l2) + 1e-3), l1 + l2 - 1e-3); const dir = dv.normalize();
+                const aa = (l1 * l1 - l2 * l2 + d * d) / (2 * d), hh = Math.sqrt(Math.max(l1 * l1 - aa * aa, 0));
+                const pole = a[1].clone().normalize(), pp = pole.clone().sub(dir.clone().multiplyScalar(pole.dot(dir))); if (pp.length() < 1e-4) pp.set(0, 0, -1); pp.normalize();
+                const E = Sp.clone().add(dir.clone().multiplyScalar(aa)).add(pp.multiplyScalar(hh)), W = Sp.clone().add(dir.clone().multiplyScalar(d)), k = a[2], Ms = Sp.clone().lerp(E, 0.5);
+                av3Seg(S, 'ua' + k, [Sp.x, Sp.y, Sp.z], [E.x, E.y, E.z], B.uarm * 0.05, AV_C.skin); av3Seg(S, 'fa' + k, [E.x, E.y, E.z], [W.x, W.y, W.z], B.farm * 0.05, AV_C.skin);
+                av3Seg(S, 'hn' + k, [W.x, W.y, W.z], [W.x, W.y, W.z], B.farm * 0.03 + 0.2, AV_C.skin, 0.7); av3Seg(S, 'sl' + k, [Sp.x, Sp.y, Sp.z], [Ms.x, Ms.y, Ms.z], B.uarm * 0.05 + 0.07, col);
+            });
+        }
+        if (false) [[rs, aT, -0.25, 'T'], [ls, aB, -0.95, 'B']].forEach(function (a) {
             av3Seg(S, 'ua' + a[3], q(a[0][0], a[0][1], a[2]), q(a[1].m[0], a[1].m[1], a[2]), B.uarm * 0.05, AV_C.skin);
             av3Seg(S, 'fa' + a[3], q(a[1].m[0], a[1].m[1], a[2]), q(a[1].e[0], a[1].e[1], a[2]), B.farm * 0.05, AV_C.skin);
             av3Seg(S, 'hn' + a[3], q(a[1].e[0], a[1].e[1], a[2]), q(a[1].e[0], a[1].e[1], a[2]), B.farm * 0.03 + 0.2, AV_C.skin);
+            if (false) { const l2 = avLerp2; av3Seg(S, 'bi' + a[3], q(l2(a[0], a[1].m, 0.15)[0], l2(a[0], a[1].m, 0.15)[1], a[2]), q(l2(a[0], a[1].m, 0.78)[0], l2(a[0], a[1].m, 0.78)[1], a[2]), B.uarm * 0.05 * 1.32, AV_C.skin); av3Seg(S, 'dl' + a[3], q(a[0][0], a[0][1], a[2]), q(a[0][0], a[0][1], a[2]), B.uarm * 0.05 * 1.75, AV_C.skin); }
             av3Seg(S, 'sl' + a[3], q(a[0][0], a[0][1], a[2]), q(avLerp2(a[0], a[1].m, 0.4)[0], avLerp2(a[0], a[1].m, 0.4)[1], a[2]), B.uarm * 0.05 + 0.07, col);
         });
     }
@@ -1525,7 +1626,7 @@
         m = AV3.glb[g] = { st: 'loading', err: '' };
         if (!/^https?:$/.test(location.protocol)) { m.st = 'bad'; m.err = 'افتح الصفحة من رابط https (GitHub Pages) | open from an https link'; return m; }
         if (!THREE.GLTFLoader) { m.st = 'bad'; m.err = 'GLTFLoader script missing'; return m; }
-        const urls = [g + '.glb'].concat(g === 'male' ? [AV3_RPM] : []).concat(AV3_BASES.map(function (b) { return b + AV3_FILE[g]; }));
+        const urls = [g + '.glb'].concat(g === 'male' ? [AV3_RPM] : AV3_BASES.map(function (b) { return b + AV3_FILE[g]; }));
         let k = 0, cur = '';
         function next(msg) {
             if (msg) { m.err = msg; (m.log = m.log || []).push((cur || '').split('/').slice(-2).join('/') + ' → ' + msg); }
@@ -1583,6 +1684,7 @@
             if (i === 2) return;
             const A = s[1].arm; let d1 = av3Dir(A.o, A.m), d2 = av3Dir(A.m, A.e);
             if (i === 3) { const lat = new THREE.Vector3(0, 0.04, s[2]).normalize(), dn = new THREE.Vector3(0, -1, 0); d1 = dn.clone().lerp(lat, p).normalize(); d2 = d1.clone(); }
+            if (i === 5) { d1 = new THREE.Vector3(1, 0.05, 0); d2 = d1.clone(); }
             av3Aim(B[s[0] + 'arm'], B[s[0] + 'forearm'], d1); av3Aim(B[s[0] + 'forearm'], B[s[0] + 'hand'], d2);
         });
         if (i === 2) {
@@ -1629,6 +1731,7 @@
             const el = document.getElementById('avatar' + i), g = avGender;
             if (!AV3.r) { AV3.r = new THREE.WebGLRenderer({ antialias: true, alpha: true }); AV3.r.outputEncoding = THREE.sRGBEncoding; AV3.r.setSize(440, 286, false); AV3.r.setPixelRatio(1); }
             const S = av3Scene(i, g), col = g === 'female' ? '#f472b6' : '#38bdf8', P = AV_TESTS[i].pose(p, g);
+            S.i = i; S.p = p;
             const gm = AV3.useGlb ? av3LoadGlb(g) : null; let usedGlb = false;
             if (gm && gm.st === 'ready') {
                 try { av3GlbPose(gm, av3Joints(i, P, g), i, p); if (gm.root.parent !== S.scene) S.scene.add(gm.root); gm.root.visible = true; usedGlb = true; } catch (e2) { gm.st = 'bad'; }
@@ -1650,7 +1753,7 @@
             if (!AV3.ok || document.getElementById('av3Toggle')) return;
             const b = document.createElement('button'); b.id = 'av3Toggle'; b.type = 'button'; b.textContent = 'مجسم واقعي ✓ | Realistic';
             b.style.cssText = 'position:fixed;bottom:12px;left:12px;z-index:60;padding:8px 12px;border-radius:999px;border:0;background:#000;color:#fff;font:700 12px Tajawal,sans-serif;opacity:.88';
-            const lab = function () { if (!AV3.useGlb) return 'مجسم مبسّط | Simple'; const s = function (g) { const m = AV3.glb[g]; return !m ? '…' : m.st === 'ready' ? 'OK(' + (m.src || '').split('/').pop() + ')' + (m.log && m.log.length ? ' [فشل قبلها: ' + m.log.join(' | ') + ']' : '') : m.st === 'loading' ? '…' : 'ERR ' + m.err; }; return 'Realistic · M:' + s('male') + ' · F:' + s('female'); };
+            const lab = function () { if (!AV3.useGlb) return 'مجسم مبسّط | Simple'; const s = function (g0) { const g = g0, m = AV3.glb[g]; return !m ? '…' : m.st === 'ready' ? 'OK(' + (m.src || '').split('/').pop() + ')' + (m.log && m.log.length ? ' [فشل قبلها: ' + m.log.join(' | ') + ']' : '') : m.st === 'loading' ? '…' : (g0 === 'male' ? 'built-in' : 'ERR ' + m.err); }; return 'Realistic · M:' + s('male') + ' · F:' + s('female'); };
             b.onclick = function () { AV3.useGlb = !AV3.useGlb; b.textContent = lab(); }; setInterval(function () { b.textContent = lab(); }, 800); b.style.maxWidth = '90vw'; b.style.textAlign = 'left';
             document.body.appendChild(b);
         }
@@ -2837,16 +2940,26 @@
 
         const flags = [];
         const flagLabels = {
-            hq1: 'عملية جراحية خلال 3-5 سنوات',
-            hq2: 'مشاكل عظام أو مفاصل تعوق الحركة',
-            hq3: 'خشونة مفاصل أو شرائح ومسامير',
-            hq4: 'سكري النوع الأول',
-            hq5: 'ضغط دم مرتفع أو أمراض قلب'
+            hq1: 'فقدان الاتزان أو الإغماء أثناء النشاط البدني',
+            hq2: 'فقدان مفاجئ للاتزان أثناء الراحة',
+            hq3: 'مرض السكري',
+            hq4: 'ارتفاع ضغط الدم أو تناول أدوية الضغط',
+            hq5: 'إصابات هيكلية أو آلام مزمنة أو قيود حركية',
+            hq6: 'جراحات سابقة أو أدوية تؤثر في معدل النبض والاستجابة للأحمال',
+            hq7: 'محاذير طبية تمنع النشاط البدني المكثف'
         };
+        const yes = function (k) { const r = document.querySelector('input[name="' + k + '"]:checked'); return !!r && r.value === 'yes'; };
+        const hv = function (id) { const e = document.getElementById(id); return e ? e.value.trim() : ''; };
+        const bpS = parseFloat(hv('hq4_sys')), bpD = parseFloat(hv('hq4_dia')), notes = hv('hqNotes');
         for (const k in flagLabels) {
-            if (document.querySelector('input[name="' + k + '"]:checked').value === 'yes') flags.push(flagLabels[k]);
+            if (!yes(k)) continue;
+            let t = flagLabels[k];
+            if (k === 'hq3' && hv('hq3_details')) t += ' — ' + hv('hq3_details');
+            if (k === 'hq4' && (hv('hq4_sys') || hv('hq4_dia'))) t += ' — ' + (hv('hq4_sys') || '?') + '/' + (hv('hq4_dia') || '?') + ' mmHg';
+            flags.push(t);
         }
-        const needsMedicalClearance = flags.includes(flagLabels.hq4) || flags.includes(flagLabels.hq5);
+        const bpHigh = (bpS >= 160) || (bpD >= 100);
+        const needsMedicalClearance = yes('hq1') || yes('hq2') || yes('hq7') || (yes('hq4') && bpHigh);
 
         // ----- Universal 7-step tests -> normalized 0-100 scores -----
         const isFemale = gender === 'female';
@@ -2951,6 +3064,7 @@
         if (flags.length > 0) {
             summaryHTML += '<br><br><strong>الملاحظات الصحية (' + flags.length + '):</strong><br>';
             summaryHTML += flags.map(f => '• ' + f).join('<br>');
+            if (notes) summaryHTML += '<br><em>ملاحظات المشترك: ' + notes.replace(/</g, '&lt;') + '</em>';
             summaryHTML += '<br>يرجى تكييف التمارين بناءً عليها.';
             if (needsMedicalClearance) {
                 summaryHTML += '<br><strong style="color:#dc2626;">يُنصح بالحصول على موافقة طبية قبل بدء البرنامج التدريبي.</strong>';
@@ -2964,7 +3078,7 @@
             '<br>• نبض الاستشفاء | HR recovery: <b>' + (Math.round(hrRate * 100) / 100) + '</b> bpm/s · ' + Math.round(hrPeakPct) + '% HRmax';
         document.getElementById('detailedReportText').innerHTML = summaryHTML;
         window.BFIT_LAST = { client: client, coach: coach, gender: gender, realAge: realAge, weight: weight, fat: fat, smm: smm, height: num('heightInput', 0),
-bioAge: biologicalAge, fitness: fitnessScore, flags: flags, clearance: needsMedicalClearance, bioParts: bioParts, testParts: testParts, hrRate: hrRate, hrPeakPct: hrPeakPct, bodyComp: bodyCompScore, reachBest: reachBest };
+bioAge: biologicalAge, fitness: fitnessScore, flags: flags, notes: notes, clearance: needsMedicalClearance, bioParts: bioParts, testParts: testParts, hrRate: hrRate, hrPeakPct: hrPeakPct, bodyComp: bodyCompScore, reachBest: reachBest };
 renderReportExtras(flags.length > 0, needsMedicalClearance);
         const area = document.getElementById('resultArea');
         area.style.display = 'block';
@@ -2988,6 +3102,7 @@ renderReportExtras(flags.length > 0, needsMedicalClearance);
         B.push({ t: 'sec', x: 'الملاحظات الصحية | Health Notes' });
         if (D.flags.length) { D.flags.forEach(function (f) { B.push({ t: 'p', x: '• ' + f }); }); if (D.clearance) B.push({ t: 'p', x: 'يلزم الحصول على موافقة طبية قبل بدء البرنامج.', c: '#dc2626', b: 1 }); }
         else B.push({ t: 'p', x: 'لا توجد ملاحظات صحية مسجلة | No health flags.' });
+        if (D.notes) B.push({ t: 'p', x: 'ملاحظات المشترك: ' + D.notes });
         B.push({ t: 'sec', x: 'الاختبارات السبعة (بالقيم المُدخلة) | Fitness Tests' });
         B.push({ t: 'tbl', head: 1, w: [.3, .3, .26, .14], r: [['الاختبار | Test', 'النتيجة الفعلية | Result', 'الهدف | Target', 'الدرجة']].concat(D.testParts.map(function (x, i) { return [x[0], entered[i], tag(i + 1), Math.round(x[1]) + '%']; })) });
         B.push({ t: 'p', x: 'استشفاء النبض | HR recovery: ' + (Math.round(D.hrRate * 100) / 100) + ' bpm/s — ' + Math.round(D.hrPeakPct) + '% HRmax' });
@@ -2999,6 +3114,12 @@ renderReportExtras(flags.length > 0, needsMedicalClearance);
             B.push({ t: 'sec', x: 'نطاقات نبض القلب Karvonen | HR Zones' });
             B.push({ t: 'p', x: 'Max HR: ' + k.hrMax + ' | Resting: ' + k.rhr + ' | Reserve: ' + k.hrr + (k.target ? ' | Target: ' + k.target + ' bpm' : '') });
             B.push({ t: 'tbl', w: [.2, .5, .3], r: k.zones.map(function (z) { return [z.lo + '–' + z.hi + '%', z.ar + ' | ' + z.en, z.from + '–' + z.to + ' bpm']; }) });
+        }
+        const ep = computeEpley();
+        if (ep) {
+            B.push({ t: 'sec', x: 'معادلة إيبلي 1RM | Epley 1RM' });
+            B.push({ t: 'p', x: (ep.name || 'Exercise') + ' — ' + ep.w + ' kg × ' + ep.r + ' reps → 1RM ≈ ' + ep.rm.toFixed(1) + ' kg' });
+            B.push({ t: 'tbl', head: 1, w: [.34, .14, .22, .15, .15], r: [['المرحلة | Phase', '% 1RM', 'الوزن | Load', 'Reps', 'Rest']].concat(epleyRows(ep).map(function (x) { return [x[0], x[1], x[2], x[3], x[4]]; })) });
         }
         B.push({ t: 'p', x: 'هذا التقرير إرشادي ولا يغني عن الاستشارة الطبية. | For guidance only; not a medical diagnosis.', c: '#64748b', s: 22 });
         return B;
@@ -3076,6 +3197,78 @@ renderReportExtras(flags.length > 0, needsMedicalClearance);
         finally { btn.disabled = false; btn.innerHTML = old; }
     }
 
+
+    // ===== Touch steppers (− / + / ±) for every test input: lets phones enter negative values and count up/down =====
+    function initMobileSteppers() {
+        ['srTry1', 'srTry2', 'apR', 'apL', 'slsR', 'slsL', 'plankSec', 'chairReps', 'kpuReps', 'ymcaRest', 'ymcaPeak', 'ymcaRec'].forEach(function (id) {
+            const el = document.getElementById(id); if (!el || el.dataset.stp) return; el.dataset.stp = '1';
+            el.removeAttribute('min'); el.removeAttribute('max'); if (!el.step || el.step === '0.5') el.setAttribute('step', 'any');
+            const row = document.createElement('div'); row.className = 'stepper-row'; el.parentNode.insertBefore(row, el);
+            const fire = function () { el.dispatchEvent(new Event('input', { bubbles: true })); el.dispatchEvent(new Event('change', { bubbles: true })); };
+            const bump = function (d) { const v = parseFloat(el.value); el.value = String(Math.round(((isNaN(v) ? 0 : v) + d) * 100) / 100); fire(); };
+            const mk = function (txt, cls, fn, hold) {
+                const b = document.createElement('button'); b.type = 'button'; b.className = 'num-step ' + cls; b.textContent = txt; b.setAttribute('aria-label', txt);
+                let t1 = 0, t2 = 0; const stop = function () { clearTimeout(t1); clearInterval(t2); };
+                b.addEventListener('pointerdown', function (e) { e.preventDefault(); fn(); if (hold) { t1 = setTimeout(function () { t2 = setInterval(fn, 90); }, 400); } });
+                ['pointerup', 'pointerleave', 'pointercancel'].forEach(function (ev) { b.addEventListener(ev, stop); });
+                b.addEventListener('contextmenu', function (e) { e.preventDefault(); });
+                return b;
+            };
+            row.appendChild(mk('−', 'mn', function () { bump(-1); }, true)); row.appendChild(el); row.appendChild(mk('+', 'pl', function () { bump(1); }, true));
+            row.appendChild(mk('±', 'sg', function () { const v = parseFloat(el.value); if (isNaN(v)) { el.focus(); return; } el.value = String(-v); fire(); }, false));
+        });
+    }
+
+
+    // ===== Epley 1RM (NASM) =====
+    function computeEpley() {
+        const w = parseFloat(document.getElementById('epW').value), r = parseFloat(document.getElementById('epReps').value);
+        if (!(w > 0) || !(r >= 1)) return null;
+        return { name: document.getElementById('epName').value.trim(), w: w, r: r, rm: r === 1 ? w : w * (1 + r / 30) };
+    }
+    function epleyRows(e) {
+        const f = function (lo, hi) { return (Math.round(e.rm * lo * 10) / 10) + '–' + (Math.round(e.rm * hi * 10) / 10) + ' kg'; };
+        return [['البناء العضلي | Hypertrophy', '70–85%', f(0.70, 0.85), '6–12', '60–90 s'], ['التحمل العضلي | Muscular Endurance', '50–70%', f(0.50, 0.70), '12–20+', '30–60 s']];
+    }
+    function renderEpley() {
+        const out = document.getElementById('epleyOut'), e = computeEpley();
+        if (!out) return;
+        if (!e) { out.innerHTML = '<p class="calc-note">أدخل الوزن المرفوع وعدد التكرارات لحساب أقصى وزن لتكرار واحد (1RM). | Enter weight and reps to calculate your 1RM.</p>'; return; }
+        let h = '<div class="calc-cards"><div class="calc-card main"><div class="label">أقصى وزن لتكرار واحد | 1RM</div><div class="value">' + e.rm.toFixed(1) + ' <span>kg</span></div><div class="sub">1RM = W × (1 + Reps ÷ 30)</div></div>' +
+            '<div class="calc-card"><div class="label">' + (e.name ? e.name.replace(/</g, '&lt;') : 'التمرين | Exercise') + '</div><div class="value">' + e.w + ' <span>kg × ' + e.r + '</span></div></div></div>';
+        h += '<div class="zone-table"><div class="zone-row ep-row hd"><span>المرحلة | Phase</span><span>% 1RM</span><span>الحمل | Load</span><span>Reps</span><span>Rest</span></div>';
+        epleyRows(e).forEach(function (x) { h += '<div class="zone-row ep-row"><span>' + x[0] + '</span><span data-l="% 1RM">' + x[1] + '</span><span data-l="Load">' + x[2] + '</span><span data-l="Reps">' + x[3] + '</span><span data-l="Rest">' + x[4] + '</span></div>'; });
+        h += '</div><p class="calc-note"><b>متى تبدأ بمرحلة التحمل العضلي؟</b> ابدأ بها (50–70% من 1RM، 12–20+ تكرار) إذا كان المشترك مبتدئاً، أو عائداً من انقطاع طويل أو إصابة، أو لديه ضعف في الاتزان والثبات؛ فهي تؤهّل الأوتار والأربطة والمفاصل وتثبّت التقنية الصحيحة أولاً.<br>' +
+            '<b>متى ينتقل لمرحلة البناء العضلي؟</b> بعد عدة أسابيع من التدرّج (عادةً 4–6 أسابيع على الأقل)، عندما يؤدي التمرين بتقنية ثابتة وسليمة، ويكمل 12–20 تكراراً دون ألم أو اهتزاز في الحركة، ثم يرفع الحمل إلى 70–85% بنطاق 6–12 تكرار.<br>' +
+            '<span style="color:#64748b">المعادلة أدق عند 10 تكرارات أو أقل، والنتيجة تقديرية؛ لا تجرّب 1RM فعلياً دون مرافق ومع وجود أي ملاحظة صحية.</span></p>';
+        out.innerHTML = h;
+    }
+    function initEpley() { ['epName', 'epW', 'epReps'].forEach(function (id) { const el = document.getElementById(id); if (el) el.addEventListener('input', renderEpley); }); renderEpley(); }
+    function initHealthDynamic() {
+        [['hq3', 'hq3_extra'], ['hq4', 'hq4_extra']].forEach(function (p) {
+            const ex = document.getElementById(p[1]), upd = function () { const r = document.querySelector('input[name="' + p[0] + '"]:checked'); ex.classList.toggle('show', !!r && r.value === 'yes'); };
+            document.querySelectorAll('input[name="' + p[0] + '"]').forEach(function (r) { r.addEventListener('change', upd); }); upd();
+        });
+    }
+
+
+    // ===== Arabic first, English on the line beneath =====
+    const BIL_SEL = '.section-header h2, .sub-h, .score-metric-card .label, .calc-card .label, button.btn-submit, .ep-row span:first-child, .zone-row .zr-name, .result-card h3';
+    function bilingualize() {
+        document.querySelectorAll(BIL_SEL).forEach(function (el) {
+            if (el.dataset.bil) return; el.dataset.bil = '1';
+            const w = document.createTreeWalker(el, NodeFilter.SHOW_TEXT), arr = []; let n; while ((n = w.nextNode())) arr.push(n);
+            for (let k = 0; k < arr.length; k++) {
+                const t = arr[k], i = t.nodeValue.indexOf(' | ');
+                if (i > 0) {
+                    const en = t.nodeValue.slice(i + 3), span = document.createElement('span'), wrap = document.createElement('span'); span.className = 'en-line'; span.textContent = en; wrap.className = 'bil-wrap';
+                    t.parentNode.insertBefore(wrap, t); wrap.appendChild(document.createTextNode(t.nodeValue.slice(0, i))); wrap.appendChild(span); t.parentNode.removeChild(t); break;
+                }
+            }
+        });
+    }
+    function initBilingual() { bilingualize(); let q = 0; new MutationObserver(function () { if (q) return; q = requestAnimationFrame(function () { q = 0; bilingualize(); }); }).observe(document.body, { childList: true, subtree: true }); }
+
     function initYmcaLive() {
         const ids = ['ymcaRest', 'ymcaPeak', 'ymcaRec', 'realAge'];
         const out = document.getElementById('ymcaLive');
@@ -3099,6 +3292,9 @@ renderReportExtras(flags.length > 0, needsMedicalClearance);
 
     let bfitBooted = false;
     function bfitInit() {
+        initBilingual();
+        initHealthDynamic(); initEpley();
+        initMobileSteppers();
         if (bfitBooted) return;
         bfitBooted = true;
         updateGenderTheme();
@@ -3114,3 +3310,5 @@ renderReportExtras(flags.length > 0, needsMedicalClearance);
 
 </body>
 </html>
+index.html!!!.html
+عرض index.html!!!.html.
