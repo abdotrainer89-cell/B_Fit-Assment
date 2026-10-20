@@ -1528,7 +1528,7 @@
         const urls = [g + '.glb'].concat(g === 'male' ? [AV3_RPM] : []).concat(AV3_BASES.map(function (b) { return b + AV3_FILE[g]; }));
         let k = 0, cur = '';
         function next(msg) {
-            if (msg) m.err = msg;
+            if (msg) { m.err = msg; (m.log = m.log || []).push((cur || '').split('/').slice(-2).join('/') + ' → ' + msg); }
             if (k >= urls.length) { m.st = 'bad'; m.err = m.err || 'download failed'; return; }
             const url = urls[k++];
             try { const ld = new THREE.GLTFLoader(); if (THREE.DRACOLoader) { const dr = new THREE.DRACOLoader(); dr.setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.4.1/'); ld.setDRACOLoader(dr); } if (window.MeshoptDecoder && ld.setMeshoptDecoder) ld.setMeshoptDecoder(window.MeshoptDecoder); cur = url; ld.load(url, ready, undefined, function (e) { next('load: ' + ((e && e.message) || 'network/CORS')); }); } catch (e) { next('load: ' + e.message); }
@@ -1650,7 +1650,7 @@
             if (!AV3.ok || document.getElementById('av3Toggle')) return;
             const b = document.createElement('button'); b.id = 'av3Toggle'; b.type = 'button'; b.textContent = 'مجسم واقعي ✓ | Realistic';
             b.style.cssText = 'position:fixed;bottom:12px;left:12px;z-index:60;padding:8px 12px;border-radius:999px;border:0;background:#000;color:#fff;font:700 12px Tajawal,sans-serif;opacity:.88';
-            const lab = function () { if (!AV3.useGlb) return 'مجسم مبسّط | Simple'; const s = function (g) { const m = AV3.glb[g]; return !m ? '…' : m.st === 'ready' ? 'OK(' + (m.src || '').split('/').pop() + ')' : m.st === 'loading' ? '…' : 'ERR ' + m.err; }; return 'Realistic · M:' + s('male') + ' · F:' + s('female'); };
+            const lab = function () { if (!AV3.useGlb) return 'مجسم مبسّط | Simple'; const s = function (g) { const m = AV3.glb[g]; return !m ? '…' : m.st === 'ready' ? 'OK(' + (m.src || '').split('/').pop() + ')' + (m.log && m.log.length ? ' [فشل قبلها: ' + m.log.join(' | ') + ']' : '') : m.st === 'loading' ? '…' : 'ERR ' + m.err; }; return 'Realistic · M:' + s('male') + ' · F:' + s('female'); };
             b.onclick = function () { AV3.useGlb = !AV3.useGlb; b.textContent = lab(); }; setInterval(function () { b.textContent = lab(); }, 800); b.style.maxWidth = '90vw'; b.style.textAlign = 'left';
             document.body.appendChild(b);
         }
