@@ -906,7 +906,9 @@
     .radio-btn-group label { border-radius: 9px !important; transition: background .2s, color .2s, box-shadow .2s; }
     .exercise-avatar-box { background: linear-gradient(160deg, color-mix(in srgb, var(--accent-gender) 24%, #fff), color-mix(in srgb, var(--accent-gender) 8%, #fff)) !important; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); min-height: 150px; box-shadow: 0 6px 18px rgba(110,90,180,.14), inset 0 1px 0 #fff !important; transform: none !important; }
     .ex-icon { width: 100%; line-height: 0; }
-    .ex-icon svg { width: 100%; height: auto; display: block; }
+    .ex-icon canvas { width: 100%; height: auto; display: block; }
+    .exercise-card { grid-template-columns: 270px 1fr !important; }
+    .exercise-avatar-box { width: 270px !important; padding: 6px !important; }
     .exercise-avatar-box .avatar-cap { color: #475569; }
 </style>
 </head>
@@ -1286,88 +1288,181 @@
 </div>
 
 <script>
-    // ===== Exercise avatars: clean animated SVG figures (male / female), start -> finish =====
+    // ===== Exercise avatars: real-time 3D figures (self-contained engine, no libraries) =====
     const AVATAR_CAPTIONS = [
         'SIT-AND-REACH', 'APLEY SCRATCH', 'CLOSED-EYE ONE-LEG', 'SUPERMAN (BIRD-DOG)',
         '30s BOX SQUAT', 'KNEELING PUSH-UP', '3-MIN STEP TEST'
     ];
-    const AV_L = { tor: 30, neck: 4, ua: 16, fa: 15, th: 23, sh: 22, ft: 8, head: 6.5 };
+    const AV_D = { tor: 50, neck: 7, ua: 28, fa: 26, th: 42, sh: 40, ft: 14 };
     const AV_ST = {
-        male:   { skin: '#e0a77c', skinF: '#c78d63', line: '#a8714b', top: '#0ea5e9', topF: '#0284c7', bot: '#1e293b', botF: '#0f172a', shoe: '#0f172a', hair: '#2b2118', w: { tor: 15, th: 9.5, sh: 7, ua: 6.5, fa: 5.5 } },
-        female: { skin: '#ffffff', skinF: '#efe6ee', line: '#cbb3c4', top: '#ec4899', topF: '#be185d', bot: '#7c3aed', botF: '#5b21b6', shoe: '#f472b6', hair: '#6b3f2a', w: { tor: 11.5, th: 8.5, sh: 6, ua: 5, fa: 4.5 } }
+        male:   { skin: '#e0a77c', line: '#8f5b3b', top: '#0ea5e9', bot: '#1e293b', shoe: '#0f172a', hair: '#2b2118', sw: 21, hw: 10, rT: 14, rTc: 17, rPel: 9.5, rTh: 8.5, rSh: 6, rUa: 5.4, rFa: 4.4, head: 11, fem: false },
+        female: { skin: '#ffffff', line: '#c4a9bd', top: '#ec4899', bot: '#7c3aed', shoe: '#f472b6', hair: '#6b3f2a', sw: 16.5, hw: 11.5, rT: 10.5, rTc: 12.5, rPel: 10.5, rTh: 7.6, rSh: 5.4, rUa: 4.3, rFa: 3.6, head: 10.5, fem: true }
     };
     const AV_CYC = { a: 500, b: 1400, c: 700, d: 1400 };
+    const AV_W = 380, AV_H = 250;
     let avGender = 'male', avRaf = 0, avLast = 0;
     const avVis = {};
 
-    function avLerp(a, b, t) { return a + (b - a) * t; }
-    function avLerp2(a, b, t) { return [avLerp(a[0], b[0], t), avLerp(a[1], b[1], t)]; }
+    const avLerp = function (a, b, t) { return a + (b - a) * t; };
+    const vAdd = function (a, b) { return [a[0] + b[0], a[1] + b[1], a[2] + b[2]]; };
+    const vSub = function (a, b) { return [a[0] - b[0], a[1] - b[1], a[2] - b[2]]; };
+    const vMul = function (a, k) { return [a[0] * k, a[1] * k, a[2] * k]; };
+    const vDot = function (a, b) { return a[0] * b[0] + a[1] * b[1] + a[2] * b[2]; };
+    const vLen = function (a) { return Math.hypot(a[0], a[1], a[2]); };
+    const vNrm = function (a) { const l = vLen(a) || 1; return [a[0] / l, a[1] / l, a[2] / l]; };
+    const vLerp = function (a, b, t) { return [avLerp(a[0], b[0], t), avLerp(a[1], b[1], t), avLerp(a[2], b[2], t)]; };
     function avEase(t) { t = Math.max(0, Math.min(1, t)); return t * t * (3 - 2 * t); }
-    function avR(n) { return Math.round(n * 10) / 10; }
-    function avSh(h, a) { const r = a * Math.PI / 180; return [h[0] + Math.cos(r) * AV_L.tor, h[1] + Math.sin(r) * AV_L.tor]; }
-    function avIK(r, t, l1, l2, b) {
-        const dx = t[0] - r[0], dy = t[1] - r[1], d = Math.hypot(dx, dy) || 0.01, dd = Math.min(d, l1 + l2 - 0.02), ux = dx / d, uy = dy / d;
-        const a = (l1 * l1 - l2 * l2 + dd * dd) / (2 * dd), h = Math.sqrt(Math.max(0, l1 * l1 - a * a));
-        return { m: [r[0] + ux * a - uy * h * b, r[1] + uy * a + ux * h * b], e: [r[0] + ux * dd, r[1] + uy * dd] };
+
+    function avIK3(r, t, l1, l2, pole) {
+        const d = vSub(t, r), D = vLen(d) || 0.001, m = Math.min(D, l1 + l2 - 0.05), u = vMul(d, 1 / D);
+        const a = (l1 * l1 - l2 * l2 + m * m) / (2 * m), h = Math.sqrt(Math.max(0, l1 * l1 - a * a));
+        let pp = vSub(pole, vMul(u, vDot(pole, u))); if (vLen(pp) < 1e-4) pp = vSub([0, 1, 0], vMul(u, u[1]));
+        pp = vNrm(pp);
+        return { m: vAdd(vAdd(r, vMul(u, a)), vMul(pp, h)), e: vAdd(r, vMul(u, m)) };
     }
-    function avPL(pts, w, col) { return '<polyline points="' + pts.map(function (p) { return avR(p[0]) + ',' + avR(p[1]); }).join(' ') + '" fill="none" stroke="' + col + '" stroke-width="' + avR(w) + '" stroke-linecap="round" stroke-linejoin="round"/>'; }
-    function avLimb(pts, w, fill, line) { return avPL(pts, w + 1.8, line) + avPL(pts, w, fill); }
-    function avDot(p, r, col) { return '<circle cx="' + avR(p[0]) + '" cy="' + avR(p[1]) + '" r="' + r + '" fill="' + col + '"/>'; }
 
+    // poses: local frame (x = body side, y = up, z = forward); t = 0 start -> 1 finish
     const AV_POSE = [null,
-        function (t) { const hip = [60, 106.5], tor = avLerp(-88, -25, t), S = avSh(hip, tor); return { hip: hip, tor: tor, hN: [S[0] + 29, S[1] + avLerp(6, 3, t)], hF: [S[0] + 27, S[1] + avLerp(8, 5, t)], fN: [104, 106.5], fF: [103, 105], fa: [-80, -80] }; },
-        function (t) { const hip = [100, 64], S = avSh(hip, -90); return { hip: hip, tor: -90, hN: avLerp2([S[0] + 3, S[1] + 29], [S[0] - 6, S[1] + 8], t), hF: avLerp2([S[0] + 1, S[1] + 30], [S[0] - 9, S[1] + 19], t), fN: [104, 108], fF: [98, 108], eb: [1, -1] }; },
-        function (t) { const hip = [100, 64], S = avSh(hip, -90); return { hip: hip, tor: -90, hN: avLerp2([S[0] + 3, S[1] + 29], [S[0] + 24, S[1] + 12], t), hF: avLerp2([S[0] + 1, S[1] + 30], [S[0] - 22, S[1] + 12], t), fN: [100, 108], fF: avLerp2([96, 108], [122, 84], t) }; },
-        function (t) { const hip = [80, 86], S = avSh(hip, -12.2); return { hip: hip, tor: -12.2, hN: [S[0], 110.5], hF: avLerp2([S[0] + 4, 110.5], [S[0] + 31, S[1] - 3], t), fN: avLerp2([58, 109], [36, 84], t), fF: [56, 109], fa: [180, 180] }; },
-        function (t) { const hip = avLerp2([98, 64], [80, 88], t), tor = avLerp(-90, -62, t), S = avSh(hip, tor); return { hip: hip, tor: tor, hN: avLerp2([S[0] + 3, S[1] + 29], [S[0] + 28, S[1] + 3], t), hF: avLerp2([S[0] + 1, S[1] + 30], [S[0] + 26, S[1] + 5], t), fN: [100, 108], fF: [104, 108] }; },
-        function (t) { const K = [58, 108], sy = avLerp(79.5, 96, t), sx = K[0] + Math.sqrt(53 * 53 - (108 - sy) * (108 - sy)), u = [(sx - K[0]) / 53, (sy - K[1]) / 53]; return { hip: [K[0] + u[0] * 23, K[1] + u[1] * 23], tor: Math.atan2(u[1], u[0]) * 180 / Math.PI, hN: [104, 110.5], hF: [108, 110.5], fN: [36.5, 108], fF: [35, 108], fa: [180, 180] }; },
-        function (t) {
-            const hip = [avLerp(84, 128, t), avLerp(64, 44, t)], S = avSh(hip, -90), n = Math.min(1, t * 1.7), f = Math.max(0, (t - 0.35) / 0.65), sw = Math.sin(Math.PI * t);
-            return { hip: hip, tor: -90, hN: [S[0] + 4 + 14 * sw, S[1] + 28 - 4 * sw], hF: [S[0] - 2 - 12 * sw, S[1] + 28 - 3 * sw],
-                fN: [avLerp(80, 124, n), avLerp(108, 88, n) - 8 * Math.sin(Math.PI * n)], fF: [avLerp(84, 130, f), avLerp(108, 88, f) - 8 * Math.sin(Math.PI * f)] };
+        function (t, S) {   // 1 sit-and-reach
+            const th = avLerp(0.1, 1.2, t), dir = [0, Math.cos(th), Math.sin(th)], hip = [0, 9, -30], sh = vAdd(hip, vMul(dir, 50));
+            return { hip: hip, dir: dir, hands: [[10, avLerp(sh[1] - 1, 25, t), avLerp(26, 64, t)], [-10, avLerp(sh[1] - 1, 24, t), avLerp(24, 62, t)]], hp: [[0.3, -1, 0], [-0.3, -1, 0]],
+                feet: [[7, 14, 50], [-7, 14, 50]], fp: [[0, 1, 0], [0, 1, 0]], fd: [[0, 1, 0.35], [0, 1, 0.35]] };
+        },
+        function (t, S, ts) {   // 2 Apley scratch (both hands reaching behind the back)
+            const w = Math.sin(ts / 200) * 2.5 * t, hip = [0, 89, 0];
+            return { hip: hip, dir: [0, 1, 0],
+                hands: [vLerp([S.sw + 3, 86, 0], [3, 121 - w, -12], t), vLerp([-S.sw - 3, 86, 0], [-3, 100 + w, -13], t)],
+                hp: [vLerp([0.3, -1, -0.2], [0.7, 1, -0.2], t), vLerp([-0.3, -1, -0.2], [-0.7, -1, -0.5], t)],
+                feet: [[S.hw, 8, 0], [-S.hw, 8, 0]] };
+        },
+        function (t, S, ts) {   // 3 one-leg stance, arms abducted
+            const hip = [5 * t + Math.sin(ts / 320) * 1.2 * t, 89, 0];
+            return { hip: hip, dir: [0, 1, 0],
+                hands: [vLerp([S.sw + 3, 86, 0], [S.sw + 52, 138, 0], t), vLerp([-S.sw - 3, 86, 0], [-S.sw - 52, 138, 0], t)],
+                hp: [[0, -1, 0], [0, -1, 0]],
+                feet: [[6 * t + S.hw * (1 - t), 8, 0], vLerp([-S.hw, 8, 0], [-6, 48, 26], t)] };
+        },
+        function (t, S) {   // 4 bird-dog (superman)
+            const hip = [0, 48, -15], dir = [0, 0.139, 0.99], sh = vAdd(hip, vMul(dir, 50));
+            return { hip: hip, dir: dir,
+                hands: [vLerp([S.sw, 5, sh[2]], [S.sw * 0.6, sh[1] + 4, sh[2] + 52], t), [-S.sw, 5, sh[2]]], hp: [[1, 0.2, -0.3], [-1, 0.2, -0.3]],
+                feet: [[S.hw, 6, -55], vLerp([-S.hw, 6, -55], [-S.hw, 52, -95], t)], fp: [[0, 0.15, 1], [0, 0.15, 1]], fd: [[0, -0.2, -1], [0, -0.2, -1]] };
+        },
+        function (t, S) {   // 5 box squat
+            const hip = vLerp([0, 89, 6], [0, 50, -22], t), th = avLerp(0, 0.62, t), dir = [0, Math.cos(th), Math.sin(th)], sh = vAdd(hip, vMul(dir, 50));
+            return { hip: hip, dir: dir,
+                hands: [vLerp([S.sw + 3, 86, 6], [12, sh[1] + 4, sh[2] + 48], t), vLerp([-S.sw - 3, 86, 6], [-12, sh[1] + 4, sh[2] + 48], t)], hp: [[0.5, -1, -0.2], [-0.5, -1, -0.2]],
+                feet: [[S.hw + 5, 8, 6], [-S.hw - 5, 8, 6]], fp: [[0, 0.1, 1], [0, 0.1, 1]] };
+        },
+        function (t, S) {   // 6 kneeling push-up
+            const K = [0, 6, -25], sy = avLerp(58, 22, t), sz = K[2] + Math.sqrt(92 * 92 - (sy - 6) * (sy - 6)), d = vNrm(vSub([0, sy, sz], K));
+            return { hip: vAdd(K, vMul(d, 42)), dir: d, hands: [[S.sw, 4, 56], [-S.sw, 4, 56]], hp: [[0.8, 0.2, -0.6], [-0.8, 0.2, -0.6]],
+                feet: [[S.hw, 6, -65], [-S.hw, 6, -65]], fp: [[0, -1, 0.1], [0, -1, 0.1]], fd: [[0, 0, -1], [0, 0, -1]] };
+        },
+        function (t, S) {   // 7 step test
+            const hip = [0, avLerp(89, 114, t), avLerp(0, 50, t)], n = Math.min(1, t * 1.7), f = Math.max(0, (t - 0.35) / 0.65), sw = Math.sin(Math.PI * t) * 16;
+            return { hip: hip, dir: [0, 1, 0.08],
+                hands: [[S.sw + 3, hip[1] - 3, hip[2] + sw], [-S.sw - 3, hip[1] - 3, hip[2] - sw]], hp: [[0.5, -1, -0.2], [-0.5, -1, -0.2]],
+                feet: [[S.hw, avLerp(8, 33, n) + 14 * Math.sin(Math.PI * n), avLerp(0, 50, n)], [-S.hw, avLerp(8, 33, f) + 14 * Math.sin(Math.PI * f), avLerp(0, 50, f)]], fp: [[0, 0.1, 1], [0, 0.1, 1]] };
         }
     ];
-    const AV_PROP = [null,
-        '<rect x="108" y="96" width="10" height="16" rx="2" fill="#94a3b8"/><rect x="108" y="94.5" width="46" height="2.5" rx="1.2" fill="#64748b"/>',
-        '', '',
-        '<rect x="20" y="111" width="140" height="3.5" rx="1.7" fill="#94a3b8"/>',
-        '<rect x="48" y="94" width="28" height="18" rx="3" fill="#94a3b8"/>',
-        '<rect x="14" y="111" width="140" height="3.5" rx="1.7" fill="#94a3b8"/>',
-        '<rect x="108" y="92" width="44" height="20" rx="3" fill="#94a3b8"/><rect x="108" y="92" width="44" height="3" rx="1.5" fill="#64748b"/>'
+    // camera per exercise: az0 start angle, sw swing, T look-at, zm zoom, spin = full rotation
+    const AV_CAM = [null,
+        { az0: 1.35, sw: 0.4, T: [0, 40, 20], zm: 1 }, { az0: 3.14, sw: 0.3, T: [0, 80, 0], zm: 0.92 }, { spin: 1, T: [0, 80, 5], zm: 0.92 },
+        { az0: 1.1, sw: 0.4, T: [0, 35, -10], zm: 0.92 }, { az0: 0.8, sw: 0.35, T: [0, 78, -6], zm: 0.9 }, { az0: 1.25, sw: 0.35, T: [0, 35, 20], zm: 0.95 }, { az0: 0.8, sw: 0.3, T: [0, 92, 25], zm: 0.82 }
     ];
+    const AV_BOX = [null, [[-22, 0, 60], [22, 22, 70], [-3, 22, 60], [3, 24, 140]], null, null, [[-40, 0, -110], [40, 3, 70]], [[-26, 0, -50], [26, 42, -8]], [[-40, 0, -95], [40, 3, 75]], [[-35, 0, 28], [35, 25, 78]]];
 
-    function avSVG(i, g, p, ts) {
-        const S = AV_ST[g], L = AV_L, W = S.w, hip = p.hip, tr = p.tor * Math.PI / 180, dir = [Math.cos(tr), Math.sin(tr)];
-        const sh = [hip[0] + dir[0] * L.tor, hip[1] + dir[1] * L.tor], fa = p.fa || [0, 0], eb = p.eb || [1, 1];
-        const leg = function (tg, ang, far) {
-            const k = avIK(hip, tg, L.th, L.sh, -1), a = ang * Math.PI / 180, toe = [k.e[0] + Math.cos(a) * L.ft, k.e[1] + Math.sin(a) * L.ft];
-            const skin = far ? S.skinF : S.skin, bot = far ? S.botF : S.bot, cut = [hip[0] + (k.m[0] - hip[0]) * 0.62, hip[1] + (k.m[1] - hip[1]) * 0.62];
-            return avLimb([hip, k.m], W.th, skin, S.line) + avLimb([k.m, k.e], W.sh, skin, S.line) + avPL([hip, cut], W.th + 1.2, bot) + avPL([k.e, toe], 4.6, S.shoe);
+    function avRig(p, S) {
+        const D = AV_D, hip = p.hip, dir = vNrm(p.dir), sh = vAdd(hip, vMul(dir, D.tor));
+        const hP = [[hip[0] + S.hw, hip[1], hip[2]], [hip[0] - S.hw, hip[1], hip[2]]], sP = [[sh[0] + S.sw, sh[1], sh[2]], [sh[0] - S.sw, sh[1], sh[2]]];
+        const arms = [0, 1].map(function (k) { const q = avIK3(sP[k], p.hands[k], D.ua, D.fa, p.hp[k]); return { s: sP[k], m: q.m, e: q.e }; });
+        const legs = [0, 1].map(function (k) { const q = avIK3(hP[k], p.feet[k], D.th, D.sh, p.fp ? p.fp[k] : [0, 0.15, 1]); return { h: hP[k], m: q.m, e: q.e, fd: vNrm(p.fd ? p.fd[k] : [0, 0, 1]) }; });
+        return { hip: hip, dir: dir, sh: sh, hP: hP, sP: sP, arms: arms, legs: legs };
+    }
+
+    const avShade = function (hex, m) { const n = parseInt(hex.slice(1), 16); return 'rgb(' + Math.round((n >> 16) * m) + ',' + Math.round(((n >> 8) & 255) * m) + ',' + Math.round((n & 255) * m) + ')'; };
+
+    function avDraw(ctx, i, g, p, ts) {
+        const S = AV_ST[g], D = AV_D, R = avRig(p, S), C = AV_CAM[i];
+        const az = C.spin ? ts * 0.00075 : C.az0 + C.sw * Math.sin(ts / 2300 + i), ca = Math.cos(az), sa = Math.sin(az), cp = Math.cos(0.22), sp = Math.sin(0.22), F = 470 * C.zm, DD = 360;
+        const tr = function (q) { const x = q[0] * ca - q[2] * sa; let z = q[0] * sa + q[2] * ca; const y = q[1] * cp - z * sp; z = q[1] * sp + z * cp; return [x, y, z]; };
+        const T = tr(C.T);
+        const pr = function (q) { const c = tr(q), sc = F / (DD - (c[2] - T[2])); return { x: AV_W / 2 + (c[0] - T[0]) * sc, y: AV_H / 2 - (c[1] - T[1]) * sc, s: sc, z: c[2] - T[2] }; };
+        const cap = function (a, b, ra, rb, c) { const A = pr(a), B = pr(b); return { t: 0, ax: A.x, ay: A.y, ra: ra * A.s, bx: B.x, by: B.y, rb: rb * B.s, c: c }; };
+        const sph = function (a, r, c) { const A = pr(a); return { t: 1, ax: A.x, ay: A.y, ra: r * A.s, c: c }; };
+        const mid = function (a, b) { return vLerp(a, b, 0.5); };
+        const items = [];
+        const fillShape = function (s, e) {
+            ctx.beginPath(); ctx.arc(s.ax, s.ay, s.ra + e, 0, 6.2832); ctx.fill();
+            if (s.t === 0) {
+                ctx.beginPath(); ctx.arc(s.bx, s.by, s.rb + e, 0, 6.2832); ctx.fill();
+                const dx = s.bx - s.ax, dy = s.by - s.ay, L = Math.hypot(dx, dy);
+                if (L > 0.5) { const nx = -dy / L, ny = dx / L, ra = s.ra + e, rb = s.rb + e; ctx.beginPath(); ctx.moveTo(s.ax + nx * ra, s.ay + ny * ra); ctx.lineTo(s.bx + nx * rb, s.by + ny * rb); ctx.lineTo(s.bx - nx * rb, s.by - ny * rb); ctx.lineTo(s.ax - nx * ra, s.ay - ny * ra); ctx.closePath(); ctx.fill(); }
+            }
         };
-        const arm = function (tg, b, far) {
-            const k = avIK(sh, tg, L.ua, L.fa, b), skin = far ? S.skinF : S.skin;
-            return avLimb([sh, k.m], W.ua, skin, S.line) + avLimb([k.m, k.e], W.fa, skin, S.line) + avDot(k.e, 2.8, skin);
+        const group = function (pts, shapes, bias, extra) {
+            let z = 0; pts.forEach(function (q) { z += pr(q).z; }); z = z / pts.length + (bias || 0);
+            const m = 0.9 + 0.1 * Math.max(0, Math.min(1, (z + 50) / 100));
+            items.push({ z: z, draw: function () {
+                ctx.fillStyle = S.line; shapes.forEach(function (s) { fillShape(s, 1.3); });
+                shapes.forEach(function (s) {
+                    ctx.fillStyle = avShade(s.c, m); fillShape(s, 0);
+                    ctx.fillStyle = 'rgba(255,255,255,0.18)';
+                    if (s.t === 1) { ctx.beginPath(); ctx.arc(s.ax - s.ra * 0.3, s.ay - s.ra * 0.32, s.ra * 0.42, 0, 6.2832); ctx.fill(); }
+                    else { ctx.strokeStyle = 'rgba(255,255,255,0.2)'; ctx.lineCap = 'round'; ctx.lineWidth = Math.max(1, (s.ra + s.rb) * 0.45); ctx.beginPath(); ctx.moveTo(s.ax - s.ra * 0.35, s.ay - s.ra * 0.35); ctx.lineTo(s.bx - s.rb * 0.35, s.by - s.rb * 0.35); ctx.stroke(); }
+                });
+                if (extra) extra();
+            } });
         };
-        const nk = [sh[0] + dir[0] * L.neck, sh[1] + dir[1] * L.neck], hc = [sh[0] + dir[0] * (L.neck + L.head), sh[1] + dir[1] * (L.neck + L.head)], r = L.head;
-        let o = '<line x1="6" y1="112" x2="194" y2="112" stroke="#b8c0d4" stroke-width="2" stroke-linecap="round"/>' + AV_PROP[i];
-        o += arm(p.hF, eb[1], true) + leg(p.fF, fa[1], true);
-        o += avLimb([sh, nk], 5, S.skin, S.line);
-        o += avLimb([hip, sh], W.tor, S.top, g === 'male' ? S.topF : '#be185d');
-        o += avDot(hip, W.tor / 2 + 0.6, S.bot);
-        o += leg(p.fN, fa[0], false) + arm(p.hN, eb[0], false);
-        const sway = Math.sin((ts || 0) / 260) * 2;
-        if (g === 'female') {
-            const tail = 'M' + avR(hc[0] - r + 1) + ',' + avR(hc[1] - 2) + ' Q' + avR(hc[0] - r - 9 + sway) + ',' + avR(hc[1] + 1) + ' ' + avR(hc[0] - r - 6 + sway * 1.6) + ',' + avR(hc[1] + 12);
-            o += '<path d="' + tail + '" fill="none" stroke="' + S.hair + '" stroke-width="4" stroke-linecap="round"/>' + avDot([hc[0] - r + 0.6, hc[1] - 2], 1.8, S.shoe);
-            o += avDot([hc[0] - 1.6, hc[1] - 1.2], r + 1.1, S.hair);
-        } else {
-            o += avDot([hc[0] - 1.2, hc[1] - 1.4], r + 0.7, S.hair);
+        // floor + shadow
+        const ring = function (r, y) { const pts = []; for (let k = 0; k < 48; k++) { const a = k / 48 * 6.2832, q = pr([Math.cos(a) * r, y, Math.sin(a) * r]); pts.push(q); } return pts; };
+        ctx.clearRect(0, 0, AV_W, AV_H);
+        const poly = function (pts) { ctx.beginPath(); pts.forEach(function (q, k) { if (k) ctx.lineTo(q.x, q.y); else ctx.moveTo(q.x, q.y); }); ctx.closePath(); };
+        poly(ring(100, 0)); ctx.fillStyle = 'rgba(255,255,255,0.45)'; ctx.fill(); ctx.strokeStyle = 'rgba(100,116,139,0.45)'; ctx.lineWidth = 1.5; ctx.stroke();
+        poly(ring(55, 0)); ctx.strokeStyle = 'rgba(100,116,139,0.25)'; ctx.lineWidth = 1; ctx.stroke();
+        for (let k = 0; k < 8; k++) { const a = k / 8 * 6.2832, A = pr([0, 0, 0]), B = pr([Math.cos(a) * 100, 0, Math.sin(a) * 100]); ctx.beginPath(); ctx.moveTo(A.x, A.y); ctx.lineTo(B.x, B.y); ctx.stroke(); }
+        const shp = []; for (let k = 0; k < 24; k++) { const a = k / 24 * 6.2832; shp.push(pr([R.hip[0] + Math.cos(a) * 34, 0, R.hip[2] + Math.sin(a) * 22])); } poly(shp); ctx.fillStyle = 'rgba(30,41,59,0.18)'; ctx.fill();
+        // props
+        const bx = AV_BOX[i];
+        if (bx) {
+            const boxItem = function (a, b, col) {
+                const v = [[a[0], a[1], a[2]], [b[0], a[1], a[2]], [b[0], b[1], a[2]], [a[0], b[1], a[2]], [a[0], a[1], b[2]], [b[0], a[1], b[2]], [b[0], b[1], b[2]], [a[0], b[1], b[2]]];
+                const F6 = [[0, 1, 2, 3, 0.8], [4, 5, 6, 7, 0.8], [0, 1, 5, 4, 0.7], [3, 2, 6, 7, 1.08], [0, 3, 7, 4, 0.9], [1, 2, 6, 5, 0.9]];
+                const c = vLerp(a, b, 0.5);
+                items.push({ z: pr(c).z, draw: function () {
+                    F6.map(function (f) { const q = f.slice(0, 4).map(function (k) { return pr(v[k]); }); return { q: q, m: f[4], z: (q[0].z + q[1].z + q[2].z + q[3].z) / 4 }; })
+                        .sort(function (u, w) { return u.z - w.z; })
+                        .forEach(function (f) { poly(f.q); ctx.fillStyle = avShade(col, f.m); ctx.fill(); ctx.strokeStyle = 'rgba(51,65,85,0.5)'; ctx.lineWidth = 1; ctx.stroke(); });
+                } });
+            };
+            boxItem(bx[0], bx[1], '#94a3b8'); if (bx[2]) boxItem(bx[2], bx[3], '#64748b');
         }
-        o += '<circle cx="' + avR(hc[0] + 0.6) + '" cy="' + avR(hc[1] + 0.8) + '" r="' + (r * 0.92) + '" fill="' + S.skin + '" stroke="' + S.line + '" stroke-width="1"/>';
-        const ex = hc[0] + r * 0.5, ey = hc[1] - 0.2;
-        o += (i === 3) ? '<line x1="' + avR(ex - 1.6) + '" y1="' + avR(ey) + '" x2="' + avR(ex + 1.6) + '" y2="' + avR(ey) + '" stroke="#334155" stroke-width="1.1" stroke-linecap="round"/>' : avDot([ex, ey], 1, '#334155');
-        o += '<path d="M' + avR(hc[0] + r * 0.3) + ',' + avR(hc[1] + 3.2) + ' q1.8,1.4 3.4,0" fill="none" stroke="#b45a6b" stroke-width="0.9" stroke-linecap="round"/>';
-        return '<svg viewBox="0 0 200 134" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="' + AVATAR_CAPTIONS[i - 1] + ' ' + g + '"><g transform="translate(0,12)">' + o + '</g></svg>';
+        // torso
+        const nd = vNrm(vAdd(vMul(R.dir, 0.6), [0, 0.4, 0])), neckTop = vAdd(R.sh, vMul(nd, D.neck)), hc = vAdd(R.sh, vMul(nd, D.neck + S.head - 2));
+        group([R.hip, R.sh], [cap(R.hP[0], R.hP[1], S.rPel, S.rPel, S.bot), cap(R.hip, R.sh, S.rT, S.rTc, S.top), cap(R.sP[0], R.sP[1], S.rSh + 1, S.rSh + 1, S.top), cap(R.sh, neckTop, 4, 4, S.skin)], -7);
+        R.arms.forEach(function (a) { group([a.m, a.e], [cap(a.s, a.m, S.rUa, S.rUa * 0.88, S.skin), cap(a.m, a.e, S.rFa, S.rFa * 0.8, S.skin), sph(a.e, S.rFa + 0.8, S.skin)]); });
+        R.legs.forEach(function (l) {
+            const toe = vAdd(l.e, vMul(l.fd, D.ft));
+            group([l.m, l.e], [cap(l.h, l.m, S.rTh, S.rTh * 0.85, S.skin), cap(l.m, l.e, S.rSh, S.rSh * 0.78, S.skin), cap(l.h, vLerp(l.h, l.m, 0.62), S.rTh + 0.9, S.rTh + 0.4, S.bot), cap(l.e, toe, 4.8, 3.9, S.shoe)]);
+        });
+        // head (+ hair, ponytail, face)
+        const r = S.head, hairC = vAdd(hc, [0, 2.2, -2.6]), faceC = vAdd(hc, [0, -0.5, 1.3]);
+        const sway = Math.sin(ts / 280) * 3;
+        if (S.fem) {
+            const b0 = vAdd(hc, [0, 2, -(r + 1.5)]), b1 = vAdd(b0, [sway * 0.5, -9, -5]), b2 = vAdd(b1, [sway * 1.2, -10, -2]);
+            group([b1], [cap(b0, b1, 3.8, 3.2, S.hair), cap(b1, b2, 3.2, 2.2, S.hair), sph(vAdd(b0, [0, 0.6, 0]), 2.6, S.shoe)], 0);
+        }
+        const hz = pr(hc).z, fz = pr(faceC).z - pr(hairC).z, headShapes = [sph(hairC, r + (S.fem ? 1.9 : 0.9), S.hair), sph(faceC, r * 0.95, S.skin)];
+        if (fz < 0) headShapes.reverse();
+        group([hc], headShapes, 12, function () {
+            if (ca * cp < 0.15) return;
+            const e0 = pr(vAdd(hc, [r * 0.4, r * 0.12, r * 0.9])), e1 = pr(vAdd(hc, [-r * 0.4, r * 0.12, r * 0.9])), m0 = pr(vAdd(hc, [0, -r * 0.42, r * 0.93]));
+            ctx.strokeStyle = '#334155'; ctx.fillStyle = '#334155'; ctx.lineCap = 'round'; ctx.lineWidth = Math.max(1, e0.s * 0.9);
+            [e0, e1].forEach(function (e) { if (i === 3) { ctx.beginPath(); ctx.moveTo(e.x - e.s * 2.2, e.y); ctx.lineTo(e.x + e.s * 2.2, e.y); ctx.stroke(); } else { ctx.beginPath(); ctx.arc(e.x, e.y, e.s * 1.5, 0, 6.2832); ctx.fill(); } });
+            ctx.strokeStyle = '#b45a6b'; ctx.lineWidth = Math.max(1, m0.s * 0.8); ctx.beginPath(); ctx.moveTo(m0.x - m0.s * 2.6, m0.y); ctx.quadraticCurveTo(m0.x, m0.y + m0.s * 2.2, m0.x + m0.s * 2.6, m0.y); ctx.stroke();
+        });
+        items.sort(function (a, b) { return a.z - b.z; }).forEach(function (it) { it.draw(); });
     }
 
     function avProg(ms) {
@@ -1380,7 +1475,14 @@
     function avRenderOne(i, p, ts) {
         const el = document.getElementById('avatar' + i);
         if (!el) return;
-        el.innerHTML = avSVG(i, avGender, AV_POSE[i](p), ts);
+        let cv = el.firstChild;
+        if (!cv || cv.tagName !== 'CANVAS') {
+            const dpr = Math.min(window.devicePixelRatio || 1, 2);
+            el.innerHTML = ''; cv = document.createElement('canvas'); cv.width = AV_W * dpr; cv.height = AV_H * dpr; cv.setAttribute('role', 'img'); cv.setAttribute('aria-label', AVATAR_CAPTIONS[i - 1]);
+            cv.getContext('2d').setTransform(dpr, 0, 0, dpr, 0, 0); el.appendChild(cv);
+        }
+        const g = avGender;
+        avDraw(cv.getContext('2d'), i, g, AV_POSE[i](p, AV_ST[g], ts), ts);
         const ph = document.getElementById('ph' + i);
         if (ph) { const txt = p < 0.5 ? 'START | بداية' : 'FINISH | نهاية'; if (ph.textContent !== txt) ph.textContent = txt; }
     }
@@ -2905,5 +3007,5 @@ renderReportExtras(flags.length > 0, needsMedicalClearance);
 
 </body>
 </html>
-index.html......html
-عرض index.html......html.
+index.html_؟_؟.html
+عرض index.html_؟_؟.html.
