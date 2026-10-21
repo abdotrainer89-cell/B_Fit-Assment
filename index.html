@@ -932,6 +932,8 @@
         .num-step.sg { font-size: 17px; }
         .stepper-row input, .input-box input, .input-box select, #hqNotes { font-size: 18px !important; min-height: 46px; }
     }
+    .smart-note { margin: 0 0 14px; padding: 14px 16px; border-radius: 18px; background: linear-gradient(135deg, rgba(255,255,255,.85), rgba(224,242,254,.7)); border: 1px solid rgba(56,189,248,.45); box-shadow: 0 6px 18px rgba(56,130,200,.12); font-size: 14.5px; line-height: 1.9; color: #0f172a; text-align: right; }
+    .smart-note .en-line { margin-top: 6px; font-size: 12.5px; font-weight: 600; color: #475569; }
 </style>
 </head>
 <body>
@@ -1085,6 +1087,7 @@
                     <label>الهدف <span class="en">Goal</span></label>
                     <select id="goalSelect">
                         <option value="maintain">تثبيت الوزن / Weight Maintenance</option>
+                        <option value="auto">💡 مقترح تلقائياً حسب الوزن المستهدف / Auto-suggested from target weight</option>
                         <option value="cut">خسارة دهون / Fat Loss</option>
                         <option value="lose">خسارة وزن / Weight Loss</option>
                         <option value="bulk">زيادة كتلة عضلية / Muscle Mass Gain</option>
@@ -2106,18 +2109,31 @@
         let base = parseFloat(document.getElementById('calorieInput').value);
         if (!(base >= 800 && base <= 6000) && ov !== null) base = ov;
         const weight = parseFloat(document.getElementById('weightInput').value);
+        let est = false;
+        if (!(base >= 800 && base <= 6000) && weight >= 30 && weight <= 250) {   // no InBody calories yet -> estimate maintenance from height / age / sex / weight
+            const hh = parseFloat(document.getElementById('heightInput').value), aa = parseFloat(document.getElementById('realAge').value), male = document.getElementById('genderSelect').value !== 'female';
+            if (hh >= 100 && hh <= 230 && aa >= 10 && aa <= 100) { base = Math.round((10 * weight + 6.25 * hh - 5 * aa + (male ? 5 : -161)) * 1.55); est = true; }
+        }
         if (!(base >= 800 && base <= 6000) || !(weight >= 30 && weight <= 250)) return null;
-        const key = document.getElementById('goalSelect').value;
-        const goal = GOAL_FACTORS[key] || GOAL_FACTORS.maintain;
+        let key = document.getElementById('goalSelect').value, autoMode = false;
+        if (key === 'auto') {   // suggested goal: the direction comes from the target weight
+            const t0 = parseFloat(document.getElementById('targetWeight').value), g0 = t0 - weight;
+            autoMode = true; key = (t0 >= 30 && t0 <= 250 && Math.abs(g0) >= 0.1) ? (g0 < 0 ? 'lose' : 'bulk') : 'maintain';
+        }
+        const goal0 = GOAL_FACTORS[key] || GOAL_FACTORS.maintain;
+        const goal = (autoMode && goal0.dir !== 0) ? Object.assign({}, goal0, { ar: 'مقترح: ' + goal0.ar, en: 'Suggested: ' + goal0.en }) : goal0;
         // ----- target-weight driven calories: the gap to the target weight sets the daily deficit / surplus -----
         const twIn = parseFloat(document.getElementById('targetWeight').value), twOk = twIn >= 30 && twIn <= 250;
         const gap = twOk ? Math.round((twIn - weight) * 10) / 10 : 0;
         const twUsed = goal.dir !== 0 && twOk && Math.abs(gap) >= 0.1 && Math.sign(gap) === goal.dir;
         let autoKcal = Math.round(base * goal.f), rate = null;
         if (twUsed) {
-            const g = Math.abs(gap);
-            rate = goal.dir < 0 ? Math.min(Math.max(g / 8, 0.2), (key === 'cut' ? 0.005 : 0.0075) * weight) : Math.min(Math.max(g / 12, 0.1), 0.0025 * weight);   // kg per week
-            const adjKcal = Math.min(Math.max(rate * 7700 / 7, base * (goal.dir < 0 ? 0.08 : 0.05)), base * (goal.dir < 0 ? 0.25 : 0.15));
+            const gp = Math.abs(gap) / weight;   // gap as a fraction of body weight: the bigger the gap, the bigger the daily deficit / surplus (with safety caps)
+            const frac = goal.dir < 0 ? Math.min(key === 'cut' ? 0.20 : 0.25, key === 'cut' ? 0.08 + 0.9 * gp : 0.10 + gp) : Math.min(0.15, 0.05 + 0.6 * gp);
+            let adjKcal = base * frac;
+            const maxRate = (goal.dir < 0 ? 0.0075 : 0.0035) * weight;   // kg per week ceiling
+            if (adjKcal * 7 / 7700 > maxRate) adjKcal = maxRate * 7700 / 7;
+            rate = adjKcal * 7 / 7700;
             autoKcal = Math.max(1200, Math.round(base + goal.dir * adjKcal));
         }
         const kcal = ov !== null ? Math.round(ov) : autoKcal;
@@ -2139,12 +2155,21 @@
             else if (Math.sign(delta) !== goal.dir) plan = { state: 'mismatch', target: tw, delta: delta };
             else plan = { state: 'ok', target: tw, delta: delta, weeks: Math.max(1, Math.ceil(Math.abs(delta) * 7700 / (Math.max(Math.abs(diff), 1) * 7))), diff: Math.round(diff) };
         } else if (goal.dir === 0 && tw >= 30 && tw <= 250) plan = { state: 'maintain', target: tw };
-        return { manual: ov !== null, plan: plan, base: Math.round(base), kcal: kcal, goal: goal, proteinG: proteinG, carbsG: carbsG, fatG: fatG, pPct: pPct, cPct: cPct, fPct: fPct, capped: capped, perKg: proteinG / refW, autoKcal: autoKcal, adj: autoKcal - Math.round(base), refW: refW, twUsed: twUsed, rate: rate };
+        return { manual: ov !== null, plan: plan, base: Math.round(base), kcal: kcal, goal: goal, proteinG: proteinG, carbsG: carbsG, fatG: fatG, pPct: pPct, cPct: cPct, fPct: fPct, capped: capped, perKg: proteinG / refW, autoKcal: autoKcal, adj: autoKcal - Math.round(base), refW: refW, twUsed: twUsed, rate: rate, est: est };
+    }
+
+
+    function smartNoteHTML(n) {
+        if (!n || !n.twUsed) return '';
+        const tw = document.getElementById('targetWeight').value, cw = document.getElementById('weightInput').value, sg = n.adj > 0 ? '+' : '−', ab = Math.abs(n.adj), loss = n.adj < 0;
+        const ar = '💡 <b>مقترح ذكي:</b> بناءً على الوزن المستهدف (' + tw + ' كجم) مقابل وزنك الحالي (' + cw + ' كجم)، تم ضبط السعرات اليومية تلقائياً على <b>' + fmtInt(n.autoKcal) + ' سعرة</b> (' + sg + ab + ' سعرة عن الأساس) لتحقيق ' + (loss ? 'خسارة آمنة' : 'زيادة تدريجية') + ' تقارب ' + n.rate.toFixed(2) + ' كجم أسبوعياً، مع إعادة حساب البروتين (' + n.proteinG + ' جم) والدهون (' + n.fatG + ' جم) والكربوهيدرات (' + n.carbsG + ' جم) وفقاً لذلك.';
+        const en = 'Smart suggestion: based on the target weight (' + tw + ' kg) vs. the current weight (' + cw + ' kg), daily calories were auto-adjusted to ' + fmtInt(n.autoKcal) + ' kcal (' + sg + ab + ' vs. baseline) for a ' + (loss ? 'safe loss' : 'gradual gain') + ' of about ' + n.rate.toFixed(2) + ' kg/week, with protein (' + n.proteinG + ' g), fat (' + n.fatG + ' g) and carbs (' + n.carbsG + ' g) recalculated accordingly.';
+        return '<div class="smart-note"><div>' + ar + '</div><div class="en-line">' + en + '</div></div>';
     }
 
     function nutritionHTML(n) {
         if (!n) return '<p class="calc-note">أدخل السعرات الموصى بها (تُقرأ من الإنبودي) والوزن لعرض الخطة. | Enter the recommended calories and weight to see the plan.</p>';
-        let h = '<div class="calc-cards">' +
+        let h = smartNoteHTML(n) + '<div class="calc-cards">' +
             '<div class="calc-card main"><div class="label">السعرات النهائية اليومية | Final Daily Calories</div><div class="value">' + fmtInt(n.kcal) + '<span> kcal</span></div>' +
             '<div class="sub">' + n.goal.ar + ' / ' + n.goal.en + '</div></div>' +
             '<div class="calc-card"><div class="label">السعرات المستهدفة | Target Calories</div><div class="value">' + fmtInt(n.autoKcal) + '<span> kcal</span></div><div class="sub">' + (n.adj === 0 ? 'InBody ' + fmtInt(n.base) : (n.adj > 0 ? '+' : '') + n.adj + ' vs InBody ' + fmtInt(n.base)) + (n.manual ? ' • ✎ ' + (n.kcal - n.autoKcal >= 0 ? '+' : '') + (n.kcal - n.autoKcal) : '') + '</div></div>' +
@@ -2155,7 +2180,7 @@
             '</div>' +
             '<div class="macro-bar" role="img" aria-label="Protein ' + n.pPct + '%, Carbs ' + n.cPct + '%, Fat ' + n.fPct + '%">' +
             '<i class="mp" style="width:' + n.pPct + '%"></i><i class="mc" style="width:' + n.cPct + '%"></i><i class="mf" style="width:' + n.fPct + '%"></i></div>';
-        let note = 'السعرات الأساسية من الإنبودي: ' + fmtInt(n.base) + ' kcal' + (n.twUsed ? '، وتم ضبط السعرات اليومية حسب الفارق إلى الوزن المستهدف (' + (n.adj > 0 ? '+' : '') + n.adj + ' سعرة، نحو ' + n.rate.toFixed(2) + ' كجم أسبوعياً)' : '') + '. البروتين 2 جم لكل كجم من ' + (n.twUsed ? 'الوزن المستهدف (' + n.refW + ' كجم)' : 'الوزن الحالي') + '، الدهون 25% من السعرات، والكارب الباقي. (4 سعرات لكل جم بروتين وكارب، 9 للدهون)';
+        let note = (n.est ? 'السعرات الأساسية تقديرية من الطول والعمر والجنس والوزن (معادلة ميفلن × 1.55) لعدم إدخال سعرات الإنبودي: ' : 'السعرات الأساسية من الإنبودي: ') + fmtInt(n.base) + ' kcal' + (n.twUsed ? '، وتم ضبط السعرات اليومية حسب الفارق إلى الوزن المستهدف (' + (n.adj > 0 ? '+' : '') + n.adj + ' سعرة، نحو ' + n.rate.toFixed(2) + ' كجم أسبوعياً)' : '') + '. البروتين 2 جم لكل كجم من ' + (n.twUsed ? 'الوزن المستهدف (' + n.refW + ' كجم)' : 'الوزن الحالي') + '، الدهون 25% من السعرات، والكارب الباقي. (4 سعرات لكل جم بروتين وكارب، 9 للدهون)';
         if (n.capped) note += '<br>تم تحديد البروتين بـ 40% من السعرات لأن السعرات منخفضة بالنسبة للوزن.';
         if (n.plan) {
             if (n.plan.state === 'ok') note += '<br>الوصول إلى ' + n.plan.target + ' كجم (' + (n.plan.delta > 0 ? '+' : '') + n.plan.delta + ' كجم) يستغرق نحو ' + n.plan.weeks + ' أسبوع بفارق ' + Math.abs(n.plan.diff) + ' سعرة يومياً (7700 سعرة لكل كجم تقريباً). | Reaching ' + n.plan.target + ' kg takes about ' + n.plan.weeks + ' weeks at a ' + Math.abs(n.plan.diff) + ' kcal daily difference.';
@@ -2209,6 +2234,7 @@
         const n = computeNutrition(), k = computeKarvonen();
         let h = '';
         if (n && n.manual) h += '<p class="calc-note"><b>✎ السعرات معدّلة يدوياً من المدرب: ' + n.kcal + ' kcal (الأساس من الإنبودي: ' + n.base + ' kcal) | Manual calories override</b></p>';
+        if (n && n.twUsed) h += smartNoteHTML(n);
         if (n) h += '<div class="report-extra"><h4><i class="fa-solid fa-utensils"></i> الخطة الغذائية | Nutrition Plan</h4>' + nutritionHTML(n) + '</div>';
         if (k && !k.invalid) h += '<div class="report-extra"><h4><i class="fa-solid fa-heart-pulse"></i> معدل القلب المستهدف (كارفونين) | Karvonen Target Heart Rate</h4>' + karvonenHTML(k) + '</div>';
         if (mealItems.length) h += '<div class="report-extra"><h4><i class="fa-solid fa-bowl-food"></i> الوجبة | Meal</h4>' + mealHTML(false) + '</div>';
@@ -2896,6 +2922,7 @@ renderReportExtras(flags.length > 0, needsMedicalClearance);
         B.push({ t: 'p', x: 'استشفاء النبض | HR recovery: ' + (Math.round(D.hrRate * 100) / 100) + ' bpm/s — ' + Math.round(D.hrPeakPct) + '% HRmax' });
         if (n) {
             B.push({ t: 'sec', x: 'السعرات والماكروز | Calories & Macros' });
+            if (n.twUsed) { B.push({ t: 'p', x: 'مقترح ذكي: بناءً على الوزن المستهدف (' + document.getElementById('targetWeight').value + ' كجم) مقابل الوزن الحالي (' + document.getElementById('weightInput').value + ' كجم)، تم ضبط السعرات تلقائياً على ' + n.autoKcal + ' سعرة (' + (n.adj > 0 ? '+' : '−') + Math.abs(n.adj) + ' عن الأساس) بمعدل نحو ' + n.rate.toFixed(2) + ' كجم أسبوعياً.' }); }
             B.push({ t: 'tbl', w: [.22, .28, .22, .28], r: [['الهدف | Goal', n.goal.ar + ' | ' + n.goal.en, 'سعرات الإنبودي', n.base + ' kcal'], ['السعرات النهائية' + (n.manual ? ' (يدوي)' : ''), n.kcal + ' kcal', 'بروتين | Protein', n.proteinG + ' g (' + n.pPct + '%)'], ['كارب | Carbs', n.carbsG + ' g (' + n.cPct + '%)', 'دهون | Fat', n.fatG + ' g (' + n.fPct + '%)']] });
         }
         if (k && !k.invalid) {
@@ -3057,6 +3084,28 @@ renderReportExtras(flags.length > 0, needsMedicalClearance);
     }
     function initBilingual() { bilingualize(); let q = 0; new MutationObserver(function () { if (q) return; q = requestAnimationFrame(function () { q = 0; bilingualize(); }); }).observe(document.body, { childList: true, subtree: true }); }
 
+
+    // ===== Smart Target Weight: the direction (lose / gain) follows the target automatically =====
+    let tgAutoPrev = null, tgManual = false;
+    function syncGoalFromTarget() {
+        const g = document.getElementById('goalSelect'), tw = parseFloat(document.getElementById('targetWeight').value), w = parseFloat(document.getElementById('weightInput').value);
+        const ok = tw >= 30 && tw <= 250 && w >= 30 && w <= 250, gap = ok ? tw - w : 0;
+        if (ok && Math.abs(gap) >= 0.1) {
+            if (tgManual || g.value === 'auto') return;
+            const want = gap < 0 ? -1 : 1, cur = (GOAL_FACTORS[g.value] || GOAL_FACTORS.maintain).dir;
+            if (cur !== want) { tgAutoPrev = g.value; g.value = 'auto'; }   // goal becomes "suggested from target weight"; the classic goals stay selectable
+        } else {
+            if (!document.getElementById('targetWeight').value) tgManual = false;
+            if (g.value === 'auto' || tgAutoPrev !== null) { g.value = tgAutoPrev || 'maintain'; tgAutoPrev = null; }   // target cleared / reached -> back to the previous goal
+        }
+    }
+    function initSmartTarget() {
+        const tw = document.getElementById('targetWeight');
+        ['input', 'change'].forEach(function (ev) { tw.addEventListener(ev, function () { syncGoalFromTarget(); refreshCalculators(); }); });
+        document.getElementById('weightInput').addEventListener('input', function () { syncGoalFromTarget(); refreshCalculators(); });
+        document.getElementById('goalSelect').addEventListener('change', function (e) { tgAutoPrev = null; tgManual = e.target.value !== 'auto' && !!document.getElementById('targetWeight').value; });   // a manual goal choice is respected
+    }
+
     function initYmcaLive() {
         const ids = ['ymcaRest', 'ymcaPeak', 'ymcaRec', 'realAge'];
         const out = document.getElementById('ymcaLive');
@@ -3080,6 +3129,7 @@ renderReportExtras(flags.length > 0, needsMedicalClearance);
 
     let bfitBooted = false;
     function bfitInit() {
+        initSmartTarget();
         initBilingual();
         initHealthDynamic(); initEpley();
         initMobileSteppers();
