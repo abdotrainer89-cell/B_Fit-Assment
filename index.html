@@ -1181,12 +1181,13 @@
                 <span class="avatar-phase" id="ph4"></span>
             </div>
             <div class="exercise-details">
-                <h4>4. اتزان وثبات الجذع الخلفي (سوبرمان متقاطع على أربع) <span class="target-tag">Target: ≥ 45 s</span></h4>
+                <h4>4. اتزان وثبات الجذع الخلفي (سوبرمان متقاطع على أربع) <span class="target-tag">Target: ≥ 45 s per side</span></h4>
                 <p class="sub-en">Posterior Core Stability — Quadruped Superman (Bird-Dog) Hold</p>
                 <div class="rest-tag"><i class="fa-solid fa-hourglass-half"></i> فترة الراحة الموصى بها: <b>60–90 ثانية</b> <span class="en">Rest: 60–90 s</span></div>
-                <p class="test-howto">من وضع الأربع، مدّ الذراع اليمنى مع الساق اليسرى في خط واحد مع الجذع وثبّت دون ميلان الحوض. سجّل زمن الثبات بالثواني.<br><span dir="ltr">From all fours, extend the opposite arm and leg in line with the torso without rotating the pelvis. Record the hold time in seconds.</span></p>
+                <p class="test-howto">من وضع الأربع، مدّ الذراع مع الساق المقابلة لها (متقاطعين) في خط واحد مع الجذع وثبّت دون ميلان الحوض. أدِّ التمرين على الجانبين: الجانب الأيمن (ذراع يمنى مع ساق يسرى) ثم الجانب الأيسر (ذراع يسرى مع ساق يمنى)، وسجّل زمن الثبات لكل جانب بالثواني.<br><span dir="ltr">From all fours, extend the opposite arm and leg in line with the torso without rotating the pelvis. Perform both cross sides — right arm + left leg, then left arm + right leg — and record the hold time for each side in seconds.</span></p>
                 <div class="exercise-inputs">
-                    <div class="input-box"><label>زمن الثبات (ثواني) <span class="en">Hold time (s)</span></label><input type="number" id="plankSec" step="1" placeholder="بالثواني" required></div>
+                    <div class="input-box"><label>زمن ثبات الجانب الأيمن (ثواني) <span class="en">Right Side Hold Time (s)</span></label><input type="number" id="plankR" step="any" placeholder="بالثواني" required></div>
+                    <div class="input-box"><label>زمن ثبات الجانب الأيسر (ثواني) <span class="en">Left Side Hold Time (s)</span></label><input type="number" id="plankL" step="any" placeholder="بالثواني" required></div>
                 </div>
             </div>
         </div>
@@ -2753,7 +2754,7 @@
         const balScore = Math.min(((num('slsR', 0) + num('slsL', 0)) / 2 / slsTarget) * 100, 100);
 
         // 4) Forearm Plank: 120 s = full score
-        const plankScore = Math.min((num('plankSec', 0) / 45) * 100, 100);
+        const plankScore = Math.min(((num('plankR', 0) + num('plankL', 0)) / 2 / 45) * 100, 100); // average of both cross sides, target 45 s each
 
         // 5) 30s Chair Stand: age and gender reference reps
         const chairRef = isFemale
@@ -2865,7 +2866,7 @@ renderReportExtras(flags.length > 0, needsMedicalClearance);
         const D = window.BFIT_LAST; if (!D) return null;
         const n = computeNutrition(), k = computeKarvonen(), v = function (id) { const x = document.getElementById(id).value; return x === '' ? '—' : x; };
         const tag = function (nn) { const h = Array.prototype.find.call(document.querySelectorAll('.exercise-details h4'), function (x) { return x.textContent.trim().indexOf(nn + '.') === 0; }); const t = h && h.querySelector('.target-tag'); return t ? t.textContent.trim() : '—'; };
-        const entered = [v('srTry1') + ' / ' + v('srTry2') + ' cm', v('apR') + ' / ' + v('apL') + ' cm (R/L)', v('slsR') + ' / ' + v('slsL') + ' s (R/L)', v('plankSec') + ' s', v('chairReps') + ' reps', v('kpuReps') + ' reps', 'Rest ' + v('ymcaRest') + ' | Peak ' + v('ymcaPeak') + ' | Rec ' + v('ymcaRec') + 's'];
+        const entered = [v('srTry1') + ' / ' + v('srTry2') + ' cm', v('apR') + ' / ' + v('apL') + ' cm (R/L)', v('slsR') + ' / ' + v('slsL') + ' s (R/L)', v('plankR') + ' / ' + v('plankL') + ' s (R/L)', v('chairReps') + ' reps', v('kpuReps') + ' reps', 'Rest ' + v('ymcaRest') + ' | Peak ' + v('ymcaPeak') + ' | Rec ' + v('ymcaRec') + 's'];
         const B = [];
         B.push({ t: 'sec', x: 'بيانات المشترك والإنبودي | Client & InBody' });
         B.push({ t: 'tbl', w: [.2, .3, .2, .3], r: [['المشترك | Client', D.client, 'المدرب | Coach', D.coach], ['الجنس | Gender', D.gender === 'male' ? 'ذكر | Male' : 'أنثى | Female', 'العمر | Age', String(D.realAge)],
@@ -2974,7 +2975,7 @@ renderReportExtras(flags.length > 0, needsMedicalClearance);
 
     // ===== Touch steppers (− / + / ±) for every test input: lets phones enter negative values and count up/down =====
     function initMobileSteppers() {
-        ['srTry1', 'srTry2', 'apR', 'apL', 'slsR', 'slsL', 'plankSec', 'chairReps', 'kpuReps', 'ymcaRest', 'ymcaPeak', 'ymcaRec'].forEach(function (id) {
+        ['srTry1', 'srTry2', 'apR', 'apL', 'slsR', 'slsL', 'plankR', 'plankL', 'chairReps', 'kpuReps', 'ymcaRest', 'ymcaPeak', 'ymcaRec'].forEach(function (id) {
             const el = document.getElementById(id); if (!el || el.dataset.stp) return; el.dataset.stp = '1';
             el.removeAttribute('min'); el.removeAttribute('max'); if (!el.step || el.step === '0.5') el.setAttribute('step', 'any');
             const row = document.createElement('div'); row.className = 'stepper-row'; el.parentNode.insertBefore(row, el);
@@ -3084,5 +3085,3 @@ renderReportExtras(flags.length > 0, needsMedicalClearance);
 
 </body>
 </html>
-index.htmlو.html
-عرض index.htmlو.html.
