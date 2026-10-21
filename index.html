@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light">
     <meta name="theme-color" content="#f6eef3">
     <title>B_FIT ASSESSMENT | Professional Evaluation</title>
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23000000'/%3E%3Ctext x='32' y='40' font-family='Arial Black,Arial' font-weight='900' font-size='34' text-anchor='middle' fill='white'%3EB%3C/text%3E%3Ctext x='32' y='56' font-family='Arial' font-weight='700' font-size='14' text-anchor='middle' fill='white'%3E_FIT%3C/text%3E%3C/svg%3E">
@@ -910,6 +911,27 @@
     .exercise-card { grid-template-columns: 270px 1fr !important; }
     .exercise-avatar-box { width: 270px !important; padding: 6px !important; }
     .exercise-avatar-box .avatar-cap { color: #475569; }
+
+    /* ===== Mobile + readability fixes ===== */
+    :root { color-scheme: light; }
+    .input-box input, .input-box select, .input-box textarea, #hqNotes, .stepper-row input {
+        color: #000 !important; -webkit-text-fill-color: #000 !important; caret-color: #000; opacity: 1 !important;
+        background-color: rgba(255, 255, 255, .97) !important;
+    }
+    .input-box input::placeholder, .input-box textarea::placeholder, #hqNotes::placeholder { color: #7b8499 !important; -webkit-text-fill-color: #7b8499 !important; opacity: 1 !important; }
+    .input-box select option { color: #000; background: #fff; }
+    .exercise-card { grid-template-columns: 230px 1fr !important; }
+    .exercise-avatar-box { width: 230px !important; }
+    .stepper-row input { min-width: 96px; font-size: 18px; font-weight: 800; text-align: center; }
+    @media (max-width: 820px) {
+        .exercise-card { grid-template-columns: 1fr !important; justify-items: center; gap: 12px; padding: 16px; }
+        .exercise-avatar-box { width: 100% !important; max-width: 150px !important; margin: 0 auto; min-height: 0 !important; -webkit-backdrop-filter: none !important; backdrop-filter: none !important; }
+        .exercise-details { width: 100%; min-width: 0; }
+        .stepper-row { display: grid; grid-template-columns: 46px minmax(0, 1fr) 46px 46px; gap: 6px; width: 100%; }
+        .num-step { min-width: 0; width: 46px; height: 46px; font-size: 22px; }
+        .num-step.sg { font-size: 17px; }
+        .stepper-row input, .input-box input, .input-box select, #hqNotes { font-size: 18px !important; min-height: 46px; }
+    }
 </style>
 </head>
 <body>
@@ -1532,7 +1554,7 @@
         if (!el) return;
         let cv = el.firstChild;
         if (!cv || cv.tagName !== 'CANVAS') {
-            const dpr = Math.min(window.devicePixelRatio || 1, 2);
+            const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
             el.innerHTML = ''; cv = document.createElement('canvas'); cv.width = AV_W * dpr; cv.height = AV_H * dpr; cv.setAttribute('role', 'img'); cv.setAttribute('aria-label', AVATAR_CAPTIONS[i - 1]);
             cv.getContext('2d').setTransform(dpr, 0, 0, dpr, 0, 0); el.appendChild(cv);
         }
@@ -3062,5 +3084,5 @@ renderReportExtras(flags.length > 0, needsMedicalClearance);
 
 </body>
 </html>
-index.html ع.html
-عرض index.html ع.html.
+index.htmlو.html
+عرض index.htmlو.html.
