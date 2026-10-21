@@ -2109,8 +2109,20 @@
         if (!(base >= 800 && base <= 6000) || !(weight >= 30 && weight <= 250)) return null;
         const key = document.getElementById('goalSelect').value;
         const goal = GOAL_FACTORS[key] || GOAL_FACTORS.maintain;
-        const kcal = ov !== null ? Math.round(ov) : Math.round(base * goal.f);
-        let proteinG = 2.0 * weight, capped = false;
+        // ----- target-weight driven calories: the gap to the target weight sets the daily deficit / surplus -----
+        const twIn = parseFloat(document.getElementById('targetWeight').value), twOk = twIn >= 30 && twIn <= 250;
+        const gap = twOk ? Math.round((twIn - weight) * 10) / 10 : 0;
+        const twUsed = goal.dir !== 0 && twOk && Math.abs(gap) >= 0.1 && Math.sign(gap) === goal.dir;
+        let autoKcal = Math.round(base * goal.f), rate = null;
+        if (twUsed) {
+            const g = Math.abs(gap);
+            rate = goal.dir < 0 ? Math.min(Math.max(g / 8, 0.2), (key === 'cut' ? 0.005 : 0.0075) * weight) : Math.min(Math.max(g / 12, 0.1), 0.0025 * weight);   // kg per week
+            const adjKcal = Math.min(Math.max(rate * 7700 / 7, base * (goal.dir < 0 ? 0.08 : 0.05)), base * (goal.dir < 0 ? 0.25 : 0.15));
+            autoKcal = Math.max(1200, Math.round(base + goal.dir * adjKcal));
+        }
+        const kcal = ov !== null ? Math.round(ov) : autoKcal;
+        const refW = twUsed ? twIn : weight;   // protein g/kg is applied to the target weight when it is valid for the chosen goal
+        let proteinG = 2.0 * refW, capped = false;
         const capG = 0.40 * kcal / 4;
         if (proteinG > capG) { proteinG = capG; capped = true; }
         proteinG = Math.round(proteinG);
@@ -2127,14 +2139,15 @@
             else if (Math.sign(delta) !== goal.dir) plan = { state: 'mismatch', target: tw, delta: delta };
             else plan = { state: 'ok', target: tw, delta: delta, weeks: Math.max(1, Math.ceil(Math.abs(delta) * 7700 / (Math.max(Math.abs(diff), 1) * 7))), diff: Math.round(diff) };
         } else if (goal.dir === 0 && tw >= 30 && tw <= 250) plan = { state: 'maintain', target: tw };
-        return { manual: ov !== null, plan: plan, base: Math.round(base), kcal: kcal, goal: goal, proteinG: proteinG, carbsG: carbsG, fatG: fatG, pPct: pPct, cPct: cPct, fPct: fPct, capped: capped, perKg: proteinG / weight };
+        return { manual: ov !== null, plan: plan, base: Math.round(base), kcal: kcal, goal: goal, proteinG: proteinG, carbsG: carbsG, fatG: fatG, pPct: pPct, cPct: cPct, fPct: fPct, capped: capped, perKg: proteinG / refW, autoKcal: autoKcal, adj: autoKcal - Math.round(base), refW: refW, twUsed: twUsed, rate: rate };
     }
 
     function nutritionHTML(n) {
         if (!n) return '<p class="calc-note">أدخل السعرات الموصى بها (تُقرأ من الإنبودي) والوزن لعرض الخطة. | Enter the recommended calories and weight to see the plan.</p>';
         let h = '<div class="calc-cards">' +
-            '<div class="calc-card main"><div class="label">السعرات اليومية | Daily Calories</div><div class="value">' + fmtInt(n.kcal) + '<span> kcal</span></div>' +
+            '<div class="calc-card main"><div class="label">السعرات النهائية اليومية | Final Daily Calories</div><div class="value">' + fmtInt(n.kcal) + '<span> kcal</span></div>' +
             '<div class="sub">' + n.goal.ar + ' / ' + n.goal.en + '</div></div>' +
+            '<div class="calc-card"><div class="label">السعرات المستهدفة | Target Calories</div><div class="value">' + fmtInt(n.autoKcal) + '<span> kcal</span></div><div class="sub">' + (n.adj === 0 ? 'InBody ' + fmtInt(n.base) : (n.adj > 0 ? '+' : '') + n.adj + ' vs InBody ' + fmtInt(n.base)) + (n.manual ? ' • ✎ ' + (n.kcal - n.autoKcal >= 0 ? '+' : '') + (n.kcal - n.autoKcal) : '') + '</div></div>' +
             '<div class="calc-card"><div class="label">بروتين | Protein</div><div class="value mp">' + n.proteinG + '<span> g</span></div><div class="sub">' + n.pPct + '% • ' + n.perKg.toFixed(1) + ' g/kg</div></div>' +
             '<div class="calc-card"><div class="label">كارب | Carbs</div><div class="value mc">' + n.carbsG + '<span> g</span></div><div class="sub">' + n.cPct + '%</div></div>' +
             '<div class="calc-card"><div class="label">دهون | Fat</div><div class="value mf">' + n.fatG + '<span> g</span></div><div class="sub">' + n.fPct + '%</div></div>' +
@@ -2142,7 +2155,7 @@
             '</div>' +
             '<div class="macro-bar" role="img" aria-label="Protein ' + n.pPct + '%, Carbs ' + n.cPct + '%, Fat ' + n.fPct + '%">' +
             '<i class="mp" style="width:' + n.pPct + '%"></i><i class="mc" style="width:' + n.cPct + '%"></i><i class="mf" style="width:' + n.fPct + '%"></i></div>';
-        let note = 'السعرات الأساسية من الإنبودي: ' + fmtInt(n.base) + ' kcal. البروتين 2 جم لكل كجم من الوزن، الدهون 25% من السعرات، والكارب الباقي. (4 سعرات لكل جم بروتين وكارب، 9 للدهون)';
+        let note = 'السعرات الأساسية من الإنبودي: ' + fmtInt(n.base) + ' kcal' + (n.twUsed ? '، وتم ضبط السعرات اليومية حسب الفارق إلى الوزن المستهدف (' + (n.adj > 0 ? '+' : '') + n.adj + ' سعرة، نحو ' + n.rate.toFixed(2) + ' كجم أسبوعياً)' : '') + '. البروتين 2 جم لكل كجم من ' + (n.twUsed ? 'الوزن المستهدف (' + n.refW + ' كجم)' : 'الوزن الحالي') + '، الدهون 25% من السعرات، والكارب الباقي. (4 سعرات لكل جم بروتين وكارب، 9 للدهون)';
         if (n.capped) note += '<br>تم تحديد البروتين بـ 40% من السعرات لأن السعرات منخفضة بالنسبة للوزن.';
         if (n.plan) {
             if (n.plan.state === 'ok') note += '<br>الوصول إلى ' + n.plan.target + ' كجم (' + (n.plan.delta > 0 ? '+' : '') + n.plan.delta + ' كجم) يستغرق نحو ' + n.plan.weeks + ' أسبوع بفارق ' + Math.abs(n.plan.diff) + ' سعرة يومياً (7700 سعرة لكل كجم تقريباً). | Reaching ' + n.plan.target + ' kg takes about ' + n.plan.weeks + ' weeks at a ' + Math.abs(n.plan.diff) + ' kcal daily difference.';
