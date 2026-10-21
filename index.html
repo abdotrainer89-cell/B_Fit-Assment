@@ -904,10 +904,9 @@
     /* ===== v2: Glassmorphism Yes/No + lightweight exercise icon cards ===== */
     .radio-btn-group { background: rgba(255,255,255,.35) !important; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,.7); border-radius: 12px !important; }
     .radio-btn-group label { border-radius: 9px !important; transition: background .2s, color .2s, box-shadow .2s; }
-    .exercise-avatar-box { background: linear-gradient(145deg, rgba(255,255,255,.75), rgba(255,255,255,.35)) !important; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); min-height: 150px; box-shadow: 0 6px 18px rgba(110,90,180,.14), inset 0 1px 0 #fff !important; transform: none !important; }
-    .ex-icon { position: relative; width: 84px; height: 84px; border-radius: 50%; display: flex; align-items: center; justify-content: center; line-height: 1; background: radial-gradient(circle at 30% 25%, #fff, color-mix(in srgb, var(--accent-gender) 22%, #fff)); border: 2px solid var(--accent-gender); box-shadow: 0 4px 12px color-mix(in srgb, var(--accent-gender) 35%, transparent); }
-    .ex-icon i { font-size: 36px; margin: 0; filter: none; color: var(--accent-gender); }
-    .ex-icon .ex-num { position: absolute; top: -4px; inset-inline-start: -4px; width: 24px; height: 24px; border-radius: 50%; background: #1d2433; color: #fff; font: 800 12px Montserrat, sans-serif; display: flex; align-items: center; justify-content: center; }
+    .exercise-avatar-box { background: linear-gradient(160deg, color-mix(in srgb, var(--accent-gender) 24%, #fff), color-mix(in srgb, var(--accent-gender) 8%, #fff)) !important; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); min-height: 150px; box-shadow: 0 6px 18px rgba(110,90,180,.14), inset 0 1px 0 #fff !important; transform: none !important; }
+    .ex-icon { width: 100%; line-height: 0; }
+    .ex-icon svg { width: 100%; height: auto; display: block; }
     .exercise-avatar-box .avatar-cap { color: #475569; }
 </style>
 </head>
@@ -934,7 +933,7 @@
 </div>
 
 <div class="health-question-row">
-<div class="q-ar">1) هل شعرت بأي دوخة، إغماء، أو عدم اتزان أثناء ممارستك للنشاط البدني سابقاً؟</div>
+<div class="q-ar">1) هل عانيت من أي نوبات فقدان اتزان، دوار مفاجئ، أو فقدان للوعي أثناء ممارستك للنشاط البدني سابقاً؟</div>
 <div class="radio-btn-group">
 <input type="radio" id="hq1_yes" name="hq1" value="yes"><label for="hq1_yes" class="yes-label">نعم / Yes</label>
 <input type="radio" id="hq1_no" name="hq1" value="no" checked><label for="hq1_no" class="no-label">لا / No</label>
@@ -942,7 +941,7 @@
 <div class="q-en">Have you previously experienced loss of balance or fainting during physical activity?</div>
 </div>
 <div class="health-question-row">
-<div class="q-ar">2) هل شعرت بدوخة أو عدم اتزان مفاجئ خلال أوقات الراحة ودون ممارسة أي مجهود بدني؟</div>
+<div class="q-ar">2) هل عانيت من نوبات فقدان اتزان أو عدم استقرار حركي خلال أوقات الراحة ودون ممارسة أي مجهود بدني؟</div>
 <div class="radio-btn-group">
 <input type="radio" id="hq2_yes" name="hq2" value="yes"><label for="hq2_yes" class="yes-label">نعم / Yes</label>
 <input type="radio" id="hq2_no" name="hq2" value="no" checked><label for="hq2_no" class="no-label">لا / No</label>
@@ -1287,28 +1286,131 @@
 </div>
 
 <script>
-    // ===== Exercise cards: lightweight CSS icon avatars (no 3D, no canvas) =====
+    // ===== Exercise avatars: clean animated SVG figures (male / female), start -> finish =====
     const AVATAR_CAPTIONS = [
         'SIT-AND-REACH', 'APLEY SCRATCH', 'CLOSED-EYE ONE-LEG', 'SUPERMAN (BIRD-DOG)',
         '30s BOX SQUAT', 'KNEELING PUSH-UP', '3-MIN STEP TEST'
     ];
-    const AVATAR_ICONS = [
-        'fa-child-reaching', 'fa-hand', 'fa-shoe-prints', 'fa-person-swimming',
-        'fa-chair', 'fa-hand-fist', 'fa-stairs'
+    const AV_L = { tor: 30, neck: 4, ua: 16, fa: 15, th: 23, sh: 22, ft: 8, head: 6.5 };
+    const AV_ST = {
+        male:   { skin: '#e0a77c', skinF: '#c78d63', line: '#a8714b', top: '#0ea5e9', topF: '#0284c7', bot: '#1e293b', botF: '#0f172a', shoe: '#0f172a', hair: '#2b2118', w: { tor: 15, th: 9.5, sh: 7, ua: 6.5, fa: 5.5 } },
+        female: { skin: '#ffffff', skinF: '#efe6ee', line: '#cbb3c4', top: '#ec4899', topF: '#be185d', bot: '#7c3aed', botF: '#5b21b6', shoe: '#f472b6', hair: '#6b3f2a', w: { tor: 11.5, th: 8.5, sh: 6, ua: 5, fa: 4.5 } }
+    };
+    const AV_CYC = { a: 500, b: 1400, c: 700, d: 1400 };
+    let avGender = 'male', avRaf = 0, avLast = 0;
+    const avVis = {};
+
+    function avLerp(a, b, t) { return a + (b - a) * t; }
+    function avLerp2(a, b, t) { return [avLerp(a[0], b[0], t), avLerp(a[1], b[1], t)]; }
+    function avEase(t) { t = Math.max(0, Math.min(1, t)); return t * t * (3 - 2 * t); }
+    function avR(n) { return Math.round(n * 10) / 10; }
+    function avSh(h, a) { const r = a * Math.PI / 180; return [h[0] + Math.cos(r) * AV_L.tor, h[1] + Math.sin(r) * AV_L.tor]; }
+    function avIK(r, t, l1, l2, b) {
+        const dx = t[0] - r[0], dy = t[1] - r[1], d = Math.hypot(dx, dy) || 0.01, dd = Math.min(d, l1 + l2 - 0.02), ux = dx / d, uy = dy / d;
+        const a = (l1 * l1 - l2 * l2 + dd * dd) / (2 * dd), h = Math.sqrt(Math.max(0, l1 * l1 - a * a));
+        return { m: [r[0] + ux * a - uy * h * b, r[1] + uy * a + ux * h * b], e: [r[0] + ux * dd, r[1] + uy * dd] };
+    }
+    function avPL(pts, w, col) { return '<polyline points="' + pts.map(function (p) { return avR(p[0]) + ',' + avR(p[1]); }).join(' ') + '" fill="none" stroke="' + col + '" stroke-width="' + avR(w) + '" stroke-linecap="round" stroke-linejoin="round"/>'; }
+    function avLimb(pts, w, fill, line) { return avPL(pts, w + 1.8, line) + avPL(pts, w, fill); }
+    function avDot(p, r, col) { return '<circle cx="' + avR(p[0]) + '" cy="' + avR(p[1]) + '" r="' + r + '" fill="' + col + '"/>'; }
+
+    const AV_POSE = [null,
+        function (t) { const hip = [60, 106.5], tor = avLerp(-88, -25, t), S = avSh(hip, tor); return { hip: hip, tor: tor, hN: [S[0] + 29, S[1] + avLerp(6, 3, t)], hF: [S[0] + 27, S[1] + avLerp(8, 5, t)], fN: [104, 106.5], fF: [103, 105], fa: [-80, -80] }; },
+        function (t) { const hip = [100, 64], S = avSh(hip, -90); return { hip: hip, tor: -90, hN: avLerp2([S[0] + 3, S[1] + 29], [S[0] - 6, S[1] + 8], t), hF: avLerp2([S[0] + 1, S[1] + 30], [S[0] - 9, S[1] + 19], t), fN: [104, 108], fF: [98, 108], eb: [1, -1] }; },
+        function (t) { const hip = [100, 64], S = avSh(hip, -90); return { hip: hip, tor: -90, hN: avLerp2([S[0] + 3, S[1] + 29], [S[0] + 24, S[1] + 12], t), hF: avLerp2([S[0] + 1, S[1] + 30], [S[0] - 22, S[1] + 12], t), fN: [100, 108], fF: avLerp2([96, 108], [122, 84], t) }; },
+        function (t) { const hip = [80, 86], S = avSh(hip, -12.2); return { hip: hip, tor: -12.2, hN: [S[0], 110.5], hF: avLerp2([S[0] + 4, 110.5], [S[0] + 31, S[1] - 3], t), fN: avLerp2([58, 109], [36, 84], t), fF: [56, 109], fa: [180, 180] }; },
+        function (t) { const hip = avLerp2([98, 64], [80, 88], t), tor = avLerp(-90, -62, t), S = avSh(hip, tor); return { hip: hip, tor: tor, hN: avLerp2([S[0] + 3, S[1] + 29], [S[0] + 28, S[1] + 3], t), hF: avLerp2([S[0] + 1, S[1] + 30], [S[0] + 26, S[1] + 5], t), fN: [100, 108], fF: [104, 108] }; },
+        function (t) { const K = [58, 108], sy = avLerp(79.5, 96, t), sx = K[0] + Math.sqrt(53 * 53 - (108 - sy) * (108 - sy)), u = [(sx - K[0]) / 53, (sy - K[1]) / 53]; return { hip: [K[0] + u[0] * 23, K[1] + u[1] * 23], tor: Math.atan2(u[1], u[0]) * 180 / Math.PI, hN: [104, 110.5], hF: [108, 110.5], fN: [36.5, 108], fF: [35, 108], fa: [180, 180] }; },
+        function (t) {
+            const hip = [avLerp(84, 128, t), avLerp(64, 44, t)], S = avSh(hip, -90), n = Math.min(1, t * 1.7), f = Math.max(0, (t - 0.35) / 0.65), sw = Math.sin(Math.PI * t);
+            return { hip: hip, tor: -90, hN: [S[0] + 4 + 14 * sw, S[1] + 28 - 4 * sw], hF: [S[0] - 2 - 12 * sw, S[1] + 28 - 3 * sw],
+                fN: [avLerp(80, 124, n), avLerp(108, 88, n) - 8 * Math.sin(Math.PI * n)], fF: [avLerp(84, 130, f), avLerp(108, 88, f) - 8 * Math.sin(Math.PI * f)] };
+        }
     ];
+    const AV_PROP = [null,
+        '<rect x="108" y="96" width="10" height="16" rx="2" fill="#94a3b8"/><rect x="108" y="94.5" width="46" height="2.5" rx="1.2" fill="#64748b"/>',
+        '', '',
+        '<rect x="20" y="111" width="140" height="3.5" rx="1.7" fill="#94a3b8"/>',
+        '<rect x="48" y="94" width="28" height="18" rx="3" fill="#94a3b8"/>',
+        '<rect x="14" y="111" width="140" height="3.5" rx="1.7" fill="#94a3b8"/>',
+        '<rect x="108" y="92" width="44" height="20" rx="3" fill="#94a3b8"/><rect x="108" y="92" width="44" height="3" rx="1.5" fill="#64748b"/>'
+    ];
+
+    function avSVG(i, g, p, ts) {
+        const S = AV_ST[g], L = AV_L, W = S.w, hip = p.hip, tr = p.tor * Math.PI / 180, dir = [Math.cos(tr), Math.sin(tr)];
+        const sh = [hip[0] + dir[0] * L.tor, hip[1] + dir[1] * L.tor], fa = p.fa || [0, 0], eb = p.eb || [1, 1];
+        const leg = function (tg, ang, far) {
+            const k = avIK(hip, tg, L.th, L.sh, -1), a = ang * Math.PI / 180, toe = [k.e[0] + Math.cos(a) * L.ft, k.e[1] + Math.sin(a) * L.ft];
+            const skin = far ? S.skinF : S.skin, bot = far ? S.botF : S.bot, cut = [hip[0] + (k.m[0] - hip[0]) * 0.62, hip[1] + (k.m[1] - hip[1]) * 0.62];
+            return avLimb([hip, k.m], W.th, skin, S.line) + avLimb([k.m, k.e], W.sh, skin, S.line) + avPL([hip, cut], W.th + 1.2, bot) + avPL([k.e, toe], 4.6, S.shoe);
+        };
+        const arm = function (tg, b, far) {
+            const k = avIK(sh, tg, L.ua, L.fa, b), skin = far ? S.skinF : S.skin;
+            return avLimb([sh, k.m], W.ua, skin, S.line) + avLimb([k.m, k.e], W.fa, skin, S.line) + avDot(k.e, 2.8, skin);
+        };
+        const nk = [sh[0] + dir[0] * L.neck, sh[1] + dir[1] * L.neck], hc = [sh[0] + dir[0] * (L.neck + L.head), sh[1] + dir[1] * (L.neck + L.head)], r = L.head;
+        let o = '<line x1="6" y1="112" x2="194" y2="112" stroke="#b8c0d4" stroke-width="2" stroke-linecap="round"/>' + AV_PROP[i];
+        o += arm(p.hF, eb[1], true) + leg(p.fF, fa[1], true);
+        o += avLimb([sh, nk], 5, S.skin, S.line);
+        o += avLimb([hip, sh], W.tor, S.top, g === 'male' ? S.topF : '#be185d');
+        o += avDot(hip, W.tor / 2 + 0.6, S.bot);
+        o += leg(p.fN, fa[0], false) + arm(p.hN, eb[0], false);
+        const sway = Math.sin((ts || 0) / 260) * 2;
+        if (g === 'female') {
+            const tail = 'M' + avR(hc[0] - r + 1) + ',' + avR(hc[1] - 2) + ' Q' + avR(hc[0] - r - 9 + sway) + ',' + avR(hc[1] + 1) + ' ' + avR(hc[0] - r - 6 + sway * 1.6) + ',' + avR(hc[1] + 12);
+            o += '<path d="' + tail + '" fill="none" stroke="' + S.hair + '" stroke-width="4" stroke-linecap="round"/>' + avDot([hc[0] - r + 0.6, hc[1] - 2], 1.8, S.shoe);
+            o += avDot([hc[0] - 1.6, hc[1] - 1.2], r + 1.1, S.hair);
+        } else {
+            o += avDot([hc[0] - 1.2, hc[1] - 1.4], r + 0.7, S.hair);
+        }
+        o += '<circle cx="' + avR(hc[0] + 0.6) + '" cy="' + avR(hc[1] + 0.8) + '" r="' + (r * 0.92) + '" fill="' + S.skin + '" stroke="' + S.line + '" stroke-width="1"/>';
+        const ex = hc[0] + r * 0.5, ey = hc[1] - 0.2;
+        o += (i === 3) ? '<line x1="' + avR(ex - 1.6) + '" y1="' + avR(ey) + '" x2="' + avR(ex + 1.6) + '" y2="' + avR(ey) + '" stroke="#334155" stroke-width="1.1" stroke-linecap="round"/>' : avDot([ex, ey], 1, '#334155');
+        o += '<path d="M' + avR(hc[0] + r * 0.3) + ',' + avR(hc[1] + 3.2) + ' q1.8,1.4 3.4,0" fill="none" stroke="#b45a6b" stroke-width="0.9" stroke-linecap="round"/>';
+        return '<svg viewBox="0 0 200 134" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="' + AVATAR_CAPTIONS[i - 1] + ' ' + g + '"><g transform="translate(0,12)">' + o + '</g></svg>';
+    }
+
+    function avProg(ms) {
+        const T = AV_CYC; let m = ms % (T.a + T.b + T.c + T.d);
+        if (m < T.a) return 0; m -= T.a;
+        if (m < T.b) return avEase(m / T.b); m -= T.b;
+        if (m < T.c) return 1; m -= T.c;
+        return 1 - avEase(m / T.d);
+    }
+    function avRenderOne(i, p, ts) {
+        const el = document.getElementById('avatar' + i);
+        if (!el) return;
+        el.innerHTML = avSVG(i, avGender, AV_POSE[i](p), ts);
+        const ph = document.getElementById('ph' + i);
+        if (ph) { const txt = p < 0.5 ? 'START | بداية' : 'FINISH | نهاية'; if (ph.textContent !== txt) ph.textContent = txt; }
+    }
+    function avReduced() { try { return window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) { return false; } }
+    function avTick(ts) {
+        avRaf = requestAnimationFrame(avTick);
+        if (document.hidden || ts - avLast < 33) return;
+        avLast = ts;
+        for (let i = 1; i <= 7; i++) { if (avVis[i] !== false) avRenderOne(i, avProg(ts + i * 330), ts); }
+    }
+    function avStart() {
+        if (avReduced() || avRaf) return;
+        if ('IntersectionObserver' in window && !avStart.obs) {
+            avStart.obs = new IntersectionObserver(function (es) { es.forEach(function (en) { avVis[parseInt(en.target.id.replace('avatar', ''), 10)] = en.isIntersecting; }); }, { rootMargin: '120px' });
+            for (let i = 1; i <= 7; i++) { const el = document.getElementById('avatar' + i); if (el) avStart.obs.observe(el); }
+        }
+        avRaf = requestAnimationFrame(avTick);
+    }
 
     function updateGenderTheme() {
         const gender = document.getElementById('genderSelect').value === 'female' ? 'female' : 'male';
+        avGender = gender;
         document.documentElement.style.setProperty('--accent-gender', gender === 'female' ? '#f472b6' : '#38bdf8');
+        const now = (window.performance && performance.now) ? performance.now() : Date.now();
         for (let i = 1; i <= 7; i++) {
-            const av = document.getElementById('avatar' + i);
-            if (av && !av.dataset.ready) {
-                av.dataset.ready = '1';
-                av.innerHTML = '<span class="ex-num">' + i + '</span><i class="fa-solid ' + AVATAR_ICONS[i - 1] + '" aria-hidden="true"></i>';
-            }
             document.getElementById('badge' + i).innerText = gender === 'female' ? 'FEMALE' : 'MALE';
             document.getElementById('cap' + i).innerText = AVATAR_CAPTIONS[i - 1];
+            avRenderOne(i, avReduced() ? 1 : avProg(now + i * 330), now);
         }
+        avStart();
     }
 
     function setOcrStatus(color, iconClass, message) {
@@ -2803,5 +2905,5 @@ renderReportExtras(flags.length > 0, needsMedicalClearance);
 
 </body>
 </html>
-index.html___.html
-عرض index.html___.html.
+index.html......html
+عرض index.html......html.
