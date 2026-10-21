@@ -934,6 +934,40 @@
     }
     .smart-note { margin: 0 0 14px; padding: 14px 16px; border-radius: 18px; background: linear-gradient(135deg, rgba(255,255,255,.85), rgba(224,242,254,.7)); border: 1px solid rgba(56,189,248,.45); box-shadow: 0 6px 18px rgba(56,130,200,.12); font-size: 14.5px; line-height: 1.9; color: #0f172a; text-align: right; }
     .smart-note .en-line { margin-top: 6px; font-size: 12.5px; font-weight: 600; color: #475569; }
+
+    /* ===== B_FIT additions: start counters, ROM sign hints, step-test note, wall posture test ===== */
+    .bf-timer { display: flex; align-items: center; gap: 8px; direction: ltr; flex-wrap: wrap; margin-top: 2px; }
+    .bf-timer-val { min-width: 64px; padding: 8px 12px; border-radius: 12px; background: rgba(255, 255, 255, 0.92); border: 2px solid var(--border-color); font: 900 22px Montserrat, sans-serif; color: var(--ink); text-align: center; font-variant-numeric: tabular-nums; }
+    .bf-timer-u { font: 700 12px Montserrat, sans-serif; color: var(--text-muted); }
+    .bf-timer button { border: 0; border-radius: 12px; min-height: 42px; padding: 0 14px; font: 800 13px Tajawal, Montserrat, sans-serif; cursor: pointer; color: #fff; touch-action: manipulation; -webkit-user-select: none; user-select: none; }
+    .bf-timer button small { font: 600 10px Montserrat, sans-serif; opacity: .85; margin-inline-start: 4px; }
+    .bf-timer button:active { transform: scale(.96); }
+    .bf-timer .bf-go { background: var(--success-green); }
+    .bf-timer.run .bf-go { background: var(--warning-red); }
+    .bf-timer.run .bf-timer-val { border-color: var(--success-green); box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.18); }
+    .bf-timer .bf-rs { background: #475569; }
+    .bf-rom-hint { font-size: 12.5px; font-weight: 800; line-height: 1.6; }
+    .bf-rom-hint:empty { display: none; }
+    .bf-rom-hint.neg { color: #dc2626; }
+    .bf-rom-hint.zero { color: #b45309; }
+    .bf-rom-hint.pos { color: #059669; }
+    .bf-rom-hint .en { font: 600 11px Montserrat, sans-serif; color: var(--text-muted); direction: ltr; unicode-bidi: isolate; margin-inline-start: 4px; }
+    .bf-sec-note { display: flex; gap: 10px; align-items: flex-start; margin-top: 12px; padding: 10px 14px; border-radius: 12px; background: rgba(245, 158, 11, 0.12); border: 1px solid rgba(245, 158, 11, 0.5); color: var(--ink); font-size: 13px; font-weight: 700; line-height: 1.8; }
+    .bf-sec-note > i { color: #d97706; margin-top: 5px; }
+    .bf-sec-note .en { display: block; font: 600 11.5px Montserrat, sans-serif; color: var(--text-muted); direction: ltr; text-align: left; margin-top: 4px; }
+    .bf-warn { color: #b45309; }
+    .wall-box { display: flex; flex-direction: column; gap: 8px; }
+    .wall-title { font-size: 13px; font-weight: 700; color: #2a3350; display: flex; justify-content: space-between; gap: 6px; flex-wrap: wrap; }
+    .wall-title .en { font-family: 'Montserrat', sans-serif; color: var(--text-muted); font-weight: 500; }
+    .wall-checks { display: grid; grid-template-columns: repeat(auto-fit, minmax(128px, 1fr)); gap: 10px; }
+    .wall-chip { position: relative; display: block; cursor: pointer; }
+    .wall-chip input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; }
+    .wall-chip span { display: flex; align-items: center; justify-content: center; gap: 8px; min-height: 48px; padding: 8px 12px; border: 2px solid var(--border-color); border-radius: 12px; background: rgba(255, 255, 255, 0.75); font-weight: 800; font-size: 13px; color: var(--ink); text-align: center; line-height: 1.3; transition: background-color .2s, border-color .2s, box-shadow .2s; }
+    .wall-chip span em { display: block; font-style: normal; font: 600 11px Montserrat, sans-serif; color: var(--text-muted); }
+    .wall-chip span::before { content: ''; flex: none; width: 20px; height: 20px; border-radius: 6px; border: 2px solid #94a3b8; background: #fff; }
+    .wall-chip input:checked + span { border-color: var(--success-green); background: rgba(16, 185, 129, 0.14); box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15); }
+    .wall-chip input:checked + span::before { content: '✓'; display: flex; align-items: center; justify-content: center; background: var(--success-green); border-color: var(--success-green); color: #fff; font-size: 13px; font-weight: 900; }
+    .wall-chip input:focus-visible + span { outline: 3px solid rgba(232, 101, 123, 0.45); outline-offset: 2px; }
 </style>
 </head>
 <body>
@@ -1116,7 +1150,65 @@
         </div>
 
         <div class="section-header">
-            <h2><i class="fa-solid fa-stopwatch"></i> 3. اختبارات التقييم البدني الـ 7 الشاملة | Universal 7-Step Fitness Tests</h2>
+            <h2><i class="fa-solid fa-stopwatch"></i> 3. اختبارات التقييم البدني الـ 8 الشاملة | Universal 8-Step Fitness Tests</h2>
+        </div>
+        <p class="calc-note" style="margin:0 0 14px;">💡 <b>ترتيب الاختبارات:</b> ثابت ← مرونة ← اتزان وثبات ← قوة وتحمل ← كارديو في النهاية. قِس <b>نبض الراحة (Resting HR)</b> في بداية الجلسة والعميل هادئ، حتى لو كان اختبار الخطوات في الآخر. <span dir="ltr" style="display:block;font-family:Montserrat,sans-serif;">Order: static → flexibility → balance &amp; stability → strength/endurance → cardio last. Measure Resting HR at the start of the session while the client is calm.</span></p>
+
+        <div class="exercise-card">
+            <div class="exercise-avatar-box">
+                <div class="ex-icon" id="avatar8"></div>
+                <span class="gender-badge" id="badge8">MALE</span>
+                <span class="avatar-cap" id="cap8"></span>
+                <span class="avatar-phase" id="ph8"></span>
+            </div>
+            <div class="exercise-details">
+                <h4>1. اختبار القوام على الجدار (تقييم الهيكل العظمي) <span class="target-tag">Target: 5/5 contacts + Normal lumbar</span></h4>
+                <p class="sub-en">Wall Postural Assessment — Skeletal Alignment</p>
+                <div class="rest-tag"><i class="fa-solid fa-hourglass-half"></i> فترة الراحة: <b>لا تحتاج — اختبار ثابت</b> <span class="en">No rest needed — static test</span></div>
+                <p class="test-howto">قف بظهرك للجدار وكعباك ملاصقان له (أو على بعد 2–3 سم) بوضعية مريحة وطبيعية دون تصحيح متعمّد، ثم حدّد نقاط الملامسة الخمس التي تلمس الجدار فعلياً. لتقييم الفراغ القطني مرّر كف يدك خلف أسفل الظهر: يتسع لكف واحدة تقريباً (≈ 2–3 سم) = طبيعي، فراغ أكبر بكثير = Lordosis، ولا تمرّ اليد (الظهر ملاصق) = Flat Back.<br><span dir="ltr">Stand with your back to the wall, heels touching (or 2–3 cm away), in your natural relaxed posture. Tick every point that actually touches the wall. For lumbar clearance, slide a flat hand behind the lower back: about one hand thickness = Normal, a much larger gap = Lordosis, no gap / the hand cannot pass = Flat Back.</span></p>
+                <div class="exercise-inputs">
+                    <div class="wall-box" style="grid-column: 1 / -1;">
+                        <div class="wall-title">نقاط ملامسة الجدار (حدّد ما يلامس الجدار) <span class="en">Wall contact points (tick = touching)</span></div>
+                        <div class="wall-checks">
+                            <label class="wall-chip"><input type="checkbox" id="wallHeels"><span>الكعبان <em>Heels</em></span></label>
+                            <label class="wall-chip"><input type="checkbox" id="wallCalves"><span>السمانة <em>Calves</em></span></label>
+                            <label class="wall-chip"><input type="checkbox" id="wallGlutes"><span>الأرداف <em>Glutes</em></span></label>
+                            <label class="wall-chip"><input type="checkbox" id="wallUpper"><span>أعلى الظهر <em>Upper Back</em></span></label>
+                            <label class="wall-chip"><input type="checkbox" id="wallHead"><span>الرأس <em>Head</em></span></label>
+                        </div>
+                    </div>
+                    <div class="input-box">
+                        <label>الفراغ القطني <span class="en">Lumbar Clearance</span></label>
+                        <select id="wallLumbar" required>
+                            <option value="">اختر | Select</option>
+                            <option value="normal">طبيعي | Normal</option>
+                            <option value="lordosis">انحناء زائد | Lordosis</option>
+                            <option value="flat">ظهر مسطّح | Flat Back</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="ymca-live" id="wallLive" aria-live="polite"></div>
+            </div>
+        </div>
+
+
+        <div class="exercise-card">
+            <div class="exercise-avatar-box">
+                <div class="ex-icon" id="avatar2"></div>
+                <span class="gender-badge" id="badge2">MALE</span>
+                <span class="avatar-cap" id="cap2"></span>
+                <span class="avatar-phase" id="ph2"></span>
+            </div>
+            <div class="exercise-details">
+                <h4>2. موبيليتي الكتفين (اختبار أبلي للخدش) <span class="target-tag">Touch / overlap ≥ 0 cm = excellent</span></h4>
+                <p class="sub-en">Apley’s Scratch Test</p>
+                <div class="rest-tag"><i class="fa-solid fa-hourglass-half"></i> فترة الراحة الموصى بها: <b>30–45 ثانية</b> <span class="en">Rest: 30–45 s</span></div>
+                <p class="test-howto">ارفع يدًا فوق الكتف ومدّها لأسفل بين لوحي الكتف، والأخرى من الأسفل لأعلى خلف الظهر. قس المسافة بين أطراف الأصابع بالسنتيمتر: إذا لم تتلامس الأصابع (لم يصل) فسجّل الفجوة بقيمة سالبة (−)، و0 = تلامس تام، وإذا تداخلت الأصابع أو تجاوزت (وصل) فسجّل قيمة موجبة (+).<br><span dir="ltr">Reach one hand over the shoulder and down the spine, the other up from below. Measure the fingertip distance in cm: not reaching = negative (gap), 0 = touching, overlap / beyond = positive.</span></p>
+                <div class="exercise-inputs">
+                    <div class="input-box"><label>الجانب الأيمن (سم: − فجوة / + تداخل) <span class="en">Right over top (cm: − gap / + overlap)</span></label><input type="number" id="apR" step="any" placeholder="0 = تلامس" required></div>
+                    <div class="input-box"><label>الجانب الأيسر (سم: − فجوة / + تداخل) <span class="en">Left over top (cm: − gap / + overlap)</span></label><input type="number" id="apL" step="any" placeholder="0 = تلامس" required></div>
+                </div>
+            </div>
         </div>
 
         <div class="exercise-card">
@@ -1127,32 +1219,13 @@
                 <span class="avatar-phase" id="ph1"></span>
             </div>
             <div class="exercise-details">
-                <h4>1. اختبار المرونة (الجلوس والوصول) <span class="target-tag">Best of 2 trials</span></h4>
+                <h4>3. اختبار المرونة (الجلوس والوصول) <span class="target-tag">Best of 2 trials</span></h4>
                 <p class="sub-en">Sit-and-Reach Test</p>
                 <div class="rest-tag"><i class="fa-solid fa-hourglass-half"></i> فترة الراحة الموصى بها: <b>30–45 ثانية</b> <span class="en">Rest: 30–45 s</span></div>
-                <p class="test-howto">اجلس على الأرض بساقين ممدودتين وقدماك على الصندوق، ثم انحنِ للأمام ببطء وابعد يديك لأقصى مسافة. سجّل المسافة بالسنتيمتر (0 = خط أصابع القدم، وقيمة سالبة = قبل الأصابع).<br><span dir="ltr">Sit with legs straight and feet flat on the box, then reach forward slowly as far as possible. Record cm (0 = toe line, negative = short of toes).</span></p>
+                <p class="test-howto">اجلس على الأرض بساقين ممدودتين وقدماك على الصندوق، ثم انحنِ للأمام ببطء وابعد يديك لأقصى مسافة. سجّل المسافة بالسنتيمتر: 0 = خط أصابع القدم، وقيمة سالبة (−) = لم تصل إلى الأصابع، وقيمة موجبة (+) = تجاوزت خط الأصابع.<br><span dir="ltr">Sit with legs straight and feet flat on the box, then reach forward slowly as far as possible. Record cm (0 = toe line, negative = short of toes, positive = beyond toes).</span></p>
                 <div class="exercise-inputs">
                     <div class="input-box"><label>المحاولة 1 (سم) <span class="en">Trial 1 (cm)</span></label><input type="number" id="srTry1" step="any" placeholder="مثال: 8" required></div>
                     <div class="input-box"><label>المحاولة 2 (سم) <span class="en">Trial 2 (cm)</span></label><input type="number" id="srTry2" step="any" placeholder="مثال: 10" required></div>
-                </div>
-            </div>
-        </div>
-
-        <div class="exercise-card">
-            <div class="exercise-avatar-box">
-                <div class="ex-icon" id="avatar2"></div>
-                <span class="gender-badge" id="badge2">MALE</span>
-                <span class="avatar-cap" id="cap2"></span>
-                <span class="avatar-phase" id="ph2"></span>
-            </div>
-            <div class="exercise-details">
-                <h4>2. موبيليتي الكتفين (اختبار أبلي للخدش) <span class="target-tag">Gap ≤ 0 cm = excellent</span></h4>
-                <p class="sub-en">Apley’s Scratch Test</p>
-                <div class="rest-tag"><i class="fa-solid fa-hourglass-half"></i> فترة الراحة الموصى بها: <b>30–45 ثانية</b> <span class="en">Rest: 30–45 s</span></div>
-                <p class="test-howto">ارفع يدًا فوق الكتف ومدّها لأسفل بين لوحي الكتف، والأخرى من الأسفل لأعلى خلف الظهر. قس المسافة بين أطراف الأصابع بالسنتيمتر (0 = تلامس، وقيمة سالبة = تداخل).<br><span dir="ltr">Reach one hand over the shoulder and down the spine, the other up from below. Measure the fingertip gap in cm (0 = touching, negative = overlap).</span></p>
-                <div class="exercise-inputs">
-                    <div class="input-box"><label>الجانب الأيمن (فجوة سم) <span class="en">Right over top (gap cm)</span></label><input type="number" id="apR" step="any" placeholder="0 = تلامس" required></div>
-                    <div class="input-box"><label>الجانب الأيسر (فجوة سم) <span class="en">Left over top (gap cm)</span></label><input type="number" id="apL" step="any" placeholder="0 = تلامس" required></div>
                 </div>
             </div>
         </div>
@@ -1165,13 +1238,13 @@
                 <span class="avatar-phase" id="ph3"></span>
             </div>
             <div class="exercise-details">
-                <h4>3. التوافق العصبي العضلي (الوقوف على قدم واحدة بعينين مغمضتين) <span class="target-tag">Target: 20–30 s per leg</span></h4>
+                <h4>4. التوافق العصبي العضلي (الوقوف على قدم واحدة بعينين مغمضتين) <span class="target-tag">Target: 20–30 s per leg</span></h4>
                 <p class="sub-en">Neuromuscular Coordination — Closed-Eye Single-Leg Stance with Arms Abducted</p>
                 <div class="rest-tag"><i class="fa-solid fa-hourglass-half"></i> فترة الراحة الموصى بها: <b>45–60 ثانية</b> <span class="en">Rest: 45–60 s</span></div>
                 <p class="test-howto">افرد الذراعين جانبياً كالأجنحة، أغمض عينيك وقف على قدم واحدة. سجّل الزمن بالثواني حتى تلمس القدم المرفوعة الأرض أو تتحرك القدم الثابتة (يمين / يسار).<br><span dir="ltr">Arms spread out like wings, eyes closed, stand on one leg. Record seconds per leg until the lifted foot touches down or the standing foot shifts.</span></p>
                 <div class="exercise-inputs">
-                    <div class="input-box"><label>القدم اليمنى (ثواني) <span class="en">Right leg (s)</span></label><input type="number" id="slsR" step="1" placeholder="أقصى 60" required></div>
-                    <div class="input-box"><label>القدم اليسرى (ثواني) <span class="en">Left leg (s)</span></label><input type="number" id="slsL" step="1" placeholder="أقصى 60" required></div>
+                    <div class="input-box"><label>القدم اليمنى (ثواني) <span class="en">Right leg (s)</span></label><input type="number" id="slsR" min="0" step="1" placeholder="أقصى 60" required></div>
+                    <div class="input-box"><label>القدم اليسرى (ثواني) <span class="en">Left leg (s)</span></label><input type="number" id="slsL" min="0" step="1" placeholder="أقصى 60" required></div>
                 </div>
             </div>
         </div>
@@ -1184,13 +1257,13 @@
                 <span class="avatar-phase" id="ph4"></span>
             </div>
             <div class="exercise-details">
-                <h4>4. اتزان وثبات الجذع الخلفي (سوبرمان متقاطع على أربع) <span class="target-tag">Target: ≥ 45 s per side</span></h4>
+                <h4>5. اتزان وثبات الجذع الخلفي (سوبرمان متقاطع على أربع) <span class="target-tag">Target: ≥ 45 s per side</span></h4>
                 <p class="sub-en">Posterior Core Stability — Quadruped Superman (Bird-Dog) Hold</p>
                 <div class="rest-tag"><i class="fa-solid fa-hourglass-half"></i> فترة الراحة الموصى بها: <b>60–90 ثانية</b> <span class="en">Rest: 60–90 s</span></div>
                 <p class="test-howto">من وضع الأربع، مدّ الذراع مع الساق المقابلة لها (متقاطعين) في خط واحد مع الجذع وثبّت دون ميلان الحوض. أدِّ التمرين على الجانبين: الجانب الأيمن (ذراع يمنى مع ساق يسرى) ثم الجانب الأيسر (ذراع يسرى مع ساق يمنى)، وسجّل زمن الثبات لكل جانب بالثواني.<br><span dir="ltr">From all fours, extend the opposite arm and leg in line with the torso without rotating the pelvis. Perform both cross sides — right arm + left leg, then left arm + right leg — and record the hold time for each side in seconds.</span></p>
                 <div class="exercise-inputs">
-                    <div class="input-box"><label>زمن ثبات الجانب الأيمن (ثواني) <span class="en">Right Side Hold Time (s)</span></label><input type="number" id="plankR" step="any" placeholder="بالثواني" required></div>
-                    <div class="input-box"><label>زمن ثبات الجانب الأيسر (ثواني) <span class="en">Left Side Hold Time (s)</span></label><input type="number" id="plankL" step="any" placeholder="بالثواني" required></div>
+                    <div class="input-box"><label>زمن ثبات الجانب الأيمن (ثواني) <span class="en">Right Side Hold Time (s)</span></label><input type="number" id="plankR" min="0" step="any" placeholder="بالثواني" required></div>
+                    <div class="input-box"><label>زمن ثبات الجانب الأيسر (ثواني) <span class="en">Left Side Hold Time (s)</span></label><input type="number" id="plankL" min="0" step="any" placeholder="بالثواني" required></div>
                 </div>
             </div>
         </div>
@@ -1203,12 +1276,12 @@
                 <span class="avatar-phase" id="ph5"></span>
             </div>
             <div class="exercise-details">
-                <h4>5. قوة وتحمل الجزء السفلي (سكوات البوكس خلال 30 ثانية) <span class="target-tag">Target: ≥ 15 reps</span></h4>
+                <h4>6. قوة وتحمل الجزء السفلي (سكوات البوكس خلال 30 ثانية) <span class="target-tag">Target: ≥ 15 reps</span></h4>
                 <p class="sub-en">30s Box Squat Test</p>
                 <div class="rest-tag"><i class="fa-solid fa-hourglass-half"></i> فترة الراحة الموصى بها: <b>90–120 ثانية</b> <span class="en">Rest: 90–120 s</span></div>
                 <p class="test-howto">قف أمام بوكس رياضي بارتفاع ثابت، انزل حتى يلامس الحوض البوكس ثم قف بالكامل. سجّل عدد التكرارات الصحيحة خلال 30 ثانية.<br><span dir="ltr">Stand in front of a gym box, lower until you touch it, then stand fully. Count correct reps in 30 seconds.</span></p>
                 <div class="exercise-inputs">
-                    <div class="input-box"><label>عدد التكرارات في 30 ثانية <span class="en">Reps in 30 s</span></label><input type="number" id="chairReps" step="1" placeholder="عدد الوقفات" required></div>
+                    <div class="input-box"><label>عدد التكرارات في 30 ثانية <span class="en">Reps in 30 s</span></label><input type="number" id="chairReps" min="0" step="1" placeholder="عدد الوقفات" required></div>
                 </div>
             </div>
         </div>
@@ -1221,12 +1294,12 @@
                 <span class="avatar-phase" id="ph6"></span>
             </div>
             <div class="exercise-details">
-                <h4>6. تحمل الجزء العلوي (الضغط على الركبتين) <span class="target-tag">Target: ≥ 15 reps</span></h4>
+                <h4>7. تحمل الجزء العلوي (الضغط على الركبتين) <span class="target-tag">Target: ≥ 15 reps</span></h4>
                 <p class="sub-en">Kneeling Push-Up Test</p>
                 <div class="rest-tag"><i class="fa-solid fa-hourglass-half"></i> فترة الراحة الموصى بها: <b>120 ثانية</b> <span class="en">Rest: 120 s</span></div>
                 <p class="test-howto">من وضع الركبتين على الأرض واليدان تحت الكتفين، انزل بالصدر حتى يقترب من الأرض ثم ادفع للأعلى. سجّل أقصى عدد تكرارات بأداء سليم.<br><span dir="ltr">Kneel with hands under shoulders, lower the chest close to the floor and press back up. Record the maximum reps with good form.</span></p>
                 <div class="exercise-inputs">
-                    <div class="input-box"><label>أقصى عدد تكرارات <span class="en">Max reps</span></label><input type="number" id="kpuReps" step="1" placeholder="عدد التكرارات" required></div>
+                    <div class="input-box"><label>أقصى عدد تكرارات <span class="en">Max reps</span></label><input type="number" id="kpuReps" min="0" step="1" placeholder="عدد التكرارات" required></div>
                 </div>
             </div>
         </div>
@@ -1239,15 +1312,16 @@
                 <span class="avatar-phase" id="ph7"></span>
             </div>
             <div class="exercise-details">
-                <h4>7. الكارديو واستشفاء النبض (اختبار YMCA للصعود 3 دقائق) <span class="target-tag">24 steps/min · 3 min</span></h4>
+                <h4>8. الكارديو واستشفاء النبض (اختبار YMCA للصعود 3 دقائق) <span class="target-tag">24 steps/min · 3 min</span></h4>
                 <p class="sub-en">3-Min YMCA Step Test</p>
                 <div class="rest-tag"><i class="fa-solid fa-hourglass-half"></i> فترة الراحة الموصى بها: <b>اختبار ختامي — استشفاء كامل بعده</b> <span class="en">Final test, full recovery after</span></div>
                 <p class="test-howto">اصعد وانزل عن صندوق ارتفاعه 30 سم لمدة 3 دقائق بإيقاع 24 خطوة/دقيقة. فور الانتهاء سجّل أقصى نبض، ثم اجلس وقس الزمن اللازم لعودة النبض إلى نبض الراحة.<br><span dir="ltr">Step up and down a 30 cm box for 3 minutes at 24 steps/min. Right after finishing record the peak HR, then sit and time how long the pulse takes to return to resting.</span></p>
                 <div class="exercise-inputs">
-                    <div class="input-box"><label>نبض الراحة الأساسي (نبضة/د) <span class="en">Resting HR (bpm)</span></label><input type="number" id="ymcaRest" step="1" placeholder="Resting HR" required></div>
-                    <div class="input-box"><label>أقصى نبض فور الانتهاء (نبضة/د) <span class="en">Peak HR right after (bpm)</span></label><input type="number" id="ymcaPeak" step="1" placeholder="Peak HR" required></div>
-                    <div class="input-box"><label>زمن استشفاء النبض للراحة (ثواني) <span class="en">Recovery time to resting (s)</span></label><input type="number" id="ymcaRec" step="1" placeholder="Recovery Time" required></div>
+                    <div class="input-box"><label>نبض الراحة الأساسي (نبضة/د) <span class="en">Resting HR (bpm)</span></label><input type="number" id="ymcaRest" min="0" step="1" placeholder="Resting HR" required></div>
+                    <div class="input-box"><label>أقصى نبض خلال الـ 3 دقائق / فور الانتهاء (نبضة/د) <span class="en">Peak HR during the 3 min (bpm)</span></label><input type="number" id="ymcaPeak" min="0" step="1" placeholder="Peak HR" required></div>
+                    <div class="input-box"><label>زمن استشفاء النبض للراحة (بالثواني الكاملة) <span class="en">Recovery time to resting (total whole seconds)</span></label><input type="number" id="ymcaRec" step="1" min="1" inputmode="numeric" placeholder="ثواني كاملة، مثال: 90" required></div>
                 </div>
+                <div class="bf-sec-note" role="note"><i class="fa-solid fa-circle-info"></i><div><b>ملاحظة للمدرب:</b> سجّل زمن استشفاء النبض <b>بالثواني الكاملة المتراكمة</b> وليس بالدقائق، واحسب الثواني بدقة (مثال: 60 ثانية وليس 1، و1 دقيقة و30 ثانية = 90 ثانية). يمكنك استخدام عدّاد الاستشفاء (Start) أسفل الحقل لتجميع الثواني تلقائياً. <span class="en">Coach note: enter the recovery time as total accumulated whole seconds, not minutes, and count them precisely (e.g. 60 s, not 1; 1 min 30 s = 90 s). Use the recovery timer (Start) under the field to accumulate the seconds automatically.</span></div></div>
                 <div class="ymca-live" id="ymcaLive" aria-live="polite"></div>
             </div>
         </div>
@@ -1317,7 +1391,7 @@
     // ===== Exercise avatars: real-time 3D figures (self-contained engine, no libraries) =====
     const AVATAR_CAPTIONS = [
         'SIT-AND-REACH', 'APLEY SCRATCH', 'CLOSED-EYE ONE-LEG', 'SUPERMAN (BIRD-DOG)',
-        '30s BOX SQUAT', 'KNEELING PUSH-UP', '3-MIN STEP TEST'
+        '30s BOX SQUAT', 'KNEELING PUSH-UP', '3-MIN STEP TEST', 'WALL POSTURE TEST'
     ];
     const AV_D = { tor: 50, neck: 7, ua: 28, fa: 26, th: 42, sh: 40, ft: 14 };
     const AV_ST = {
@@ -1394,14 +1468,22 @@
             return { hip: hip, dir: [0, 1, 0.08],
                 hands: [[S.sw + 3, hip[1] - 3, hip[2] + sw], [-S.sw - 3, hip[1] - 3, hip[2] - sw]], hp: [[0.5, -1, -0.2], [-0.5, -1, -0.2]],
                 feet: [[S.hw, avLerp(8, 33, n) + 14 * Math.sin(Math.PI * n), avLerp(0, 50, n)], [-S.hw, avLerp(8, 33, f) + 14 * Math.sin(Math.PI * f), avLerp(0, 50, f)]], fp: [[0, 0.1, 1], [0, 0.1, 1]] };
+        },
+        function (t, S) {   // 8 wall postural test: back to the wall, five contact points highlighted
+            const Zw = -13.5, off = 18 * (1 - t), hz = Zw + S.rPel + 0.3 + off, th = avLerp(0.07, 0.02, t), fz = Zw + 6.4 + off, lift = 3 * Math.sin(Math.PI * Math.min(1, t * 1.25));
+            return { hip: [0, 90, hz], dir: [0, Math.cos(th), Math.sin(th)],
+                hands: [[S.sw + 3, 87, hz], [-S.sw - 3, 87, hz]], hp: [[0.3, -1, -0.2], [-0.3, -1, -0.2]],
+                feet: [[S.hw, 8 + lift, fz], [-S.hw, 8 + lift * 0.6, fz]], fp: [[0, 0.15, 1], [0, 0.15, 1]],
+                wall: { z: Zw, t: t, pts: [[155, 'HEAD'], [125, 'UPPER BACK'], [88, 'GLUTES'], [36, 'CALVES'], [9, 'HEELS']] } };
         }
     ];
     // camera per exercise: az0 start angle, sw swing, T look-at, zm zoom, spin = full rotation
     const AV_CAM = [null,
         { az0: 1.35, sw: 0.4, T: [0, 40, 20], zm: 1 }, { az0: 3.14, sw: 0.3, T: [0, 80, 0], zm: 0.92 }, { spin: 1, T: [0, 80, 5], zm: 0.92 },
-        { az0: 1.1, sw: 0.4, T: [0, 35, -10], zm: 0.92 }, { az0: 0.8, sw: 0.35, T: [0, 78, -6], zm: 0.9 }, { az0: 1.25, sw: 0.35, T: [0, 35, 20], zm: 0.95 }, { az0: 0.8, sw: 0.3, T: [0, 92, 25], zm: 0.82 }
+        { az0: 1.1, sw: 0.4, T: [0, 35, -10], zm: 0.92 }, { az0: 0.8, sw: 0.35, T: [0, 78, -6], zm: 0.9 }, { az0: 1.25, sw: 0.35, T: [0, 35, 20], zm: 0.95 }, { az0: 0.8, sw: 0.3, T: [0, 92, 25], zm: 0.82 },
+        { az0: 1.36, sw: 0.05, T: [0, 85, -8], zm: 0.9 }
     ];
-    const AV_BOX = [null, [[-22, 0, 60], [22, 22, 70], [-3, 22, 60], [3, 24, 140]], null, null, [[-40, 0, -110], [40, 3, 70]], [[-26, 0, -50], [26, 42, -8]], [[-40, 0, -95], [40, 3, 75]], [[-35, 0, 28], [35, 25, 78]]];
+    const AV_BOX = [null, [[-22, 0, 60], [22, 22, 70], [-3, 22, 60], [3, 24, 140]], null, null, [[-40, 0, -110], [40, 3, 70]], [[-26, 0, -50], [26, 42, -8]], [[-40, 0, -95], [40, 3, 75]], [[-35, 0, 28], [35, 25, 78]], [[-45, 0, -28], [45, 185, -13.5], null, null, -1e4, '#c9d3e3']];
 
     function avRig(p, S) {
         const D = AV_D, hip = p.hip, dir = vNrm(p.dir), sh = vAdd(hip, vMul(dir, D.tor));
@@ -1465,16 +1547,16 @@
         // ---- props
         const bx = AV_BOX[i];
         if (bx) {
-            const boxItem = function (a, b, col) {
+            const boxItem = function (a, b, col, zo) {
                 const v = [[a[0], a[1], a[2]], [b[0], a[1], a[2]], [b[0], b[1], a[2]], [a[0], b[1], a[2]], [a[0], a[1], b[2]], [b[0], a[1], b[2]], [b[0], b[1], b[2]], [a[0], b[1], b[2]]];
                 const F6 = [[0, 1, 2, 3, 0.8], [4, 5, 6, 7, 0.8], [0, 1, 5, 4, 0.7], [3, 2, 6, 7, 1.1], [0, 3, 7, 4, 0.9], [1, 2, 6, 5, 0.9]];
-                items.push({ z: pr(vLerp(a, b, 0.5)).z, draw: function () {
+                items.push({ z: zo !== undefined ? zo : pr(vLerp(a, b, 0.5)).z, draw: function () {
                     F6.map(function (f) { const q = f.slice(0, 4).map(function (k) { return pr(v[k]); }); return { q: q, m: f[4], z: (q[0].z + q[1].z + q[2].z + q[3].z) / 4 }; })
                         .sort(function (u, w) { return u.z - w.z; })
                         .forEach(function (f) { poly(f.q); ctx.fillStyle = avTone(col, f.m); ctx.fill(); ctx.strokeStyle = 'rgba(30,41,59,0.35)'; ctx.lineWidth = 0.8; ctx.stroke(); });
                 } });
             };
-            boxItem(bx[0], bx[1], '#8b97ab'); if (bx[2]) boxItem(bx[2], bx[3], '#64748b');
+            boxItem(bx[0], bx[1], bx[5] || '#8b97ab', bx[4]); if (bx[2]) boxItem(bx[2], bx[3], '#64748b');
         }
         // ---- frame of the torso
         const right = [1, 0, 0], fwd = vNrm([0, -R.dir[2], R.dir[1]]), up = R.dir, fc = tr(fwd)[2], front = fc > -0.15, back = fc < 0.15;
@@ -1543,6 +1625,23 @@
             const m0 = pr(vAdd(hc, [0, -r * 0.46, r * 0.92]));
             if (m0.z - hz > r * 0.25) { ctx.fillStyle = S.lip; ctx.beginPath(); ctx.ellipse(m0.x, m0.y, m0.s * (S.fem ? 2.9 : 2.5), m0.s * (S.fem ? 1.1 : 0.8), 0, 0, 6.2832); ctx.fill(); }
         });
+        // ---- wall test: contact markers drawn on the wall surface (always on top)
+        if (p.wall) {
+            const wl = p.wall, al = Math.max(0, Math.min(1, (wl.t - 0.72) / 0.28)), pulse = (Math.sin(ts / 260) + 1) / 2;
+            items.push({ z: 1e4, draw: function () {
+                if (al <= 0) return;
+                ctx.save(); ctx.globalAlpha = al; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.font = '700 9.5px Montserrat, Arial, sans-serif';
+                try { ctx.direction = 'ltr'; } catch (er) { }
+                wl.pts.forEach(function (m) {
+                    const P = pr([0, m[0], wl.z]), lx = AV_W * 0.68;
+                    ctx.strokeStyle = 'rgba(4,120,87,0.45)'; ctx.lineWidth = 1; ctx.setLineDash([3, 3]); ctx.beginPath(); ctx.moveTo(P.x + P.s * 5, P.y); ctx.lineTo(lx - 4, P.y); ctx.stroke(); ctx.setLineDash([]);
+                    ctx.strokeStyle = 'rgba(16,185,129,' + (0.6 - 0.4 * pulse).toFixed(2) + ')'; ctx.lineWidth = 1.6; ctx.beginPath(); ctx.arc(P.x, P.y, P.s * (3.6 + pulse * 3.4), 0, 6.2832); ctx.stroke();
+                    ctx.fillStyle = '#10b981'; ctx.beginPath(); ctx.arc(P.x, P.y, P.s * 2.6, 0, 6.2832); ctx.fill(); ctx.strokeStyle = '#fff'; ctx.lineWidth = 1; ctx.stroke();
+                    ctx.fillStyle = '#047857'; ctx.fillText(m[1], lx, P.y);
+                });
+                ctx.restore();
+            } });
+        }
         items.sort(function (a, b) { return a.z - b.z; }).forEach(function (it) { it.draw(); });
     }
 
@@ -1572,13 +1671,13 @@
         avRaf = requestAnimationFrame(avTick);
         if (document.hidden || ts - avLast < 33) return;
         avLast = ts;
-        for (let i = 1; i <= 7; i++) { if (avVis[i] !== false) avRenderOne(i, avProg(ts + i * 330), ts); }
+        for (let i = 1; i <= 8; i++) { if (avVis[i] !== false) avRenderOne(i, avProg(ts + i * 330), ts); }
     }
     function avStart() {
         if (avReduced() || avRaf) return;
         if ('IntersectionObserver' in window && !avStart.obs) {
             avStart.obs = new IntersectionObserver(function (es) { es.forEach(function (en) { avVis[parseInt(en.target.id.replace('avatar', ''), 10)] = en.isIntersecting; }); }, { rootMargin: '120px' });
-            for (let i = 1; i <= 7; i++) { const el = document.getElementById('avatar' + i); if (el) avStart.obs.observe(el); }
+            for (let i = 1; i <= 8; i++) { const el = document.getElementById('avatar' + i); if (el) avStart.obs.observe(el); }
         }
         avRaf = requestAnimationFrame(avTick);
     }
@@ -1588,7 +1687,7 @@
         avGender = gender;
         document.documentElement.style.setProperty('--accent-gender', gender === 'female' ? '#f472b6' : '#38bdf8');
         const now = (window.performance && performance.now) ? performance.now() : Date.now();
-        for (let i = 1; i <= 7; i++) {
+        for (let i = 1; i <= 8; i++) {
             document.getElementById('badge' + i).innerText = gender === 'female' ? 'FEMALE' : 'MALE';
             document.getElementById('cap' + i).innerText = AVATAR_CAPTIONS[i - 1];
             avRenderOne(i, avReduced() ? 1 : avProg(now + i * 330), now);
@@ -2785,28 +2884,28 @@
         const reachShift = Math.max(0, realAge - 30) * 0.12;
         const flexScore = isFemale ? lin(reachBest, -6 - reachShift, 14 - reachShift) : lin(reachBest, -12 - reachShift, 8 - reachShift);
 
-        // 2) Apley's Scratch: fingertip gap (cm) per side, 0 or less = full score
-        const apScore = (lin(num('apR', 15), 15, 0) + lin(num('apL', 15), 15, 0)) / 2;
+        // 2) Apley's Scratch: signed cm per side. Negative = fingertips did not meet (gap), 0 = touch, positive = overlap (full score from 0 up)
+        const apScore = (lin(num('apR', -15), -15, 0) + lin(num('apL', -15), -15, 0)) / 2;
 
         // 3) Single-Leg Stance (eyes open): age-based reference time
         const slsTarget = realAge < 40 ? 30 : realAge < 60 ? 25 : 20; // closed-eye target 20-30 s per leg
-        const balScore = Math.min(((num('slsR', 0) + num('slsL', 0)) / 2 / slsTarget) * 100, 100);
+        const balScore = Math.min(((Math.max(0, num('slsR', 0)) + Math.max(0, num('slsL', 0))) / 2 / slsTarget) * 100, 100);
 
         // 4) Forearm Plank: 120 s = full score
-        const plankScore = Math.min(((num('plankR', 0) + num('plankL', 0)) / 2 / 45) * 100, 100); // average of both cross sides, target 45 s each
+        const plankScore = Math.min(((Math.max(0, num('plankR', 0)) + Math.max(0, num('plankL', 0))) / 2 / 45) * 100, 100); // average of both cross sides, target 45 s each
 
         // 5) 30s Chair Stand: age and gender reference reps
         const chairRef = isFemale
             ? (realAge < 60 ? 20 : realAge < 65 ? 17 : realAge < 70 ? 16 : realAge < 80 ? 15 : realAge < 85 ? 14 : realAge < 90 ? 13 : 11)
             : (realAge < 60 ? 22 : realAge < 65 ? 19 : realAge < 70 ? 18 : realAge < 80 ? 17 : realAge < 85 ? 15 : realAge < 90 ? 14 : 12);
-        const chairScore = Math.min((num('chairReps', 0) / 15) * 100, 100); // Box Squat target >= 15
+        const chairScore = Math.min((Math.max(0, num('chairReps', 0)) / 15) * 100, 100); // Box Squat target >= 15
 
         // 6) Kneeling Push-Up: reference reps drop 3 per decade after 30
         const kpuRef = 15; // target >= 15 reps
-        const pushScore = Math.min((num('kpuReps', 0) / kpuRef) * 100, 100);
+        const pushScore = Math.min((Math.max(0, num('kpuReps', 0)) / kpuRef) * 100, 100);
 
         // 7) 3-Min YMCA Step Test: peak HR (% of age-predicted max), recovery time and recovery rate
-        const hrRest = num('ymcaRest', 70), hrPeak = num('ymcaPeak', 140), hrRecSec = Math.max(num('ymcaRec', 120), 1);
+        const hrRest = num('ymcaRest', 70), hrPeak = num('ymcaPeak', 140), hrRecSec = Math.max(Math.round(num('ymcaRec', 120)), 1);   // recovery time is whole seconds (never minutes)
         const hrPeakEl = document.getElementById('ymcaPeak');
         if (!(hrPeak > hrRest)) {
             hrPeakEl.setCustomValidity('أقصى نبض يجب أن يكون أكبر من نبض الراحة | Peak HR must be higher than resting HR');
@@ -2822,7 +2921,13 @@
         const cardioRateScore = lin(hrRate, 0.2, 0.8);
         const cardioScore = cardioPeakScore * 0.4 + cardioTimeScore * 0.3 + cardioRateScore * 0.3;
 
-        const testAverage = (flexScore + apScore + balScore + plankScore + chairScore + pushScore + cardioScore) / 7;
+        // 8) Wall postural assessment: 5 contact points x 12 pts + lumbar clearance (Normal 40 / Flat back 20 / Lordosis 15) = 100
+        const wallEv = wallEval();
+        const postureScore = wallEv.score;
+        const postureNotes = wallFindings(wallEv);
+        const postureText = wallEv.contacts + '/5 contacts · ' + ({ normal: 'Normal', lordosis: 'Lordosis', flat: 'Flat Back' }[wallEv.lumbar] || '—');
+
+        const testAverage = (flexScore + apScore + balScore + plankScore + chairScore + pushScore + cardioScore + postureScore) / 8;
         const muscleTestsAvg = (flexScore + apScore + balScore + plankScore + chairScore + pushScore) / 6;
 
         // ----- Body composition from InBody 770 (PBF + SMM) -----
@@ -2847,7 +2952,7 @@
             ['الكارديو واستشفاء النبض | Cardio & HR recovery', cardioScore]
         ];
         const testParts = [
-            ['المرونة | Sit-and-Reach', flexScore], ['موبيليتي الكتفين | Apley', apScore], ['التوافق العصبي | Closed-Eye Stance', balScore],
+            ['القوام على الجدار | Wall Posture', postureScore], ['موبيليتي الكتفين | Apley', apScore], ['المرونة | Sit-and-Reach', flexScore], ['التوافق العصبي | Closed-Eye Stance', balScore],
             ['ثبات الجذع (سوبرمان) | Superman Bird-Dog', plankScore], ['القوة السفلية | Box Squat', chairScore], ['تحمل علوي | Kneeling Push-Up', pushScore],
             ['الكارديو | YMCA Step', cardioScore]
         ];
@@ -2887,12 +2992,13 @@
 
         summaryHTML += '<br><br><strong>تفاصيل حساب العمر البيولوجي | Biological-age inputs:</strong><br>' +
             bioParts.map(function (x) { return '• ' + x[0] + ': <b>' + Math.round(x[1]) + '%</b>'; }).join('<br>') +
-            '<br><br><strong>درجات الاختبارات السبعة | The 7 tests:</strong><br>' +
+            '<br><br><strong>درجات الاختبارات الثمانية | The 8 tests:</strong><br>' +
             testParts.map(function (x) { return '• ' + x[0] + ': <b>' + Math.round(x[1]) + '%</b>'; }).join('<br>') +
             '<br>• نبض الاستشفاء | HR recovery: <b>' + (Math.round(hrRate * 100) / 100) + '</b> bpm/s · ' + Math.round(hrPeakPct) + '% HRmax';
+        if (postureNotes.length) summaryHTML += '<br><br><strong>ملاحظات القوام | Postural findings:</strong><br>' + postureNotes.map(function (x) { return '• ' + x; }).join('<br>') + '<br><span style="color:#64748b">مؤشرات فحص أولي وليست تشخيصاً طبياً. | Screening indicators only, not a diagnosis.</span>';
         document.getElementById('detailedReportText').innerHTML = summaryHTML;
         window.BFIT_LAST = { client: client, coach: coach, gender: gender, realAge: realAge, weight: weight, fat: fat, smm: smm, height: num('heightInput', 0),
-bioAge: biologicalAge, fitness: fitnessScore, flags: flags, notes: notes, clearance: needsMedicalClearance, bioParts: bioParts, testParts: testParts, hrRate: hrRate, hrPeakPct: hrPeakPct, bodyComp: bodyCompScore, reachBest: reachBest };
+bioAge: biologicalAge, fitness: fitnessScore, flags: flags, notes: notes, clearance: needsMedicalClearance, bioParts: bioParts, testParts: testParts, hrRate: hrRate, hrPeakPct: hrPeakPct, bodyComp: bodyCompScore, reachBest: reachBest, postureScore: postureScore, postureText: postureText, postureNotes: postureNotes };
 renderReportExtras(flags.length > 0, needsMedicalClearance);
         const area = document.getElementById('resultArea');
         area.style.display = 'block';
@@ -2905,7 +3011,7 @@ renderReportExtras(flags.length > 0, needsMedicalClearance);
         const D = window.BFIT_LAST; if (!D) return null;
         const n = computeNutrition(), k = computeKarvonen(), v = function (id) { const x = document.getElementById(id).value; return x === '' ? '—' : x; };
         const tag = function (nn) { const h = Array.prototype.find.call(document.querySelectorAll('.exercise-details h4'), function (x) { return x.textContent.trim().indexOf(nn + '.') === 0; }); const t = h && h.querySelector('.target-tag'); return t ? t.textContent.trim() : '—'; };
-        const entered = [v('srTry1') + ' / ' + v('srTry2') + ' cm', v('apR') + ' / ' + v('apL') + ' cm (R/L)', v('slsR') + ' / ' + v('slsL') + ' s (R/L)', v('plankR') + ' / ' + v('plankL') + ' s (R/L)', v('chairReps') + ' reps', v('kpuReps') + ' reps', 'Rest ' + v('ymcaRest') + ' | Peak ' + v('ymcaPeak') + ' | Rec ' + v('ymcaRec') + 's'];
+        const entered = [(D.postureText || '—'), v('apR') + ' / ' + v('apL') + ' cm (R/L)', v('srTry1') + ' / ' + v('srTry2') + ' cm', v('slsR') + ' / ' + v('slsL') + ' s (R/L)', v('plankR') + ' / ' + v('plankL') + ' s (R/L)', v('chairReps') + ' reps', v('kpuReps') + ' reps', 'Rest ' + v('ymcaRest') + ' | Peak ' + v('ymcaPeak') + ' | Rec ' + v('ymcaRec') + 's'];
         const B = [];
         B.push({ t: 'sec', x: 'بيانات المشترك والإنبودي | Client & InBody' });
         B.push({ t: 'tbl', w: [.2, .3, .2, .3], r: [['المشترك | Client', D.client, 'المدرب | Coach', D.coach], ['الجنس | Gender', D.gender === 'male' ? 'ذكر | Male' : 'أنثى | Female', 'العمر | Age', String(D.realAge)],
@@ -2917,9 +3023,10 @@ renderReportExtras(flags.length > 0, needsMedicalClearance);
         if (D.flags.length) { D.flags.forEach(function (f) { B.push({ t: 'p', x: '• ' + f }); }); if (D.clearance) B.push({ t: 'p', x: 'يلزم الحصول على موافقة طبية قبل بدء البرنامج.', c: '#dc2626', b: 1 }); }
         else B.push({ t: 'p', x: 'لا توجد ملاحظات صحية مسجلة | No health flags.' });
         if (D.notes) B.push({ t: 'p', x: 'ملاحظات المشترك: ' + D.notes });
-        B.push({ t: 'sec', x: 'الاختبارات السبعة (بالقيم المُدخلة) | Fitness Tests' });
+        B.push({ t: 'sec', x: 'الاختبارات الثمانية (بالقيم المُدخلة) | Fitness Tests' });
         B.push({ t: 'tbl', head: 1, w: [.3, .3, .26, .14], r: [['الاختبار | Test', 'النتيجة الفعلية | Result', 'الهدف | Target', 'الدرجة']].concat(D.testParts.map(function (x, i) { return [x[0], entered[i], tag(i + 1), Math.round(x[1]) + '%']; })) });
         B.push({ t: 'p', x: 'استشفاء النبض | HR recovery: ' + (Math.round(D.hrRate * 100) / 100) + ' bpm/s — ' + Math.round(D.hrPeakPct) + '% HRmax' });
+        if (D.postureNotes && D.postureNotes.length) { B.push({ t: 'p', x: 'ملاحظات القوام | Postural findings (screening only):', b: 1 }); D.postureNotes.forEach(function (f) { B.push({ t: 'p', x: '• ' + f }); }); }
         if (n) {
             B.push({ t: 'sec', x: 'السعرات والماكروز | Calories & Macros' });
             if (n.twUsed) { B.push({ t: 'p', x: 'مقترح ذكي: بناءً على الوزن المستهدف (' + document.getElementById('targetWeight').value + ' كجم) مقابل الوزن الحالي (' + document.getElementById('weightInput').value + ' كجم)، تم ضبط السعرات تلقائياً على ' + n.autoKcal + ' سعرة (' + (n.adj > 0 ? '+' : '−') + Math.abs(n.adj) + ' عن الأساس) بمعدل نحو ' + n.rate.toFixed(2) + ' كجم أسبوعياً.' }); }
@@ -3014,13 +3121,16 @@ renderReportExtras(flags.length > 0, needsMedicalClearance);
 
 
     // ===== Touch steppers (− / + / ±) for every test input: lets phones enter negative values and count up/down =====
+    const BF_NONNEG = ['slsR', 'slsL', 'plankR', 'plankL', 'chairReps', 'kpuReps', 'ymcaRest', 'ymcaPeak', 'ymcaRec'];
     function initMobileSteppers() {
         ['srTry1', 'srTry2', 'apR', 'apL', 'slsR', 'slsL', 'plankR', 'plankL', 'chairReps', 'kpuReps', 'ymcaRest', 'ymcaPeak', 'ymcaRec'].forEach(function (id) {
             const el = document.getElementById(id); if (!el || el.dataset.stp) return; el.dataset.stp = '1';
-            el.removeAttribute('min'); el.removeAttribute('max'); if (!el.step || el.step === '0.5') el.setAttribute('step', 'any');
+            const nn = BF_NONNEG.indexOf(id) >= 0;   // counters that can never be negative (time / reps / heart rate)
+            if (nn) el.setAttribute('min', id === 'ymcaRec' ? '1' : '0'); else el.removeAttribute('min');
+            el.removeAttribute('max'); if (!el.step || el.step === '0.5') el.setAttribute('step', 'any');
             const row = document.createElement('div'); row.className = 'stepper-row'; el.parentNode.insertBefore(row, el);
             const fire = function () { el.dispatchEvent(new Event('input', { bubbles: true })); el.dispatchEvent(new Event('change', { bubbles: true })); };
-            const bump = function (d) { const v = parseFloat(el.value); el.value = String(Math.round(((isNaN(v) ? 0 : v) + d) * 100) / 100); fire(); };
+            const bump = function (d) { const v = parseFloat(el.value); let nv = Math.round(((isNaN(v) ? 0 : v) + d) * 100) / 100; if (nn && nv < 0) nv = 0; el.value = String(nv); fire(); };
             const mk = function (txt, cls, fn, hold) {
                 const b = document.createElement('button'); b.type = 'button'; b.className = 'num-step ' + cls; b.textContent = txt; b.setAttribute('aria-label', txt);
                 let t1 = 0, t2 = 0; const stop = function () { clearTimeout(t1); clearInterval(t2); };
@@ -3030,7 +3140,7 @@ renderReportExtras(flags.length > 0, needsMedicalClearance);
                 return b;
             };
             row.appendChild(mk('−', 'mn', function () { bump(-1); }, true)); row.appendChild(el); row.appendChild(mk('+', 'pl', function () { bump(1); }, true));
-            row.appendChild(mk('±', 'sg', function () { const v = parseFloat(el.value); if (isNaN(v)) { el.focus(); return; } el.value = String(-v); fire(); }, false));
+            if (!nn) row.appendChild(mk('±', 'sg', function () { const v = parseFloat(el.value); if (isNaN(v)) { el.focus(); return; } el.value = String(-v); fire(); }, false));   // sign flip only for two-direction ROM tests
         });
     }
 
@@ -3117,6 +3227,7 @@ renderReportExtras(flags.length > 0, needsMedicalClearance);
             const rate = (peak - rest) / rec;
             let h = 'معدل استشفاء النبض: <b>' + (Math.round(rate * 100) / 100) + '</b> نبضة/ث <span class="en">HR recovery rate (bpm/s)</span>';
             if (age > 0) h += '<br>أقصى نبض = <b>' + Math.round(peak / Math.max(220 - age, 100) * 100) + '%</b> من النبض الأقصى المتوقع <span class="en">of predicted HRmax</span>';
+            if (rec < 15) h += '<br><span class="bf-warn">⚠️ القيمة صغيرة: هل أدخلتها بالدقائق؟ يجب إدخال الثواني الكاملة (مثال: 60 = دقيقة واحدة). <span class="en">Looks like minutes — enter whole seconds (e.g. 60 = 1 min).</span></span>';
             out.innerHTML = h;
         }
         ids.forEach(function (id) {
@@ -3127,12 +3238,97 @@ renderReportExtras(flags.length > 0, needsMedicalClearance);
         refresh();
     }
 
+    // ===== Start counters (positive only) for timed tests =====
+    function initCounters() {
+        [['slsR', 60], ['slsL', 60], ['plankR', 300], ['plankL', 300], ['ymcaRec', 900]].forEach(function (cfg) {
+            const id = cfg[0], max = cfg[1], el = document.getElementById(id);
+            if (!el || el.dataset.ctr) return; el.dataset.ctr = '1';
+            const box = el.closest('.input-box'); if (!box) return;
+            const wrap = document.createElement('div'); wrap.className = 'bf-timer';
+            const START = '▶ ابدأ <small>Start</small>', STOP = '■ إيقاف <small>Stop</small>';
+            wrap.innerHTML = '<span class="bf-timer-val">0</span><span class="bf-timer-u">s</span><button type="button" class="bf-go">' + START + '</button><button type="button" class="bf-rs">↺ <small>Reset</small></button>';
+            box.appendChild(wrap);
+            const val = wrap.querySelector('.bf-timer-val'), go = wrap.querySelector('.bf-go'), rs = wrap.querySelector('.bf-rs');
+            let run = false, iv = 0, t0 = 0, last = -1;
+            const fire = function () { el.dispatchEvent(new Event('input', { bubbles: true })); el.dispatchEvent(new Event('change', { bubbles: true })); };
+            const halt = function () { run = false; clearInterval(iv); wrap.classList.remove('run'); go.innerHTML = START; };
+            const tick = function () {
+                const sec = Math.min(max, Math.max(0, Math.floor((performance.now() - t0) / 1000)));   // counts 0, 1, 2 ... never negative
+                if (sec !== last) { last = sec; val.textContent = String(sec); el.value = String(sec); fire(); }
+                if (sec >= max) halt();
+            };
+            go.addEventListener('click', function () {
+                if (run) { halt(); return; }
+                run = true; last = -1; t0 = performance.now(); wrap.classList.add('run'); go.innerHTML = STOP; tick(); iv = setInterval(tick, 100);
+            });
+            rs.addEventListener('click', function () { halt(); last = -1; val.textContent = '0'; el.value = ''; fire(); });
+            el.addEventListener('input', function () { if (!run) val.textContent = el.value === '' ? '0' : el.value; });
+        });
+    }
+
+    // ===== Two-direction ROM tests: negative = did not reach, positive = reached / beyond =====
+    function initRomHints() {
+        [['srTry1', 'sr'], ['srTry2', 'sr'], ['apR', 'ap'], ['apL', 'ap']].forEach(function (cfg) {
+            const el = document.getElementById(cfg[0]); if (!el || el.dataset.rom) return; el.dataset.rom = '1';
+            const box = el.closest('.input-box'); if (!box) return;
+            const hint = document.createElement('div'); hint.className = 'bf-rom-hint'; hint.setAttribute('aria-live', 'polite'); box.appendChild(hint);
+            const T = {
+                sr: ['لم يصل إلى خط أصابع القدم (قيمة سالبة)', 'Short of the toes', 'على خط أصابع القدم', 'On the toe line', 'تجاوز خط الأصابع (قيمة موجبة)', 'Beyond the toes'],
+                ap: ['لم تتلامس الأصابع — فجوة (قيمة سالبة)', 'Not reached — gap', 'تلامس تام', 'Fingertips touching', 'تداخل الأصابع / تجاوز (قيمة موجبة)', 'Reached — overlap']
+            }[cfg[1]];
+            const upd = function () {
+                const v = parseFloat(el.value);
+                if (!Number.isFinite(v)) { hint.className = 'bf-rom-hint'; hint.innerHTML = ''; return; }
+                const k = v < 0 ? 0 : (v === 0 ? 2 : 4), cls = v < 0 ? 'neg' : (v === 0 ? 'zero' : 'pos');
+                hint.className = 'bf-rom-hint ' + cls;
+                hint.innerHTML = (v < 0 ? '🔻 ' : (v > 0 ? '🔺 ' : '● ')) + '<span dir="ltr">' + (v > 0 ? '+' : '') + v + ' cm</span> — ' + T[k] + ' <span class="en">' + T[k + 1] + '</span>';
+            };
+            el.addEventListener('input', upd); el.addEventListener('change', upd); upd();
+        });
+    }
+
+    // ===== Wall postural assessment: scoring + findings =====
+    const WALL_IDS = [
+        ['wallHeels', 'الكعبان', 'Heels', 'الكعبان لا يلامسان الجدار: راجع وقفة القدمين ومرونة الكاحل.'],
+        ['wallCalves', 'السمانة', 'Calves', 'السمانة لا تلامس الجدار: قد يرتبط بوضعية الركبة أو مرونة الكاحل.'],
+        ['wallGlutes', 'الأرداف', 'Glutes', 'الأرداف لا تلامس الجدار: قد يشير إلى ميل الحوض أو انحناء الجذع للأمام.'],
+        ['wallUpper', 'أعلى الظهر', 'Upper Back', 'أعلى الظهر لا يلامس الجدار: قد يشير إلى تحدّب صدري أو استدارة الكتفين (Kyphosis / Rounded Shoulders).'],
+        ['wallHead', 'الرأس', 'Head', 'الرأس لا يلامس الجدار: قد يشير إلى ميل الرأس للأمام (Forward Head Posture).']
+    ];
+    function wallEval() {
+        const touch = {}; let c = 0;
+        WALL_IDS.forEach(function (w) { const el = document.getElementById(w[0]), on = !!el && el.checked; touch[w[0]] = on; if (on) c++; });
+        const lel = document.getElementById('wallLumbar'), lum = lel ? lel.value : '';
+        const pts = { normal: 40, flat: 20, lordosis: 15 };
+        return { touch: touch, contacts: c, lumbar: lum, score: Math.min(100, c * 12 + (pts[lum] || 0)) };
+    }
+    function wallFindings(ev) {
+        const out = [];
+        WALL_IDS.forEach(function (w) { if (!ev.touch[w[0]]) out.push(w[3]); });
+        if (ev.lumbar === 'lordosis') out.push('فراغ قطني زائد (Lordosis): قد يرتبط بقِصَر عضلات ثني الورك أو ضعف عضلات البطن والألوية.');
+        else if (ev.lumbar === 'flat') out.push('ظهر مسطّح (Flat Back): غياب الانحناء القطني الطبيعي، وقد يرتبط بقِصَر أوتار الركبة أو ميل الحوض للخلف.');
+        return out;
+    }
+    function initWallLive() {
+        const out = document.getElementById('wallLive'); if (!out || out.dataset.wl) return; out.dataset.wl = '1';
+        const names = { normal: 'طبيعي | Normal', lordosis: 'Lordosis', flat: 'Flat Back' };
+        const refresh = function () {
+            const ev = wallEval();
+            if (!ev.contacts && !ev.lumbar) { out.innerHTML = ''; return; }
+            out.innerHTML = 'نقاط الملامسة: <b>' + ev.contacts + '/5</b> <span class="en">Contact points</span>' + (ev.lumbar ? '<br>الفراغ القطني: <b>' + names[ev.lumbar] + '</b>' : '') +
+                '<br>درجة القوام: <b>' + ev.score + '%</b> <span class="en">Posture score (feeds the Fitness Score)</span>';
+        };
+        WALL_IDS.map(function (w) { return w[0]; }).concat(['wallLumbar']).forEach(function (id) { const el = document.getElementById(id); if (el) { el.addEventListener('change', refresh); el.addEventListener('input', refresh); } });
+        refresh();
+    }
+
     let bfitBooted = false;
     function bfitInit() {
         initSmartTarget();
         initBilingual();
         initHealthDynamic(); initEpley();
         initMobileSteppers();
+        initCounters(); initRomHints(); initWallLive();
         if (bfitBooted) return;
         bfitBooted = true;
         updateGenderTheme();
