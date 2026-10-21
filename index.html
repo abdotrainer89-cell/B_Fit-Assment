@@ -1477,7 +1477,7 @@
         const right = [1, 0, 0], fwd = vNrm([0, -R.dir[2], R.dir[1]]), up = R.dir, fc = tr(fwd)[2], front = fc > -0.15, back = fc < 0.15;
         const stn = [0, 0.25, 0.55, 0.87].map(function (f) { return vAdd(R.hip, vMul(up, D.tor * f)); });
         const vr = function (rx, rz) { const sd = Math.max(0, Math.min(1, up[1])), st = Math.sqrt(rx * rx * ca * ca + rz * rz * sa * sa); return st * sd + rz * (1 - sd); };
-        const tcol = function (k) { return S.fem && k < 2 ? S.skin : S.top; };
+        const tcol = function (k) { return S.fem ? (k < 1 ? S.bot : S.top) : S.top; };   // female: high-waist leggings + top that covers the midriff
         const torso = []; for (let k = 0; k < 3; k++) torso.push(cap(stn[k], stn[k + 1], vr(S.tx[k][0], S.tx[k][1]), vr(S.tx[k + 1][0], S.tx[k + 1][1]), tcol(k)));
         torso.push(cap(stn[3], R.sh, vr(S.tx[3][0], S.tx[3][1]), vr(S.tx[3][0] * 0.82, S.tx[3][1] * 0.8), S.top));
         const pel = [cap(R.hP[0], R.hP[1], S.rPel, S.rPel, S.bot)];
