@@ -877,8 +877,6 @@
         }
         .ymca-live:empty { display: none; }
         .ymca-live .en { font-family: 'Montserrat', sans-serif; color: var(--text-muted); font-weight: 600; direction: ltr; unicode-bidi: isolate; }
-    .avatar-svg svg{filter:drop-shadow(4px 7px 5px rgba(0,0,0,.38)) drop-shadow(-1px -1px 1px rgba(255,255,255,.35));transform:perspective(600px) rotateX(6deg)}
-    .avatar-svg canvas{max-width:100%}
     .stepper-row { display: flex; gap: 8px; align-items: center; direction: ltr; }
     .stepper-row input { flex: 1; min-width: 0; }
     .num-step { display: none; min-width: 48px; height: 48px; border: 0; border-radius: 14px; font: 900 24px Montserrat, sans-serif; background: #000; color: #fff; cursor: pointer; touch-action: manipulation; -webkit-user-select: none; user-select: none; align-items: center; justify-content: center; }
@@ -902,11 +900,16 @@
     .en-line { display: block; direction: ltr; text-align: right; font-size: .78em; font-weight: 700; color: #64748b; line-height: 1.35; margin-top: 2px; }
     .btn-submit .en-line { color: rgba(255,255,255,.85); text-align: center; }
     .ep-row span:first-child .en-line { font-size: .85em; }
-    </style>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/DRACOLoader.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/libs/meshopt_decoder.js"></script>
+    
+    /* ===== v2: Glassmorphism Yes/No + lightweight exercise icon cards ===== */
+    .radio-btn-group { background: rgba(255,255,255,.35) !important; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,.7); border-radius: 12px !important; }
+    .radio-btn-group label { border-radius: 9px !important; transition: background .2s, color .2s, box-shadow .2s; }
+    .exercise-avatar-box { background: linear-gradient(145deg, rgba(255,255,255,.75), rgba(255,255,255,.35)) !important; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); min-height: 150px; box-shadow: 0 6px 18px rgba(110,90,180,.14), inset 0 1px 0 #fff !important; transform: none !important; }
+    .ex-icon { position: relative; width: 84px; height: 84px; border-radius: 50%; display: flex; align-items: center; justify-content: center; line-height: 1; background: radial-gradient(circle at 30% 25%, #fff, color-mix(in srgb, var(--accent-gender) 22%, #fff)); border: 2px solid var(--accent-gender); box-shadow: 0 4px 12px color-mix(in srgb, var(--accent-gender) 35%, transparent); }
+    .ex-icon i { font-size: 36px; margin: 0; filter: none; color: var(--accent-gender); }
+    .ex-icon .ex-num { position: absolute; top: -4px; inset-inline-start: -4px; width: 24px; height: 24px; border-radius: 50%; background: #1d2433; color: #fff; font: 800 12px Montserrat, sans-serif; display: flex; align-items: center; justify-content: center; }
+    .exercise-avatar-box .avatar-cap { color: #475569; }
+</style>
 </head>
 <body>
 
@@ -931,7 +934,7 @@
 </div>
 
 <div class="health-question-row">
-<div class="q-ar">1) هل شعرتَ سابقًا بفقدان الاتزان أو بالإغماء أثناء ممارسة النشاط البدني؟</div>
+<div class="q-ar">1) هل شعرت بأي دوخة، إغماء، أو عدم اتزان أثناء ممارستك للنشاط البدني سابقاً؟</div>
 <div class="radio-btn-group">
 <input type="radio" id="hq1_yes" name="hq1" value="yes"><label for="hq1_yes" class="yes-label">نعم / Yes</label>
 <input type="radio" id="hq1_no" name="hq1" value="no" checked><label for="hq1_no" class="no-label">لا / No</label>
@@ -939,7 +942,7 @@
 <div class="q-en">Have you previously experienced loss of balance or fainting during physical activity?</div>
 </div>
 <div class="health-question-row">
-<div class="q-ar">2) هل شعرتَ بفقدان مفاجئ للاتزان في أوقات الراحة، دون بذل أي مجهود بدني؟</div>
+<div class="q-ar">2) هل شعرت بدوخة أو عدم اتزان مفاجئ خلال أوقات الراحة ودون ممارسة أي مجهود بدني؟</div>
 <div class="radio-btn-group">
 <input type="radio" id="hq2_yes" name="hq2" value="yes"><label for="hq2_yes" class="yes-label">نعم / Yes</label>
 <input type="radio" id="hq2_no" name="hq2" value="no" checked><label for="hq2_no" class="no-label">لا / No</label>
@@ -947,14 +950,14 @@
 <div class="q-en">Have you experienced a sudden loss of balance at rest, without any physical exertion?</div>
 </div>
 <div class="health-question-row">
-<div class="q-ar">3) هل تعاني من مرض السكري (النوع الأول الذي يستلزم العلاج بالإنسولين، أو النوع الثاني الذي يُدار بالأقراص)؟</div>
+<div class="q-ar">3) هل تعاني من مرض السكري (النوع الأول الذي يتطلب العلاج بالإنسولين، أو النوع الثاني الذي يتم إدارته بالأقراص)؟</div>
 <div class="radio-btn-group">
 <input type="radio" id="hq3_yes" name="hq3" value="yes"><label for="hq3_yes" class="yes-label">نعم / Yes</label>
 <input type="radio" id="hq3_no" name="hq3" value="no" checked><label for="hq3_no" class="no-label">لا / No</label>
 </div>
 <div class="q-en">Do you have diabetes (Type 1 requiring insulin, or Type 2 managed with tablets)?</div>
 </div>
-<div class="hq-extra" id="hq3_extra"><div class="input-box"><label>يُرجى إدخال تفاصيل نوع السكري والعلاج المتّبع <span class="en">Diabetes type &amp; treatment details</span></label><input type="text" id="hq3_details" placeholder="مثال: النوع الثاني — أقراص الميتفورمين"></div></div>
+<div class="hq-extra" id="hq3_extra"><div class="input-box"><label>يرجى كتابة تفاصيل نوع السكري <span class="en">Diabetes type &amp; treatment details</span></label><input type="text" id="hq3_details" placeholder="مثال: النوع الثاني — أقراص الميتفورمين"></div></div>
 <div class="health-question-row">
 <div class="q-ar">4) هل تعاني من ارتفاع ضغط الدم، أو تتناول أدوية خاصة به؟</div>
 <div class="radio-btn-group">
@@ -963,10 +966,10 @@
 </div>
 <div class="q-en">Do you have high blood pressure, or take medication for it?</div>
 </div>
-<div class="hq-extra" id="hq4_extra"><div class="input-box"><label>قراءة ضغط الدم (ملم زئبقي) <span class="en">Blood pressure — Systolic / Diastolic (mmHg)</span></label>
+<div class="hq-extra" id="hq4_extra"><div class="input-box"><label>قراءة ضغط الدم [ &nbsp;&nbsp; / &nbsp;&nbsp; ] مم زئبق <span class="en">Blood pressure — Systolic / Diastolic (mmHg)</span></label>
 <div class="bp-row"><input type="number" id="hq4_sys" step="any" inputmode="decimal" placeholder="Systolic 120"><span>/</span><input type="number" id="hq4_dia" step="any" inputmode="decimal" placeholder="Diastolic 80"><span>mmHg</span></div></div></div>
 <div class="health-question-row">
-<div class="q-ar">5) هل تعاني حاليًا من إصابات هيكلية، أو آلام مزمنة في المفاصل أو العمود الفقري، أو قيود حركية تؤثر في الأداء الرياضي؟</div>
+<div class="q-ar">5) هل تعاني حالياً من أي إصابات هيكلية، آلام مزمنة (في المفاصل أو العمود الفقري)، أو قيود حركية تؤثر على الأداء الرياضي؟</div>
 <div class="radio-btn-group">
 <input type="radio" id="hq5_yes" name="hq5" value="yes"><label for="hq5_yes" class="yes-label">نعم / Yes</label>
 <input type="radio" id="hq5_no" name="hq5" value="no" checked><label for="hq5_no" class="no-label">لا / No</label>
@@ -974,7 +977,7 @@
 <div class="q-en">Do you currently have skeletal injuries, chronic joint or spinal pain, or movement restrictions that affect athletic performance?</div>
 </div>
 <div class="health-question-row">
-<div class="q-ar">6) هل خضعتَ لعمليات جراحية سابقة، أو تتناول بانتظام أدوية تؤثر مباشرةً في معدل ضربات القلب أو في الاستجابة للأحمال التدريبية؟</div>
+<div class="q-ar">6) هل خضعت لأي جراحات سابقة أو تتناول أدوية بانتظام تؤثر بشكل مباشر على معدل ضربات القلب أو الاستجابة للأحمال؟</div>
 <div class="radio-btn-group">
 <input type="radio" id="hq6_yes" name="hq6" value="yes"><label for="hq6_yes" class="yes-label">نعم / Yes</label>
 <input type="radio" id="hq6_no" name="hq6" value="no" checked><label for="hq6_no" class="no-label">لا / No</label>
@@ -982,19 +985,19 @@
 <div class="q-en">Have you had previous surgeries, or do you regularly take medication that directly affects heart rate or response to training loads?</div>
 </div>
 <div class="health-question-row">
-<div class="q-ar">7) هل توجد حالات صحية أو إصابات سابقة أو محاذير طبية موثّقة تمنعك من ممارسة النشاط البدني المكثف؟</div>
+<div class="q-ar">7) هل توجد أي حالات صحية، إصابات سابقة، أو محاذير طبية موثقة تمنعك من ممارستك للنشاط البدني المكثف؟</div>
 <div class="radio-btn-group">
 <input type="radio" id="hq7_yes" name="hq7" value="yes"><label for="hq7_yes" class="yes-label">نعم / Yes</label>
 <input type="radio" id="hq7_no" name="hq7" value="no" checked><label for="hq7_no" class="no-label">لا / No</label>
 </div>
 <div class="q-en">Are there any health conditions, previous injuries, or documented medical restrictions that prevent you from intense physical activity?</div>
 </div>
-<div class="input-box" style="margin:16px 0 26px;"><label>ملاحظات إضافية (اختياري) <span class="en">Additional notes (optional)</span></label>
-<textarea id="hqNotes" rows="3" placeholder="في حال الإجابة بـ (نعم) على أي من الأسئلة السابقة، يُرجى كتابة تفاصيل الإصابة أو الحالة أو اسم الدواء، لضمان تصميم البرنامج التدريبي وفق أعلى معايير الأمان العلمي"></textarea></div>
+<div class="input-box" style="margin:16px 0 26px;"><label>في حال الإجابة بـ (نعم) على أي من الأسئلة السابقة، يرجى كتابة تفاصيل الإصابة، الحالة، أو اسم الدواء لضمان تصميم البرنامج التدريبي بأعلى معايير الأمان العلمي <span class="en">Optional: details of injury, condition or medication</span></label>
+<textarea id="hqNotes" rows="3" placeholder="تفاصيل الإصابة أو الحالة أو اسم الدواء"></textarea></div>
 
 
         <div class="section-header">
-<h2><i class="fa-solid fa-id-card"></i> 2. البروفايل وتركيب الجسم والتغذية وحاسبة الغذاء | Integrated Profile, InBody &amp; Nutrition &amp; Food</h2>
+<h2><i class="fa-solid fa-id-card"></i> 2. بيانات المشترك وتحليل تركيب الجسم والتغذية | Client Profile, InBody &amp; Nutrition</h2>
         </div>
 
         <div class="form-grid-4">
@@ -1092,7 +1095,7 @@
 
         <div class="exercise-card">
             <div class="exercise-avatar-box">
-                <div class="avatar-svg" id="avatar1"></div>
+                <div class="ex-icon" id="avatar1"></div>
                 <span class="gender-badge" id="badge1">MALE</span>
                 <span class="avatar-cap" id="cap1"></span>
                 <span class="avatar-phase" id="ph1"></span>
@@ -1111,7 +1114,7 @@
 
         <div class="exercise-card">
             <div class="exercise-avatar-box">
-                <div class="avatar-svg" id="avatar2"></div>
+                <div class="ex-icon" id="avatar2"></div>
                 <span class="gender-badge" id="badge2">MALE</span>
                 <span class="avatar-cap" id="cap2"></span>
                 <span class="avatar-phase" id="ph2"></span>
@@ -1130,7 +1133,7 @@
 
         <div class="exercise-card">
             <div class="exercise-avatar-box">
-                <div class="avatar-svg" id="avatar3"></div>
+                <div class="ex-icon" id="avatar3"></div>
                 <span class="gender-badge" id="badge3">MALE</span>
                 <span class="avatar-cap" id="cap3"></span>
                 <span class="avatar-phase" id="ph3"></span>
@@ -1149,7 +1152,7 @@
 
         <div class="exercise-card">
             <div class="exercise-avatar-box">
-                <div class="avatar-svg" id="avatar4"></div>
+                <div class="ex-icon" id="avatar4"></div>
                 <span class="gender-badge" id="badge4">MALE</span>
                 <span class="avatar-cap" id="cap4"></span>
                 <span class="avatar-phase" id="ph4"></span>
@@ -1167,7 +1170,7 @@
 
         <div class="exercise-card">
             <div class="exercise-avatar-box">
-                <div class="avatar-svg" id="avatar5"></div>
+                <div class="ex-icon" id="avatar5"></div>
                 <span class="gender-badge" id="badge5">MALE</span>
                 <span class="avatar-cap" id="cap5"></span>
                 <span class="avatar-phase" id="ph5"></span>
@@ -1185,7 +1188,7 @@
 
         <div class="exercise-card">
             <div class="exercise-avatar-box">
-                <div class="avatar-svg" id="avatar6"></div>
+                <div class="ex-icon" id="avatar6"></div>
                 <span class="gender-badge" id="badge6">MALE</span>
                 <span class="avatar-cap" id="cap6"></span>
                 <span class="avatar-phase" id="ph6"></span>
@@ -1203,7 +1206,7 @@
 
         <div class="exercise-card">
             <div class="exercise-avatar-box">
-                <div class="avatar-svg" id="avatar7"></div>
+                <div class="ex-icon" id="avatar7"></div>
                 <span class="gender-badge" id="badge7">MALE</span>
                 <span class="avatar-cap" id="cap7"></span>
                 <span class="avatar-phase" id="ph7"></span>
@@ -1284,538 +1287,28 @@
 </div>
 
 <script>
-    // ===== Exercise avatars: animated human figures (start -> finish), male / female =====
+    // ===== Exercise cards: lightweight CSS icon avatars (no 3D, no canvas) =====
     const AVATAR_CAPTIONS = [
         'SIT-AND-REACH', 'APLEY SCRATCH', 'CLOSED-EYE ONE-LEG', 'SUPERMAN (BIRD-DOG)',
         '30s BOX SQUAT', 'KNEELING PUSH-UP', '3-MIN STEP TEST'
     ];
-
-    const AV_BODY = {
-        male:   { thigh: 10.5, shin: 8,   uarm: 7.6, farm: 6.4, torso: 17,   head: 9.2, shoulder: 21,   waist: 13,   hipw: 12,   chest: 0,   pelvis: 0,   glute: 0 },
-        female: { thigh: 9.6,  shin: 7,   uarm: 5.9, farm: 5,   torso: 12.5, head: 8.6, shoulder: 15.5, waist: 10,   hipw: 15.5, chest: 4.6, pelvis: 1.6, glute: 7.4 }
-    };
-    const AV_C = { skin: '#e2a77f', skinF: '#c98e66', hair: '#2b2118', shorts: '#334155', shortsF: '#27303f', shoe: '#0f172a', shoeF: '#1e293b', floor: '#b8c0d4', prop: '#94a3b8', propDark: '#64748b', mark: '#ef4444' };
-    const AV_LEN = { torso: 36, neck: 6, uarm: 19, farm: 18, thigh: 26, shin: 25, foot: 10 };
-    const AV_CYCLE = { hold0: 600, move: 1300, hold1: 900, back: 1300 };
-    let avGender = 'male';
-    const avVisible = {};
-    let avRaf = 0, avLastTs = 0;
-
-    function avDir(a, l) { const r = a * Math.PI / 180; return [Math.cos(r) * l, Math.sin(r) * l]; }
-    function avPt(p, a, l) { const d = avDir(a, l); return [p[0] + d[0], p[1] + d[1]]; }
-    function avLerp(a, b, t) { return a + (b - a) * t; }
-    function avLerp2(a, b, t) { return [avLerp(a[0], b[0], t), avLerp(a[1], b[1], t)]; }
-    function avClamp(t) { return Math.max(0, Math.min(1, t)); }
-    function avEase(t) { t = avClamp(t); return t * t * (3 - 2 * t); }
-    function avR(n) { return Math.round(n * 10) / 10; }
-    function avPts(pts) { return pts.map(function (p) { return avR(p[0]) + ',' + avR(p[1]); }).join(' '); }
-    function avLine(pts, w, color) {
-        return '<polyline points="' + avPts(pts) + '" fill="none" stroke="' + color + '" stroke-width="' + w + '" stroke-linecap="round" stroke-linejoin="round"/>';
-    }
-    function avDot(p, r, color) { return '<circle cx="' + avR(p[0]) + '" cy="' + avR(p[1]) + '" r="' + avR(r) + '" fill="' + color + '"/>'; }
-
-    // Two-bone inverse kinematics: keeps every limb at its true length.
-    function avIK(root, target, l1, l2, bend) {
-        let dx = target[0] - root[0], dy = target[1] - root[1], d = Math.hypot(dx, dy) || 0.001;
-        const maxd = l1 + l2 - 0.02, mind = Math.abs(l1 - l2) + 0.5;
-        if (d > maxd) { dx *= maxd / d; dy *= maxd / d; d = maxd; }
-        if (d < mind) { dx *= mind / d; dy *= mind / d; d = mind; }
-        const ux = dx / d, uy = dy / d, a = (l1 * l1 - l2 * l2 + d * d) / (2 * d), h = Math.sqrt(Math.max(0, l1 * l1 - a * a));
-        return { m: [root[0] + ux * a - bend * uy * h, root[1] + uy * a + bend * ux * h], e: [root[0] + dx, root[1] + dy] };
-    }
-
-    // ---- side-view figure (faces right) ----
-    function avSideJoints(P, g) {
-        const B = AV_BODY[g], L = AV_LEN, sh = avPt(P.hip, P.tA, L.torso);
-        const lN = avIK(P.hip, P.fN, L.thigh, L.shin, P.kB), lF = avIK(P.hip, P.fF, L.thigh, L.shin, P.kB);
-        return {
-            hip: P.hip, sh: sh, nk: avPt(sh, P.nA, L.neck), hd: avPt(sh, P.nA, L.neck + B.head * 0.8),
-            aN: avIK(sh, P.hN, L.uarm, L.farm, P.eB), aF: avIK(sh, P.hF, L.uarm, L.farm, P.eB),
-            lN: lN, lF: lF, toN: avPt(lN.e, P.toN, L.foot), toF: avPt(lF.e, P.toF, L.foot)
-        };
-    }
-
-    function avArm(sh, a, B, far) {
-        const c = far ? AV_C.skinF : AV_C.skin;
-        return avLine([sh, a.m], B.uarm, c) + avLine([a.m, a.e], B.farm, c) + avDot(a.e, B.farm * 0.6 + 0.8, c) +
-            avLine([sh, avLerp2(sh, a.m, 0.5)], B.uarm + 1.4, 'currentColor');
-    }
-
-    function avLeg(hip, l, to, B, far) {
-        const c = far ? AV_C.skinF : AV_C.skin, s = far ? AV_C.shortsF : AV_C.shorts;
-        return avLine([hip, l.m], B.thigh, c) + avLine([l.m, l.e], B.shin, c) + avLine([l.e, to], 6, far ? AV_C.shoeF : AV_C.shoe) +
-            avLine([hip, avLerp2(hip, l.m, 0.64)], B.thigh + 1.6, s);
-    }
-
-    function avSideBody(P, g, J) {
-        const B = AV_BODY[g], f = avDir(P.nA + 90, 1), up = avDir(P.nA, 1), tn = avDir(P.tA + 90, 1);
-        let o = avArm(J.sh, J.aF, B, true) + avLeg(J.hip, J.lF, J.toF, B, true);
-        o += avLine([J.hip, J.sh], B.torso, 'currentColor');
-        if (B.chest) o += avDot([J.sh[0] - avDir(P.tA, 1)[0] * 9 + tn[0] * (B.torso / 2 - 0.5), J.sh[1] - avDir(P.tA, 1)[1] * 9 + tn[1] * (B.torso / 2 - 0.5)], B.chest, 'currentColor');
-        o += avLine([J.hip, avLerp2(J.hip, J.sh, 0.17)], B.torso + 0.6, AV_C.shorts);
-        if (B.glute) o += avDot([J.hip[0] - tn[0] * (B.torso / 2 - 1.5), J.hip[1] - tn[1] * (B.torso / 2 - 1.5)], B.glute, AV_C.shorts);
-        if (B.pelvis) o += avDot(J.hip, B.torso / 2 + B.pelvis, AV_C.shorts);
-        o += avLine([J.sh, J.nk], 5.6, AV_C.skin);
-        if (g === 'female') {
-            const bp = [J.hd[0] - f[0] * B.head * 0.85, J.hd[1] - f[1] * B.head * 0.85 + 1];
-            o += avLine([bp, [bp[0] - f[0] * 5, bp[1] + 4], [bp[0] - f[0] * 6, bp[1] + 12]], 4.2, AV_C.hair);
-        }
-        o += avDot([J.hd[0] - f[0] * 1.7 + up[0] * 1.3, J.hd[1] - f[1] * 1.7 + up[1] * 1.3], B.head + 0.5, AV_C.hair);
-        o += avDot([J.hd[0] + f[0] * 0.9, J.hd[1] + f[1] * 0.9], B.head - 0.5, AV_C.skin);
-        o += avDot([J.hd[0] + f[0] * B.head * 0.62 + up[0] * 0.8, J.hd[1] + f[1] * B.head * 0.62 + up[1] * 0.8], 1.1, '#1f2937');
-        o += avLeg(J.hip, J.lN, J.toN, B, false) + avArm(J.sh, J.aN, B, false);
-        return o;
-    }
-
-    // ---- back-view figure (Apley scratch) ----
-    function avBackBody(P, g) {
-        const B = AV_BODY[g], cx = 100, sy = 40, S = B.shoulder, W = B.waist, H = B.hipw, L = AV_LEN;
-        let o = '';
-        [-1, 1].forEach(function (s) {
-            const hip = [cx + s * H * 0.5, 82], knee = [cx + s * (H * 0.5 + 1), 100], ank = [cx + s * (H * 0.5 + 1.5), 115];
-            o += avLine([hip, knee], B.thigh, AV_C.skin) + avLine([knee, ank], B.shin, AV_C.skin) +
-                avLine([ank, [ank[0] + s * 4, 117.5]], 6, AV_C.shoe) + avLine([hip, [hip[0] + s * 0.5, 94]], B.thigh + 1.6, AV_C.shorts);
-        });
-        const torso = [[cx - S, sy], [cx + S, sy], [cx + W, 66], [cx + H, 83], [cx - H, 83], [cx - W, 66]];
-        o += '<polygon points="' + avPts(torso) + '" fill="currentColor" stroke="currentColor" stroke-width="6" stroke-linejoin="round"/>';
-        o += '<polygon points="' + avPts([[cx - H, 80], [cx + H, 80], [cx + H + 1, 86], [cx - H - 1, 86]]) + '" fill="' + AV_C.shorts + '" stroke="' + AV_C.shorts + '" stroke-width="5" stroke-linejoin="round"/>';
-        o += avLine([[cx, 31], [cx, sy]], 6, AV_C.skin);
-        o += avDot([cx - B.head, 21], 2, AV_C.skin) + avDot([cx + B.head, 21], 2, AV_C.skin);
-        o += avDot([cx, 21], B.head, AV_C.hair);
-        if (g === 'female') o += avDot([cx, 9.5], 4.6, AV_C.hair) + avLine([[cx, 12], [cx, 17]], 3, AV_C.hair);
-        const rs = [cx - S + 2, sy + 3], ls = [cx + S - 2, sy + 3];
-        const aT = avIK(rs, P.hT, L.uarm, L.farm, P.eT), aB = avIK(ls, P.hB, L.uarm, L.farm, P.eB);
-        o += avLine([rs, aT.m], B.uarm, AV_C.skin) + avLine([aT.m, aT.e], B.farm, AV_C.skin) + avDot(aT.e, B.farm * 0.6 + 0.8, AV_C.skin) + avLine([rs, avLerp2(rs, aT.m, 0.4)], B.uarm + 1.4, 'currentColor');
-        o += avLine([ls, aB.m], B.uarm, AV_C.skin) + avLine([aB.m, aB.e], B.farm, AV_C.skin) + avDot(aB.e, B.farm * 0.6 + 0.8, AV_C.skin) + avLine([ls, avLerp2(ls, aB.m, 0.4)], B.uarm + 1.4, 'currentColor');
-        return o;
-    }
-
-    // ---- the seven tests: pose(p) with p = 0 (start) .. 1 (finish) ----
-    function avSideP(o) {
-        return Object.assign({ tA: -90, nA: -90, eB: 1, kB: -1, toN: 0, toF: 0 }, o);
-    }
-
-    const AV_TESTS = {
-        1: { kind: 'side', scale: 1,
-            pose: function (p) {
-                const hip = [48, 113.5], tA = avLerp(-92, -14, p), sh = avPt(hip, tA, AV_LEN.torso);
-                const ty = avLerp(sh[1] + 3, 93, p);
-                return avSideP({ hip: hip, tA: tA, nA: tA + avLerp(0, 26, p), hN: [sh[0] + 37, ty], hF: [sh[0] + 35, ty + 1], eB: 1,
-                    fN: [99, 114], fF: [99, 114], kB: -1, toN: -78, toF: -78 });
-            },
-            back: function () {
-                let o = '<rect x="108" y="99" width="16" height="20" rx="2" fill="' + AV_C.prop + '"/><rect x="108" y="96.5" width="82" height="3" rx="1.5" fill="' + AV_C.propDark + '"/>';
-                for (let x = 110; x <= 188; x += 6) o += '<line x1="' + x + '" y1="96.5" x2="' + x + '" y2="' + (x % 12 === 2 ? 93.5 : 95) + '" stroke="' + AV_C.propDark + '" stroke-width="0.9"/>';
-                return o;
-            },
-            front: function (J) { return '<polygon points="' + avPts([[J.aN.e[0] + 3, 91.5], [J.aN.e[0] + 7, 91.5], [J.aN.e[0] + 5, 96]]) + '" fill="' + AV_C.mark + '"/>'; } },
-        2: { kind: 'back', scale: 1,
-            pose: function (p) {
-                const cx = 100, up = avEase(avClamp(p / 0.5)), dn = avEase(avClamp((p - 0.5) / 0.5));
-                let hT, hB;
-                if (p < 0.5) { hT = avLerp2([cx - 29, 77], [cx - 31, 6], up); hB = avLerp2([cx + 29, 77], [cx + 14, 74], up); }
-                else { hT = avLerp2([cx - 31, 6], [cx - 9, 46], dn); hB = avLerp2([cx + 14, 74], [cx - 8, 51], dn); }
-                return { hT: hT, hB: hB, eT: -1, eB: -1 };
-            } },
-        3: { kind: 'side', scale: 1,
-            pose: function (p) {
-                const hip = [100, 65], sh = avPt(hip, -90, AV_LEN.torso);
-                return avSideP({ hip: hip, hN: avLerp2([sh[0] + 2, sh[1] + 35], [sh[0] + 36, sh[1] + 3], p), hF: avLerp2([sh[0] - 1, sh[1] + 35], [sh[0] - 36, sh[1] + 3], p), eB: 1,
-                    fN: [106, 116], fF: avLerp2([94, 116], [114, 91], p), kB: -1, toN: 0, toF: avLerp(0, 72, p) });
-            } },
-        4: { kind: 'side', scale: 1,
-            pose: function (p) {
-                const hip = [58, 80], sh = avPt(hip, -3, AV_LEN.torso);
-                return avSideP({ hip: hip, tA: -3, nA: -10,
-                    hN: [sh[0] + 3, 115.5], hF: avLerp2([sh[0] + 1, 115.5], [sh[0] + 37, sh[1] - 1], p), eB: -1,
-                    fN: avLerp2([30, 115], [hip[0] - 50, hip[1] + 2], p), fF: [30, 115], kB: -1, toN: 180, toF: 180 });
-            } },
-        5: { kind: 'side', scale: 1,
-            pose: function (p) {
-                const e = avEase(p), hip = [avLerp(64, 90, e), avLerp(81, 65, avEase(avClamp((p - 0.12) / 0.88)))], tA = -90 + 32 * Math.sin(Math.PI * p), sh = avPt(hip, tA, AV_LEN.torso);
-                return avSideP({ hip: hip, tA: tA, nA: tA, hN: [sh[0] + 9, sh[1] + 10], hF: [sh[0] + 6, sh[1] + 7], eB: -1,
-                    fN: [93, 116], fF: [88, 116], kB: -1 });
-            },
-            back: function () {
-                return '<rect x="34" y="90" width="48" height="29" rx="2" fill="' + AV_C.prop + '"/><rect x="34" y="90" width="48" height="4" rx="2" fill="' + AV_C.propDark + '"/>';
-            } },
-        6: { kind: 'side', scale: 1,
-            pose: function (p) {
-                const th = avLerp(36.6, 14, p), K = [32, 114.5], u = avDir(-th, 1), hip = [K[0] + u[0] * 26, K[1] + u[1] * 26];
-                return avSideP({ hip: hip, tA: -th, nA: -th + 8, hN: [82, 115.5], hF: [80, 115.5], eB: 1,
-                    fN: [K[0] - 25, 114.5], fF: [K[0] - 25, 114.5], kB: -1, toN: 180, toF: 180 });
-            } },
-        7: { kind: 'side', scale: 0.85,
-            pose: function (p) {
-                const a = avEase(avClamp(p / 0.4)), b = avEase(avClamp((p - 0.4) / 0.4)), c = avEase(avClamp((p - 0.8) / 0.2));
-                let hip = [82, 65], fN = [86, 116], fF = [76, 116];
-                fN = avLerp2(fN, [122, 96], a); if (a > 0 && a < 1) fN = [fN[0], fN[1] - 14 * Math.sin(Math.PI * a)];
-                hip = avLerp2(hip, [98, 62], a);
-                fF = avLerp2(fF, [134, 96], b); if (b > 0 && b < 1) fF = [fF[0], fF[1] - 14 * Math.sin(Math.PI * b)];
-                hip = avLerp2(hip, [128, 45], b);
-                const tA = -90 + 12 * Math.sin(Math.PI * avClamp(p / 0.8)), sh = avPt(hip, tA, AV_LEN.torso), sw = Math.sin(Math.PI * avClamp(p / 0.8));
-                return avSideP({ hip: hip, tA: tA, nA: tA, hN: [sh[0] + 10 * sw + 2, sh[1] + 33], hF: [sh[0] - 10 * sw, sh[1] + 33], eB: -1,
-                    fN: fN, fF: fF, kB: -1, toN: 0, toF: 0 });
-            },
-            back: function () {
-                return '<rect x="110" y="99" width="50" height="20" rx="2" fill="' + AV_C.prop + '"/><rect x="110" y="99" width="50" height="3.5" rx="1.5" fill="' + AV_C.propDark + '"/>';
-            } }
-    };
-
-    function avBodyAt(i, g, p) {
-        const T = AV_TESTS[i], P = T.pose(p, g);
-        let o = '<line x1="8" y1="119" x2="192" y2="119" stroke="' + AV_C.floor + '" stroke-width="2" stroke-linecap="round"/>';
-        if (T.kind === 'back') return o + avBackBody(P, g);
-        const J = avSideJoints(P, g);
-        if (T.back) o += T.back(p, J);
-        o += avSideBody(P, g, J);
-        if (T.front) o += T.front(J, p);
-        return o;
-    }
-
-    function avFigureSVG(i, g, p, ghost) {
-        const T = AV_TESTS[i], s = T.scale || 1;
-        let o = '';
-        if (ghost) o += '<g opacity="0.24">' + avBodyAt(i, g, 0) + '</g>';
-        o += avBodyAt(i, g, p);
-        if (s !== 1) o = '<g transform="translate(100 119) scale(' + s + ') translate(-100 -119)">' + o + '</g>';
-        return '<svg viewBox="0 0 200 130" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="' + AVATAR_CAPTIONS[i - 1] + ' ' + g + '">' + o + '</svg>';
-    }
-
-    function exerciseAvatarSVG(index, gender) {
-        return avFigureSVG(index, gender === 'female' ? 'female' : 'male', 1, true);
-    }
-
-    function avProgress(ms) {
-        const C = AV_CYCLE, total = C.hold0 + C.move + C.hold1 + C.back;
-        let t = ((ms % total) + total) % total;
-        if (t < C.hold0) return 0;
-        t -= C.hold0; if (t < C.move) return avEase(t / C.move);
-        t -= C.move; if (t < C.hold1) return 1;
-        t -= C.hold1; return 1 - avEase(t / C.back);
-    }
-
-
-    // ===== Real 3D human models (three.js) — procedural rig, same start/finish poses, male / female =====
-    const AV3 = { ok: typeof THREE !== 'undefined', r: null, sc: {}, cx: {}, mats: {} };
-    function av3Mat(c) { if (!AV3.mats[c]) { const mt = new THREE.MeshPhongMaterial({ shininess: 38, specular: 0x333333 }); mt.color = new THREE.Color(c).convertSRGBToLinear(); AV3.mats[c] = mt; } return AV3.mats[c]; }
-    const AV3_TAPER = { ua: 0.84, fa: 0.74, th: 0.78, sn: 0.68 };
-    function av3Seg(S, key, a, b, r, color, zf) {
-        let o = S.p[key];
-        const tp = AV3_TAPER[key.slice(0, 2)] || 1;
-        if (!o) { AV3.tg = AV3.tg || {}; const cg = tp < 1 ? (AV3.tg[tp] = AV3.tg[tp] || new THREE.CylinderGeometry(tp, 1, 1, 16)) : AV3.cyl; o = S.p[key] = { c: new THREE.Mesh(cg, av3Mat(color)), a: new THREE.Mesh(AV3.sph, av3Mat(color)), b: new THREE.Mesh(AV3.sph, av3Mat(color)) }; S.g.add(o.c); S.g.add(o.a); S.g.add(o.b); }
-        const A = new THREE.Vector3(a[0], a[1], a[2]), B = new THREE.Vector3(b[0], b[1], b[2]), d = B.clone().sub(A);
-        let len = d.length(); if (len < 1e-3) { d.set(0, 1, 0); len = 1e-3; } else d.normalize();
-        const z = zf || 1;
-        o.c.position.copy(A).add(B).multiplyScalar(0.5); o.c.scale.set(r, len, r * z); o.c.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), d);
-        o.a.position.copy(A); o.a.scale.set(r, r, r * z); o.b.position.copy(B); o.b.scale.set(r * tp, r * tp, r * tp * z);
-    }
-    function av3Q(pt, z) { return [(pt[0] - 100) * 0.1, (119 - pt[1]) * 0.1, z || 0]; }
-    function av3Box(S, x1, y1, x2, y2, d, color) {
-        const m = new THREE.Mesh(new THREE.BoxGeometry((x2 - x1) * 0.1, (y2 - y1) * 0.1, d), av3Mat(color));
-        const c = av3Q([(x1 + x2) / 2, (y1 + y2) / 2], 0); m.position.set(c[0], c[1], 0); S.scene.add(m);
-    }
-    const AV3_PAL = { shorts: '#334155', shortsF: '#27303f', shoe: '#0f172a', shoeF: '#1e293b' };
-    function av3Face(S, h3, r, f, l) {
-        const P = function (a, b, c, k) { const n = Math.sqrt(a * a + b * b + c * c) || 1; return [h3[0] + (f[0] * a + l[0] * b) / n * r * k, h3[1] + c / n * r * k, h3[2] + (f[2] * a + l[2] * b) / n * r * k]; };
-        [-1, 1].forEach(function (sd, k) {
-            const e = P(0.86, sd * 0.38, 0.14, 0.97), p = P(0.9, sd * 0.38, 0.14, 1.03), b1 = P(0.88, sd * 0.56, 0.4, 1.0), b2 = P(0.92, sd * 0.2, 0.36, 1.0), ea = P(0, sd * 1, 0, 1.0);
-            av3Seg(S, 'ew' + k, e, e, r * 0.17, 0xf4f4f4); av3Seg(S, 'ep' + k, p, p, r * 0.085, 0x161616); av3Seg(S, 'br' + k, b1, b2, r * 0.06, 0x1a1410); av3Seg(S, 'ear' + k, ea, ea, r * 0.17, AV_C.skin);
-        });
-        const n1 = P(1, 0, -0.14, 1.03), n2 = P(1, 0, -0.14, 1.0), m1 = P(0.92, -0.24, -0.42, 1.0), m2 = P(0.92, 0.24, -0.42, 1.0);
-        av3Seg(S, 'nose', n2, n1, r * 0.12, 0xc98862); av3Seg(S, 'mouth', m1, m2, r * 0.045, 0x6e2a2a);
-    }
-    function av3MaleSide(S, P, g, J) {
-        const B = AV_BODY[g], q = av3Q, sk = AV_C.skin, sd = AV_C.skinF, L2 = avLerp2, zs = B.shoulder * 0.022, zl = B.hipw * 0.02 + 0.12;
-        [[-1, J.aF, J.lF, sd, '_0'], [1, J.aN, J.lN, sk, '_1']].forEach(function (s) {
-            const z = s[0], a = s[1], l = s[2], c = s[3], t = s[4];
-            av3Seg(S, 'qd' + t, q(L2(J.hip, l.m, 0.6), z * zl), q(L2(J.hip, l.m, 0.93), z * zl), B.thigh * 0.05 * 1.07, c);
-            av3Seg(S, 'cf' + t, q(L2(l.m, l.e, 0.1), z * zl), q(L2(l.m, l.e, 0.55), z * zl), B.shin * 0.05 * 1.12, c);
-        });
-    }
-    function av3MaleBack(S, g) { }
-    function av3Side(S, P, g, col) {
-        const PAL = g === 'male' ? AV3_PAL : AV_C;
-        const B = AV_BODY[g], J = avSideJoints(P, g), F = g === 'female', zs = B.shoulder * 0.022, zl = B.hipw * 0.02 + 0.12, q = av3Q;
-        const arm3 = function (z) {
-            if (S.i !== 3 && S.i !== 5) return null;
-            const p = S.p == null ? 1 : S.p, sp = q(J.sh, z * zs); let d = S.i === 3 ? [0, -(1 - p) + 0.06 * p, z * p] : [1, 0.05, 0];
-            const n = Math.hypot(d[0], d[1], d[2]) || 1; d = [d[0] / n, d[1] / n, d[2] / n];
-            const pt = function (k) { return [sp[0] + d[0] * k, sp[1] + d[1] * k, sp[2] + d[2] * k]; };
-            return { m: pt(1.9), e: pt(3.7), mid: pt(0.95) };
-        };
-        [[-1, J.aF, J.lF, J.toF, AV_C.skinF, PAL.shortsF, PAL.shoeF], [1, J.aN, J.lN, J.toN, AV_C.skin, PAL.shorts, PAL.shoe]].forEach(function (s, k) {
-            const z = s[0], a = s[1], l = s[2], to = s[3], c = s[4], t = '_' + k, A3 = arm3(z);
-            av3Seg(S, 'ua' + t, q(J.sh, z * zs), A3 ? A3.m : q(a.m, z * zs), B.uarm * 0.05, c);
-            av3Seg(S, 'fa' + t, A3 ? A3.m : q(a.m, z * zs), A3 ? A3.e : q(a.e, z * zs), B.farm * 0.05, c);
-            av3Seg(S, 'hd' + t, A3 ? A3.e : q(a.e, z * zs), A3 ? A3.e : q(a.e, z * zs), B.farm * 0.03 + 0.2, c, 0.75);
-            av3Seg(S, 'sl' + t, q(J.sh, z * zs), A3 ? A3.mid : q(avLerp2(J.sh, a.m, 0.5), z * zs), B.uarm * 0.05 + 0.07, col);
-            av3Seg(S, 'th' + t, q(J.hip, z * zl), q(l.m, z * zl), B.thigh * 0.05, c);
-            av3Seg(S, 'sn' + t, q(l.m, z * zl), q(l.e, z * zl), B.shin * 0.05, c);
-            av3Seg(S, 'st' + t, q(J.hip, z * zl), q(avLerp2(J.hip, l.m, 0.64), z * zl), B.thigh * 0.05 + 0.08, s[5]);
-            av3Seg(S, 'ft' + t, q(l.e, z * zl), q(to, z * zl), 0.3, s[6]);
-        });
-        const mid = avLerp2(J.hip, J.sh, 0.2);
-        av3Seg(S, 'pel', q(J.hip), q(mid), F ? 0.78 : 0.6, PAL.shorts, F ? 1 : 1.25);
-        av3Seg(S, 'chest', q(mid), q(J.sh), F ? 0.62 : 0.72, col, F ? 1 : 1.4);
-        av3Seg(S, 'sbar', q(J.sh, -zs), q(J.sh, zs), B.uarm * 0.05 + 0.1, col);
-        if (F) {
-            const d = avDir(P.tA, 1), tn = avDir(P.tA + 90, 1), cp = [J.sh[0] - d[0] * 9 + tn[0] * (B.torso / 2 - 0.5), J.sh[1] - d[1] * 9 + tn[1] * (B.torso / 2 - 0.5)];
-            av3Seg(S, 'b1', q(cp, 0.24), q(cp, 0.24), B.chest * 0.1, col); av3Seg(S, 'b2', q(cp, -0.24), q(cp, -0.24), B.chest * 0.1, col);
-        }
-        av3Seg(S, 'neck', q(J.sh), q(J.nk), 0.28, AV_C.skin);
-        const h3 = q(J.hd), r = B.head * 0.075;
-        av3Seg(S, 'head', h3, h3, r, AV_C.skin);
-        av3Seg(S, 'jaw', [h3[0] + r * 0.3, h3[1] - r * 0.42, 0], [h3[0] + r * 0.3, h3[1] - r * 0.42, 0], r * 0.66, AV_C.skin);
-        av3Seg(S, 'hair', [h3[0] - r * 0.25, h3[1] + r * 0.22, 0], [h3[0] - r * 0.25, h3[1] + r * 0.22, 0], r * 1.04, AV_C.hair);
-        av3Face(S, h3, r, [1, 0, 0], [0, 0, 1]);
-        if (g === 'male') av3MaleSide(S, P, g, J);
-        if (F) av3Seg(S, 'tail', [h3[0] - r * 1.05, h3[1] - r * 0.1, 0], [h3[0] - r * 1.05, h3[1] - r * 0.1, 0], r * 0.45, AV_C.hair);
-    }
-    function av3Back(S, P, g, col) {
-        const PAL = g === 'male' ? AV3_PAL : AV_C;
-        const B = AV_BODY[g], F = g === 'female', cx = 100, sy = 40, Sx = B.shoulder, W = B.waist, H = B.hipw, q = function (x, y, z) { return av3Q([x, y], z); };
-        [-1, 1].forEach(function (s, k) {
-            const hip = [cx + s * H * 0.5, 82], kn = [cx + s * (H * 0.5 + 1), 100], an = [cx + s * (H * 0.5 + 1.5), 115], t = '_' + k;
-            av3Seg(S, 'th' + t, q(hip[0], hip[1]), q(kn[0], kn[1]), B.thigh * 0.05, AV_C.skin);
-            av3Seg(S, 'sn' + t, q(kn[0], kn[1]), q(an[0], an[1]), B.shin * 0.05, AV_C.skin);
-            av3Seg(S, 'ft' + t, q(an[0], an[1]), q(an[0] + s * 2, 117.5, 0.9), 0.3, PAL.shoe);
-            if (g === 'male') { av3Seg(S, 'qd' + t, q(hip[0] + s * 0.4, 95), q(kn[0], 99), B.thigh * 0.05 * 1.07, AV_C.skin); av3Seg(S, 'cf' + t, q(kn[0] + s * 0.2, 102), q(an[0], 110), B.shin * 0.05 * 1.12, AV_C.skin); }
-            av3Seg(S, 'st' + t, q(hip[0], hip[1]), q(hip[0], 94), B.thigh * 0.05 + 0.08, PAL.shorts);
-        });
-        av3Seg(S, 'pel', q(cx, 86), q(cx, 76), H * 0.1, PAL.shorts, 0.55);
-        av3Seg(S, 'low', q(cx, 83), q(cx, 66), (H + W) * 0.05, col, 0.5);
-        av3Seg(S, 'up', q(cx, 66), q(cx, sy), (W + Sx) * 0.05, col, 0.5);
-        av3Seg(S, 'neck', q(cx, 31), q(cx, sy), 0.3, AV_C.skin);
-        av3Seg(S, 'head', q(cx, 21), q(cx, 21), B.head * 0.075, AV_C.skin);
-        av3Seg(S, 'hair', q(cx, 21.5, -0.05), q(cx, 21.5, -0.05), B.head * 0.078, AV_C.hair);
-        if (F) av3Seg(S, 'bun', q(cx, 11, -0.3), q(cx, 11, -0.3), 0.46, AV_C.hair);
-        if (g === 'male') av3MaleBack(S, g);
-        const rs = [cx - Sx + 2, sy + 3], ls = [cx + Sx - 2, sy + 3], L = AV_LEN;
-        const aT = avIK(rs, P.hT, L.uarm, L.farm, P.eT), aB = avIK(ls, P.hB, L.uarm, L.farm, P.eB);
-        av3Seg(S, 'sbar', q(rs[0], rs[1], -0.1), q(ls[0], ls[1], -0.1), B.uarm * 0.05 + 0.1, col);
-        {
-            const V = THREE.Vector3, l1 = AV_LEN.uarm * 0.1, l2 = AV_LEN.farm * 0.1, p = S.p == null ? 1 : S.p, M = new V(0, 6.9, -1.0);
-            [[rs, new V(-0.25, 1, -0.15), 'T'], [ls, new V(0.3, -1, -0.55), 'B']].forEach(function (a) {
-                const sh = av3Q(a[0], 0), Sp = new V(sh[0], sh[1], sh[2]);
-                const H = Sp.clone().add(new V(0, -(l1 + l2) * 0.999, 0)).lerp(M, p), dv = H.clone().sub(Sp);
-                let d = dv.length(); d = Math.min(Math.max(d, Math.abs(l1 - l2) + 1e-3), l1 + l2 - 1e-3); const dir = dv.normalize();
-                const aa = (l1 * l1 - l2 * l2 + d * d) / (2 * d), hh = Math.sqrt(Math.max(l1 * l1 - aa * aa, 0));
-                const pole = a[1].clone().normalize(), pp = pole.clone().sub(dir.clone().multiplyScalar(pole.dot(dir))); if (pp.length() < 1e-4) pp.set(0, 0, -1); pp.normalize();
-                const E = Sp.clone().add(dir.clone().multiplyScalar(aa)).add(pp.multiplyScalar(hh)), W = Sp.clone().add(dir.clone().multiplyScalar(d)), k = a[2], Ms = Sp.clone().lerp(E, 0.5);
-                av3Seg(S, 'ua' + k, [Sp.x, Sp.y, Sp.z], [E.x, E.y, E.z], B.uarm * 0.05, AV_C.skin); av3Seg(S, 'fa' + k, [E.x, E.y, E.z], [W.x, W.y, W.z], B.farm * 0.05, AV_C.skin);
-                av3Seg(S, 'hn' + k, [W.x, W.y, W.z], [W.x, W.y, W.z], B.farm * 0.03 + 0.2, AV_C.skin, 0.7); av3Seg(S, 'sl' + k, [Sp.x, Sp.y, Sp.z], [Ms.x, Ms.y, Ms.z], B.uarm * 0.05 + 0.07, col);
-            });
-        }
-        if (false) [[rs, aT, -0.25, 'T'], [ls, aB, -0.95, 'B']].forEach(function (a) {
-            av3Seg(S, 'ua' + a[3], q(a[0][0], a[0][1], a[2]), q(a[1].m[0], a[1].m[1], a[2]), B.uarm * 0.05, AV_C.skin);
-            av3Seg(S, 'fa' + a[3], q(a[1].m[0], a[1].m[1], a[2]), q(a[1].e[0], a[1].e[1], a[2]), B.farm * 0.05, AV_C.skin);
-            av3Seg(S, 'hn' + a[3], q(a[1].e[0], a[1].e[1], a[2]), q(a[1].e[0], a[1].e[1], a[2]), B.farm * 0.03 + 0.2, AV_C.skin);
-            if (false) { const l2 = avLerp2; av3Seg(S, 'bi' + a[3], q(l2(a[0], a[1].m, 0.15)[0], l2(a[0], a[1].m, 0.15)[1], a[2]), q(l2(a[0], a[1].m, 0.78)[0], l2(a[0], a[1].m, 0.78)[1], a[2]), B.uarm * 0.05 * 1.32, AV_C.skin); av3Seg(S, 'dl' + a[3], q(a[0][0], a[0][1], a[2]), q(a[0][0], a[0][1], a[2]), B.uarm * 0.05 * 1.75, AV_C.skin); }
-            av3Seg(S, 'sl' + a[3], q(a[0][0], a[0][1], a[2]), q(avLerp2(a[0], a[1].m, 0.4)[0], avLerp2(a[0], a[1].m, 0.4)[1], a[2]), B.uarm * 0.05 + 0.07, col);
-        });
-    }
-
-    // ---- realistic rigged human models (Mixamo characters hosted by three.js): male = Soldier, female = Michelle ----
-    AV3.glb = { male: null, female: null }; AV3.useGlb = true;
-    const AV3_FILE = { male: 'Soldier.glb', female: 'Michelle.glb' }, AV3_RPM = 'https://readyplayerme.github.io/visage/male.glb';
-    const AV3_BASES = ['https://threejs.org/examples/models/gltf/', 'https://cdn.jsdelivr.net/gh/mrdoob/three.js@dev/examples/models/gltf/', 'https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/models/gltf/'];
-    const AV3_NEED = ['hips', 'spine', 'neck', 'head', 'rightarm', 'rightforearm', 'righthand', 'leftarm', 'leftforearm', 'lefthand', 'rightupleg', 'rightleg', 'rightfoot', 'leftupleg', 'leftleg', 'leftfoot'], AV3_OPT = ['spine1', 'spine2', 'righttoebase', 'lefttoebase'];
-    function av3LoadGlb(g) {
-        let m = AV3.glb[g]; if (m) return m;
-        m = AV3.glb[g] = { st: 'loading', err: '' };
-        if (!/^https?:$/.test(location.protocol)) { m.st = 'bad'; m.err = 'افتح الصفحة من رابط https (GitHub Pages) | open from an https link'; return m; }
-        if (!THREE.GLTFLoader) { m.st = 'bad'; m.err = 'GLTFLoader script missing'; return m; }
-        const urls = [g + '.glb'].concat(g === 'male' ? [AV3_RPM] : AV3_BASES.map(function (b) { return b + AV3_FILE[g]; }));
-        let k = 0, cur = '';
-        function next(msg) {
-            if (msg) { m.err = msg; (m.log = m.log || []).push((cur || '').split('/').slice(-2).join('/') + ' → ' + msg); }
-            if (k >= urls.length) { m.st = 'bad'; m.err = m.err || 'download failed'; return; }
-            const url = urls[k++];
-            try { const ld = new THREE.GLTFLoader(); if (THREE.DRACOLoader) { const dr = new THREE.DRACOLoader(); dr.setDecoderPath('https://www.gstatic.com/draco/versioned/decoders/1.4.1/'); ld.setDRACOLoader(dr); } if (window.MeshoptDecoder && ld.setMeshoptDecoder) ld.setMeshoptDecoder(window.MeshoptDecoder); cur = url; ld.load(url, ready, undefined, function (e) { next('load: ' + ((e && e.message) || 'network/CORS')); }); } catch (e) { next('load: ' + e.message); }
-        }
-        function ready(gl) {
-            try {
-                const root = gl.scene, names = {}, rest = [];
-                root.traverse(function (o) { if (o.isMesh) o.frustumCulled = false; if (o.isBone) { names[o.name.toLowerCase().replace(/[^a-z0-9]/g, '')] = o; rest.push({ b: o, q: o.quaternion.clone() }); } });
-                const B = {}, miss = [];
-                AV3_NEED.concat(AV3_OPT).forEach(function (k2) { const f = Object.keys(names).find(function (n) { return n.endsWith(k2); }); if (f) B[k2] = names[f]; else if (AV3_NEED.indexOf(k2) >= 0) miss.push(k2); });
-                if (miss.length) { next('bones missing: ' + miss.join(',')); return; }
-                B.spine1 = B.spine1 || B.spine; B.spine2 = B.spine2 || B.spine1;
-                root.updateMatrixWorld(true);
-                const p1 = new THREE.Vector3(), p2 = new THREE.Vector3(); B.hips.getWorldPosition(p1); B.rightfoot.getWorldPosition(p2);
-                const leg = p1.distanceTo(p2); if (!(leg > 1e-5)) { next('bad leg length'); return; }
-                let sole = 0; try { const bx = new THREE.Box3().setFromObject(root); sole = Math.max(0, p2.y - bx.min.y); } catch (e) { }
-                m.src = cur; m.root = root; m.B = B; m.rest = rest; m.scale = root.scale.x * 5.1 / leg; m.sole = sole * (m.scale / root.scale.x); m.st = 'ready';
-            } catch (e) { next('setup: ' + e.message); }
-        }
-        next('');
-        return m;
-    }
-    function av3Dir(a, b) { return new THREE.Vector3(b[0] - a[0], b[1] - a[1], b[2] - a[2]).normalize(); }
-    function av3Aim(b, c, d) {
-        if (!b || !c || b === c) return;
-        const pb = new THREE.Vector3(), pc = new THREE.Vector3(); b.getWorldPosition(pb); c.getWorldPosition(pc);
-        const cur = pc.sub(pb); if (cur.length() < 1e-6 || d.length() < 1e-6) return; cur.normalize();
-        const wq = new THREE.Quaternion(), pq = new THREE.Quaternion(); b.getWorldQuaternion(wq); wq.premultiply(new THREE.Quaternion().setFromUnitVectors(cur, d.clone().normalize()));
-        b.parent.getWorldQuaternion(pq); pq.invert(); b.quaternion.copy(pq.multiply(wq)); b.updateMatrixWorld(true);
-    }
-    function av3Joints(i, P, g) {
-        const q = av3Q;
-        if (AV_TESTS[i].kind !== 'back') {
-            const J = avSideJoints(P, g), mk = function (a, l, to) { return { arm: { o: q(J.sh), m: q(a.m), e: q(a.e) }, leg: { h: q(J.hip), m: q(l.m), e: q(l.e), t: q(to) } }; };
-            return { back: false, hip: q(J.hip), sh: q(J.sh), nk: q(J.nk), R: mk(J.aN, J.lN, J.toN), L: mk(J.aF, J.lF, J.toF) };
-        }
-        const B = AV_BODY[g], cx = 100, sy = 40, H = B.hipw, Sx = B.shoulder, L = AV_LEN, rs = [cx - Sx + 2, sy + 3], ls = [cx + Sx - 2, sy + 3];
-        const aT = avIK(rs, P.hT, L.uarm, L.farm, P.eT), aB = avIK(ls, P.hB, L.uarm, L.farm, P.eB);
-        const leg = function (s) { const hip = [cx + s * H * 0.5, 82], kn = [cx + s * (H * 0.5 + 1), 100], an = [cx + s * (H * 0.5 + 1.5), 115]; return { h: q(hip), m: q(kn), e: q(an), t: q([an[0] + s * 2, 117.5], 0.9) }; };
-        return { back: true, hip: q([cx, 82]), sh: q([cx, sy + 3]), nk: q([cx, 31]),
-            R: { arm: { o: q(rs), m: q(aT.m, -0.2), e: q(aT.e, -0.2) }, leg: leg(-1) }, L: { arm: { o: q(ls), m: q(aB.m, -0.8), e: q(aB.e, -0.8) }, leg: leg(1) } };
-    }
-    function av3GlbPose(m, J, i, p) {
-        const root = m.root, B = m.B;
-        root.rotation.set(0, J.back ? 0 : Math.PI / 2, 0); root.position.set(0, 0, 0); root.scale.setScalar(m.scale);
-        m.rest.forEach(function (e) { e.b.quaternion.copy(e.q); });
-        root.updateMatrixWorld(true);
-        B.hips.position.copy(B.hips.parent.worldToLocal(new THREE.Vector3(J.hip[0], J.hip[1], J.hip[2]))); root.updateMatrixWorld(true);
-        const t = av3Dir(J.hip, J.sh);
-        av3Aim(B.hips, B.spine, t); av3Aim(B.spine, B.spine1, t); av3Aim(B.spine1, B.spine2, t); av3Aim(B.spine2, B.neck, t); av3Aim(B.neck, B.head, av3Dir(J.sh, J.nk));
-        [['right', J.R, 1], ['left', J.L, -1]].forEach(function (s) {
-            if (i === 2) return;
-            const A = s[1].arm; let d1 = av3Dir(A.o, A.m), d2 = av3Dir(A.m, A.e);
-            if (i === 3) { const lat = new THREE.Vector3(0, 0.04, s[2]).normalize(), dn = new THREE.Vector3(0, -1, 0); d1 = dn.clone().lerp(lat, p).normalize(); d2 = d1.clone(); }
-            if (i === 5) { d1 = new THREE.Vector3(1, 0.05, 0); d2 = d1.clone(); }
-            av3Aim(B[s[0] + 'arm'], B[s[0] + 'forearm'], d1); av3Aim(B[s[0] + 'forearm'], B[s[0] + 'hand'], d2);
-        });
-        if (i === 2) {
-            const V3 = THREE.Vector3, wp = function (b) { const v = new V3(); b.getWorldPosition(v); return v; };
-            const sR = wp(B.rightarm), sL = wp(B.leftarm), hp = wp(B.hips), mid = sR.clone().add(sL).multiplyScalar(0.5), T = mid.distanceTo(hp);
-            const M = mid.clone().add(new V3(0, -0.18 * T, -0.17 * T));   // between the shoulder blades (model faces +z, back = -z)
-            [['right', sR, new V3(-0.25, 1, -0.15)], ['left', sL, new V3(0.3, -1, -0.55)]].forEach(function (a) {
-                const Sp = a[1], E0 = wp(B[a[0] + 'forearm']), W0 = wp(B[a[0] + 'hand']), l1 = Sp.distanceTo(E0), l2 = E0.distanceTo(W0);
-                const H = Sp.clone().add(new V3(0, -(l1 + l2) * 0.999, 0)).lerp(M, p), dv = H.clone().sub(Sp);
-                let d = dv.length(); d = Math.min(Math.max(d, Math.abs(l1 - l2) + 1e-3), l1 + l2 - 1e-3); const dir = dv.normalize();
-                const aa = (l1 * l1 - l2 * l2 + d * d) / (2 * d), hh = Math.sqrt(Math.max(l1 * l1 - aa * aa, 0));
-                const pole = a[2].clone().normalize(), pp = pole.clone().sub(dir.clone().multiplyScalar(pole.dot(dir)));
-                if (pp.length() < 1e-4) pp.set(0, 0, -1); pp.normalize();
-                const E = Sp.clone().add(dir.clone().multiplyScalar(aa)).add(pp.multiplyScalar(hh)), Hp = Sp.clone().add(dir.clone().multiplyScalar(d));
-                av3Aim(B[a[0] + 'arm'], B[a[0] + 'forearm'], E.clone().sub(Sp)); av3Aim(B[a[0] + 'forearm'], B[a[0] + 'hand'], Hp.clone().sub(E));
-            });
-        }
-        [['right', J.R], ['left', J.L]].forEach(function (s) {
-            const Lg = s[1].leg;
-            av3Aim(B[s[0] + 'upleg'], B[s[0] + 'leg'], av3Dir(Lg.h, Lg.m)); av3Aim(B[s[0] + 'leg'], B[s[0] + 'foot'], av3Dir(Lg.m, Lg.e)); av3Aim(B[s[0] + 'foot'], B[s[0] + 'toebase'], av3Dir(Lg.e, Lg.t));
-        });
-        root.updateMatrixWorld(true);
-        const wy = function (bn, off) { if (!bn) return 1e9; const v = new THREE.Vector3(); bn.getWorldPosition(v); return v.y - off; };
-        const low = Math.min(wy(B.rightfoot, m.sole), wy(B.leftfoot, m.sole), wy(B.righttoebase, m.sole * 0.45), wy(B.lefttoebase, m.sole * 0.45), wy(B.righthand, m.sole * 0.5), wy(B.lefthand, m.sole * 0.5));
-        if (low < 1e8) { root.position.y -= low; root.updateMatrixWorld(true); }
-    }
-
-    function av3Scene(i, g) {
-        const sc = AV3.sc[i];
-        if (sc && sc.g0 === g) return sc;
-        if (!AV3.cyl) { AV3.cyl = new THREE.CylinderGeometry(1, 1, 1, 16); AV3.sph = new THREE.SphereGeometry(1, 16, 12); }
-        const scene = new THREE.Scene(), grp = new THREE.Group(); scene.add(grp);
-        scene.add(new THREE.AmbientLight(0xffffff, 0.62)); const dl = new THREE.DirectionalLight(0xffffff, 0.85); dl.position.set(6, 14, 10); scene.add(dl);
-        const fl = new THREE.Mesh(new THREE.CircleGeometry(12, 48), av3Mat(0xcfd6e6)); fl.rotation.x = -Math.PI / 2; fl.position.y = -0.02; scene.add(fl);
-        const S = { scene: scene, g: grp, p: {}, g0: g, cam: new THREE.PerspectiveCamera(34, 440 / 286, 0.1, 100), back: AV_TESTS[i].kind === 'back' };
-        if (i === 1) { av3Box(S, 108, 99, 124, 119, 3, AV_C.prop); av3Box(S, 108, 96, 190, 99.5, 1.4, AV_C.propDark); }
-        if (i === 5) av3Box(S, 34, 90, 82, 119, 3.4, AV_C.prop);
-        if (i === 7) av3Box(S, 110, 99, 160, 119, 3.4, AV_C.prop);
-        return (AV3.sc[i] = S);
-    }
-    function av3Render(i, p) {
-        if (!AV3.ok) return false;
-        try {
-            const el = document.getElementById('avatar' + i), g = avGender;
-            if (!AV3.r) { AV3.r = new THREE.WebGLRenderer({ antialias: true, alpha: true }); AV3.r.outputEncoding = THREE.sRGBEncoding; AV3.r.setSize(440, 286, false); AV3.r.setPixelRatio(1); }
-            const S = av3Scene(i, g), col = g === 'female' ? '#f472b6' : '#38bdf8', P = AV_TESTS[i].pose(p, g);
-            S.i = i; S.p = p;
-            const gm = AV3.useGlb ? av3LoadGlb(g) : null; let usedGlb = false;
-            if (gm && gm.st === 'ready') {
-                try { av3GlbPose(gm, av3Joints(i, P, g), i, p); if (gm.root.parent !== S.scene) S.scene.add(gm.root); gm.root.visible = true; usedGlb = true; } catch (e2) { gm.st = 'bad'; }
-            }
-            S.g.visible = !usedGlb;
-            if (!usedGlb) { if (S.back) av3Back(S, P, g, col); else av3Side(S, P, g, col); }
-            const t = (performance.now ? performance.now() : Date.now()) / 1000, az = (S.back ? Math.PI : 0) + 0.6 * Math.sin(t * 0.7 + i), D = 24;
-            S.cam.position.set(Math.sin(az) * D, 7.6, Math.cos(az) * D); S.cam.lookAt(0, 5.6, 0);
-            AV3.r.render(S.scene, S.cam);
-            let cv = el.firstChild;
-            if (!cv || cv.tagName !== 'CANVAS') { el.innerHTML = ''; cv = document.createElement('canvas'); cv.width = 440; cv.height = 286; cv.style.cssText = 'width:100%;height:auto;display:block'; el.appendChild(cv); }
-            const c2 = cv.getContext('2d'); c2.clearRect(0, 0, 440, 286); c2.drawImage(AV3.r.domElement, 0, 0, 440, 286);
-            return true;
-        } catch (e) { AV3.ok = false; return false; }
-    }
-
-    (function () {
-        function mk() {
-            if (!AV3.ok || document.getElementById('av3Toggle')) return;
-            const b = document.createElement('button'); b.id = 'av3Toggle'; b.type = 'button'; b.textContent = 'مجسم واقعي ✓ | Realistic';
-            b.style.cssText = 'position:fixed;bottom:12px;left:12px;z-index:60;padding:8px 12px;border-radius:999px;border:0;background:#000;color:#fff;font:700 12px Tajawal,sans-serif;opacity:.88';
-            const lab = function () { if (!AV3.useGlb) return 'مجسم مبسّط | Simple'; const s = function (g0) { const g = g0, m = AV3.glb[g]; return !m ? '…' : m.st === 'ready' ? 'OK(' + (m.src || '').split('/').pop() + ')' + (m.log && m.log.length ? ' [فشل قبلها: ' + m.log.join(' | ') + ']' : '') : m.st === 'loading' ? '…' : (g0 === 'male' ? 'built-in' : 'ERR ' + m.err); }; return 'Realistic · M:' + s('male') + ' · F:' + s('female'); };
-            b.onclick = function () { AV3.useGlb = !AV3.useGlb; b.textContent = lab(); }; setInterval(function () { b.textContent = lab(); }, 800); b.style.maxWidth = '90vw'; b.style.textAlign = 'left';
-            document.body.appendChild(b);
-        }
-        if (document.body) mk(); else window.addEventListener('DOMContentLoaded', mk);
-    })();
-    function avRenderOne(i, p) {
-        const el = document.getElementById('avatar' + i);
-        if (!el) return;
-        if (!av3Render(i, p)) el.innerHTML = avFigureSVG(i, avGender, p, false);
-        const ph = document.getElementById('ph' + i);
-        if (ph) {
-            const txt = p < 0.5 ? 'START | بداية' : 'FINISH | نهاية';
-            if (ph.textContent !== txt) ph.textContent = txt;
-        }
-    }
-
-    function avReduced() {
-        try { return window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) { return false; }
-    }
-
-    function avTick(ts) {
-        avRaf = requestAnimationFrame(avTick);
-        if (document.hidden || ts - avLastTs < 34) return;
-        avLastTs = ts;
-        for (let i = 1; i <= 7; i++) {
-            if (avVisible[i] !== false) avRenderOne(i, avProgress(ts + i * 330));
-        }
-    }
-
-    function avStatic() {
-        for (let i = 1; i <= 7; i++) {
-            const el = document.getElementById('avatar' + i), ph = document.getElementById('ph' + i);
-            if (el) el.innerHTML = avFigureSVG(i, avGender, 1, true);
-            if (ph) ph.textContent = 'START | بداية  →  FINISH | نهاية';
-        }
-    }
-
-    function avStart() {
-        if (avReduced()) { avStatic(); return; }
-        if (avRaf) return;
-        if ('IntersectionObserver' in window && !avStart.obs) {
-            avStart.obs = new IntersectionObserver(function (entries) {
-                entries.forEach(function (en) { avVisible[parseInt(en.target.id.replace('avatar', ''), 10)] = en.isIntersecting; });
-            }, { rootMargin: '120px' });
-            for (let i = 1; i <= 7; i++) { const el = document.getElementById('avatar' + i); if (el) avStart.obs.observe(el); }
-        }
-        avRaf = requestAnimationFrame(avTick);
-    }
+    const AVATAR_ICONS = [
+        'fa-child-reaching', 'fa-hand', 'fa-shoe-prints', 'fa-person-swimming',
+        'fa-chair', 'fa-hand-fist', 'fa-stairs'
+    ];
 
     function updateGenderTheme() {
         const gender = document.getElementById('genderSelect').value === 'female' ? 'female' : 'male';
-        avGender = gender;
         document.documentElement.style.setProperty('--accent-gender', gender === 'female' ? '#f472b6' : '#38bdf8');
-
         for (let i = 1; i <= 7; i++) {
+            const av = document.getElementById('avatar' + i);
+            if (av && !av.dataset.ready) {
+                av.dataset.ready = '1';
+                av.innerHTML = '<span class="ex-num">' + i + '</span><i class="fa-solid ' + AVATAR_ICONS[i - 1] + '" aria-hidden="true"></i>';
+            }
             document.getElementById('badge' + i).innerText = gender === 'female' ? 'FEMALE' : 'MALE';
             document.getElementById('cap' + i).innerText = AVATAR_CAPTIONS[i - 1];
         }
-        if (avReduced()) { avStatic(); return; }
-        const now = (window.performance && performance.now) ? performance.now() : Date.now();
-        for (let i = 1; i <= 7; i++) avRenderOne(i, avProgress(now + i * 330));
-        avStart();
     }
 
     function setOcrStatus(color, iconClass, message) {
@@ -3310,5 +2803,5 @@ renderReportExtras(flags.length > 0, needsMedicalClearance);
 
 </body>
 </html>
-index.html!!!.html
-عرض index.html!!!.html.
+index.html___.html
+عرض index.html___.html.
