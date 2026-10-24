@@ -976,6 +976,12 @@
     .prog-det { margin-top: 10px; }
     .prog-det summary { cursor: pointer; font: 800 13px Tajawal, sans-serif; padding: 8px 0; }
     .prog-del { margin-top: 8px; border: 1.5px solid rgba(239, 68, 68, 0.6); background: transparent; color: #b91c1c; border-radius: 12px; min-height: 40px; padding: 0 14px; font: 800 12.5px Tajawal, sans-serif; cursor: pointer; }
+    .coach-goal { font: 800 15px Tajawal, sans-serif; margin: 6px 0 10px; color: var(--ink); }
+    .coach-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 8px; }
+    .coach-grid > div { padding: 10px; border-radius: 12px; background: rgba(255, 255, 255, 0.7); text-align: center; border: 1px solid rgba(255, 255, 255, 0.9); }
+    .coach-grid span { display: block; font: 700 12px Tajawal, sans-serif; color: var(--text-muted); }
+    .coach-grid b { font: 900 20px Montserrat, sans-serif; color: var(--ink); }
+    .coach-warn { list-style: none; margin: 6px 0; padding: 0; font: 700 12.5px/1.7 Tajawal, sans-serif; color: #b45309; }
     .share-hub { margin-top: 18px; padding: 14px; border-radius: 16px; background: rgba(255, 255, 255, 0.6); border: 1px solid rgba(255, 255, 255, 0.9); }
     .share-hub h4 { font: 900 14px Tajawal, sans-serif; margin-bottom: 10px; color: var(--ink); }
     .share-row { display: flex; flex-wrap: wrap; gap: 10px; }
@@ -1435,6 +1441,7 @@
 
             <div class="report-summary-text" id="detailedReportText"></div>
             <div id="reportExtras"></div>
+            <div id="coachPlanArea"></div>
             <div id="progressArea"></div>
             <button type="button" class="btn-submit" id="pdfBtn" onclick="downloadPdfReport()" style="margin-top:18px;"><i class="fa-solid fa-file-pdf"></i> تحميل التقرير الكامل PDF | Download Full PDF Report</button>
 
@@ -3755,6 +3762,7 @@
         window.BFIT_LAST = { client: client, memberId: memberId, inbodyModel: inbodyMeta.model || '', category: (inbodyMeta.category && inbodyMeta.category !== 'unknown') ? inbodyMeta.category : (realAge < 18 ? 'child' : 'adult'), coach: coach, gender: gender, realAge: realAge, weight: weight, fat: fat, smm: smm, height: num('heightInput', 0),
 bioAge: biologicalAge, fitness: fitnessScore, flags: flags, notes: notes, clearance: needsMedicalClearance, bioParts: bioParts, testParts: testParts, hrRate: hrRate, hrPeakPct: hrPeakPct, bodyComp: bodyCompScore, reachBest: reachBest, postureScore: postureScore, postureText: postureText, postureNotes: postureNotes };
 renderReportExtras(flags.length > 0, needsMedicalClearance);
+        try { renderCoachPlan(window.BFIT_LAST); } catch (err) { const cp = document.getElementById('coachPlanArea'); if (cp) cp.innerHTML = ''; }
         try { bfitProgress(window.BFIT_LAST); } catch (err) { const pa = document.getElementById('progressArea'); if (pa) pa.innerHTML = ''; }
         const area = document.getElementById('resultArea');
         area.style.display = 'block';
@@ -3798,6 +3806,13 @@ renderReportExtras(flags.length > 0, needsMedicalClearance);
             B.push({ t: 'sec', x: 'معادلة إيبلي 1RM | Epley 1RM' });
             B.push({ t: 'p', x: (ep.name || 'Exercise') + ' — ' + ep.w + ' kg × ' + ep.r + ' reps → 1RM ≈ ' + ep.rm.toFixed(1) + ' kg' });
             B.push({ t: 'tbl', head: 1, w: [.34, .14, .22, .15, .15], r: [['المرحلة | Phase', '% 1RM', 'الوزن | Load', 'Reps', 'Rest']].concat(epleyRows(ep).map(function (x) { return [x[0], x[1], x[2], x[3], x[4]]; })) });
+        }
+        if (D.coach_plan) {
+            const C = D.coach_plan;
+            B.push({ t: 'sec', x: 'الهدف والتوجيه الغذائي | Coaching Plan' });
+            B.push({ t: 'p', x: 'Goal: ' + C.ar + ' (' + C.en + ')' + (C.kcal !== null ? ' | Calories: ' + C.kcal + ' kcal | Protein: ' + C.protein[0] + '-' + C.protein[1] + ' g' : ''), b: 1 });
+            B.push({ t: 'p', x: C.line1 }); B.push({ t: 'p', x: C.line2 });
+            C.warn.forEach(function (x) { B.push({ t: 'p', x: '! ' + x, c: '#b45309', s: 24 }); });
         }
         if (D.prog && D.prog.prev) {
             const noEmo = function (s) { return String(s).replace(/[\u{1F000}-\u{1FFFF}\u2600-\u27BF\uFE0F]/gu, '').trim(); };
@@ -4340,6 +4355,60 @@ renderReportExtras(flags.length > 0, needsMedicalClearance);
         progDrawChart();
     }
 
+    // ===== Coaching plan: training goal + calories + motivational summary (auto, from the entered InBody values) =====
+    function coachPlan(D) {
+        const g = D.gender === 'female' ? 'female' : 'male', age = D.realAge, w = D.weight, fat = D.fat, smm = D.smm, h = D.height || 0;
+        const ffm = w * (1 - fat / 100), bmi = h > 0 ? w / Math.pow(h / 100, 2) : null, smi = h > 0 ? smm / Math.pow(h / 100, 2) : null;
+        const fatHigh = (g === 'male' ? 20 : 28) + (age >= 40 ? 3 : 0), fatLow = g === 'male' ? 10 : 18;
+        const over = fat - fatHigh, smiLow = g === 'male' ? 7.0 : 5.7;
+        const muscleLow = smi !== null ? smi < smiLow : (smm / w * 100) < (g === 'male' ? 37 : 30);
+        let key;
+        if ((bmi !== null && bmi < 18.5) || (muscleLow && fat < fatLow + 4)) key = 'bulk';
+        else if (over > 6 || (bmi !== null && bmi >= 35)) key = 'cut';
+        else if (over > 0 && muscleLow) key = 'recomp';
+        else if (over > 2) key = 'recomp';
+        else if (muscleLow) key = 'lean';
+        else key = 'maintain';
+        const T = {
+            cut: { ar: 'تنشيف تدريجي', en: 'Cutting', adj: -0.20 },
+            recomp: { ar: 'إعادة تركيب الجسم', en: 'Body Recomposition', adj: -0.08 },
+            lean: { ar: 'زيادة عضلات نظيفة', en: 'Lean Bulk', adj: 0.20 },
+            bulk: { ar: 'زيادة عضلات ووزن', en: 'Bulking', adj: 0.25 },
+            maintain: { ar: 'حفاظ وتحسين الأداء', en: 'Maintenance / Performance', adj: 0 }
+        }[key];
+        const bmr = 10 * w + 6.25 * h - 5 * age + (g === 'male' ? 5 : -161);
+        const tdee = h > 0 ? bmr * 1.35 : null;
+        const floor = g === 'male' ? 1500 : 1200;
+        let kcal = tdee === null ? null : Math.round(tdee * (1 + T.adj) / 50) * 50;
+        if (kcal !== null && T.adj < 0) kcal = Math.max(kcal, floor);
+        const pr = key === 'bulk' || key === 'lean' ? [2.0, 2.4] : [2.2, 2.6];
+        const protein = [Math.round(ffm * pr[0] / 5) * 5, Math.round(ffm * pr[1] / 5) * 5];
+        const name = D.client || 'العميل', fs = progFmt(fat, 1), ss = progFmt(smm, 1);
+        const wkLo = progFmt(w * 0.005, 1), wkHi = progFmt(w * 0.008, 1);
+        let l1, l2;
+        if (key === 'cut') { l1 = name + ': دهونك ' + fs + '% وعضلاتك ' + ss + ' كجم، وعندنا مساحة واضحة لخسارة الدهون مع الحفاظ على العضلات.'; l2 = 'عجز سعري معتدل ومقاومة 3–4 أيام أسبوعياً، والهدف نزول من ' + wkLo + ' إلى ' + wkHi + ' كجم أسبوعياً بخطوات ثابتة.'; }
+        else if (key === 'recomp') { l1 = name + ': قاعدتك العضلية قابلة للبناء ودهونك ' + fs + '% فوق المعدل، وهذه أنسب مرحلة لإعادة التركيب.'; l2 = 'سعرات قريبة من الثبات وبروتين عالٍ ومقاومة منتظمة تعطيك دهوناً أقل وعضلات أكثر دون نزول حاد في الميزان.'; }
+        else if (key === 'lean') { l1 = name + ': دهونك ' + fs + '% مناسبة والناقص هو الكتلة العضلية' + (smi !== null ? ' (SMI ' + progFmt(smi, 1) + ')' : '') + '، وهذه فرصة ممتازة للبناء.'; l2 = 'فائض سعرات صغير وتمارين مقاومة تصاعدية، والهدف زيادة وزن بحدود 0.25 كجم أسبوعياً معظمها عضلات.'; }
+        else if (key === 'bulk') { l1 = name + ': جسمك يحتاج كتلة' + (bmi !== null ? ' (BMI ' + progFmt(bmi, 1) + ')' : '') + '، وكل خطوة تقدّم ستظهر عليك بسرعة.'; l2 = 'أكل منتظم بفائض سعرات، حديد تصاعدي، ونوم كافٍ؛ والهدف زيادة من 0.25 إلى 0.4 كجم أسبوعياً.'; }
+        else { l1 = name + ': تركيبك الجسمي (دهون ' + fs + '%، عضلات ' + ss + ' كجم) في نطاق جيد.'; l2 = 'نحافظ على السعرات الحالية ونرفع الأداء والقوة تدريجياً مع متابعة القياس كل 4 أسابيع.'; }
+        const warn = [];
+        if (age < 18) warn.push('العميل دون 18 سنة: الأرقام استرشادية فقط، ويلزم إشراف مختص.');
+        if (fat >= 45 || (bmi !== null && (bmi >= 35 || bmi < 18.5))) warn.push('قيم الجسم بعيدة عن النطاق الطبيعي: يُفضّل استشارة طبية قبل بدء البرنامج.');
+        if (age >= 50) warn.push('ابدأ بأحمال تدريجية وركّز على التسخين والتوازن.');
+        return { key: key, ar: T.ar, en: T.en, kcal: kcal, protein: protein, line1: l1, line2: l2, warn: warn, bmi: bmi, smi: smi };
+    }
+    function renderCoachPlan(D) {
+        const box = document.getElementById('coachPlanArea'); if (!box || !D) return;
+        const P = coachPlan(D); D.coach_plan = P;
+        let h = '<div class="report-extra coach-card"><h4><i class="fa-solid fa-bullseye"></i> الهدف التدريبي والتوجيه الغذائي | Coaching Plan</h4>';
+        h += '<div class="coach-goal">🎯 الهدف الأساسي: <b>' + P.ar + '</b> <span class="en">' + P.en + '</span></div>';
+        h += '<div class="coach-grid"><div><span>السعرات المقترحة</span><b dir="ltr">' + (P.kcal === null ? '—' : P.kcal + ' kcal') + '</b></div><div><span>البروتين اليومي</span><b dir="ltr">' + P.protein[0] + '–' + P.protein[1] + ' g</b></div></div>';
+        h += '<div class="prog-sum good"><div class="prog-verdict">ملخص للعميل</div><div class="prog-sec">' + progEsc(P.line1) + '<br>' + progEsc(P.line2) + '</div></div>';
+        if (P.warn.length) h += '<ul class="coach-warn">' + P.warn.map(function (x) { return '<li>⚠️ ' + progEsc(x) + '</li>'; }).join('') + '</ul>';
+        h += '<p class="calc-note">تقدير مبني على معادلة Mifflin بنشاط خفيف–متوسط، ويُراجَع بعد 4 أسابيع بقياس جديد؛ وهو استرشادي وليس وصفة طبية.</p></div>';
+        box.innerHTML = h;
+    }
+
     // ===== Sharing hub =====
     function shareText() {
         const D = window.BFIT_LAST; if (!D) return '';
@@ -4367,6 +4436,7 @@ renderReportExtras(flags.length > 0, needsMedicalClearance);
             P.analysis.neg.forEach(function (x) { L.push('✖ ' + x); });
             P.analysis.tips.forEach(function (x) { L.push('➜ ' + x); });
         }
+        if (D.coach_plan) { const C = D.coach_plan; L.push(''); L.push('🎯 الهدف: ' + C.ar + ' (' + C.en + ')'); if (C.kcal !== null) L.push('🍽 السعرات المقترحة: ' + C.kcal + ' kcal | بروتين: ' + C.protein[0] + '-' + C.protein[1] + ' g'); L.push(C.line1); L.push(C.line2); }
         if (D.flags && D.flags.length) { L.push(''); L.push('⚠️ ملاحظات صحية: ' + D.flags.length + ' — راجع التقرير الكامل.'); }
         L.push('');
         L.push('— B_FIT Assessment');
@@ -4407,6 +4477,7 @@ renderReportExtras(flags.length > 0, needsMedicalClearance);
         const form = document.getElementById('bfitAssessmentForm');
         if (form) form.reset();
         window.BFIT_LAST = null; window.BFIT_INBODY = null; window.BFIT_PROG = null;
+        const cpa = document.getElementById('coachPlanArea'); if (cpa) cpa.innerHTML = '';
         const area = document.getElementById('resultArea'); if (area) area.style.display = 'none';
         const pa = document.getElementById('progressArea'); if (pa) pa.innerHTML = '';
         const st = document.getElementById('ocrStatusMsg'); if (st) { st.style.display = 'none'; st.innerHTML = ''; }
