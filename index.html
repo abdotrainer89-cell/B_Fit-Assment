@@ -968,6 +968,8 @@
     .wall-chip input:checked + span { border-color: var(--success-green); background: rgba(16, 185, 129, 0.14); box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15); }
     .wall-chip input:checked + span::before { content: '✓'; display: flex; align-items: center; justify-content: center; background: var(--success-green); border-color: var(--success-green); color: #fff; font-size: 13px; font-weight: 900; }
     .wall-chip input:focus-visible + span { outline: 3px solid rgba(232, 101, 123, 0.45); outline-offset: 2px; }
+    .bf-id-crop { display: block; max-width: 100%; height: 36px; margin-top: 6px; border: 1px dashed var(--border-color); border-radius: 8px; background: #fff; object-fit: contain; align-self: flex-start; }
+    .bf-id-crop[hidden] { display: none; }
 </style>
 </head>
 <body>
@@ -1081,6 +1083,11 @@
             <div class="input-box">
                 <label>اسم المشترك <span class="en">Client Name</span></label>
                 <input type="text" id="clientName" required placeholder="اسم المشترك">
+            </div>
+            <div class="input-box">
+                <label>رقم المشترك ID (من تقرير InBody) <span class="en">Member ID</span></label>
+                <input type="text" id="memberId" required inputmode="text" autocomplete="off" pattern="[A-Za-z0-9_\-]{1,30}" title="أرقام أو حروف إنجليزية فقط" placeholder="يُقرأ تلقائياً من InBody أو أدخله يدوياً">
+                <canvas id="memberIdCrop" class="bf-id-crop" hidden aria-label="الجزء المقروء من التقرير | Region read from the report"></canvas>
             </div>
             <div class="input-box">
                 <label>الجنس <span class="en">Gender</span></label>
@@ -1709,9 +1716,9 @@
         document.getElementById('ocrProgressBar').style.width = Math.max(4, Math.min(100, pct)) + '%';
     }
 
-    const INBODY_FIELDS = { age: 'realAge', height: 'heightInput', weight: 'weightInput', smm: 'smmInput', pbf: 'fatInput', calories: 'calorieInput' };
-    const INBODY_FIELD_LABELS = { age: 'العمر', height: 'الطول', weight: 'الوزن', smm: 'SMM', pbf: 'PBF', calories: 'السعرات' };
-    const INBODY_UNITS = { age: '', height: ' سم', weight: ' كجم', smm: ' كجم', pbf: '%', calories: ' kcal' };
+    const INBODY_FIELDS = { id: 'memberId', age: 'realAge', height: 'heightInput', weight: 'weightInput', smm: 'smmInput', pbf: 'fatInput', calories: 'calorieInput' };
+    const INBODY_FIELD_LABELS = { id: 'ID', age: 'العمر', height: 'الطول', weight: 'الوزن', smm: 'SMM', pbf: 'PBF', calories: 'السعرات' };
+    const INBODY_UNITS = { id: '', age: '', height: ' سم', weight: ' كجم', smm: ' كجم', pbf: '%', calories: ' kcal' };
 
     function markField(id, state) {
         const el = document.getElementById(id);
@@ -1719,12 +1726,20 @@
         if (state) el.classList.add(state === 'ok' ? 'field-ok' : 'field-check');
     }
 
+    function showIdCrop(cv) {
+        const t = document.getElementById('memberIdCrop'); if (!t) return;
+        if (!cv || !cv.width || !cv.height) { t.hidden = true; return; }
+        t.width = cv.width; t.height = cv.height; t.getContext('2d').drawImage(cv, 0, 0); t.hidden = false;
+    }
+
     function applyInBodyResult(res) {
         Object.keys(INBODY_FIELDS).forEach(function (k) { markField(INBODY_FIELDS[k], null); });
+        showIdCrop(null);
+        window.BFIT_INBODY = null;
 
         if (res.notInBody) {
             setOcrStatus('#dc2626', 'fa-solid fa-triangle-exclamation',
-                'هذه الصورة ليست تقرير InBody 770 بالتصميم المعتمد. ارفع صورة التقرير كاملة ومستقيمة، أو أدخل القياسات يدوياً. | Not a valid InBody 770 report.');
+                'لم أتعرّف على تقرير InBody في هذه الصورة. ارفع صورة التقرير كاملة ومستقيمة وواضحة، أو أدخل القياسات يدوياً. | Not recognised as an InBody report.');
             return;
         }
         if (res.lowQuality) {
@@ -1735,24 +1750,33 @@
 
         const v = res.values, shown = [], missing = [];
         Object.keys(INBODY_FIELDS).forEach(function (k) {
-            if (v[k] === null) { missing.push(INBODY_FIELD_LABELS[k]); return; }
+            if (v[k] === null) { if (k === 'id') document.getElementById('memberId').value = ''; missing.push(INBODY_FIELD_LABELS[k]); return; }   // never keep a previous member's ID
             document.getElementById(INBODY_FIELDS[k]).value = v[k];
             markField(INBODY_FIELDS[k], res.check.indexOf(k) >= 0 ? 'check' : 'ok');
             shown.push(INBODY_FIELD_LABELS[k] + ' ' + v[k] + INBODY_UNITS[k]);
         });
         if (v.gender) document.getElementById('genderSelect').value = v.gender;
+        showIdCrop(res.idCrop);
+        window.BFIT_INBODY = { model: res.model || '', category: res.category || 'unknown', tier: res.tier || 1 };
         updateGenderTheme();
         refreshCalculators();
 
+        const isChild = res.category === 'child';
+        const head = '<b>' + (res.model ? 'InBody ' + res.model : 'موديل InBody غير محدد | Model not identified') + '</b> · <b>' +
+            (isChild ? 'تقرير طفل / غير بالغ | Child report' : (res.category === 'adult' ? 'تقرير شخص بالغ | Adult report' : 'الفئة غير محددة | Category unknown')) + '</b>' +
+            (res.tier === 2 ? ' · قُرئ بالكلمات المرجعية | read by label words' : '') + '<br>';
+        const childNote = isChild ? '<br>⚠️ هذا تقرير لطفل / غير بالغ: طريقة عرض البيانات ومعاييرها تختلف عن تقرير البالغين، ومعايير اختبارات B_FIT والعمر البيولوجي مخصّصة للبالغين، فراجع النتائج بحذر.' +
+            (v.age !== null && v.age < 12 ? ' كما أن العمر أقل من الحد الأدنى المسموح في النموذج (12 سنة).' : '') : '';
+
         const summary = shown.join(' • ');
         if (missing.length === 0 && res.check.length === 0) {
-            setOcrStatus('#0b8f63', 'fa-solid fa-check',
-                'تم استخراج: ' + summary + '<br>راجعها مع التقرير قبل المتابعة. | Please verify against the report.');
+            setOcrStatus(isChild ? '#b45309' : '#0b8f63', isChild ? 'fa-solid fa-triangle-exclamation' : 'fa-solid fa-check',
+                head + 'تم استخراج: ' + summary + '<br>راجعها مع التقرير قبل المتابعة (خاصة رقم الـ ID). | Please verify against the report.' + childNote);
         } else {
-            let msg = 'تم استخراج: ' + summary;
+            let msg = head + 'تم استخراج: ' + summary;
             if (res.check.length) msg += '<br>الحقول المظللة بالأصفر تحتاج مطابقة مع التقرير' + (res.pbfCalculated ? ' (نسبة الدهون محسوبة من كتلة الدهون ÷ الوزن)' : '') + '.';
             if (missing.length) msg += '<br>لم تُقرأ: ' + missing.join('، ') + ' — أدخلها يدوياً.';
-            setOcrStatus('#b45309', 'fa-solid fa-triangle-exclamation', msg);
+            setOcrStatus('#b45309', 'fa-solid fa-triangle-exclamation', msg + childNote);
         }
     }
 
@@ -1824,6 +1848,8 @@
     const INBODY_LAYOUT = {
         vTop: 0.0684, vBottom: 0.9732, uLeft: 0.0026, uRight: 0.9967,
         zones: {
+            id:     [0.049, 0.0895, 0.215, 0.1045],   // member ID cell, left of Height (verified on an InBody 770 sheet: ID 102126-3)
+            model:  [0.450, 0.047, 1.000, 0.067],     // model tag printed above the red rule, e.g. [InBody770]
             labels: [0.20, 0.072, 0.52, 0.090],
             height: [0.2245, 0.0895, 0.290, 0.1045],
             age:    [0.3285, 0.0895, 0.362, 0.1045],
@@ -1834,7 +1860,7 @@
         },
         rows: { weight: [0.3298, 0.3363], smm: [0.3581, 0.3650], pbf: [0.4856, 0.4921] }
     };
-    const INBODY_STEPS = 10;
+    const INBODY_STEPS = 12;
 
     function inbodyIsRed(r, g, b, th) { return r > 80 && r - Math.max(g, b) > (th || 45); }
 
@@ -2122,6 +2148,225 @@
         return inbodyField(env, inbodyRect(env.frame, z), '0123456789.', parse);
     }
 
+    // ---- parsers shared by every tier (IDs may contain a hyphen or letters, e.g. 102126-3) ----
+    function inbodyIdParse(t) {
+        const s = String(t || '').replace(/[\s|_,]+/g, '').replace(/[^0-9A-Za-z\-.]/g, '').replace(/^[-.]+|[-.]+$/g, '');
+        return /\d/.test(s) && s.length >= 3 && s.length <= 20 ? s : null;
+    }
+    function inbodyAgeParse(t) { const m = String(t || '').match(/\d{1,2}/), v = m ? parseInt(m[0], 10) : null; return v !== null && v >= 3 && v <= 99 ? v : null; }
+    function inbodyHeightParse(t) {
+        const s = String(t || ''), m = s.match(/\d{3}/) || s.match(/\d{2}/), v = m ? parseInt(m[0], 10) : null;
+        return v !== null && v >= 60 && v <= 230 ? v : null;
+    }
+    function inbodyModelParse(t) {
+        const m = String(t || '').match(/inbody\s*-?\s*(\d{2,3}\s?[A-Za-z]{0,2})/i);
+        return m ? m[1].replace(/\s+/g, '').toUpperCase() : null;
+    }
+    // adults vs children: some InBody models print a different result sheet and different norms for children (under 18)
+    function inbodyRanges(child) {
+        return child ? { w: [8, 250], bfm: [0.5, 150], smm: [2, 80], pbf: [2, 60], kcal: [400, 6000], sw: [0.25, 0.65] }
+            : { w: [30, 250], bfm: [3, 150], smm: [10, 80], pbf: [3, 60], kcal: [800, 6000], sw: [0.28, 0.62] };
+    }
+    function inbodyCategory(age, childWords) {
+        if (age !== null && age !== undefined) return age < 18 ? 'child' : 'adult';
+        return childWords ? 'child' : 'unknown';
+    }
+
+    // ===== Generic reader (any InBody model): locates the printed label words, then reads the value printed next to each =====
+    function inbodyNorm(t) { return String(t || '').toLowerCase().replace(/[^a-z0-9.\-]/g, ''); }
+    function inbodyWordsFrom(data) {
+        let w = (data && data.words) || [];
+        if ((!w || !w.length) && data && data.blocks) {
+            w = [];
+            data.blocks.forEach(function (b) { (b.paragraphs || []).forEach(function (p) { (p.lines || []).forEach(function (l) { (l.words || []).forEach(function (x) { w.push(x); }); }); }); });
+        }
+        return w.filter(function (x) { return x && x.text && String(x.text).trim() && x.bbox; })
+            .map(function (x) { return { t: String(x.text).trim(), x0: x.bbox.x0, y0: x.bbox.y0, x1: x.bbox.x1, y1: x.bbox.y1 }; });
+    }
+    function inbodyRot90(canvas, cw) {
+        const c = document.createElement('canvas'); c.width = canvas.height; c.height = canvas.width;
+        const g = c.getContext('2d', { willReadFrequently: true }); g.fillStyle = '#fff'; g.fillRect(0, 0, c.width, c.height);
+        g.translate(c.width / 2, c.height / 2); g.rotate(cw ? Math.PI / 2 : -Math.PI / 2); g.drawImage(canvas, -canvas.width / 2, -canvas.height / 2);
+        return c;
+    }
+    async function inbodyFullWords(worker, canvas, width) {
+        const k = width / canvas.width, c = document.createElement('canvas');
+        c.width = width; c.height = Math.round(canvas.height * k);
+        const g = c.getContext('2d', { willReadFrequently: true }); g.fillStyle = '#fff'; g.fillRect(0, 0, c.width, c.height);
+        g.imageSmoothingQuality = 'high'; g.drawImage(canvas, 0, 0, c.width, c.height);
+        await worker.setParameters({ tessedit_char_whitelist: '', tessedit_pageseg_mode: '11' });
+        const res = await worker.recognize(c, {}, { blocks: true });
+        return inbodyWordsFrom(res && res.data).map(function (w) { return { t: w.t, x0: w.x0 / k, y0: w.y0 / k, x1: w.x1 / k, y1: w.y1 / k }; });
+    }
+
+    // header row: [ID] Height Age Gender [Test Date] -> the value sits under each label, left-aligned with it
+    function inbodyFindHeader(words) {
+        const nm = function (w) { return inbodyNorm(w.t); }, hh = function (w) { return w.y1 - w.y0; }, cy = function (w) { return (w.y0 + w.y1) / 2; };
+        const hs = words.filter(function (w) { return nm(w) === 'height'; }).sort(function (a, b) { return a.y0 - b.y0; });
+        for (let i = 0; i < hs.length; i++) {
+            const h = hs[i], tol = Math.max(8, hh(h) * 0.7);
+            const a = words.filter(function (w) { return nm(w) === 'age' && Math.abs(cy(w) - cy(h)) < tol && w.x0 > h.x1; }).sort(function (p, q) { return p.x0 - q.x0; })[0];
+            if (!a) continue;
+            const g = words.filter(function (w) { return nm(w) === 'gender' && Math.abs(cy(w) - cy(a)) < tol && w.x0 > a.x1; }).sort(function (p, q) { return p.x0 - q.x0; })[0] || null;
+            const id = words.filter(function (w) { return nm(w) === 'id' && Math.abs(cy(w) - cy(h)) < tol && w.x1 < h.x0; }).sort(function (p, q) { return q.x1 - p.x1; })[0] || null;
+            const test = words.filter(function (w) { return nm(w) === 'test' && Math.abs(cy(w) - cy(h)) < tol && w.x0 > (g || a).x1; })[0] || null;
+            return { id: id, h: h, a: a, g: g, test: test };
+        }
+        return null;
+    }
+    function inbodyHeaderCells(hd) {
+        const lh = hd.h.y1 - hd.h.y0, cells = {};
+        const seq = [['id', hd.id], ['height', hd.h], ['age', hd.a], ['gender', hd.g]].filter(function (e) { return e[1]; });
+        seq.forEach(function (e, i) {
+            const w = e[1], nxt = seq[i + 1] ? seq[i + 1][1] : null;
+            const right = nxt ? nxt.x0 - 3 : (e[0] === 'gender' && hd.test ? hd.test.x0 - 3 : w.x1 + 3.2 * (w.x1 - w.x0));
+            cells[e[0]] = { x: w.x0 - 3, y: w.y1 + 0.05 * lh, w: Math.max(10, right - (w.x0 - 3)), h: 1.75 * lh };
+        });
+        return cells;
+    }
+
+    // body-composition values: collect decimals printed on the same row as each label, then keep the combination
+    // that agrees with the physics of the report (fat mass = weight x PBF, muscle / weight ratio)
+    function inbodyBodyPick(words, R) {
+        const cy = function (w) { return (w.y0 + w.y1) / 2; }, ht = function (w) { return Math.max(8, w.y1 - w.y0); };
+        const pageW = Math.max.apply(null, words.map(function (w) { return w.x1; }).concat([1]));
+        let dec = words.filter(function (w) { return !/[~()]/.test(w.t) && /^\d{1,3}\.\d{1,2}$/.test(String(w.t).replace(/[^0-9.]/g, '')); });
+        // a row of 3+ decimals on one line is an axis scale (e.g. 10.0 30.0 35.0 ...), not a result: drop it
+        dec = dec.filter(function (d) {
+            const line = dec.filter(function (e) { return Math.abs(cy(e) - cy(d)) < ht(d) * 0.5; }).sort(function (a, b) { return a.x0 - b.x0; });
+            let i = line.indexOf(d), n = 1, k;
+            for (k = i; k > 0 && line[k].x0 - line[k - 1].x1 <= 0.2 * pageW; k--) n++;
+            for (k = i; k < line.length - 1 && line[k + 1].x0 - line[k].x1 <= 0.2 * pageW; k++) n++;
+            return n < 3;
+        });
+        const lab = {
+            weight: words.filter(function (w) { return inbodyNorm(w.t) === 'weight'; }),
+            smm: words.filter(function (w) { return inbodyNorm(w.t) === 'smm'; }),
+            pbf: words.filter(function (w) { return inbodyNorm(w.t) === 'pbf'; }),
+            bfm: words.filter(function (w) { return inbodyNorm(w.t) === 'fat' && words.some(function (p) { return inbodyNorm(p.t) === 'body' && p.x1 <= w.x0 + 4 && w.x0 - p.x1 < ht(w) * 2 && Math.abs(cy(p) - cy(w)) < ht(w) * 0.6; }); })
+        };
+        const rng = { weight: R.w, smm: R.smm, pbf: R.pbf, bfm: R.bfm }, cand = {};
+        Object.keys(lab).forEach(function (k) {
+            const m = {};
+            lab[k].forEach(function (L) {
+                dec.forEach(function (d) {
+                    if (d.x0 < L.x1 - 2 || d.x0 > L.x1 + 0.6 * pageW || Math.abs(cy(d) - cy(L)) > 1.2 * ht(L)) return;
+                    const v = parseFloat(String(d.t).replace(/[^0-9.]/g, ''));
+                    if (!(v >= rng[k][0] && v <= rng[k][1])) return;
+                    if (!m[v]) m[v] = { v: v, n: 0, w: d }; m[v].n++;
+                });
+            });
+            cand[k] = Object.keys(m).map(function (x) { return m[x]; }).slice(0, 8);
+        });
+        const opt = function (a) { return a.length ? a : [null]; };
+        let best = null;
+        opt(cand.weight).forEach(function (w) { opt(cand.smm).forEach(function (s) { opt(cand.pbf).forEach(function (p) { opt(cand.bfm).forEach(function (b) {
+            let sc = 0, fat = false;
+            [w, s, p, b].forEach(function (x) { if (x) sc += 0.1 * x.n + 0.2; });
+            if (w && b && p) { if (Math.abs(b.v - w.v * p.v / 100) <= Math.max(0.6, w.v * 0.012)) { sc += 6; fat = true; } else sc -= 2; }
+            if (w && s) { const r = s.v / w.v; if (r >= R.sw[0] && r <= R.sw[1]) sc += 1.5; else sc -= 3; }
+            if (w && b && b.v >= w.v) sc -= 6;
+            if (!best || sc > best.sc) best = { sc: sc, w: w, s: s, p: p, b: b, fat: fat };
+        }); }); }); });
+        return best;
+    }
+
+    async function inbodyGenericCore(words, hd, io, tk) {
+        const cells = inbodyHeaderCells(hd), check = [];
+        const inCell = function (c) {
+            return words.filter(function (w) { const x = (w.x0 + w.x1) / 2, y = (w.y0 + w.y1) / 2; return x >= c.x && x <= c.x + c.w && y >= c.y && y <= c.y + c.h; })
+                .sort(function (p, q) { return p.x0 - q.x0; }).map(function (w) { return w.t; }).join('');
+        };
+        const ALNUM = '0123456789-ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+        tk('ID');
+        let id = null, idCell = cells.id || null;
+        if (idCell) {
+            let r = await io.consensus(idCell, '0123456789-', inbodyIdParse);
+            if (r === null) r = await io.single(idCell, '0123456789-', inbodyIdParse);
+            if (r === null) r = await io.single(idCell, ALNUM, inbodyIdParse);
+            const wd = inbodyIdParse(inCell(idCell));
+            id = r !== null ? r : wd;
+            if (id !== null && (r === null || (wd !== null && wd !== r))) check.push('id');
+        }
+        tk('العمر');
+        let age = cells.age ? await io.single(cells.age, '0123456789', inbodyAgeParse) : null;
+        if (age === null && cells.age) age = inbodyAgeParse(inCell(cells.age));
+        tk('الطول');
+        let height = cells.height ? await io.single(cells.height, '0123456789cm', inbodyHeightParse) : null;
+        if (height === null && cells.height) height = inbodyHeightParse(inCell(cells.height));
+        tk('الجنس');
+        let gender = cells.gender ? await io.single(cells.gender, 'MaleFmal', inbodyGender) : null;
+        if (gender === null && cells.gender) gender = inbodyGender(inCell(cells.gender));
+        if (age === null || height === null) return { ok: false, headerFound: true, idCell: idCell };
+
+        const R = inbodyRanges(age < 18), dcm = function (lo, hi) { return function (t) { return inbodyDecimal(t, lo, hi); }; };
+        tk('قيم الجسم');
+        const pick = inbodyBodyPick(words, R) || {};
+        const rect = function (w) { return { x: w.x0 - 4, y: w.y0 - 3, w: (w.x1 - w.x0) + 8, h: (w.y1 - w.y0) + 6 }; };
+        const verify = async function (key, cnd, lo, hi) {
+            if (!cnd) return null;
+            const r = await io.consensus(rect(cnd.w), '0123456789.', dcm(lo, hi));
+            if (r !== null && r !== cnd.v) { check.push(key); return r; }
+            if (r === null && !pick.fat) check.push(key);
+            return cnd.v;
+        };
+        let weight = await verify('weight', pick.w, R.w[0], R.w[1]);
+        const smm = await verify('smm', pick.s, R.smm[0], R.smm[1]);
+        let pbf = await verify('pbf', pick.p, R.pbf[0], R.pbf[1]), pbfCalculated = false;
+        const bfm = await verify('bfm', pick.b, R.bfm[0], R.bfm[1]);
+        if (pbf === null && bfm !== null && weight !== null) { pbf = Math.round(bfm / weight * 1000) / 10; pbfCalculated = true; check.push('pbf'); }
+        if (weight !== null && smm !== null && (smm / weight < R.sw[0] || smm / weight > R.sw[1]) && check.indexOf('smm') < 0) check.push('smm');
+
+        tk('السعرات');
+        let calories = null;
+        const rec = words.filter(function (w) { return inbodyNorm(w.t) === 'recommended'; })[0];
+        if (rec) {
+            const row = words.filter(function (w) { return w.x0 > rec.x1 && Math.abs((w.y0 + w.y1) / 2 - (rec.y0 + rec.y1) / 2) < Math.max(8, rec.y1 - rec.y0) * 0.8 && /^\d{3,4}$/.test(String(w.t).replace(/[^0-9]/g, '')); })[0];
+            if (row) {
+                const v = parseInt(String(row.t).replace(/[^0-9]/g, ''), 10), r = await io.consensus(rect(row), '0123456789', function (t) { const m = String(t || '').match(/\d{3,4}/), n = m ? parseInt(m[0], 10) : null; return n !== null && n >= R.kcal[0] && n <= R.kcal[1] ? n : null; });
+                calories = r !== null ? r : (v >= R.kcal[0] && v <= R.kcal[1] ? v : null);
+                if (calories !== null && r === null) check.push('calories');
+            }
+        }
+        return { ok: true, values: { id: id, age: age, height: height, gender: gender, weight: weight, smm: smm, pbf: pbf, calories: calories }, check: check, pbfCalculated: pbfCalculated, idCell: idCell };
+    }
+
+    async function inbodyGenericRead(canvas, worker, progress, st) {
+        const tk = function (label) { st.step = Math.min(st.step + 1, st.total); if (progress) progress(st.step, st.total, label); };
+        const attempts = [{ c: canvas, w: 1700, rot: false }, { c: canvas, w: 2400, rot: false }];
+        if (canvas.width > canvas.height * 1.05) { attempts.push({ c: null, w: 1700, rot: 'cw' }); attempts.push({ c: null, w: 1700, rot: 'ccw' }); }
+        let brand = false, headerFound = false, best = null;
+        for (let i = 0; i < attempts.length; i++) {
+            const a = attempts[i];
+            if (a.rot && headerFound) break;                               // rotation is only tried when no header was found at all
+            if (i === 1 && !headerFound) continue;                         // higher zoom only helps when the first pass saw the header but was unsure
+            if (i === 1 && best && best.check.length === 0) break;
+            tk(a.rot ? 'تدوير الصورة وإعادة القراءة' : (i === 0 ? 'قراءة التقرير كاملاً (الكلمات المرجعية)' : 'إعادة القراءة بتكبير أعلى'));
+            const cv = a.rot ? inbodyRot90(canvas, a.rot === 'cw') : a.c;
+            const words = await inbodyFullWords(worker, cv, a.w);
+            if (words.some(function (w) { return /inbody/i.test(w.t); })) brand = true;
+            const hd = inbodyFindHeader(words);
+            if (!hd) { if (i === 0 && !a.rot) { attempts[1].c = canvas; } continue; }
+            headerFound = true;
+            const env = { worker: worker, canvas: cv };
+            const io = {
+                consensus: function (r, wl, p) { return inbodyConsensus(env, r, wl, p); },
+                single: function (r, wl, p) { return inbodyField(env, r, wl, p); }
+            };
+            const core = await inbodyGenericCore(words, hd, io, tk);
+            if (!core.ok) continue;
+            let model = null;
+            for (let j = 0; j < words.length && !model; j++) model = inbodyModelParse(words[j].t);
+            if (!model) { const k = words.findIndex(function (w) { return /^\[?inbody\]?$/i.test(w.t); }); if (k >= 0 && words[k + 1]) model = inbodyModelParse('InBody' + words[k + 1].t); }
+            const childWords = words.some(function (w) { return /^(growth|percentiles?|child|children|pediatric|junior|kids?)$/i.test(w.t.replace(/[^A-Za-z]/g, '')); });
+            const res = { ok: true, values: core.values, check: core.check, pbfCalculated: core.pbfCalculated, model: model, category: inbodyCategory(core.values.age, childWords),
+                idCrop: core.idCell ? inbodyCrop(cv, core.idCell, false) : null, brand: brand, headerFound: true };
+            if (!best || res.check.length < best.check.length) best = res;
+            if (best.check.length === 0) break;
+        }
+        return best || { ok: false, brand: brand, headerFound: headerFound };
+    }
+
     async function readInBodyReport(source, worker, progress) {
         let canvas = source, img = inbodyPixels(canvas);
         const tilt = inbodyTilt(img);
@@ -2133,56 +2378,77 @@
         const frame = found || { x0: 0, y0: 0, sx: img.width, sy: img.height };
         const env = { worker: worker, canvas: canvas, img: img, frame: frame };
         const Z = INBODY_LAYOUT.zones;
-        let step = 0;
-        const tick = function (label) { step++; if (progress) progress(step, INBODY_STEPS, label); };
+        const st = { step: 0, total: INBODY_STEPS + 6 };
+        const tick = function (label) { st.step = Math.min(st.step + 1, st.total); if (progress) progress(st.step, st.total, label); };
 
+        // ---- tier 1: the calibrated InBody 770 sheet layout (fast and the most accurate)
         tick('الترويسة');
         const labels = await inbodyOcr(worker, inbodyCrop(canvas, inbodyRect(frame, Z.labels), false), '', 7);
         const labelHits = [/heig/i, /\bag/i, /gend/i].filter(function (r) { return r.test(labels); }).length;
-        tick('الطول');
-        const height = await inbodyField(env, inbodyRect(frame, Z.height), '0123456789cm', function (t) { return inbodyInt(t, 3, 100, 230); });
+        tick('ID');
+        const idRect = inbodyRect(frame, Z.id), ALNUM = '0123456789-ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+        let memberId = await inbodyConsensus(env, idRect, '0123456789-', inbodyIdParse), idSingle = false;
+        if (memberId === null) { memberId = await inbodyField(env, idRect, '0123456789-', inbodyIdParse); idSingle = memberId !== null; }
+        if (memberId === null) { memberId = await inbodyField(env, idRect, ALNUM, inbodyIdParse); idSingle = memberId !== null; }
+        const idCrop = inbodyCrop(canvas, idRect, false);
         tick('العمر');
-        const age = await inbodyField(env, inbodyRect(frame, Z.age), '0123456789', function (t) { return inbodyInt(t, 2, 10, 90); });
+        const age = await inbodyField(env, inbodyRect(frame, Z.age), '0123456789', inbodyAgeParse);
+        const R = inbodyRanges(age !== null && age < 18);
+        tick('الطول');
+        const height = await inbodyField(env, inbodyRect(frame, Z.height), '0123456789cm', inbodyHeightParse);
         tick('الجنس');
         const gender = await inbodyField(env, inbodyRect(frame, Z.gender), 'MaleFmal', inbodyGender);
+
+        const strict = age !== null && height !== null && (labelHits >= 2 || !!found);
+        if (!strict) {
+            // ---- tier 2: any other InBody model / photo: find the printed words (ID, Height, Age, Gender, Weight, SMM, PBF ...)
+            const g = await inbodyGenericRead(canvas, worker, progress, st);
+            if (g.ok) return { values: g.values, check: g.check, pbfCalculated: g.pbfCalculated, calibrated: false, notInBody: false, lowQuality: false, idCrop: g.idCrop, model: g.model, category: g.category, tier: 2 };
+            if (age === null || height === null) {
+                const notInBody = !found && labelHits < 2 && !g.brand && !g.headerFound;
+                return { values: { id: null, age: null, height: null, gender: null, weight: null, smm: null, pbf: null, calories: null }, check: [], pbfCalculated: false, calibrated: !!found, notInBody: notInBody, lowQuality: !notInBody, idCrop: null, model: null, category: 'unknown', tier: 1 };
+            }
+        }
         tick('الوزن');
-        const weightCell = await inbodyField(env, inbodyRect(frame, Z.weight), '0123456789.', function (t) { return inbodyDecimal(t, 30, 250); });
+        const weightCell = await inbodyField(env, inbodyRect(frame, Z.weight), '0123456789.', function (t) { return inbodyDecimal(t, R.w[0], R.w[1]); });
         tick('كتلة الدهون');
-        const bfm = await inbodyField(env, inbodyRect(frame, Z.bfm), '0123456789.', function (t) { return inbodyDecimal(t, 3, 150); });
+        const bfm = await inbodyField(env, inbodyRect(frame, Z.bfm), '0123456789.', function (t) { return inbodyDecimal(t, R.bfm[0], R.bfm[1]); });
         tick('الوزن (مطابقة)');
-        const weightRow = await inbodyRowValue(env, 'weight', function (t) { return inbodyDecimal(t, 30, 250); });
+        const weightRow = await inbodyRowValue(env, 'weight', function (t) { return inbodyDecimal(t, R.w[0], R.w[1]); });
         tick('كتلة العضلات SMM');
-        const smm = await inbodyRowValue(env, 'smm', function (t) { return inbodyDecimal(t, 10, 80); });
+        const smm = await inbodyRowValue(env, 'smm', function (t) { return inbodyDecimal(t, R.smm[0], R.smm[1]); });
         tick('نسبة الدهون PBF');
-        const pbfRow = await inbodyRowValue(env, 'pbf', function (t) { return inbodyDecimal(t, 3, 60); });
+        const pbfRow = await inbodyRowValue(env, 'pbf', function (t) { return inbodyDecimal(t, R.pbf[0], R.pbf[1]); });
         tick('السعرات الموصى بها');
         const calories = await inbodyConsensus(env, inbodyRect(frame, Z.calories), '0123456789', function (t) {
             const m = String(t || '').match(/\d{3,4}/);
             const v = m ? parseInt(m[0], 10) : null;
-            return v !== null && v >= 800 && v <= 6000 ? v : null;
+            return v !== null && v >= R.kcal[0] && v <= R.kcal[1] ? v : null;
         });
+        tick('الموديل');
+        const model = await inbodyField(env, inbodyRect(frame, Z.model), '[]InBody0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ', inbodyModelParse);
 
         const check = [];
+        if (idSingle) check.push('id');
         let weight = weightCell !== null ? weightCell : weightRow;
         if (weightCell !== null && weightRow !== null && Math.abs(weightCell - weightRow) > 0.15) check.push('weight');
 
         let pbf = pbfRow, pbfCalculated = false;
         const calc = (bfm !== null && weight !== null) ? Math.round(bfm / weight * 1000) / 10 : null;
         if (calc !== null && (pbfRow === null || Math.abs(pbfRow - calc) > 0.8)) { pbf = calc; pbfCalculated = true; check.push('pbf'); }
-        if (smm !== null && weight !== null && (smm / weight < 0.28 || smm / weight > 0.62)) check.push('smm');
+        if (smm !== null && weight !== null && (smm / weight < R.sw[0] || smm / weight > R.sw[1])) check.push('smm');
 
-        const reliable = age !== null && height !== null;
-        const values = reliable
-            ? { age: age, height: height, gender: gender, weight: weight, smm: smm, pbf: pbf, calories: calories }
-            : { age: null, height: null, gender: null, weight: null, smm: null, pbf: null, calories: null };
-        const notInBody = !reliable && (!found || labelHits < 2);
         return {
-            values: values,
-            check: reliable ? check : [],
-            pbfCalculated: reliable && pbfCalculated,
+            values: { id: memberId, age: age, height: height, gender: gender, weight: weight, smm: smm, pbf: pbf, calories: calories },
+            check: check,
+            pbfCalculated: pbfCalculated,
             calibrated: !!found,
-            notInBody: notInBody,
-            lowQuality: !reliable && !notInBody
+            notInBody: false,
+            lowQuality: false,
+            idCrop: idCrop,
+            model: model,
+            category: inbodyCategory(age, false),
+            tier: 1
         };
     }
 
@@ -2845,6 +3111,7 @@
 
         const coach = document.getElementById('coachName').value.trim();
         const client = document.getElementById('clientName').value.trim();
+        const memberId = document.getElementById('memberId').value.trim();
         const gender = document.getElementById('genderSelect').value;
         const realAge = Math.round(num('realAge', 30));
         const weight = num('weightInput', 70);
@@ -2997,7 +3264,8 @@
             '<br>• نبض الاستشفاء | HR recovery: <b>' + (Math.round(hrRate * 100) / 100) + '</b> bpm/s · ' + Math.round(hrPeakPct) + '% HRmax';
         if (postureNotes.length) summaryHTML += '<br><br><strong>ملاحظات القوام | Postural findings:</strong><br>' + postureNotes.map(function (x) { return '• ' + x; }).join('<br>') + '<br><span style="color:#64748b">مؤشرات فحص أولي وليست تشخيصاً طبياً. | Screening indicators only, not a diagnosis.</span>';
         document.getElementById('detailedReportText').innerHTML = summaryHTML;
-        window.BFIT_LAST = { client: client, coach: coach, gender: gender, realAge: realAge, weight: weight, fat: fat, smm: smm, height: num('heightInput', 0),
+        const inbodyMeta = window.BFIT_INBODY || {};
+        window.BFIT_LAST = { client: client, memberId: memberId, inbodyModel: inbodyMeta.model || '', category: (inbodyMeta.category && inbodyMeta.category !== 'unknown') ? inbodyMeta.category : (realAge < 18 ? 'child' : 'adult'), coach: coach, gender: gender, realAge: realAge, weight: weight, fat: fat, smm: smm, height: num('heightInput', 0),
 bioAge: biologicalAge, fitness: fitnessScore, flags: flags, notes: notes, clearance: needsMedicalClearance, bioParts: bioParts, testParts: testParts, hrRate: hrRate, hrPeakPct: hrPeakPct, bodyComp: bodyCompScore, reachBest: reachBest, postureScore: postureScore, postureText: postureText, postureNotes: postureNotes };
 renderReportExtras(flags.length > 0, needsMedicalClearance);
         const area = document.getElementById('resultArea');
@@ -3014,7 +3282,7 @@ renderReportExtras(flags.length > 0, needsMedicalClearance);
         const entered = [(D.postureText || '—'), v('apR') + ' / ' + v('apL') + ' cm (R/L)', v('srTry1') + ' / ' + v('srTry2') + ' cm', v('slsR') + ' / ' + v('slsL') + ' s (R/L)', v('plankR') + ' / ' + v('plankL') + ' s (R/L)', v('chairReps') + ' reps', v('kpuReps') + ' reps', 'Rest ' + v('ymcaRest') + ' | Peak ' + v('ymcaPeak') + ' | Rec ' + v('ymcaRec') + 's'];
         const B = [];
         B.push({ t: 'sec', x: 'بيانات المشترك والإنبودي | Client & InBody' });
-        B.push({ t: 'tbl', w: [.2, .3, .2, .3], r: [['المشترك | Client', D.client, 'المدرب | Coach', D.coach], ['الجنس | Gender', D.gender === 'male' ? 'ذكر | Male' : 'أنثى | Female', 'العمر | Age', String(D.realAge)],
+        B.push({ t: 'tbl', w: [.2, .3, .2, .3], r: [['رقم الـ ID | Member ID', D.memberId || '—', 'التاريخ | Date', new Date().toLocaleDateString('en-GB')], ['جهاز InBody | Model', D.inbodyModel ? 'InBody ' + D.inbodyModel : '—', 'الفئة | Category', D.category === 'child' ? 'طفل | Child' : 'بالغ | Adult'], ['المشترك | Client', D.client, 'المدرب | Coach', D.coach], ['الجنس | Gender', D.gender === 'male' ? 'ذكر | Male' : 'أنثى | Female', 'العمر | Age', String(D.realAge)],
             ['الوزن | Weight', D.weight + ' kg', 'الطول | Height', (D.height || '—') + ' cm'], ['الدهون PBF', D.fat + ' %', 'العضلات SMM', D.smm + ' kg']] });
         B.push({ t: 'sec', x: 'العمر البيولوجي | Biological Age' });
         B.push({ t: 'big', r: [['الدرجة الكلية | Fitness', D.fitness + '%'], ['العمر الحقيقي | Real Age', String(D.realAge)], ['العمر البيولوجي | Bio Age', String(D.bioAge)]] });
@@ -3053,7 +3321,7 @@ renderReportExtras(flags.length > 0, needsMedicalClearance);
             cv = document.createElement('canvas'); cv.width = W; cv.height = H; c = cv.getContext('2d'); c.fillStyle = '#fff'; c.fillRect(0, 0, W, H); c.direction = 'rtl'; c.textBaseline = 'middle'; pages.push(cv); pg++;
             c.fillStyle = '#000'; c.fillRect(0, 0, W, 130); c.fillStyle = '#fff'; c.font = '900 56px Montserrat, ' + FONT; c.textAlign = 'left'; c.direction = 'ltr'; c.fillText('B_FIT', M, 65);
             c.direction = 'rtl'; c.textAlign = 'right'; c.font = '700 34px ' + FONT; c.fillText('تقرير التقييم البدني الشامل | Assessment Report', W - M, 48);
-            c.font = '500 24px ' + FONT; c.fillStyle = '#cbd5e1'; c.fillText((D.client || '') + '  ·  ' + new Date().toLocaleDateString('en-GB'), W - M, 94);
+            c.font = '500 24px ' + FONT; c.fillStyle = '#cbd5e1'; c.fillText((D.client || '') + (D.memberId ? '  ·  ID ' + D.memberId : '') + '  ·  ' + new Date().toLocaleDateString('en-GB'), W - M, 94);
             c.fillStyle = '#64748b'; c.font = '500 20px ' + FONT; c.textAlign = 'center'; c.fillText('B_FIT · ' + pg, W / 2, H - 30); y = 166;
         }
         function fit(t, w, size, weight) { let s = size; c.font = weight + ' ' + s + 'px ' + FONT; while (s > 15 && c.measureText(t).width > w) { s -= 1; c.font = weight + ' ' + s + 'px ' + FONT; } }
@@ -3085,7 +3353,7 @@ renderReportExtras(flags.length > 0, needsMedicalClearance);
         });
         return pages;
     }
-    function pdfAssemble(jpegs, w, h) {
+    function pdfAssemble(jpegs, w, h, meta) {
         const enc = new TextEncoder(), chunks = [], offs = []; let len = 0;
         const push = function (u) { chunks.push(u); len += u.length; }, ps = function (s) { push(enc.encode(s)); };
         const obj = function (n, fn) { offs[n] = len; ps(n + ' 0 obj\n'); fn(); ps('\nendobj\n'); };
@@ -3098,9 +3366,12 @@ renderReportExtras(flags.length > 0, needsMedicalClearance);
             obj(4 + 3 * i, function () { ps('<< /Length ' + c.length + ' >>\nstream\n' + c + '\nendstream'); });
             obj(5 + 3 * i, function () { ps('<< /Type /XObject /Subtype /Image /Width ' + w + ' /Height ' + h + ' /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ' + jpg.length + ' >>\nstream\n'); push(jpg); ps('\nendstream'); });
         });
-        const size = 3 * N + 3, x = len; ps('xref\n0 ' + size + '\n0000000000 65535 f \n');
+        const m = meta || {}, hx = function (t) { let o = 'FEFF'; for (let i = 0; i < t.length; i++) o += t.charCodeAt(i).toString(16).padStart(4, '0'); return '<' + o + '>'; };
+        const ttl = 'BFIT Report' + (m.memberId ? ' - ID ' + m.memberId : '') + (m.client ? ' - ' + m.client : '');
+        obj(3 * N + 3, function () { ps('<< /Title ' + hx(ttl) + ' /Subject ' + hx(m.memberId ? 'ID ' + m.memberId : 'BFIT Report') + ' /Keywords ' + hx(m.memberId ? String(m.memberId) : '') + ' /Producer ' + hx('B_FIT') + ' >>'); });
+        const size = 3 * N + 4, x = len; ps('xref\n0 ' + size + '\n0000000000 65535 f \n');
         for (let n = 1; n < size; n++) ps(String(offs[n]).padStart(10, '0') + ' 00000 n \n');
-        ps('trailer\n<< /Size ' + size + ' /Root 1 0 R >>\nstartxref\n' + x + '\n%%EOF');
+        ps('trailer\n<< /Size ' + size + ' /Root 1 0 R /Info ' + (3 * N + 3) + ' 0 R >>\nstartxref\n' + x + '\n%%EOF');
         const out = new Uint8Array(len); let p = 0; chunks.forEach(function (u) { out.set(u, p); p += u.length; });
         return new Blob([out], { type: 'application/pdf' });
     }
@@ -3112,7 +3383,7 @@ renderReportExtras(flags.length > 0, needsMedicalClearance);
             btn.disabled = true; btn.innerHTML = '... جاري إنشاء الملف | Creating PDF';
             try { await Promise.all([document.fonts.load('700 28px Tajawal'), document.fonts.load('900 28px Montserrat')]); await document.fonts.ready; } catch (e) { }
             const pages = pdfDrawPages(B), jpegs = pages.map(function (cv) { const bin = atob(cv.toDataURL('image/jpeg', 0.93).split(',')[1]), u = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) u[i] = bin.charCodeAt(i); return u; });
-            const blob = pdfAssemble(jpegs, 1240, 1754), name = 'BFIT_Report_' + ((window.BFIT_LAST.client || 'Client').replace(/[^\w\u0600-\u06FF]+/g, '_')) + '.pdf', url = URL.createObjectURL(blob), a = document.createElement('a');
+            const blob = pdfAssemble(jpegs, 1240, 1754, window.BFIT_LAST), name = 'BFIT_Report_' + (window.BFIT_LAST.memberId ? String(window.BFIT_LAST.memberId).replace(/[^\w-]+/g, '') + '_' : '') + ((window.BFIT_LAST.client || 'Client').replace(/[^\w\u0600-\u06FF]+/g, '_')) + '.pdf', url = URL.createObjectURL(blob), a = document.createElement('a');
             a.href = url; a.download = name; document.body.appendChild(a); a.click();
             setTimeout(function () { a.remove(); URL.revokeObjectURL(url); }, 8000);
         } catch (err) { alert('تعذّر إنشاء الـ PDF | PDF failed: ' + err.message); }
