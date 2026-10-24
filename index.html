@@ -946,6 +946,11 @@
     .bf-timer.run .bf-go { background: var(--warning-red); }
     .bf-timer.run .bf-timer-val { border-color: var(--success-green); box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.18); }
     .bf-timer .bf-rs { background: #475569; }
+    .bf-cd .bf-timer-val { min-width: 76px; }
+    .bf-cd.done .bf-timer-val { border-color: var(--warning-red); color: var(--warning-red); box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2); animation: bfCdBlink .5s ease-in-out 8; }
+    .bf-cd-msg { display: none; width: 100%; font: 800 13px Tajawal, Montserrat, sans-serif; color: var(--warning-red); direction: rtl; }
+    .bf-cd.done .bf-cd-msg { display: block; }
+    @keyframes bfCdBlink { 0%, 100% { opacity: 1; } 50% { opacity: .35; } }
     .bf-rom-hint { font-size: 12.5px; font-weight: 800; line-height: 1.6; }
     .bf-rom-hint:empty { display: none; }
     .bf-rom-hint.neg { color: #dc2626; }
@@ -1063,7 +1068,7 @@
 
         <div class="form-grid-4">
             <div class="input-box upload-box">
-                <span class="upload-title">إرفاق تقرير InBody 770 <span class="en">InBody 770 Scan</span></span>
+                <span class="upload-title">إرفاق تقرير InBody (أي موديل / أي لغة) <span class="en">InBody Scan — any model</span></span>
                 <input type="file" id="inbodyFile" class="sr-file" accept="image/*" onchange="handleInBodyFile(this.files[0])">
                 <label class="upload-zone" id="uploadZone" for="inbodyFile">
                     <span class="upload-icon"><i class="fa-solid fa-file-arrow-up"></i></span>
@@ -1750,7 +1755,7 @@
 
         const v = res.values, shown = [], missing = [];
         Object.keys(INBODY_FIELDS).forEach(function (k) {
-            if (v[k] === null) { if (k === 'id') document.getElementById('memberId').value = ''; missing.push(INBODY_FIELD_LABELS[k]); return; }   // never keep a previous member's ID
+            if (v[k] === null) { if (k === 'id') document.getElementById('memberId').value = ''; if (k === 'calories' && res.tier === 3) document.getElementById('calorieInput').value = ''; if (!(k === 'calories' && res.tier === 3)) missing.push(INBODY_FIELD_LABELS[k]); return; }   // never keep a previous member's ID
             document.getElementById(INBODY_FIELDS[k]).value = v[k];
             markField(INBODY_FIELDS[k], res.check.indexOf(k) >= 0 ? 'check' : 'ok');
             shown.push(INBODY_FIELD_LABELS[k] + ' ' + v[k] + INBODY_UNITS[k]);
@@ -1764,7 +1769,7 @@
         const isChild = res.category === 'child';
         const head = '<b>' + (res.model ? 'InBody ' + res.model : 'موديل InBody غير محدد | Model not identified') + '</b> · <b>' +
             (isChild ? 'تقرير طفل / غير بالغ | Child report' : (res.category === 'adult' ? 'تقرير شخص بالغ | Adult report' : 'الفئة غير محددة | Category unknown')) + '</b>' +
-            (res.tier === 2 ? ' · قُرئ بالكلمات المرجعية | read by label words' : '') + '<br>';
+            (res.tier === 2 ? ' · قُرئ بالكلمات المرجعية | read by label words' : '') + (res.tier === 3 ? ' · قراءة شاملة مع تحقق حسابي (ماء + بروتين + معادن + دهون = الوزن) | universal parse, arithmetic-verified' : '') + '<br>';
         const childNote = isChild ? '<br>⚠️ هذا تقرير لطفل / غير بالغ: طريقة عرض البيانات ومعاييرها تختلف عن تقرير البالغين، ومعايير اختبارات B_FIT والعمر البيولوجي مخصّصة للبالغين، فراجع النتائج بحذر.' +
             (v.age !== null && v.age < 12 ? ' كما أن العمر أقل من الحد الأدنى المسموح في النموذج (12 سنة).' : '') : '';
 
@@ -2367,7 +2372,7 @@
         return best || { ok: false, brand: brand, headerFound: headerFound };
     }
 
-    async function readInBodyReport(source, worker, progress) {
+    async function readInBodyReportLegacy(source, worker, progress) {
         let canvas = source, img = inbodyPixels(canvas);
         const tilt = inbodyTilt(img);
         if (Math.abs(tilt) > 0.0015 && Math.abs(tilt) < 0.07) {
@@ -2450,6 +2455,436 @@
             category: inbodyCategory(age, false),
             tier: 1
         };
+    }
+
+    // ===== Universal InBody reader: any model / language / layout. Full-page words + arithmetic cross-validation =====
+    // Body composition always satisfies  TBW + Protein + Minerals + BodyFat = Weight  on every InBody sheet (770, 270S, Arabic, child ...),
+    // so the five numbers are located by that equation instead of by pixel position or by label language.
+    function uniClean(t) {
+        return String(t || '')
+            .replace(/[\u06F0-\u06F9]/g, function (d) { return String.fromCharCode(d.charCodeAt(0) - 0x06F0 + 48); })
+            .replace(/[\u0660-\u0669]/g, function (d) { return String.fromCharCode(d.charCodeAt(0) - 0x0660 + 48); })
+            .replace(/[\u066B]/g, '.').replace(/[\u2212]/g, '-');
+    }
+    function uniNum(s) { return parseFloat(String(s).replace(',', '.')); }
+    function uniR1(v) { return Math.round(v * 10) / 10; }
+
+    // joins numbers that the OCR split around a range sign:  "(34.5" "~" "42.1)"  ->  "(34.5~42.1)"
+    function uniGlue(words, mh) {
+        const arr = words.map(function (w) { return { t: uniClean(w.t), x0: w.x0, y0: w.y0, x1: w.x1, y1: w.y1 }; });
+        const cyOf = function (w) { return (w.y0 + w.y1) / 2; };
+        const sameLine = function (a, b) { return Math.abs(cyOf(a) - cyOf(b)) < mh * 0.8; };
+        let guard = 0, changed = true;
+        while (changed && guard++ < 400) {
+            changed = false;
+            for (let i = 0; i < arr.length; i++) {
+                const a = arr[i];
+                const only = /^[~\-\u2013\u2014=\u2248_]+$/.test(a.t), starts = /^[~=\u2248]\d/.test(a.t), ends = /\d[~=\u2248]$/.test(a.t);
+                if (!only && !starts && !ends) continue;
+                let L = -1, R = -1, dl = 1e9, dr = 1e9;
+                arr.forEach(function (b, j) {
+                    if (j === i || !sameLine(a, b)) return;
+                    const gl = a.x0 - b.x1, gr = b.x0 - a.x1;
+                    if ((only || starts) && /\d[)\]]?$/.test(b.t) && gl > -mh && gl < mh * 2.5 && gl < dl) { dl = gl; L = j; }
+                    if ((only || ends) && /^[(\[]?\d/.test(b.t) && gr > -mh && gr < mh * 2.5 && gr < dr) { dr = gr; R = j; }
+                });
+                if (only && (L < 0 || R < 0)) continue;
+                if (!only && L < 0 && R < 0) continue;
+                const parts = [];
+                if (L >= 0) parts.push(arr[L]);
+                parts.push(a);
+                if (R >= 0) parts.push(arr[R]);
+                const m = { t: parts.map(function (p) { return p.t; }).join(''), x0: Math.min.apply(null, parts.map(function (p) { return p.x0; })), y0: Math.min.apply(null, parts.map(function (p) { return p.y0; })),
+                    x1: Math.max.apply(null, parts.map(function (p) { return p.x1; })), y1: Math.max.apply(null, parts.map(function (p) { return p.y1; })) };
+                const drop = [L, i, R].filter(function (k) { return k >= 0; }).sort(function (p, q) { return q - p; });
+                drop.forEach(function (k) { arr.splice(k, 1); });
+                arr.push(m);
+                changed = true;
+                break;
+            }
+        }
+        return arr;
+    }
+
+    // every decimal printed on the sheet + every "(low~high)" reference range, with positions
+    function uniTokens(ws, PW, mh) {
+        const vals = [], rngs = [];
+        const rangeRe = /(\d{1,3}[.,]\d{1,2})\s*[~\-\u2013\u2014=\u2248]+\s*(\d{1,3}[.,]\d{1,2})/;
+        const decRe = /(^|\D)(\d{1,3}[.,]\d{1,2})(?!\d)/g;
+        ws.forEach(function (w) {
+            let s = w.t;
+            const m = s.match(rangeRe);
+            let inl = null;
+            if (m) {
+                const a = uniNum(m[1]), b = uniNum(m[2]);
+                if (b > a && b / Math.max(a, 0.01) < 4) { rngs.push({ a: a, b: b, x0: w.x0, y0: w.y0, x1: w.x1, y1: w.y1 }); inl = { a: a, b: b }; }
+                s = s.slice(0, m.index);
+            }
+            let d;
+            decRe.lastIndex = 0;
+            let any = false;
+            while ((d = decRe.exec(s)) !== null) {
+                any = true;
+                vals.push({ v: uniNum(d[2]), x0: w.x0, y0: w.y0, x1: w.x1, y1: w.y1, rng: inl, weak: false });
+                decRe.lastIndex = d.index + d[0].length - 0;
+            }
+            if (!any && !m && /^\D{0,2}\d{3,4}\D{0,2}$/.test(s)) {
+                const n = parseInt(s.replace(/\D/g, ''), 10);
+                vals.push({ v: n / 10, x0: w.x0, y0: w.y0, x1: w.x1, y1: w.y1, rng: null, weak: true, raw: n });
+            }
+        });
+        rngs.forEach(function (r) { r.cx = (r.x0 + r.x1) / 2; r.cy = (r.y0 + r.y1) / 2; });
+        vals.forEach(function (v) { v.cx = (v.x0 + v.x1) / 2; v.cy = (v.y0 + v.y1) / 2; });
+        // attach each range to the value printed beside it (same line, to the right) or above it
+        const cands = [];
+        vals.forEach(function (v, vi) {
+            if (v.rng) return;
+            rngs.forEach(function (r, ri) {
+                const dy = r.cy - v.cy, dxr = r.x0 - v.x1;
+                let cost = null;
+                if (Math.abs(dy) < mh * 0.7 && dxr > -mh * 0.5 && dxr < PW * 0.14) cost = dxr / PW * 10 + Math.abs(dy) / mh;
+                else if (dy > mh * 0.5 && dy < mh * 3.2 && Math.abs(r.cx - v.cx) < Math.max(r.x1 - r.x0, v.x1 - v.x0) * 1.1) cost = 1 + dy / mh * 0.5 + Math.abs(r.cx - v.cx) / PW * 5;
+                if (cost !== null) cands.push({ vi: vi, ri: ri, cost: cost });
+            });
+        });
+        cands.sort(function (p, q) { return p.cost - q.cost; });
+        const uv = {}, ur = {};
+        cands.forEach(function (c) { if (uv[c.vi] || ur[c.ri]) return; uv[c.vi] = 1; ur[c.ri] = 1; vals[c.vi].rng = { a: rngs[c.ri].a, b: rngs[c.ri].b }; });
+        return { vals: vals, rngs: rngs };
+    }
+
+    // finds  TBW + Protein + Minerals + BodyFat = Weight
+    function uniSolve(pool, tol) {
+        const idx = {};
+        pool.forEach(function (p, i) { const k = Math.round(p.v * 10); (idx[k] = idx[k] || []).push(i); });
+        const Wl = [], Bl = [], Ml = [], Pl = [];
+        pool.forEach(function (p, i) {
+            if (p.v >= 15 && p.v <= 250) Wl.push(i);
+            if (p.v >= 0.4 && p.v <= 200) Bl.push(i);
+            if (p.v >= 0.5 && p.v <= 9) Ml.push(i);
+            if (p.v >= 1.5 && p.v <= 30) Pl.push(i);
+        });
+        const sols = {};
+        const span = Math.ceil(tol * 10) + 1;
+        Wl.forEach(function (wi) {
+            const W = pool[wi];
+            Bl.forEach(function (bi) {
+                const B = pool[bi];
+                if (bi === wi || B.v > W.v * 0.85) return;
+                Ml.forEach(function (mi) {
+                    const M = pool[mi];
+                    if (mi === wi || mi === bi) return;
+                    Pl.forEach(function (pi) {
+                        const P = pool[pi];
+                        if (pi === wi || pi === bi || pi === mi || P.v <= M.v) return;
+                        const T = W.v - B.v - M.v - P.v;
+                        if (T < 8 || T < P.v) return;
+                        const k0 = Math.round(T * 10);
+                        for (let k = k0 - span; k <= k0 + span; k++) {
+                            const ids = idx[k]; if (!ids) continue;
+                            for (let q = 0; q < ids.length; q++) {
+                                const ti = ids[q], Tt = pool[ti];
+                                if (ti === wi || ti === bi || ti === mi || ti === pi) continue;
+                                const err = Math.abs(Tt.v + P.v + M.v + B.v - W.v);
+                                if (err > tol) continue;
+                                const rp = P.v / Tt.v, rm = M.v / P.v;      // protein is ~26 % of body water, minerals ~35 % of protein on every sheet
+                                if (rp < 0.235 || rp > 0.31 || rm < 0.22 || rm > 0.5) continue;
+                                let sc = 0;
+                                if (W.rng) { sc += 3; const r = W.rng.b / W.rng.a; if (r > 1.22 && r < 1.5) sc += 2; }
+                                [Tt, P, M, B].forEach(function (x) { if (x.rng) sc += 1; });
+                                sc -= err * 4 + Math.abs(rp - 0.267) * 12;
+                                if (W.weak || B.weak || M.weak || P.weak || Tt.weak) sc -= 2;
+                                const key = [W.v, B.v, M.v, P.v, Tt.v].join('|');
+                                if (!sols[key] || sols[key].sc < sc) sols[key] = { W: W, B: B, M: M, P: P, T: Tt, sc: sc, err: err };
+                            }
+                        }
+                    });
+                });
+            });
+        });
+        const list = Object.keys(sols).map(function (k) { return sols[k]; }).sort(function (a, b) { return b.sc - a.sc; });
+        if (!list.length) return null;
+        const best = list[0];
+        let ambiguous = false;
+        for (let i = 1; i < list.length; i++) { if ((list[i].W.v !== best.W.v || list[i].B.v !== best.B.v) && list[i].sc >= best.sc - 1) { ambiguous = true; break; } }
+        best.ambiguous = ambiguous;
+        return best;
+    }
+
+    // pure parser: words (with boxes) of one full page -> InBody values
+    function uniParse(words, PW, PH) {
+        const out = { ok: false, confident: false, rangeCount: 0, brand: false, looks770: false, score: 0, check: [], pbfCalculated: false, model: null, bfm: null, ageBox: null, hdrY: null,
+            values: { id: null, age: null, height: null, gender: null, weight: null, smm: null, pbf: null, calories: null } };
+        if (!words || !words.length) return out;
+        const hs = words.map(function (w) { return w.y1 - w.y0; }).sort(function (a, b) { return a - b; });
+        const mh = Math.max(8, hs[hs.length >> 1] || 12);
+        const nm = function (w) { return String(w.t || '').toLowerCase().replace(/[^a-z0-9]/g, ''); };
+        const cyOf = function (w) { return (w.y0 + w.y1) / 2; };
+        out.brand = words.some(function (w) { return /inbody/i.test(w.t); });
+        out.looks770 = words.some(function (w) { return /^(height|gender|weight|recommended)$/.test(nm(w)); });
+
+        const ws = uniGlue(words, mh);
+        const tk = uniTokens(ws, PW, mh);
+        out.rangeCount = tk.rngs.length;
+        const strong = tk.vals.filter(function (v) { return !v.weak && v.v > 0.2 && v.v <= 260; });
+        const ranged = strong.filter(function (v) { return !!v.rng; });
+
+        let sol = ranged.length >= 5 ? uniSolve(ranged, 0.35) : null;
+        let viaRange = !!sol;
+        if (!sol) {
+            const pool = strong.filter(function (v) { return v.v >= 0.4; }).slice(0, 120);
+            sol = uniSolve(pool, 0.3);
+            if (!sol) sol = uniSolve(pool.concat(tk.vals.filter(function (v) { return v.weak && v.v >= 8 && v.v <= 250; }).slice(0, 40)), 0.3);
+        }
+
+        // ---- header: height, age, gender, id
+        const hdr = ws.filter(function (w) { return w.y1 < PH * 0.23; });
+        let hTok = null, height = null;
+        hdr.forEach(function (w) {
+            if (hTok) return;
+            const m = w.t.match(/^(\d{2,3})\s*(?:cm|em|crn|cin|crm|cm\.|c)$/i);
+            if (m) { const v = parseInt(m[1], 10); if (v >= 60 && v <= 230) { hTok = w; height = v; } }
+        });
+        if (!hTok) {
+            hdr.forEach(function (w, i) {
+                if (hTok || !/^(cm|em|crn)$/i.test(w.t.replace(/[^A-Za-z]/g, ''))) return;
+                let best = null;
+                hdr.forEach(function (p) { if (/^\d{2,3}$/.test(p.t) && Math.abs(cyOf(p) - cyOf(w)) < mh && w.x0 - p.x1 > -mh && w.x0 - p.x1 < mh * 2.5) best = p; });
+                if (best) { const v = parseInt(best.t, 10); if (v >= 60 && v <= 230) { hTok = best; height = v; } }
+            });
+        }
+        let age = null, ageTok = null;
+        if (hTok) {
+            hdr.filter(function (w) { return /^\d{1,2}$/.test(w.t) && Math.abs(cyOf(w) - cyOf(hTok)) < mh * 1.2 && w.x0 >= hTok.x1 - 2; })
+                .sort(function (a, b) { return a.x0 - b.x0; }).slice(0, 1).forEach(function (w) { const v = parseInt(w.t, 10); if (v >= 3 && v <= 99) { age = v; ageTok = w; } });
+            out.hdrY = cyOf(hTok);
+        }
+        let gender = null;
+        hdr.forEach(function (w) {
+            if (gender) return;
+            const t = w.t.toLowerCase().replace(/[^a-z]/g, '');
+            if (/^(female|femal|fernale|femle|fem)$/.test(t)) gender = 'female';
+            else if (/^(male|male|mal)$/.test(t) && !/^f/.test(t)) gender = 'male';
+        });
+        let id = null;
+        hdr.forEach(function (w) {
+            if (id) return;
+            if (/^\d{4,9}[-\u2013]\d{1,3}$/.test(w.t)) id = w.t.replace('\u2013', '-');
+        });
+        if (!id && hTok) {
+            hdr.filter(function (w) { return Math.abs(cyOf(w) - cyOf(hTok)) < mh && w.x1 <= hTok.x0 + 2 && /^[A-Za-z0-9_\-]{3,20}$/.test(w.t) && /\d/.test(w.t); })
+                .sort(function (a, b) { return b.x1 - a.x1; }).slice(0, 1).forEach(function (w) { id = inbodyIdParse(w.t); });
+        }
+        out.ageBox = ageTok ? { x0: ageTok.x0, x1: ageTok.x1, y0: ageTok.y0, y1: ageTok.y1 } : null;
+
+        let model = null;
+        for (let j = 0; j < ws.length && !model; j++) model = inbodyModelParse(ws[j].t);
+        if (!model) { const k = ws.findIndex(function (w) { return /^\[?inbody\]?$/i.test(w.t); }); if (k >= 0 && ws[k + 1]) model = inbodyModelParse('InBody' + ws[k + 1].t); }
+        out.model = model;
+        out.values.id = id; out.values.age = age; out.values.height = height; out.values.gender = gender;
+
+        // ---- calories (only some models print "Recommended calorie intake")
+        let kcal = null;
+        const lab = ws.filter(function (w) { return /^(recommended|intake)$/.test(nm(w)); });
+        lab.forEach(function (l) {
+            if (kcal !== null) return;
+            ws.filter(function (w) { return /^\d{3,4}$/.test(w.t) && Math.abs(cyOf(w) - cyOf(l)) < mh * 0.9 && w.x0 > l.x1 - 2 && w.x0 - l.x1 < PW * 0.5; })
+                .sort(function (a, b) { return a.x0 - b.x0; }).slice(0, 1).forEach(function (w) { const v = parseInt(w.t, 10); if (v >= 800 && v <= 6000) kcal = v; });
+        });
+        out.values.calories = kcal;
+
+        if (!sol) { out.score = 0; return out; }
+        const W = sol.W.v, B = sol.B.v, FFM = W - B, child = age !== null && age < 18;
+        out.bfm = B;
+        out.values.weight = W;
+        if (sol.ambiguous || !viaRange) { out.check.push('weight'); }
+
+        // ---- PBF: the printed value when found (it is what the sheet shows), otherwise fat / weight
+        const calc = uniR1(B / W * 100);
+        let pbf = null, bestD = 1e9;
+        strong.forEach(function (c) { const d = Math.abs(c.v - calc); if (!c.rng && d <= 0.45 && d < bestD && c !== sol.W && c !== sol.B) { bestD = d; pbf = c.v; } });
+        if (pbf === null) { pbf = calc; out.pbfCalculated = true; out.check.push('pbf'); }
+        out.values.pbf = pbf;
+
+        // ---- SMM: skeletal muscle mass is about 47-62 % of fat-free mass; it is printed in the muscle-fat row and again in the history block
+        const smmLab = ws.filter(function (w) { return nm(w) === 'smm'; });
+        const bmiLab = ws.filter(function (w) { return /^(bmi|smi)$/.test(nm(w)); });
+        const bmi = height ? W / Math.pow(height / 100, 2) : null;
+        const lo = child ? 0.42 : 0.47, hi = 0.63;
+        const counts = {};
+        strong.forEach(function (c) { if (!c.rng) { const k = Math.round(c.v * 10); counts[k] = (counts[k] || 0) + 1; } });
+        let bestS = null, bestSc = -1e9, bestAnch = false, bestFreq = 0;
+        strong.forEach(function (c) {
+            if (c.rng || c === sol.W || c === sol.B || c === sol.M || c === sol.P || c === sol.T) return;
+            const r = c.v / FFM;
+            if (r < lo || r > hi) return;
+            if (Math.abs(c.v - pbf) < 0.06 || Math.abs(c.v - W) < 0.06) return;
+            const anch = smmLab.some(function (l) { return Math.abs(cyOf(l) - c.cy) < mh * 0.9 && c.x0 > l.x1 - 2; });
+            const onBmi = bmiLab.some(function (l) { return Math.abs(cyOf(l) - c.cy) < mh * 0.9; }) || (bmi !== null && Math.abs(c.v - bmi) < 0.12);
+            if (onBmi && !anch) return;
+            const freq = counts[Math.round(c.v * 10)] || 1;
+            const sc = freq * 2 + (anch ? 3 : 0) + (1 - Math.abs(r - 0.55) / 0.12);
+            if (sc > bestSc) { bestSc = sc; bestS = c.v; bestAnch = anch; bestFreq = freq; }
+        });
+        out.values.smm = bestS;
+        if (bestS !== null && !bestAnch && bestFreq < 2) out.check.push('smm');
+
+        out.ok = bestS !== null;
+        out.confident = out.ok && viaRange && !sol.ambiguous && age !== null && height !== null;
+        out.score = (out.ok ? 10 : 4) + (viaRange ? 5 : 0) + (age !== null ? 1 : 0) + (height !== null ? 1 : 0) + (id ? 1 : 0) + (gender ? 1 : 0) - out.check.length;
+        return out;
+    }
+
+    // ---- image helpers (browser only)
+    function uniOrient(canvas, mode) {
+        if (mode === 'cw') return inbodyRot90(canvas, true);
+        if (mode === 'ccw') return inbodyRot90(canvas, false);
+        const c = document.createElement('canvas'); c.width = canvas.width; c.height = canvas.height;
+        const g = c.getContext('2d', { willReadFrequently: true }); g.translate(c.width / 2, c.height / 2); g.rotate(Math.PI); g.drawImage(canvas, -c.width / 2, -c.height / 2);
+        return c;
+    }
+    // grayscale + contrast stretch: helps phone photos / dim screenshots
+    function uniEnhance(canvas) {
+        const c = document.createElement('canvas'); c.width = canvas.width; c.height = canvas.height;
+        const g = c.getContext('2d', { willReadFrequently: true });
+        g.drawImage(canvas, 0, 0);
+        const im = g.getImageData(0, 0, c.width, c.height), d = im.data, hist = new Uint32Array(256), n = c.width * c.height;
+        for (let i = 0; i < d.length; i += 4) { const y = (d[i] * 299 + d[i + 1] * 587 + d[i + 2] * 114) / 1000 | 0; d[i] = d[i + 1] = d[i + 2] = y; hist[y]++; }
+        let acc = 0, lo = 0, hi = 255;
+        for (let v = 0; v < 256; v++) { acc += hist[v]; if (acc >= n * 0.01) { lo = v; break; } }
+        acc = 0;
+        for (let v = 255; v >= 0; v--) { acc += hist[v]; if (acc >= n * 0.30) { hi = v; break; } }
+        const k = 255 / Math.max(50, hi - lo);
+        for (let i = 0; i < d.length; i += 4) { let v = (d[i] - lo) * k; v = v < 0 ? 0 : (v > 255 ? 255 : v); d[i] = d[i + 1] = d[i + 2] = v; }
+        g.putImageData(im, 0, 0);
+        return c;
+    }
+
+    // Arabic sheets print the gender as a word (ذكر / أنثى): read it with the Arabic model, loaded only when needed
+    let uniAraPromise = null;
+    function uniGetAra() {
+        if (typeof Tesseract === 'undefined') return Promise.reject(new Error('engine-missing'));
+        if (!uniAraPromise) {
+            uniAraPromise = Promise.race([
+                Tesseract.createWorker('ara', 1, {}),
+                new Promise(function (_, rej) { setTimeout(function () { rej(new Error('ara-timeout')); }, 40000); })
+            ]).catch(function (e) { uniAraPromise = null; throw e; });
+        }
+        return uniAraPromise;
+    }
+    async function uniArabicGender(canvas, res, PW, PH) {
+        let ara;
+        try { ara = await uniGetAra(); } catch (e) { return null; }
+        const rects = [];
+        if (res.ageBox) {
+            const b = res.ageBox, h = b.y1 - b.y0;
+            rects.push({ x: b.x1 + PW * 0.004, y: b.y0 - h * 0.7, w: PW * 0.13, h: h * 2.4 });
+        }
+        rects.push({ x: 0, y: 0, w: PW, h: PH * 0.16 });
+        for (let i = 0; i < rects.length; i++) {
+            const r = rects[i];
+            const sx = Math.max(0, Math.round(r.x)), sy = Math.max(0, Math.round(r.y)), sw = Math.min(PW - sx, Math.round(r.w)), sh = Math.min(PH - sy, Math.round(r.h));
+            if (sw < 8 || sh < 8) continue;
+            const k = Math.max(1, Math.min(5, 900 / sw)), c = document.createElement('canvas');
+            c.width = Math.round(sw * k); c.height = Math.round(sh * k);
+            const g = c.getContext('2d', { willReadFrequently: true });
+            g.fillStyle = '#fff'; g.fillRect(0, 0, c.width, c.height); g.imageSmoothingQuality = 'high';
+            g.drawImage(canvas, sx, sy, sw, sh, 0, 0, c.width, c.height);
+            for (let m = 0; m < 2; m++) {
+                try {
+                    await ara.setParameters({ tessedit_char_whitelist: '', tessedit_pageseg_mode: m === 0 ? '7' : '6' });
+                    const rr = await ara.recognize(c);
+                    const t = uniClean(rr && rr.data && rr.data.text || '').replace(/[\u064B-\u065F\u0640]/g, '');
+                    if (/[\u0623\u0627\u0625]?\u0646\u062B[\u0649\u064A]/.test(t) || /\u0627\u0646\u062B/.test(t)) return 'female';
+                    if (/\u0630\u0643\u0631/.test(t)) return 'male';
+                } catch (e) { /* try the next variant */ }
+            }
+        }
+        return null;
+    }
+
+    function uniFill(base, extra) {
+        if (!extra) return base;
+        Object.keys(base.values).forEach(function (k) { if (base.values[k] === null && extra.values[k] !== null && extra.values[k] !== undefined) base.values[k] = extra.values[k]; });
+        if (!base.model && extra.model) base.model = extra.model;
+        if (!base.ageBox && extra.ageBox) base.ageBox = extra.ageBox;
+        base.looks770 = base.looks770 || extra.looks770;
+        base.brand = base.brand || extra.brand;
+        return base;
+    }
+
+    async function uniRead(source, worker, progress) {
+        let canvas = source;
+        try {
+            const img = inbodyPixels(canvas), tilt = inbodyTilt(img);
+            if (Math.abs(tilt) > 0.0015 && Math.abs(tilt) < 0.07) canvas = inbodyRotate(canvas, -tilt);
+        } catch (e) { canvas = source; }
+        const passes = [{ w: 2000, enh: false }, { w: 2700, enh: true }, { w: 3300, enh: false }];
+        const orients = ['0', 'cw', 'ccw', '180'];
+        const total = 7;
+        let step = 0, best = null, bestCv = null, any = null;
+        const tick = function (label) { step = Math.min(step + 1, total); if (progress) progress(step, total, label); };
+        outer:
+        for (let o = 0; o < orients.length; o++) {
+            const cv = orients[o] === '0' ? canvas : uniOrient(canvas, orients[o]);
+            let first = true;
+            for (let p = 0; p < passes.length; p++) {
+                tick(o ? 'تدوير الصورة وإعادة القراءة' : (p === 0 ? 'قراءة التقرير كاملاً (شاملة)' : 'إعادة القراءة بجودة أعلى'));
+                const words = await inbodyFullWords(worker, passes[p].enh ? uniEnhance(cv) : cv, passes[p].w);
+                const r = uniParse(words, cv.width, cv.height);
+                r.cv = cv;
+                any = any ? uniFill(any.score >= r.score ? any : r, any.score >= r.score ? r : any) : r;
+                if (r.ok && (!best || r.score > best.score)) { best = r; bestCv = cv; }
+                if (best && best.confident) break outer;
+                if (first && r.rangeCount < 3 && !r.brand && !r.looks770) break;   // wrong orientation / not an InBody sheet: try the next rotation
+                first = false;
+            }
+            if (best) break;
+        }
+        const res = best || any;
+        if (!res) return null;
+        if (best) {
+            // fill header gaps from the other passes of the same sheet
+            if (any && any !== best) uniFill(best, any);
+            if (best.values.gender === null) {
+                tick('الجنس (العربية)');
+                try { best.values.gender = await uniArabicGender(bestCv, best, bestCv.width, bestCv.height); } catch (e) { /* manual */ }
+            }
+            best.cv = bestCv;
+        }
+        return res;
+    }
+
+    // router: universal reader first (validated by the weight equation); the calibrated 770 reader only fills what is still missing
+    async function readInBodyReport(source, worker, progress) {
+        let uni = null;
+        try { uni = await uniRead(source, worker, progress); } catch (e) { uni = null; }
+        if (uni && uni.ok) {
+            const v = uni.values;
+            const missing = v.id === null || v.calories === null || v.age === null || v.height === null || v.gender === null;
+            if (missing && uni.looks770 && !(uni.model && /270/.test(uni.model))) {
+                try {
+                    const lg = await readInBodyReportLegacy(source, worker, progress);
+                    if (lg && !lg.notInBody && !lg.lowQuality) {
+                        ['id', 'age', 'height', 'gender', 'calories'].forEach(function (k) {
+                            if (v[k] === null && lg.values[k] !== null && lg.values[k] !== undefined) { v[k] = lg.values[k]; if (lg.check.indexOf(k) >= 0 && uni.check.indexOf(k) < 0) uni.check.push(k); }
+                        });
+                        if (!uni.model && lg.model) uni.model = lg.model;
+                    }
+                } catch (e) { /* keep the universal result */ }
+            }
+            let idCrop = null;
+            try { if (v.id !== null && uni.cv && uni.hdrY !== null) idCrop = null; } catch (e) { idCrop = null; }
+            return { values: v, check: uni.check, pbfCalculated: uni.pbfCalculated, calibrated: false, notInBody: false, lowQuality: false, idCrop: idCrop,
+                model: uni.model, category: inbodyCategory(v.age, false), tier: 3 };
+        }
+        const lg = await readInBodyReportLegacy(source, worker, progress);
+        if (uni && lg) {
+            // legacy could not finish: keep whatever the universal pass did read (never invent numbers)
+            Object.keys(lg.values).forEach(function (k) { if (lg.values[k] === null && uni.values[k] !== null && uni.values[k] !== undefined) lg.values[k] = uni.values[k]; });
+            if (lg.notInBody && (uni.brand || uni.looks770 || uni.rangeCount >= 3)) { lg.notInBody = false; lg.lowQuality = true; }
+        }
+        return lg;
     }
 
     // ===== Nutrition (calories + macros) and Karvonen target heart rate =====
@@ -3537,6 +3972,57 @@ renderReportExtras(flags.length > 0, needsMedicalClearance);
         });
     }
 
+
+    // ===== 30-second countdown timers (box squat #6 and kneeling push-up #7) =====
+    let bfAudioCtx = null;
+    function bfBeep(times, freq, dur) {
+        try {
+            const AC = window.AudioContext || window.webkitAudioContext; if (!AC) return;
+            if (!bfAudioCtx) bfAudioCtx = new AC();
+            if (bfAudioCtx.state === 'suspended') bfAudioCtx.resume();
+            for (let i = 0; i < times; i++) {
+                const o = bfAudioCtx.createOscillator(), g = bfAudioCtx.createGain(), t = bfAudioCtx.currentTime + i * (dur + 0.12);
+                o.type = 'sine'; o.frequency.value = freq; o.connect(g); g.connect(bfAudioCtx.destination);
+                g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(0.5, t + 0.02); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+                o.start(t); o.stop(t + dur + 0.02);
+            }
+        } catch (e) { /* audio is optional */ }
+    }
+    function initCountdowns() {
+        [['chairReps', 30], ['kpuReps', 30]].forEach(function (cfg) {
+            const id = cfg[0], total = cfg[1], el = document.getElementById(id);
+            if (!el || el.dataset.cd) return; el.dataset.cd = '1';
+            const box = el.closest('.input-box'); if (!box) return;
+            const wrap = document.createElement('div'); wrap.className = 'bf-timer bf-cd';
+            const START = '▶ ابدأ <small>Start</small>', STOP = '■ إيقاف <small>Stop</small>';
+            wrap.innerHTML = '<span class="bf-timer-val" aria-live="off">' + total + '</span><span class="bf-timer-u">s</span><button type="button" class="bf-go">' + START + '</button><button type="button" class="bf-rs">↺ <small>Reset</small></button>' +
+                '<div class="bf-cd-msg" role="alert">⏱ انتهى الوقت! أدخل عدد التكرارات. <span class="en">Time is up! Enter the reps.</span></div>';
+            box.appendChild(wrap);
+            const val = wrap.querySelector('.bf-timer-val'), go = wrap.querySelector('.bf-go'), rs = wrap.querySelector('.bf-rs');
+            let run = false, iv = 0, t0 = 0, shown = -1;
+            const show = function (sec) { if (sec !== shown) { shown = sec; val.textContent = String(sec); } };
+            const halt = function () { run = false; clearInterval(iv); wrap.classList.remove('run'); go.innerHTML = START; };
+            const finish = function () {
+                halt(); show(0); wrap.classList.add('done');
+                bfBeep(3, 880, 0.35);
+                try { if (navigator.vibrate) navigator.vibrate([400, 150, 400, 150, 600]); } catch (e) { /* optional */ }
+                try { el.focus(); } catch (e) { /* optional */ }
+            };
+            const tick = function () {
+                const left = total - (performance.now() - t0) / 1000;
+                if (left <= 0) { finish(); return; }
+                show(Math.ceil(left));
+                if (left <= 3.05 && Math.ceil(left) !== tick.lastBeep) { tick.lastBeep = Math.ceil(left); bfBeep(1, 660, 0.12); }
+            };
+            go.addEventListener('click', function () {
+                if (run) { halt(); show(total); return; }
+                wrap.classList.remove('done'); run = true; tick.lastBeep = -1; t0 = performance.now(); wrap.classList.add('run'); go.innerHTML = STOP; bfBeep(1, 520, 0.08); show(total); iv = setInterval(tick, 100);
+            });
+            rs.addEventListener('click', function () { halt(); wrap.classList.remove('done'); shown = -1; show(total); });
+            document.addEventListener('visibilitychange', function () { if (run) tick(); });
+        });
+    }
+
     // ===== Two-direction ROM tests: negative = did not reach, positive = reached / beyond =====
     function initRomHints() {
         [['srTry1', 'sr'], ['srTry2', 'sr'], ['apR', 'ap'], ['apL', 'ap']].forEach(function (cfg) {
@@ -3599,7 +4085,7 @@ renderReportExtras(flags.length > 0, needsMedicalClearance);
         initBilingual();
         initHealthDynamic(); initEpley();
         initMobileSteppers();
-        initCounters(); initRomHints(); initWallLive();
+        initCounters(); initCountdowns(); initRomHints(); initWallLive();
         if (bfitBooted) return;
         bfitBooted = true;
         updateGenderTheme();
