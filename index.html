@@ -946,6 +946,47 @@
     .bf-timer.run .bf-go { background: var(--warning-red); }
     .bf-timer.run .bf-timer-val { border-color: var(--success-green); box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.18); }
     .bf-timer .bf-rs { background: #475569; }
+    /* ===== Progressive analytics + sharing hub ===== */
+    .prog-card .prog-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    .prog-table { width: 100%; border-collapse: collapse; font: 600 13px Tajawal, Montserrat, sans-serif; margin: 4px 0 12px; }
+    .prog-table th, .prog-table td { padding: 8px 6px; text-align: center; border-bottom: 1px solid rgba(100, 116, 139, 0.22); white-space: nowrap; }
+    .prog-table th { font-weight: 800; color: var(--text-muted); font-size: 12px; }
+    .prog-table td:first-child { text-align: right; white-space: normal; }
+    .pd { display: inline-block; padding: 3px 9px; border-radius: 999px; font: 800 12px Montserrat, Tajawal, sans-serif; direction: ltr; }
+    .pd.good { color: #047857; background: rgba(16, 185, 129, 0.16); }
+    .pd.bad { color: #b91c1c; background: rgba(239, 68, 68, 0.15); }
+    .pd.neu { color: #1d4ed8; background: rgba(59, 130, 246, 0.14); }
+    .pd.same { color: #475569; background: rgba(100, 116, 139, 0.14); }
+    .prog-ctrl { display: flex; flex-wrap: wrap; gap: 6px; margin: 8px 0; }
+    .prog-chip { border: 1.5px solid rgba(100, 116, 139, 0.4); background: rgba(255, 255, 255, 0.7); color: var(--ink); border-radius: 999px; min-height: 38px; padding: 0 14px; font: 800 12.5px Tajawal, Montserrat, sans-serif; cursor: pointer; touch-action: manipulation; }
+    .prog-chip.on { color: #fff; border-color: transparent; background: linear-gradient(135deg, #ff6b9d, #9b7bff 60%, #4cb8ff); }
+    .prog-chip .en { font-size: 10px; opacity: .8; }
+    .prog-chart { background: rgba(255, 255, 255, 0.72); border: 1px solid rgba(255, 255, 255, 0.9); border-radius: 14px; padding: 8px; margin-top: 6px; }
+    .prog-empty { padding: 26px 10px; text-align: center; font-weight: 700; color: var(--text-muted); }
+    .prog-tip { min-height: 22px; margin: 6px 2px 10px; font: 600 12.5px Tajawal, sans-serif; color: var(--text-muted); }
+    .prog-sum { border-radius: 14px; padding: 12px 14px; margin: 8px 0; border: 1.5px solid rgba(100, 116, 139, 0.3); background: rgba(255, 255, 255, 0.6); }
+    .prog-sum.good { border-color: #10b981; background: rgba(16, 185, 129, 0.10); }
+    .prog-sum.mixed { border-color: #f59e0b; background: rgba(245, 158, 11, 0.10); }
+    .prog-sum.bad { border-color: #ef4444; background: rgba(239, 68, 68, 0.09); }
+    .prog-sum.base { border-color: #3b82f6; background: rgba(59, 130, 246, 0.08); }
+    .prog-verdict { font: 900 15px Tajawal, sans-serif; color: var(--ink); margin-bottom: 6px; }
+    .prog-sec { margin-top: 8px; font: 600 13px/1.7 Tajawal, sans-serif; }
+    .prog-sec ul { list-style: none; margin: 4px 0 0; padding: 0; }
+    .prog-sec li.pos { color: #047857; } .prog-sec li.neg { color: #b91c1c; }
+    .prog-det { margin-top: 10px; }
+    .prog-det summary { cursor: pointer; font: 800 13px Tajawal, sans-serif; padding: 8px 0; }
+    .prog-del { margin-top: 8px; border: 1.5px solid rgba(239, 68, 68, 0.6); background: transparent; color: #b91c1c; border-radius: 12px; min-height: 40px; padding: 0 14px; font: 800 12.5px Tajawal, sans-serif; cursor: pointer; }
+    .share-hub { margin-top: 18px; padding: 14px; border-radius: 16px; background: rgba(255, 255, 255, 0.6); border: 1px solid rgba(255, 255, 255, 0.9); }
+    .share-hub h4 { font: 900 14px Tajawal, sans-serif; margin-bottom: 10px; color: var(--ink); }
+    .share-row { display: flex; flex-wrap: wrap; gap: 10px; }
+    .share-btn { flex: 1 1 200px; min-height: 50px; border: 0; border-radius: 14px; color: #fff; font: 800 14px Tajawal, sans-serif; cursor: pointer; padding: 8px 14px; touch-action: manipulation; box-shadow: 0 6px 16px rgba(0, 0, 0, 0.18); }
+    .share-btn:active { transform: scale(.97); }
+    .share-btn .en { font: 600 11px Montserrat, sans-serif; opacity: .9; margin-inline-start: 4px; }
+    .share-btn.wa { background: linear-gradient(135deg, #25d366, #128c7e); }
+    .share-btn.mail { background: linear-gradient(135deg, #4cb8ff, #3b6fe0); }
+    .share-btn.new { background: linear-gradient(135deg, #ff6b9d, #9b7bff); }
+    .share-toast { display: none; position: fixed; left: 50%; bottom: 22px; transform: translateX(-50%); max-width: 92vw; z-index: 9999; background: #0f172a; color: #fff; padding: 12px 18px; border-radius: 14px; font: 700 13.5px Tajawal, sans-serif; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4); text-align: center; }
+    @media print { .share-hub, .share-toast, .prog-ctrl, .prog-del { display: none !important; } }
     .bf-cd .bf-timer-val { min-width: 76px; }
     .bf-cd.done .bf-timer-val { border-color: var(--warning-red); color: var(--warning-red); box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2); animation: bfCdBlink .5s ease-in-out 8; }
     .bf-cd-msg { display: none; width: 100%; font: 800 13px Tajawal, Montserrat, sans-serif; color: var(--warning-red); direction: rtl; }
@@ -1394,7 +1435,18 @@
 
             <div class="report-summary-text" id="detailedReportText"></div>
             <div id="reportExtras"></div>
+            <div id="progressArea"></div>
             <button type="button" class="btn-submit" id="pdfBtn" onclick="downloadPdfReport()" style="margin-top:18px;"><i class="fa-solid fa-file-pdf"></i> تحميل التقرير الكامل PDF | Download Full PDF Report</button>
+
+            <div class="share-hub" id="shareHub">
+                <h4><i class="fa-solid fa-share-nodes"></i> المشاركة والحفظ السريع | Sharing Hub</h4>
+                <div class="share-row">
+                    <button type="button" class="share-btn wa" id="shareWaBtn"><i class="fa-brands fa-whatsapp"></i> مشاركة عبر الواتساب <span class="en">Share via WhatsApp</span></button>
+                    <button type="button" class="share-btn mail" id="shareMailBtn"><i class="fa-solid fa-envelope"></i> مشاركة / بريد إلكتروني <span class="en">Web Share / Email</span></button>
+                    <button type="button" class="share-btn new" id="saveNewBtn"><i class="fa-solid fa-user-plus"></i> حفظ وبدء تقييم جديد <span class="en">Save &amp; New Client</span></button>
+                </div>
+            </div>
+
         </div>
     </div>
 </div>
@@ -3703,6 +3755,7 @@
         window.BFIT_LAST = { client: client, memberId: memberId, inbodyModel: inbodyMeta.model || '', category: (inbodyMeta.category && inbodyMeta.category !== 'unknown') ? inbodyMeta.category : (realAge < 18 ? 'child' : 'adult'), coach: coach, gender: gender, realAge: realAge, weight: weight, fat: fat, smm: smm, height: num('heightInput', 0),
 bioAge: biologicalAge, fitness: fitnessScore, flags: flags, notes: notes, clearance: needsMedicalClearance, bioParts: bioParts, testParts: testParts, hrRate: hrRate, hrPeakPct: hrPeakPct, bodyComp: bodyCompScore, reachBest: reachBest, postureScore: postureScore, postureText: postureText, postureNotes: postureNotes };
 renderReportExtras(flags.length > 0, needsMedicalClearance);
+        try { bfitProgress(window.BFIT_LAST); } catch (err) { const pa = document.getElementById('progressArea'); if (pa) pa.innerHTML = ''; }
         const area = document.getElementById('resultArea');
         area.style.display = 'block';
         area.scrollIntoView({ behavior: 'smooth' });
@@ -3745,6 +3798,16 @@ renderReportExtras(flags.length > 0, needsMedicalClearance);
             B.push({ t: 'sec', x: 'معادلة إيبلي 1RM | Epley 1RM' });
             B.push({ t: 'p', x: (ep.name || 'Exercise') + ' — ' + ep.w + ' kg × ' + ep.r + ' reps → 1RM ≈ ' + ep.rm.toFixed(1) + ' kg' });
             B.push({ t: 'tbl', head: 1, w: [.34, .14, .22, .15, .15], r: [['المرحلة | Phase', '% 1RM', 'الوزن | Load', 'Reps', 'Rest']].concat(epleyRows(ep).map(function (x) { return [x[0], x[1], x[2], x[3], x[4]]; })) });
+        }
+        if (D.prog && D.prog.prev) {
+            const noEmo = function (s) { return String(s).replace(/[\u{1F000}-\u{1FFFF}\u2600-\u27BF\uFE0F]/gu, '').trim(); };
+            B.push({ t: 'sec', x: 'المتابعة والتقدم | Progress vs previous session' });
+            B.push({ t: 'p', x: 'Previous: ' + progDT(D.prog.prev.ts) + ' | Now: ' + progDT(D.prog.cur.ts) });
+            B.push({ t: 'tbl', head: 1, w: [.34, .2, .2, .26], r: [['المؤشر | Metric', 'قبل | Before', 'الآن | Now', 'الفرق | Change']].concat(PROG_METRICS.map(function (m) { return [m.ar + ' | ' + m.en, progFmt(D.prog.prev[m.k], m.dec), progFmt(D.prog.cur[m.k], m.dec), progDeltaCell(m, D.prog.cur, D.prog.prev).txt.replace('▲', '+').replace('▼', '-')]; })) });
+            B.push({ t: 'p', x: noEmo(D.prog.analysis.verdict), b: 1 });
+            D.prog.analysis.pos.forEach(function (x) { B.push({ t: 'p', x: '+ ' + x, c: '#047857', s: 24 }); });
+            D.prog.analysis.neg.forEach(function (x) { B.push({ t: 'p', x: '- ' + x, c: '#b91c1c', s: 24 }); });
+            D.prog.analysis.tips.forEach(function (x) { B.push({ t: 'p', x: '> ' + x, s: 24 }); });
         }
         B.push({ t: 'p', x: 'هذا التقرير إرشادي ولا يغني عن الاستشارة الطبية. | For guidance only; not a medical diagnosis.', c: '#64748b', s: 22 });
         return B;
@@ -4079,13 +4142,299 @@ renderReportExtras(flags.length > 0, needsMedicalClearance);
         refresh();
     }
 
+    // ===== Progressive Analytics: per-member history (LocalStorage), Before/After, progress chart, auto analysis =====
+    const PROG_KEY = 'bfit_progress_v1';
+    let progMem = {};
+    const PROG_METRICS = [
+        { k: 'weight', ar: 'الوزن', en: 'Weight', u: 'كجم', good: 0, dec: 1, col: '#3b82f6' },
+        { k: 'fat', ar: 'نسبة الدهون', en: 'Body Fat', u: '%', good: -1, dec: 1, col: '#ef4444' },
+        { k: 'smm', ar: 'كتلة العضلات', en: 'Muscle SMM', u: 'كجم', good: 1, dec: 1, col: '#10b981' },
+        { k: 'bio', ar: 'العمر البيولوجي', en: 'Bio Age', u: 'سنة', good: -1, dec: 0, col: '#8b5cf6' },
+        { k: 'fit', ar: 'الدرجة الكلية', en: 'Fitness', u: '%', good: 1, dec: 0, col: '#f59e0b' }
+    ];
+    const PROG_PERIODS = [
+        { k: 'week', ar: 'أسبوعي', en: 'Weekly', days: 7 },
+        { k: 'quarter', ar: 'ربع سنوي', en: 'Quarterly', days: 92 },
+        { k: 'year', ar: 'سنوي', en: 'Yearly', days: 366 },
+        { k: 'all', ar: 'الكل', en: 'All', days: 0 }
+    ];
+    function progEsc(s) { return String(s === null || s === undefined ? '' : s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+    function progLoad() { try { const r = JSON.parse(localStorage.getItem(PROG_KEY) || 'null'); if (r && typeof r === 'object' && !Array.isArray(r)) progMem = r; } catch (e) { /* keep memory copy */ } return progMem; }
+    function progStore() { try { localStorage.setItem(PROG_KEY, JSON.stringify(progMem)); return true; } catch (e) { return false; } }
+    function progKey(D) {
+        const id = String(D.memberId || '').trim().toUpperCase().replace(/\s+/g, '');
+        return id ? 'id:' + id : 'name:' + String(D.client || '').trim().toLowerCase().replace(/\s+/g, ' ');
+    }
+    function progPad(n) { return n < 10 ? '0' + n : String(n); }
+    function progDate(ts) { const d = new Date(ts); return progPad(d.getDate()) + '/' + progPad(d.getMonth() + 1) + '/' + d.getFullYear(); }
+    function progDT(ts) { const d = new Date(ts); return progDate(ts) + ' ' + progPad(d.getHours()) + ':' + progPad(d.getMinutes()); }
+    function progFmt(v, dec) { return (Math.round(v * Math.pow(10, dec)) / Math.pow(10, dec)).toFixed(dec); }
+    function progFatMass(r) { return r.weight * r.fat / 100; }
+
+    function progAnalyse(cur, prev, first, count) {
+        const R = { verdict: '', cls: 'mixed', pos: [], neg: [], notes: [], tips: [], base: !prev };
+        if (!prev) {
+            R.verdict = '🆕 أول جلسة محفوظة لهذا المشترك';
+            R.cls = 'base';
+            R.notes.push('تم حفظ هذه القياسات كنقطة بداية، وستظهر المقارنة والرسم البياني تلقائياً مع الجلسة القادمة.');
+            return R;
+        }
+        const dW = cur.weight - prev.weight, dF = cur.fat - prev.fat, dS = cur.smm - prev.smm, dB = cur.bio - prev.bio, dT = cur.fit - prev.fit, dFM = progFatMass(cur) - progFatMass(prev);
+        const days = Math.max(0, Math.round((cur.ts - prev.ts) / 86400000));
+        const ab = function (v, d) { return progFmt(Math.abs(v), d === undefined ? 1 : d); };
+        let net = 0;
+        if (dF <= -0.3) { R.pos.push('انخفضت نسبة الدهون بمقدار ' + ab(dF) + '% (≈ ' + ab(dFM) + ' كجم دهون).'); net++; }
+        else if (dF >= 0.3) { R.neg.push('ارتفعت نسبة الدهون بمقدار ' + ab(dF) + '% (≈ ' + ab(dFM) + ' كجم دهون).'); net--; R.tips.push('راجع العجز السعري في النظام الغذائي وزِد حصص الكارديو المنتظمة.'); }
+        if (dS >= 0.2) { R.pos.push('زادت الكتلة العضلية بمقدار ' + ab(dS) + ' كجم.'); net++; }
+        else if (dS <= -0.2) { R.neg.push('انخفضت الكتلة العضلية بمقدار ' + ab(dS) + ' كجم.'); net--; R.tips.push('ارفع كمية البروتين وحافظ على تمارين المقاومة لحماية العضلات.'); }
+        if (dB <= -1) { R.pos.push('تحسّن العمر البيولوجي (أصغر بمقدار ' + ab(dB, 0) + ' سنة).'); net++; }
+        else if (dB >= 1) { R.neg.push('ارتفع العمر البيولوجي بمقدار ' + ab(dB, 0) + ' سنة.'); net--; R.tips.push('ركّز على تحسين الاختبارات الأضعف في التقرير (القوة والتوازن والكارديو).'); }
+        if (dT >= 2) { R.pos.push('ارتفعت الدرجة الكلية للياقة بمقدار ' + ab(dT, 0) + ' نقطة.'); net++; }
+        else if (dT <= -2) { R.neg.push('انخفضت الدرجة الكلية للياقة بمقدار ' + ab(dT, 0) + ' نقطة.'); net--; }
+        if (Math.abs(dW) >= 0.5) {
+            if (dW < 0) {
+                if (dF <= -0.3 && dS >= -0.3) R.pos.push('نزول الوزن (' + ab(dW) + ' كجم) ناتج عن فقد الدهون مع الحفاظ على العضلات.');
+                else if (dS <= -0.5) R.neg.push('نزول الوزن (' + ab(dW) + ' كجم) شمل جزءاً من الكتلة العضلية، وليس الدهون فقط.');
+                else R.notes.push('انخفض الوزن بمقدار ' + ab(dW) + ' كجم.');
+            } else {
+                if (dS >= 0.3 && dF <= 0.2) R.pos.push('زيادة الوزن (' + ab(dW) + ' كجم) ناتجة عن زيادة العضلات.');
+                else if (dF >= 0.3) R.neg.push('زيادة الوزن (' + ab(dW) + ' كجم) صاحبتها زيادة في الدهون.');
+                else R.notes.push('ارتفع الوزن بمقدار ' + ab(dW) + ' كجم.');
+            }
+        }
+        if (net >= 2 && R.neg.length === 0) { R.verdict = '✅ الأداء على المسار الصحيح'; R.cls = 'good'; }
+        else if (net >= 1) { R.verdict = R.neg.length ? '✅ المسار صحيح بشكل عام مع نقاط تحتاج متابعة' : '✅ الأداء على المسار الصحيح'; R.cls = R.neg.length ? 'mixed' : 'good'; }
+        else if (net === 0 && !R.pos.length && !R.neg.length) { R.verdict = '➖ الأداء مستقر دون تغيير يُذكر'; R.cls = 'stable'; if (!R.tips.length) R.tips.push('إن كان الهدف تغيير التركيب الجسمي فعدّل الحمل التدريبي أو السعرات تدريجياً.'); }
+        else if (net === 0) { R.verdict = '🟡 نتائج متباينة — تحتاج مراقبة وتعديلاً بسيطاً'; R.cls = 'mixed'; }
+        else { R.verdict = '⚠️ الأداء يحتاج إلى تعديل في البرنامج'; R.cls = 'bad'; }
+        R.notes.unshift('المدة منذ الجلسة السابقة: ' + days + ' يوم' + (days < 14 ? ' (فترة قصيرة، فالتغيرات الصغيرة قد تكون طبيعية).' : '.'));
+        if (count >= 3 && first && first !== prev) {
+            const tw = cur.weight - first.weight, tf = cur.fat - first.fat, ts = cur.smm - first.smm;
+            R.notes.push('الحصيلة منذ أول جلسة (' + progDate(first.ts) + '): الوزن ' + (tw > 0 ? '+' : '') + progFmt(tw, 1) + ' كجم، الدهون ' + (tf > 0 ? '+' : '') + progFmt(tf, 1) + '%، العضلات ' + (ts > 0 ? '+' : '') + progFmt(ts, 1) + ' كجم.');
+        }
+        return R;
+    }
+
+    function progDeltaCell(m, cur, prev) {
+        const raw = cur[m.k] - prev[m.k], r = Math.round(raw * Math.pow(10, m.dec)) / Math.pow(10, m.dec);
+        if (r === 0) return { html: '<span class="pd same">＝ 0 ' + m.u + '</span>', txt: '= 0 ' + m.u, r: 0 };
+        const up = r > 0, cls = m.good === 0 ? 'neu' : ((m.good > 0) === up ? 'good' : 'bad');
+        const t = (up ? '+' : '-') + progFmt(Math.abs(r), m.dec) + ' ' + m.u;
+        return { html: '<span class="pd ' + cls + '">' + (up ? '↑' : '↓') + ' <span dir="ltr">' + t + '</span></span>', txt: (up ? '▲ ' : '▼ ') + t, r: r };
+    }
+
+    function progCompareHTML(cur, prev) {
+        if (!prev) return '';
+        const days = Math.round((cur.ts - prev.ts) / 86400000);
+        let h = '<p class="calc-note" style="margin:0 0 8px;">المقارنة مع الجلسة السابقة: <b dir="ltr">' + progDT(prev.ts) + '</b> (قبل ' + days + ' يوم) <span class="en">Before &amp; After</span></p>';
+        h += '<div class="prog-scroll"><table class="prog-table"><thead><tr><th>المؤشر</th><th>قبل</th><th>الآن</th><th>الفرق</th></tr></thead><tbody>';
+        PROG_METRICS.forEach(function (m) {
+            h += '<tr><td>' + m.ar + ' <span class="en">' + m.en + '</span></td><td dir="ltr">' + progFmt(prev[m.k], m.dec) + '</td><td dir="ltr"><b>' + progFmt(cur[m.k], m.dec) + '</b></td><td>' + progDeltaCell(m, cur, prev).html + '</td></tr>';
+        });
+        return h + '</tbody></table></div>';
+    }
+
+    function progChartSVG(list, metric, period) {
+        const m = PROG_METRICS.filter(function (x) { return x.k === metric; })[0] || PROG_METRICS[0];
+        const p = PROG_PERIODS.filter(function (x) { return x.k === period; })[0] || PROG_PERIODS[3];
+        const now = Date.now();
+        const pts = list.filter(function (r) { return !p.days || r.ts >= now - p.days * 86400000; });
+        if (!pts.length) return { svg: '<div class="prog-empty">لا توجد جلسات محفوظة ضمن هذه الفترة. اختر «الكل» لعرض كل الجلسات.</div>', pts: pts };
+        const Wd = 340, Hd = 190, L = 40, Rr = 14, T = 20, B = 30, iw = Wd - L - Rr, ih = Hd - T - B;
+        let lo = Math.min.apply(null, pts.map(function (r) { return r[m.k]; })), hi = Math.max.apply(null, pts.map(function (r) { return r[m.k]; }));
+        if (hi - lo < 0.0001) { lo -= 1; hi += 1; } else { const pad = (hi - lo) * 0.18; lo -= pad; hi += pad; }
+        const t0 = pts[0].ts, t1 = pts[pts.length - 1].ts;
+        const X = function (r, i) { return pts.length === 1 || t1 === t0 ? L + iw / 2 : L + (r.ts - t0) / (t1 - t0) * iw; };
+        const Y = function (v) { return T + (hi - v) / (hi - lo) * ih; };
+        let s = '<svg viewBox="0 0 ' + Wd + ' ' + Hd + '" width="100%" role="img" aria-label="Progress chart" style="direction:ltr;display:block;">';
+        for (let g = 0; g <= 3; g++) {
+            const gv = lo + (hi - lo) * g / 3, gy = Y(gv);
+            s += '<line x1="' + L + '" y1="' + gy.toFixed(1) + '" x2="' + (Wd - Rr) + '" y2="' + gy.toFixed(1) + '" stroke="rgba(100,116,139,.28)" stroke-dasharray="3 4"/>' +
+                '<text x="' + (L - 5) + '" y="' + (gy + 4).toFixed(1) + '" font-size="10" text-anchor="end" fill="#64748b">' + progFmt(gv, m.dec === 0 ? 0 : 1) + '</text>';
+        }
+        if (pts.length > 1) {
+            s += '<polyline fill="none" stroke="' + m.col + '" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round" points="' + pts.map(function (r, i) { return X(r, i).toFixed(1) + ',' + Y(r[m.k]).toFixed(1); }).join(' ') + '"/>';
+        }
+        pts.forEach(function (r, i) {
+            const cx = X(r, i), cy = Y(r[m.k]);
+            s += '<circle class="prog-pt" data-i="' + i + '" tabindex="0" cx="' + cx.toFixed(1) + '" cy="' + cy.toFixed(1) + '" r="' + (i === pts.length - 1 ? 6 : 4.5) + '" fill="' + (i === pts.length - 1 ? m.col : '#fff') + '" stroke="' + m.col + '" stroke-width="2.4" style="cursor:pointer"/>';
+            if (pts.length <= 8 || i === 0 || i === pts.length - 1) s += '<text x="' + cx.toFixed(1) + '" y="' + (cy - 9).toFixed(1) + '" font-size="10" font-weight="700" text-anchor="middle" fill="' + m.col + '">' + progFmt(r[m.k], m.dec) + '</text>';
+        });
+        s += '<text x="' + L + '" y="' + (Hd - 8) + '" font-size="10" fill="#64748b" text-anchor="start">' + progDate(t0) + '</text>';
+        if (pts.length > 1) s += '<text x="' + (Wd - Rr) + '" y="' + (Hd - 8) + '" font-size="10" fill="#64748b" text-anchor="end">' + progDate(t1) + '</text>';
+        s += '</svg>';
+        return { svg: s, pts: pts, m: m };
+    }
+
+    function progDrawChart() {
+        const P = window.BFIT_PROG, box = document.getElementById('progChart'), tip = document.getElementById('progTip');
+        if (!P || !box) return;
+        const out = progChartSVG(P.list, P.metric, P.period);
+        box.innerHTML = out.svg;
+        P.shown = out.pts;
+        if (tip) tip.innerHTML = out.pts.length ? 'اضغط على أي نقطة لعرض تفاصيل الجلسة. <span class="en">Tap a point for details.</span>' : '';
+        document.querySelectorAll('#progressArea [data-metric]').forEach(function (b) { b.classList.toggle('on', b.getAttribute('data-metric') === P.metric); });
+        document.querySelectorAll('#progressArea [data-period]').forEach(function (b) { b.classList.toggle('on', b.getAttribute('data-period') === P.period); });
+    }
+
+    function progSessionsHTML(list) {
+        let h = '<details class="prog-det"><summary>سجل الجلسات المحفوظة (' + list.length + ') <span class="en">Saved sessions</span></summary><div class="prog-scroll"><table class="prog-table"><thead><tr><th>التاريخ والوقت</th><th>الوزن</th><th>الدهون</th><th>العضلات</th><th>العمر البيولوجي</th></tr></thead><tbody>';
+        list.slice().reverse().forEach(function (r) {
+            h += '<tr><td dir="ltr">' + progDT(r.ts) + '</td><td dir="ltr">' + progFmt(r.weight, 1) + '</td><td dir="ltr">' + progFmt(r.fat, 1) + '%</td><td dir="ltr">' + progFmt(r.smm, 1) + '</td><td dir="ltr">' + progFmt(r.bio, 0) + '</td></tr>';
+        });
+        return h + '</tbody></table></div><button type="button" class="prog-del" id="progDelBtn">🗑 حذف سجل هذا المشترك <span class="en">Delete member history</span></button></details>';
+    }
+
+    function progSummaryHTML(R) {
+        let h = '<div class="prog-sum ' + R.cls + '"><div class="prog-verdict">' + R.verdict + '</div>';
+        if (R.pos.length) h += '<div class="prog-sec"><b>الإيجابيات | Positives</b><ul>' + R.pos.map(function (x) { return '<li class="pos">✔ ' + progEsc(x) + '</li>'; }).join('') + '</ul></div>';
+        if (R.neg.length) h += '<div class="prog-sec"><b>السلبيات | Negatives</b><ul>' + R.neg.map(function (x) { return '<li class="neg">✖ ' + progEsc(x) + '</li>'; }).join('') + '</ul></div>';
+        if (R.notes.length) h += '<div class="prog-sec"><b>ملاحظات | Notes</b><ul>' + R.notes.map(function (x) { return '<li>• ' + progEsc(x) + '</li>'; }).join('') + '</ul></div>';
+        if (R.tips.length) h += '<div class="prog-sec"><b>توصيات التعديل | Adjustments</b><ul>' + R.tips.map(function (x) { return '<li>➜ ' + progEsc(x) + '</li>'; }).join('') + '</ul></div>';
+        return h + '</div>';
+    }
+
+    function bfitProgress(D) {
+        const area = document.getElementById('progressArea'); if (!area || !D) return;
+        progLoad();
+        const key = progKey(D);
+        const list = progMem[key] = Array.isArray(progMem[key]) ? progMem[key] : [];
+        const rec = { ts: Date.now(), client: D.client, coach: D.coach, age: D.realAge, weight: D.weight, fat: D.fat, smm: D.smm, bio: D.bioAge, fit: D.fitness };
+        const last = list[list.length - 1];
+        if (last && rec.ts - last.ts < 30 * 60000 && last.weight === rec.weight && last.fat === rec.fat && last.smm === rec.smm && last.bio === rec.bio && last.fit === rec.fit) { last.ts = rec.ts; }
+        else list.push(rec);
+        while (list.length > 500) list.shift();
+        const saved = progStore();
+        const cur = list[list.length - 1], prev = list.length > 1 ? list[list.length - 2] : null, first = list[0];
+        const R = progAnalyse(cur, prev, first, list.length);
+        window.BFIT_PROG = { key: key, list: list, metric: 'fat', period: 'all', shown: [] };
+        D.prog = { cur: cur, prev: prev, first: first, count: list.length, analysis: R, saved: saved };
+
+        let h = '<div class="report-extra prog-card"><h4><i class="fa-solid fa-chart-line"></i> المتابعة والتقدّم عبر الزمن | Progressive Analytics</h4>';
+        h += '<p class="calc-note" style="margin:0 0 10px;">' + (saved ? '💾 تم حفظ هذه الجلسة تلقائياً بتاريخ <b dir="ltr">' + progDT(cur.ts) + '</b> للمشترك <b>' + progEsc(D.client) + '</b>' + (D.memberId ? ' (ID: <span dir="ltr">' + progEsc(D.memberId) + '</span>)' : '') + ' — عدد الجلسات: <b>' + list.length + '</b>. السجل محفوظ على هذا الجهاز/المتصفح فقط.' : '⚠️ تعذّر الحفظ الدائم في المتصفح (التخزين غير متاح)، وسيُحتفظ بالسجل حتى إغلاق الصفحة فقط.') + '</p>';
+        h += progCompareHTML(cur, prev);
+        h += '<div class="prog-ctrl" role="group" aria-label="metric">' + PROG_METRICS.map(function (m) { return '<button type="button" class="prog-chip" data-metric="' + m.k + '">' + m.ar + '</button>'; }).join('') + '</div>';
+        h += '<div class="prog-ctrl" role="group" aria-label="period">' + PROG_PERIODS.map(function (p) { return '<button type="button" class="prog-chip alt" data-period="' + p.k + '">' + p.ar + ' <span class="en">' + p.en + '</span></button>'; }).join('') + '</div>';
+        h += '<div id="progChart" class="prog-chart"></div><div id="progTip" class="prog-tip" aria-live="polite"></div>';
+        h += progSummaryHTML(R);
+        h += progSessionsHTML(list);
+        h += '</div>';
+        area.innerHTML = h;
+
+        area.querySelectorAll('[data-metric]').forEach(function (b) { b.addEventListener('click', function () { window.BFIT_PROG.metric = b.getAttribute('data-metric'); progDrawChart(); }); });
+        area.querySelectorAll('[data-period]').forEach(function (b) { b.addEventListener('click', function () { window.BFIT_PROG.period = b.getAttribute('data-period'); progDrawChart(); }); });
+        const chart = document.getElementById('progChart');
+        const showTip = function (el) {
+            const P = window.BFIT_PROG, i = parseInt(el.getAttribute('data-i'), 10), r = P.shown[i], tip = document.getElementById('progTip'); if (!r || !tip) return;
+            tip.innerHTML = '📍 <b dir="ltr">' + progDT(r.ts) + '</b> — الوزن <b>' + progFmt(r.weight, 1) + '</b> كجم • الدهون <b>' + progFmt(r.fat, 1) + '%</b> • العضلات <b>' + progFmt(r.smm, 1) + '</b> كجم • العمر البيولوجي <b>' + progFmt(r.bio, 0) + '</b>';
+        };
+        chart.addEventListener('click', function (e) { const t = e.target; if (t && t.classList && t.classList.contains('prog-pt')) showTip(t); });
+        chart.addEventListener('keydown', function (e) { const t = e.target; if (t && t.classList && t.classList.contains('prog-pt') && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); showTip(t); } });
+        const del = document.getElementById('progDelBtn');
+        if (del) del.addEventListener('click', function () {
+            if (!window.confirm('سيتم حذف جميع الجلسات المحفوظة لهذا المشترك نهائياً من هذا الجهاز. هل أنت متأكد؟')) return;
+            progLoad(); delete progMem[key]; progStore();
+            window.BFIT_PROG = null; if (window.BFIT_LAST) window.BFIT_LAST.prog = null;
+            area.innerHTML = '<div class="report-extra prog-card"><p class="calc-note">تم حذف سجل هذا المشترك.</p></div>';
+        });
+        progDrawChart();
+    }
+
+    // ===== Sharing hub =====
+    function shareText() {
+        const D = window.BFIT_LAST; if (!D) return '';
+        const now = progDT(Date.now());
+        const L = [];
+        L.push('*B_FIT ASSESSMENT REPORT*');
+        L.push('👤 المشترك: ' + D.client + (D.memberId ? ' (ID: ' + D.memberId + ')' : ''));
+        L.push('📅 التاريخ: ' + now + (D.coach ? ' | 🏋️ المدرب: ' + D.coach : ''));
+        L.push('');
+        L.push('⚖️ الوزن: ' + progFmt(D.weight, 1) + ' كجم');
+        L.push('🔥 نسبة الدهون: ' + progFmt(D.fat, 1) + '%');
+        L.push('💪 كتلة العضلات: ' + progFmt(D.smm, 1) + ' كجم');
+        L.push('🏆 الدرجة الكلية للياقة: ' + D.fitness + '%');
+        L.push('🧬 العمر البيولوجي: ' + D.bioAge + ' سنة (العمر الحقيقي: ' + D.realAge + ')');
+        const P = D.prog;
+        if (P && P.prev) {
+            L.push('');
+            L.push('📊 مقارنة بالجلسة السابقة (' + progDate(P.prev.ts) + '):');
+            PROG_METRICS.forEach(function (m) { L.push('• ' + m.ar + ': ' + progFmt(P.prev[m.k], m.dec) + ' ← ' + progFmt(P.cur[m.k], m.dec) + '  (' + progDeltaCell(m, P.cur, P.prev).txt + ')'); });
+        }
+        if (P && P.analysis) {
+            L.push('');
+            L.push(P.analysis.verdict);
+            P.analysis.pos.forEach(function (x) { L.push('✔ ' + x); });
+            P.analysis.neg.forEach(function (x) { L.push('✖ ' + x); });
+            P.analysis.tips.forEach(function (x) { L.push('➜ ' + x); });
+        }
+        if (D.flags && D.flags.length) { L.push(''); L.push('⚠️ ملاحظات صحية: ' + D.flags.length + ' — راجع التقرير الكامل.'); }
+        L.push('');
+        L.push('— B_FIT Assessment');
+        return L.join('\n');
+    }
+    function shareNeedReport() {
+        if (window.BFIT_LAST) return true;
+        shareToast('أنشئ التقرير أولاً ثم شاركه.');
+        return false;
+    }
+    let shareTimer = 0;
+    function shareToast(msg) {
+        const el = document.getElementById('shareMsg'); if (!el) return;
+        el.textContent = msg; el.style.display = 'block';
+        clearTimeout(shareTimer); shareTimer = setTimeout(function () { el.style.display = 'none'; }, 6000);
+    }
+    function shareWhatsApp() {
+        if (!shareNeedReport()) return;
+        const url = 'https://wa.me/?text=' + encodeURIComponent(shareText());
+        const w = window.open(url, '_blank', 'noopener');
+        if (!w) window.location.href = url;
+    }
+    async function shareWebOrEmail() {
+        if (!shareNeedReport()) return;
+        const D = window.BFIT_LAST, text = shareText(), title = 'B_FIT Assessment Report - ' + D.client;
+        if (navigator.share) {
+            try { await navigator.share({ title: title, text: text }); return; }
+            catch (e) { if (e && e.name === 'AbortError') return; }
+        }
+        let body = text; if (body.length > 1800) body = body.slice(0, 1800) + '...';
+        window.location.href = 'mailto:?subject=' + encodeURIComponent(title) + '&body=' + encodeURIComponent(body);
+        try { if (navigator.clipboard) navigator.clipboard.writeText(text); } catch (e) { /* optional */ }
+        shareToast('تم فتح البريد الإلكتروني، ونُسخ نص التقرير للحافظة أيضاً.');
+    }
+    function saveAndNewClient() {
+        const D = window.BFIT_LAST;
+        if (D && D.prog === undefined) { try { bfitProgress(D); } catch (e) { /* already stored on generate */ } }
+        const form = document.getElementById('bfitAssessmentForm');
+        if (form) form.reset();
+        window.BFIT_LAST = null; window.BFIT_INBODY = null; window.BFIT_PROG = null;
+        const area = document.getElementById('resultArea'); if (area) area.style.display = 'none';
+        const pa = document.getElementById('progressArea'); if (pa) pa.innerHTML = '';
+        const st = document.getElementById('ocrStatusMsg'); if (st) { st.style.display = 'none'; st.innerHTML = ''; }
+        const th = document.getElementById('uploadThumb'); if (th) { th.style.display = 'none'; th.removeAttribute('src'); }
+        const un = document.getElementById('uploadName'); if (un && un.dataset.def !== undefined) un.innerText = un.dataset.def;
+        try { showIdCrop(null); } catch (e) { /* optional */ }
+        document.querySelectorAll('.bf-timer .bf-rs').forEach(function (b) { b.click(); });
+        document.querySelectorAll('#bfitAssessmentForm .field-ok, #bfitAssessmentForm .field-check').forEach(function (el) { el.classList.remove('field-ok', 'field-check'); });
+        setTimeout(function () {
+            form.querySelectorAll('input, select, textarea').forEach(function (el) { try { el.dispatchEvent(new Event('input', { bubbles: true })); el.dispatchEvent(new Event('change', { bubbles: true })); } catch (e) { /* ignore */ } });
+            try { updateGenderTheme(); refreshCalculators(); } catch (e) { /* optional */ }
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }, 30);
+        shareToast('✅ تم حفظ الجلسة وتهيئة النموذج لمشترك جديد.');
+    }
+    function initSharingHub() {
+        const un = document.getElementById('uploadName'); if (un && un.dataset.def === undefined) un.dataset.def = un.innerText;
+        const map = { shareWaBtn: shareWhatsApp, shareMailBtn: shareWebOrEmail, saveNewBtn: saveAndNewClient };
+        Object.keys(map).forEach(function (id) { const b = document.getElementById(id); if (b && !b.dataset.bound) { b.dataset.bound = '1'; b.addEventListener('click', map[id]); } });
+    }
+
     let bfitBooted = false;
     function bfitInit() {
         initSmartTarget();
         initBilingual();
         initHealthDynamic(); initEpley();
         initMobileSteppers();
-        initCounters(); initCountdowns(); initRomHints(); initWallLive();
+        initCounters(); initCountdowns(); initRomHints(); initWallLive(); initSharingHub();
         if (bfitBooted) return;
         bfitBooted = true;
         updateGenderTheme();
@@ -4099,5 +4448,6 @@ renderReportExtras(flags.length > 0, needsMedicalClearance);
     window.addEventListener('load', bfitInit);
 </script>
 
+<div id="shareMsg" class="share-toast" role="status" aria-live="polite"></div>
 </body>
 </html>
