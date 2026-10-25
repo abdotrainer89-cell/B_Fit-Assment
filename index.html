@@ -3630,14 +3630,42 @@ renderReportExtras(flags.length > 0, needsMedicalClearance);
         }, 250);
         ['pointerdown', 'touchstart', 'click'].forEach(function (ev) { document.addEventListener(ev, warm, { once: true, passive: true }); });   // phones load the voice list lazily
     }
+    // Recorded voice clips: when a clip exists for (gender, word) it is played instead of the device voice, so every phone sounds identical.
+    // Fill the empty strings with data-URIs, e.g. 'data:audio/mpeg;base64,....' (see BF_CLIP_WORDS for the 4 words x 2 genders).
+    const BF_CLIP_WORDS = ['Start', 'Stop', 'Reset', 'Time Over'];
+    const BF_CLIPS = {
+        male:   { 'Start': '', 'Stop': '', 'Reset': '', 'Time Over': '' },
+        female: { 'Start': '', 'Stop': '', 'Reset': '', 'Time Over': '' }
+    };
+    let bfClipEl = null;
+    function bfClipUnlock() {                                   // phones only allow audio after a tap: unlock one shared element on the first tap
+        try {
+            if (bfClipEl) return;
+            bfClipEl = new Audio();
+            bfClipEl.src = 'data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAESsAACJWAAACABAAZGF0YQAAAAA=';
+            const p = bfClipEl.play(); if (p && p.catch) p.catch(function () { /* optional */ });
+        } catch (e) { /* optional */ }
+    }
+    ['pointerdown', 'touchstart', 'click'].forEach(function (ev) { document.addEventListener(ev, bfClipUnlock, { once: true, passive: true }); });
+    function bfPlayClip(gender, text) {
+        try {
+            const src = BF_CLIPS[gender] && BF_CLIPS[gender][text];
+            if (!src) return false;
+            if (!bfClipEl) bfClipEl = new Audio();
+            bfClipEl.pause(); bfClipEl.src = src; bfClipEl.currentTime = 0;
+            const p = bfClipEl.play(); if (p && p.catch) p.catch(function () { /* optional */ });
+            return true;
+        } catch (e) { return false; }
+    }
     function bfSpeak(text) {
         try {
             if (!('speechSynthesis' in window) || typeof SpeechSynthesisUtterance === 'undefined') return false;
             window.speechSynthesis.cancel();                       // stop any previous speech immediately
             const gender = bfClientGender();
+            if (bfPlayClip(gender, text)) return true;             // recorded clip available -> identical voice on every device
             const u = new SpeechSynthesisUtterance(text);
             u.lang = 'en-US';
-            u.rate = 1; u.volume = 1;
+            u.rate = 0.85; u.volume = 1;                           // slightly slower, calmer delivery
             const v = bfPickVoice(gender);
             if (v) { u.voice = v; u.lang = v.lang; u.pitch = 1; }   // lang copied exactly from the voice (Android: 'en_US') so the engine really uses it
             else { u.pitch = gender === 'female' ? 1.3 : 0.45; }   // no male/female voice identifiable on this device: strong pitch shift so a male client never hears a female-sounding voice
