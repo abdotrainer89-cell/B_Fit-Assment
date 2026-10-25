@@ -3593,23 +3593,39 @@ renderReportExtras(flags.length > 0, needsMedicalClearance);
     }
 
     // ===== Voice guidance (Web Speech API, English) — female voice for a female client, male voice for a male client =====
-    const BF_FEMALE_VOICES = /female|zira|aria|jenny|samantha|karen|victoria|allison|ava\b|susan|joanna|salli|kendra|kimberly|ivy|emma|amy|hazel|serena|moira|tessa|fiona|libby|sonia|natasha|catherine|heather/i;
-    const BF_MALE_VOICES = /\bmale\b|david|mark\b|guy\b|alex\b|fred\b|daniel|tom\b|aaron|matthew|joey|justin|brian|ryan|george|james|richard|ronald|eric|christopher|roger|steffan|oliver|rishi|thomas/i;
+    // Works on Windows/Mac (named voices), Android Chrome (Google voice codes), Samsung (f000/m000 codes) and iOS (Samantha, Daniel ...).
+    const BF_FEMALE_NAMES = /samantha|zira|aria\b|jenny|karen|victoria|allison|\bava\b|susan|joanna|salli|kendra|kimberly|ivy|emma|\bamy\b|hazel|serena|moira|tessa|fiona|libby|sonia|natasha|catherine|heather|nicky|zoe|martha|stephanie|kate|veena|nora|michelle|ana\b|clara|eva\b|linda|sara|siri.*female/i;
+    const BF_MALE_NAMES = /\bdavid\b|\bmark\b|\bguy\b|\balex\b|\bfred\b|daniel|\btom\b|aaron|matthew|joey|justin|brian|\bryan\b|george|james|richard|ronald|\beric\b|christopher|roger|steffan|oliver|rishi|thomas|gordon|\blee\b|evan|nathan|arthur|\bguy\b|andrew|davis|jason|tony|liam|noah/i;
+    function bfVoiceGender(v) {
+        const t = ((v.name || '') + ' ' + (v.voiceURI || '')).toLowerCase();
+        if (/\bfemale\b|woman|girl/.test(t)) return 'female';
+        if (/\bmale\b|\bman\b|\bboy\b/.test(t)) return 'male';
+        // Android / Chrome OS: Google voice codes (en-us-x-sfg-local, en-gb-x-gba-network ...)
+        if (/x-(sfg|tpc|tpf|iob|iog|gba|gbc|fis)\b/.test(t)) return 'female';
+        if (/x-(iol|iom|tpd|gbb|gbd|rjs)\b/.test(t)) return 'male';
+        // Samsung TTS: eng-USA-f000 / eng-US-m000 / en-US-SMTf00 / SMTm00
+        if (/(^|[-_ ])f\d{2,3}\b|smtf\d/.test(t)) return 'female';
+        if (/(^|[-_ ])m\d{2,3}\b|smtm\d/.test(t)) return 'male';
+        if (BF_FEMALE_NAMES.test(t)) return 'female';
+        if (BF_MALE_NAMES.test(t)) return 'male';
+        return null;
+    }
     function bfClientGender() {
         const g = document.getElementById('genderSelect');          // follows the manual choice and the InBody upload
         return g && g.value === 'female' ? 'female' : 'male';
     }
     function bfPickVoice(gender) {
-        const all = window.speechSynthesis.getVoices() || [];
-        const en = all.filter(function (v) { return /^en[-_]/i.test(v.lang); });
-        const us = en.filter(function (v) { return /^en[-_]US$/i.test(v.lang); });
-        const rx = gender === 'female' ? BF_FEMALE_VOICES : BF_MALE_VOICES;
-        const find = function (list) {
-            return list.filter(function (v) { return rx.test(v.name); })[0] || null;
-        };
-        return find(us) || find(en) || null;
+        const all = (window.speechSynthesis.getVoices() || []).filter(function (v) { return /^en([-_]|$)/i.test(v.lang || ''); });
+        const rank = function (v) { return (/^en[-_]US$/i.test(v.lang) ? 0 : 2) + (v.localService ? 0 : 1); };   // en-US first, offline voices first
+        const match = all.filter(function (v) { return bfVoiceGender(v) === gender; }).sort(function (p, q) { return rank(p) - rank(q); });
+        return match[0] || null;
     }
-    if ('speechSynthesis' in window) { try { window.speechSynthesis.getVoices(); window.speechSynthesis.onvoiceschanged = function () { window.speechSynthesis.getVoices(); }; } catch (e) { /* optional */ } }
+    if ('speechSynthesis' in window) {
+        const warm = function () { try { window.speechSynthesis.getVoices(); } catch (e) { /* optional */ } };
+        warm();
+        try { window.speechSynthesis.onvoiceschanged = warm; } catch (e) { /* optional */ }
+        ['pointerdown', 'touchstart', 'click'].forEach(function (ev) { document.addEventListener(ev, warm, { once: true, passive: true }); });   // phones load the voice list lazily
+    }
     function bfSpeak(text) {
         try {
             if (!('speechSynthesis' in window) || typeof SpeechSynthesisUtterance === 'undefined') return false;
@@ -3617,13 +3633,23 @@ renderReportExtras(flags.length > 0, needsMedicalClearance);
             const gender = bfClientGender();
             const u = new SpeechSynthesisUtterance(text);
             u.lang = 'en-US';
+            u.rate = 1; u.volume = 1;
             const v = bfPickVoice(gender);
-            if (v) { u.voice = v; u.pitch = 1; }
-            else { u.pitch = gender === 'female' ? 1.35 : 0.75; }  // no matching voice on this device: shift the pitch instead
+            if (v) { u.voice = v; u.pitch = 1; if (!/^en[-_]US$/i.test(v.lang)) u.lang = v.lang.replace('_', '-'); }
+            else { u.pitch = gender === 'female' ? 1.2 : 0.8; }    // no gender-identifiable voice on this device: gentle pitch shift only
             window.speechSynthesis.speak(u);
             return true;
         } catch (e) { return false; /* speech is optional */ }
     }
+    // Diagnostic (invisible unless used): open the page with #voices at the end of the link to list the voices installed on this device.
+    window.addEventListener('load', function () {
+        if (location.hash !== '#voices' || !('speechSynthesis' in window)) return;
+        setTimeout(function () {
+            const list = (window.speechSynthesis.getVoices() || []).filter(function (v) { return /^en/i.test(v.lang); })
+                .map(function (v) { return v.name + ' | ' + v.lang + ' | ' + (bfVoiceGender(v) || '?'); });
+            alert(list.length ? list.join('\n') : 'No English voices found on this device');
+        }, 1500);
+    });
 
     // ===== Start counters (positive only) for timed tests =====
     function initCounters() {
